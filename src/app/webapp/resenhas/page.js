@@ -10,10 +10,11 @@ export const metadata = {
 
 export default function Home() {
     return (
+        
         <div className="flex flex-col items-center justify-center h-screen px-4">
-            <div className="flex flex-row justify-between items-center w-full max-w-md mb-16 p-4">
+            <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 p-4">
                 <MenuButton />
-                <NotificationsButton />
+                <NotificationsButton dotVisible={false} />
             </div>
             <section className="flex flex-start items-center w-full max-w-md p-4">
                 <div className=' h3 w-full flex'>
@@ -28,7 +29,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            <div className="flex flex-col mb-4 w-[80%] mt-8">
+            <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
                 <Button label={'Criar resenha'} icon={'plus'} />
             </div>
         </div>

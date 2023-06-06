@@ -13,7 +13,7 @@ export const metadata = {
 export default function Settings() {
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">
-            <div className="flex flex-row justify-start items-center w-full max-w-md mb-16 p-4">
+            <div className="flex flex-row justify-between items-center w-full max-w-md mb-16 p-4">
                 <MenuButton />
                 <h1 className='text-2xl ml-6 text-whiteT1 font-bold'>Configurações</h1>
             </div>

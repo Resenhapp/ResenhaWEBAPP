@@ -48,7 +48,7 @@ const Button = ({ label, icon }) => {
         labelClass = 'flex-1 text-center';
     }
     return (
-        <button className="bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white h-16 font-bold py-2 px-4 rounded-full flex justify-center items-center">
+        <button className="bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white h-16 font-bold py-2 px-4 rounded-full flex justify-center items-center w-full max-w-[500px]">
             <span className={labelClass}>{label}</span>
             {iconSvg && <div className="ml-0">{iconSvg}</div>}
         </button>
