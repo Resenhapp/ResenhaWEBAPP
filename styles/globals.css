@@ -40,6 +40,10 @@
   filter: invert(1);
 }
 
+.text-glow {
+  text-shadow: 0 0 20px #ff00c8, 0 0 20px #8000ff, 0 0 20px #7f00fd;
+}
+
 .gradient {
   height: fit-content;
   z-index: 3;

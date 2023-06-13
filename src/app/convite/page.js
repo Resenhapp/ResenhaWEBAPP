@@ -10,8 +10,18 @@ export default function Invite() {
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
     };
+    var price = '123,55';
+    var date = 12;
+    var month = 'agosto';
+    var year = 2023;
+    var day = 'Sábado';
+    var confirmed = 12;
+    var maxguests = 100;
+    var hour = '20:00';
+
+    var address = 'Rua Ramiro Barcelos 1450';
     const renderDescription = () => {
-        const descriptionText = `🎉 Estamos trazendo para você uma noite inesquecível de celebração e alegria! Apresentamos a nossa grande festa com bebidas totalmente liberadas! 🍸🍻 Isso mesmo, o bar estará aberto para você se deleitar com seus coquetéis favoritos, cervejas e muito mais - sem limites!`;
+        var descriptionText = `🎉 Estamos trazendo para você uma noite inesquecível de celebração e alegria! Apresentamos a nossa grande festa com bebidas totalmente liberadas! 🍸🍻 Isso mesmo, o bar estará aberto para você se deleitar com seus coquetéis favoritos, cervejas e muito mais - sem limites!`;
         if (isExpanded) {
             return (
                 <>
@@ -96,15 +106,20 @@ export default function Invite() {
     return (
         <div className="flex flex-col justify-start min-h-screen h-fit relative">
             <section className="relative">
-                <div className="bg-gradient-to-r from-cyan-500 to-blue-500 ">
+                <div className="relative">
                     <Image
-                        src={defaultImage}
-                        width={5000}
-                        height={300}
+                        src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
                         alt="Picture of the author"
-                        className="z-0 h-[300px] w-full object-cover"
+                        layout="responsive"
+                        width={5000}
+                        height={3000}
+                        className="object-cover"
                     />
+                    <div className="absolute inset-0">
+                        <div className="absolute bottom-0 bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
+                    </div>
                 </div>
+
                 <div className="px-6 py-4">
                     <div className="w-full flex flex-row justify-between max-w-screen-xs items-start">
                         <div className="w-fit">
@@ -117,7 +132,7 @@ export default function Invite() {
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
                             <h1 className="text-purpleT2 text-center font-bold">
-                                <span className="mr-1">R$</span>999,99
+                                <span className="mr-1">R$</span>{price}
                             </h1>
                         </div>
                     </div>
@@ -125,18 +140,16 @@ export default function Invite() {
                         <div className="flex flex-row justify-left gap-6 w-full h-fit">
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
                                 <h1 className="font-bold">
-                                    20
+                                    {'Dia '+date}
                                 </h1>
-                                <h1>
-                                    de Maio
-                                </h1>
+                                <h1>  {'de ' + month} </h1>
                             </div>
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
                                 <h1 className="font-bold">
-                                    Sábado
+                                    {day}
                                 </h1>
                                 <h1>
-                                    às 20:00h
+                                    {'às ' + hour}
                                 </h1>
                             </div>
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
@@ -144,7 +157,7 @@ export default function Invite() {
                                     Confirmados
                                 </h1>
                                 <h1>
-                                    10/80
+                                    {confirmed}/{maxguests}
                                 </h1>
                             </div>
                         </div>
@@ -159,7 +172,7 @@ export default function Invite() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Rua Ramiro barcelos 1450
+                                        {address}
                                     </a>
                                 </h1>
                             </div>
@@ -173,7 +186,16 @@ export default function Invite() {
                                     <RoundButton label="" icon="share" onClick={handleShare} />
                                 </div>
                                 <div className="flex flex-col mb-4 w-full">
-                                    <Button label="Tô dentro!" icon="arrow" />
+                                    <Button
+                                        label="Tô dentro!"
+                                        icon="arrow"
+                                        action={() => {/* insert action here */ }}
+                                        iconSide='right'
+                                        height={1}
+                                        width={1}
+                                        textAlign='center'
+                                    />
+
                                 </div>
                             </div>
                             <div className="flex flex-col mb-4 gap-4 w-full">

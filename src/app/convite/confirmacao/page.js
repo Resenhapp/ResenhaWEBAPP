@@ -1,6 +1,5 @@
+'use client'
 import Button from '@/src/components/Button';
-import CopyInput from '@/src/components/CopyInput';
-import Timer from '@/src/components/Timer';
 import Image from 'next/image';
 import defaultImage from "@/assets/images/default.jpg";
 
@@ -72,7 +71,7 @@ export default function Confirmation() {
                     </div>
                 </div>
                 <div className="flex flex-col mb-4 mt-4 w-full">
-                    <Button label="Salvar" icon="" />
+                <Button label={'Salvar'} icon={'arrowDown'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
                 <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
                     <h1 className="font-regular">

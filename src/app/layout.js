@@ -9,13 +9,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className='bg-gradient-to-b from-purpleT1 to-purpleT2 w-screen h-screen text-whiteT1'>
-        <div className=''>
-          <div className='' />
-        </div>
-        <main className=''>
+      <body className='bg-purpleT1 w-screen min-h-full h-fit text-whiteT1'>
           {children}
-        </main>
       </body>
     </html>
   )

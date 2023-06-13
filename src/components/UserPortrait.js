@@ -7,7 +7,7 @@ const UserPortrait = ({ name, image }) => {
                 <img src={image} alt="" className="w-full h-full rounded-full" />
             </div>
             <span className="font-regular text-white text-left w-full text-sm mt-1">{name}</span>
-            <span className="font-bold text-white text-left w-full text-sm mt-1">confirmado</span>
+            <span className="font-bold text-white text-left w-full text-sm mt-1 text-glow">confirmado</span>
         </div>
     );
 };

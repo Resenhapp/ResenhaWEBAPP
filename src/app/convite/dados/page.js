@@ -1,9 +1,6 @@
 'use client'
 import InputField from '@/src/components/InputField';
-import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
-import GoogleButton from '@/src/components/GoogleButton';
-import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
 import Dropdown from '@/src/components/Dropdown';
 import Back from '@/src/components/Back';
@@ -35,7 +32,7 @@ export default function Info() {
                 </div>
                 <div className="flex flex-col mb-0 w-full">
                     <div>
-                        <h2 className="text-2xl text-whiteT1 text-center font-bold">Informações</h2>
+                       <h2 className="text-2xl text-whiteT1 text-center font-bold">Informações</h2>
                         <p className="text-sm text-whiteT1 text-center font-thin mb-4">Antes de continuar, precisamos de algumas informações...</p>
                     </div>
                     <div className='bg-purpleT2 items-center justify-center align-center flex flex-col ring-2 p-2 ring-inset ring-purpleT3 rounded-2xl'>
@@ -63,7 +60,7 @@ export default function Info() {
                     </div>
                 </div>
                 <div className="flex flex-col mb-4 w-full">
-                    <Button label="Próximo" icon="arrow" />
+                <Button label={'Próximo'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
                 <div className="flex items-center justify-end">
                     <p className="mr-1">Tem uma conta?</p>
