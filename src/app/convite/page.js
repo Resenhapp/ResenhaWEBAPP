@@ -10,6 +10,7 @@ export default function Invite() {
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
     };
+
     var price = '123,55';
     var date = 12;
     var month = 'agosto';
@@ -18,8 +19,8 @@ export default function Invite() {
     var confirmed = 12;
     var maxguests = 100;
     var hour = '20:00';
-
     var address = 'Rua Ramiro Barcelos 1450';
+
     const renderDescription = () => {
         var descriptionText = `🎉 Estamos trazendo para você uma noite inesquecível de celebração e alegria! Apresentamos a nossa grande festa com bebidas totalmente liberadas! 🍸🍻 Isso mesmo, o bar estará aberto para você se deleitar com seus coquetéis favoritos, cervejas e muito mais - sem limites!`;
         if (isExpanded) {
