@@ -15,38 +15,41 @@ export default function Invite() {
     };
 
     useEffect(() => {
-      fetchData();
+        fetchData();
     }, []);
-  
+
     const axios = require('axios');
     const qs = require('qs');
-    
+
     const makeRequest = async (url, data) => {
-      try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-      } catch (error) {
-        throw new Error(`Request failed: ${error}`);
-      }
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
     };
-    
+
     const fetchData = async () => {
-      try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: 'mjCvJEPv' });
-        console.log(response);
-        setData(response);
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: 'mjCvJEPv' });
+            console.log(response);
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
     };
 
     if (!data) {
         return <p>Loading...</p>;
     }
-  
-    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek} = data;
+
+    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek } = data;
+
+
+
 
     const renderDescription = () => {
         if (isExpanded) {
@@ -172,7 +175,7 @@ export default function Invite() {
                         <div className="flex flex-row justify-left gap-6 w-full h-fit">
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
                                 <h1 className="font-bold">
-                                    {'Dia '+day}
+                                    {'Dia ' + day}
                                 </h1>
                                 <h1>  {'de ' + month} </h1>
                             </div>
@@ -237,8 +240,9 @@ export default function Invite() {
                                     </h1>
                                 </div>
                                 <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Lucas Silva'} />
-                                    <UserPortrait image={defaultImage} name={'Pedro Oliveira'} />
+                                    {users.map((user) => (
+                                        <UserPortrait key={user.id} image={defaultImage} name={user.name} />
+                                    ))}
                                 </div>
                             </div>
                             <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
@@ -249,7 +253,7 @@ export default function Invite() {
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 }
