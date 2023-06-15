@@ -32,7 +32,7 @@ export default function Invite() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: 'mjCvJEPv' });
+            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: 'DGPcBwzI' });
             console.log(response);
             setData(response);
         }
@@ -46,10 +46,7 @@ export default function Invite() {
         return <p>Loading...</p>;
     }
 
-    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek } = data;
-
-
-
+    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek, users } = data;
 
     const renderDescription = () => {
         if (isExpanded) {
@@ -105,7 +102,7 @@ export default function Invite() {
         return `maps://maps.apple.com/?q=${newAddress}`;
     };
 
-    const getGoogleMapsURL = () => {
+    const getGoogleMapsURL = (address) => {
         var newAddress = encodeURIComponent(address);
         return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
     };
@@ -241,7 +238,7 @@ export default function Invite() {
                                 </div>
                                 <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
                                     {users.map((user) => (
-                                        <UserPortrait key={user.id} image={defaultImage} name={user.name} />
+                                        <UserPortrait key={user.id} image={defaultImage} name={user.name}/>
                                     ))}
                                 </div>
                             </div>

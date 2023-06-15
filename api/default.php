@@ -122,6 +122,16 @@ if (isset($_POST['function'])) {
             $year = (int) $year; 
     
             $dayOfWeek = getDayOfWeek($dateString);
+
+            $users = [];
+            $query = "SELECT * FROM guests WHERE party = '$code'";
+            $db = queryDBRows($query);
+
+            if (mysqli_num_rows($db) > 0) {
+              foreach ($db as $info) {
+                $users[] = ['name' => $info['name']];
+              }
+            }
     
             $data = array(
                 'price' => $price,
@@ -136,6 +146,7 @@ if (isset($_POST['function'])) {
                 'host' => $host,
                 'name' => $row["name"],
                 'description' => $row["description"],
+                'users' => $users
             );
 
             header('Content-Type: application/json');
