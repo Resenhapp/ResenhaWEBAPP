@@ -5,28 +5,54 @@ import Button from "@/src/components/Button";
 import RoundButton from "@/src/components/RoundButton";
 import { useState } from "react";
 import UserPortrait from "@/src/components/UserPortrait";
+import React, { useEffect } from 'react';
+import axios from 'axios';
 export default function Invite() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [data, setData] = useState(null);
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
     };
 
-    var price = '123,55';
-    var date = 12;
-    var month = 'agosto';
-    var year = 2023;
-    var day = 'Sábado';
-    var confirmed = 12;
-    var maxguests = 100;
-    var hour = '20:00';
-    var address = 'Rua Ramiro Barcelos 1450';
+    useEffect(() => {
+      fetchData();
+    }, []);
+  
+    const axios = require('axios');
+    const qs = require('qs');
+    
+    const makeRequest = async (url, data) => {
+      try {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+      } catch (error) {
+        throw new Error(`Request failed: ${error}`);
+      }
+    };
+    
+    const fetchData = async () => {
+      try {
+        const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: 'mjCvJEPv' });
+        console.log(response);
+        setData(response);
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (!data) {
+        return <p>Loading...</p>;
+    }
+  
+    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek} = data;
 
     const renderDescription = () => {
-        var descriptionText = `🎉 Estamos trazendo para você uma noite inesquecível de celebração e alegria! Apresentamos a nossa grande festa com bebidas totalmente liberadas! 🍸🍻 Isso mesmo, o bar estará aberto para você se deleitar com seus coquetéis favoritos, cervejas e muito mais - sem limites!`;
         if (isExpanded) {
             return (
                 <>
-                    <h1>{descriptionText}</h1>
+                    <h1>{description}</h1>
                     <div
                         className="flex flex-row items-center align-center cursor-pointer text-purpleT5"
                         onClick={handleToggleDescription}
@@ -43,7 +69,12 @@ export default function Invite() {
             );
         }
 
-        const shortDescription = descriptionText.slice(0, 80) + '...';
+        let shortDescription = description;
+
+        if (description.length > 80) {
+            shortDescription = description.slice(0, 80) + '...';
+        }
+
         return (
             <>
                 <h1>{shortDescription}</h1>
@@ -125,10 +156,10 @@ export default function Invite() {
                     <div className="w-full flex flex-row justify-between max-w-screen-xs items-start">
                         <div className="w-fit">
                             <h1 className="text-xl font-bold mr-2 text-whiteT1">
-                                Resenha dos manos!
+                                {name}
                             </h1>
                             <p className="text-sm mb-4 text-purpleT5">
-                                Por: <b>João Davi</b>
+                                Por: <b>{host}</b>
                             </p>
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
@@ -141,13 +172,13 @@ export default function Invite() {
                         <div className="flex flex-row justify-left gap-6 w-full h-fit">
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
                                 <h1 className="font-bold">
-                                    {'Dia '+date}
+                                    {'Dia '+day}
                                 </h1>
                                 <h1>  {'de ' + month} </h1>
                             </div>
                             <div className="flex-column justify-left text-purple-100 items-center px-2">
                                 <h1 className="font-bold">
-                                    {day}
+                                    {dayOfWeek}
                                 </h1>
                                 <h1>
                                     {'às ' + hour}
@@ -208,34 +239,6 @@ export default function Invite() {
                                 <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
                                     <UserPortrait image={defaultImage} name={'Lucas Silva'} />
                                     <UserPortrait image={defaultImage} name={'Pedro Oliveira'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Mateus Santos'} />
-                                    <UserPortrait image={defaultImage} name={'Rafaela Almeida'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Fernanda Costa'} />
-                                    <UserPortrait image={defaultImage} name={'Camila Gonçalves'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Gustavo Pereira'} />
-                                    <UserPortrait image={defaultImage} name={'Carolina Souza'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Ricardo Rodrigues'} />
-                                    <UserPortrait image={defaultImage} name={'Amanda Oliveira'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Mariana Santos'} />
-                                    <UserPortrait image={defaultImage} name={'Guilherme Alves'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Patricia Lima'} />
-                                    <UserPortrait image={defaultImage} name={'Daniel Souza'} />
-                                </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    <UserPortrait image={defaultImage} name={'Juliana Ferreira'} />
-                                    <UserPortrait image={defaultImage} name={'Renato Oliveira'} />
                                 </div>
                             </div>
                             <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
