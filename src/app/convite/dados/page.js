@@ -7,20 +7,88 @@ import Back from '@/src/components/Back';
 import AmountSelector from '@/src/components/AmountSelector';
 import Checker from '@/src/components/Checker';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
+import React, { useEffect } from 'react';
+
 export const metadata = {
     title: 'Resenha.app • Dados',
     description: 'Venha fazer suas resenhas!',
 }
 
 export default function Info() {
+    const code = Cookies.get('code');
+
     const options = ['Pix', 'Cartão', 'Dinheiro'];
+
     const [amount, setAmount] = useState(1);
-    const pricePerItem = 20;
-    const date = '10/10/2021';
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [method, setMethod] = useState('');
+    const [data, setData] = useState(null);
+    const [minor, setMinor] = useState(false);
+
+    const handleNextClick = () => {
+        const normalizedStr = method.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const formatted = normalizedStr.toLowerCase();
+        
+        window.location.href = formatted;
+    };
+
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+    };
+  
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
 
     const handleAmountChange = (newAmount) => {
         setAmount(newAmount);
     };
+
+    const handleSelectChange = (event) => {
+        setMethod(event.target.value);
+    };
+
+    const handleCheckerChange = (event) => {
+        const isChecked = event.target.checked;
+        setMinor(isChecked);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } 
+        
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: code });
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return <p>Loading...</p>;
+    }
+
+    const { pricePerItem, month, year, day, confirmed, maxguests, hour, address, host, title, description, dayOfWeek, users } = data;
 
     const price = pricePerItem * amount;
 
@@ -39,7 +107,7 @@ export default function Info() {
                         <h2 className="text-xl text-whiteT1 text-left font-bold">Você está comprando:</h2>
                         <div className='flex flex-row'>
                             <div>
-                                <p className="text-2md text-whiteT1 text-left font-normal">Resenha dos manos</p>
+                                <p className="text-2md text-whiteT1 text-left font-normal">{title}</p>
                             </div>
                             <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-2 ring-purpleT3'>
                                 <p className="text-sm text-whiteT1 text-left font-normal">{amount}x</p>
@@ -48,19 +116,18 @@ export default function Info() {
                         </div>
                     </div>
                     <div className="flex flex-col mt-4 mb-12 gap-4 w-full">
-                        <InputField placeholder="Nome" showIcon={true} Icon="person" />
-                        <InputField placeholder="E-mail" showIcon={true} Icon="mail" />
+                        <InputField placeholder="Nome" showIcon={true} Icon="person" value={name} action={handleNameChange} />
+                        <InputField placeholder="E-mail" showIcon={true} Icon="mail" value={email} action={handleEmailChange} />
                         <div className="flex bg-whiteT1 ring-2 px-4 ring-whiteT2 ring-inset rounded-2xl h-14 flex-row items-center justify-between">
                             <h2 className="text-purpleT2 text-2md font-normal">Entradas</h2>
                             <AmountSelector onChange={handleAmountChange} className="text-purpleT1" />
                         </div>
-                        <Checker labelText={`Tenho mais de 18 anos.`} showLabel={true} startChecked={false} />
-
-                        <Dropdown showIcon={true} Icon="coin" options={options} placeholder='Forma de pagamento' />
+                        <Checker labelText={`Tenho mais de 18 anos.`} showLabel={true} startChecked={false} action={handleCheckerChange} />
+                        <Dropdown showIcon={true} Icon="coin" options={options} action={handleSelectChange} placeholder='Forma de pagamento' />
                     </div>
                 </div>
                 <div className="flex flex-col mb-4 w-full">
-                <Button label={'Próximo'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+                    <Button label={'Próximo'} icon={'arrow'} action={handleNextClick} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
                 <div className="flex items-center justify-end">
                     <p className="mr-1">Tem uma conta?</p>

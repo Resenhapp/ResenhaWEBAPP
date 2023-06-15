@@ -1,8 +1,13 @@
+'use client';
 
 import Button from '@/src/components/Button';
 import CopyInput from '@/src/components/CopyInput';
 import Timer from '@/src/components/Timer';
 import Back from '@/src/components/Back';
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useState } from "react";
+import Cookies from 'js-cookie';
 
 export const metadata = {
     title: 'Resenha.app • Pix',
@@ -10,6 +15,46 @@ export const metadata = {
 }
 
 export default function Pix() {
+    const [data, setData] = useState(null);
+
+    const code = Cookies.get('code');
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } 
+        
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'tryToCreateGuest', method: "pix", code: code, name: "", birth: "", email: "", charge: ""});
+            console.log(response);
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return <p>Loading...</p>;
+    }
+
+    const { charge } = data;
+
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">
             <section className="flex flex-col items-center w-full max-w-md p-4">

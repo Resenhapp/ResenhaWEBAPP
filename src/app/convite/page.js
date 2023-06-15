@@ -6,6 +6,7 @@ import RoundButton from "@/src/components/RoundButton";
 import { useState } from "react";
 import UserPortrait from "@/src/components/UserPortrait";
 import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 export default function Invite() {
@@ -14,6 +15,13 @@ export default function Invite() {
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [data, setData] = useState(null);
+
+    const handleNextClick = () => {
+        Cookies.set('code', code);
+
+        window.location.href = 'convite/dados/';
+    };
+
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
     };
@@ -50,7 +58,7 @@ export default function Invite() {
         return <p>Loading...</p>;
     }
 
-    const { price, month, year, day, confirmed, maxguests, hour, address, host, name, description, dayOfWeek, users } = data;
+    const { pricePerItem, month, year, day, confirmed, maxguests, hour, address, host, title, description, dayOfWeek, users } = data;
 
     const renderDescription = () => {
         if (isExpanded) {
@@ -113,8 +121,8 @@ export default function Invite() {
 
     const handleShare = () => {
         const shareData = {
-            title: name,
-            text: `Confira essa incrível ${name}!`,
+            title: title,
+            text: `Confira essa incrível ${title}!`,
             url: "https://example.com/resenha",
         };
 
@@ -160,7 +168,7 @@ export default function Invite() {
                     <div className="w-full flex flex-row justify-between max-w-screen-xs items-start">
                         <div className="w-fit">
                             <h1 className="text-xl font-bold mr-2 text-whiteT1">
-                                {name}
+                                {title}
                             </h1>
                             <p className="text-sm mb-4 text-purpleT5">
                                 Por: <b>{host}</b>
@@ -168,7 +176,7 @@ export default function Invite() {
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
                             <h1 className="text-purpleT2 text-center font-bold">
-                                <span className="mr-1">R$</span>{price}
+                                <span className="mr-1">R$</span>{pricePerItem}
                             </h1>
                         </div>
                     </div>
@@ -225,7 +233,7 @@ export default function Invite() {
                                     <Button
                                         label="Tô dentro!"
                                         icon="arrow"
-                                        action={() => {/* insert action here */ }}
+                                        action={handleNextClick}
                                         iconSide='right'
                                         height={1}
                                         width={1}

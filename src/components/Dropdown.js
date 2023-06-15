@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Dropdown = ({ placeholder = 'Escolha uma opção', showIcon = false, Icon, options = [] }) => {
+const Dropdown = ({ placeholder = 'Escolha uma opção', action, showIcon = false, Icon, options = [] }) => {
   return (
     <div className="relative h-14 ring-2 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
       {showIcon && Icon && (
@@ -21,6 +21,7 @@ const Dropdown = ({ placeholder = 'Escolha uma opção', showIcon = false, Icon,
       <select
         className={`pl-3 pr-2 block w-[88%] bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-purpleT1 placeholder-purpleT5 ${showIcon ? 'pl-10' : ''
           }`}
+        onChange={action}
       >
         <option value="" disabled selected>{placeholder}</option>
         {options.map((option, index) => (

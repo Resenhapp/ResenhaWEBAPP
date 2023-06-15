@@ -15,6 +15,14 @@ $iv = chr(0x1) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0)
 $method = 'aes-256-cbc';
 $enckey = 'lifeisaparty';
 
+if ($root_directory == "C:/xampp/htdocs") {
+  $pagarmeKey = "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og==";
+}
+
+else {
+  $pagarmeKey = "c2tfcU5ENEpOMERpMkk0R205Qjo=";
+}
+
 global $enckey;
 
 function queryDB($query) {
@@ -180,6 +188,28 @@ function getIp() {
   return $ip;
 }
 
+function request_pagarme($data) {
+  global $pagarmeKey;
+
+  $ch = curl_init('https://api.pagar.me/core/v5/orders');
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Authorization: Basic '.$pagarmeKey,
+      'Accept: application/json')
+  );
+
+  $result = curl_exec($ch);
+
+  curl_close($ch);
+
+  $array = json_decode($result, true);
+
+  return $array;
+}
+
 if (isset($_POST['function'])) {
   $function = $_POST['function'];
   switch ($function) {
@@ -191,8 +221,6 @@ if (isset($_POST['function'])) {
       $result = queryDBRows($query);
       if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
-            $price = number_format($row["price"], 2, ',', '.');
-    
             $host = $row["host"];
     
             $query = "SELECT name FROM users WHERE id = '$host'";
@@ -221,7 +249,7 @@ if (isset($_POST['function'])) {
             }
     
             $data = array(
-                'price' => $price,
+                'pricePerItem' => $row["price"],
                 'day' => $day,
                 'month' => $month,
                 'year' => $year,
@@ -231,7 +259,7 @@ if (isset($_POST['function'])) {
                 'hour' => $row["time"],
                 'address' => $row["address"],
                 'host' => $host,
-                'name' => $row["name"],
+                'title' => $row["name"],
                 'description' => $row["description"],
                 'users' => $users
             );
@@ -252,7 +280,151 @@ if (isset($_POST['function'])) {
 
       break;
     
+    case 'tryToCreateGuest':
+      $party = $_POST['code'];
+      $name = $_POST['name'];
+      $birth = $_POST['birth'];
+      $email = $_POST['email'];
+      $charge = $_POST['charge'];
+      $method = $_POST['method'];
+
+      $date = date("d/m/Y H:i");
+      
+      $query = "SELECT price FROM parties WHERE code = '$party'";
+      $price = queryDB($query)[0];
+
+      do {
+        $code = rand(1000, 9999);
+        $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
+        $result = queryDBRows($query);
+      } while (mysqli_num_rows($result) > 0);
+
+      if ($method == "cartao") {
+        $paid = "1";
+      }
+
+      else if ($method == "pix") {
+        $req = [
+            "items" => [
+                [
+                    "amount" => $price * 100,
+                    "description" => "Resenha.app",
+                    "quantity" => 1
+                ]
+            ],
+            "customer" => [
+                "name" => $name,
+                "email" => $email,
+                "type" => "individual",
+                "document" => "02332277099",
+                "phones" => [
+                    "mobile_phone" => [
+                        "country_code" => "55",
+                        "number" => "997722334",
+                        "area_code" => "51"
+                    ]
+                ]
+            ],
+            "payments" => [
+                [
+                    "payment_method" => "pix",
+                    "pix" => [
+                        "expires_in" => "1800",
+                        "additional_information" => [
+                            [
+                                "name" => "Código da Resenha: ".$party,
+                                "value" => "1"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    
+        $array = request_pagarme(json_encode($req));
+    
+        $qrcode = $array["charges"][0]["last_transaction"]["qr_code"];
+        $qrcodeurl = $array["charges"][0]["last_transaction"]["qr_code_url"];
+    
+        $charge = $array["charges"][0]["id"];
+      }
+
+      else {
+        $paid = "0";
+      }
+
+      if ($method != "pix") {
+        //send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
+      }
+
+      $used = "0";
+      $deleted = "0";
+
+      $query = "INSERT INTO guests (party, name, birth, email, method, date, code, charge, paid, used, deleted) VALUES ('$party', '$name', '$birth', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
+      queryNR($query);
+
+      $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
+      $guest = queryDB($query)[0];
+
+      $query = "SELECT price FROM parties WHERE code = '$party'";
+      $price = queryDB($query)[0];
+
+      $price = number_format($price, 2, ',', '.');
+
+      $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
+          
+      $embed = [
+          'title' => 'Novo visitante registrado!',
+          'color' => hexdec('7d00ff'),
+          'fields' => [
+              [
+                  'name' => 'Nome',
+                  'value' => $name,
+                  'inline' => false
+              ],
+              [
+                  'name' => 'Email',
+                  'value' => $email,
+                  'inline' => false
+              ],
+              [
+                  'name' => 'Método',
+                  'value' => $method,
+                  'inline' => false
+              ],
+              [
+                  'name' => 'Preço',
+                  'value' => 'R$ '.$price,
+                  'inline' => false
+              ],
+              [
+                  'name' => 'Resenha',
+                  'value' => $party,
+                  'inline' => false
+              ],
+              [
+                  'name' => 'Código',
+                  'value' => $code,
+                  'inline' => false
+              ],
+          ]
+      ];
+
+      send_message($embed, $webhook);
+
+      register_log($guest, "guest", "guest_created", "ID: ".$guest);
+
+      $data = array(
+        'guest' => $guest,
+        'charge' => $charge,
+        'status' => "success"
+      );
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
+      break;
     case 'tryToAuthenticate':
+
       $email = $_POST['email'];
       $password = $_POST['password'];
       
