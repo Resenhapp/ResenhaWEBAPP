@@ -97,20 +97,20 @@ export default function Invite() {
         return /iPad|iPhone|iPod/.test(navigator.userAgent);
     };
 
-    const getAppleMapsURL = () => {
-        const address = encodeURIComponent('Rua Ramiro barcelos 1450');
-        return `maps://maps.apple.com/?q=${address}`;
+    const getAppleMapsURL = (address) => {
+        var newAddress = encodeURIComponent(address);
+        return `maps://maps.apple.com/?q=${newAddress}`;
     };
 
     const getGoogleMapsURL = () => {
-        const address = encodeURIComponent('Rua Ramiro barcelos 1450');
-        return `https://www.google.com/maps/search/?api=1&query=${address}`;
+        var newAddress = encodeURIComponent(address);
+        return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
     };
 
     const handleShare = () => {
         const shareData = {
-            title: "Resenha dos manos!",
-            text: "Confira essa incrível resenha dos manos!",
+            title: name,
+            text: `Confira essa incrível ${name}!`,
             url: "https://example.com/resenha",
         };
 
