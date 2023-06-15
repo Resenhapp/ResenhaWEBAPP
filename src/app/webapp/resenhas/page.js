@@ -3,6 +3,7 @@ import OutlinedButton from '@/src/components/OutlinedButton';
 import MyEventsBanner from '@/src/components/MyEventsBanner';
 import Button from '@/src/components/Button';
 import NotificationsButton from '@/src/components/NotificationsButton';
+import Notifications from '@/src/components/Notifications';
 import MenuButton from '@/src/components/MenuButton';
 import Menu from '@/src/components/Menu';
 import React, { useState } from 'react';
@@ -13,16 +14,21 @@ export const metadata = {
 
 export default function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isNotificationsOpen, setNotificationsOpen] = useState(false);
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+    const toggleNotifications = () => {
+        setNotificationsOpen(!isNotificationsOpen);
+    }
 
     return (
         <div className='flex flex-col w-screen h-screen'>
             <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
             <MenuButton toggleMenu={toggleMenu} />
                 <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                <NotificationsButton dotVisible={false} />
+                <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true}/>
+                <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
             </div>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
