@@ -1,9 +1,13 @@
+'use client';
+
 import InputField from '@/src/components/InputField';
 import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import GoogleButton from '@/src/components/GoogleButton';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
+import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 
 export const metadata = {
   title: 'Resenha.app • Cadastro',
@@ -11,6 +15,24 @@ export const metadata = {
 }
 
 export default function Cadastro() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleNextClick = () => {
+    Cookies.set('email', email);
+    Cookies.set('password', password);
+  
+    window.location.href = 'cadastro/pessoal/';
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4">
       <section className="flex flex-col items-center w-full max-w-md p-4">
@@ -28,19 +50,18 @@ export default function Cadastro() {
             <path d="M221.091 43V9.74667H227.115V12.6133H227.989C228.54 11.6896 229.398 10.8774 230.564 10.1767C231.73 9.44407 233.398 9.07778 235.568 9.07778C237.511 9.07778 239.309 9.55556 240.96 10.5111C242.612 11.4348 243.94 12.8044 244.944 14.62C245.948 16.4356 246.45 18.6333 246.45 21.2133V21.9778C246.45 24.5578 245.948 26.7556 244.944 28.5711C243.94 30.3867 242.612 31.7722 240.96 32.7278C239.309 33.6515 237.511 34.1133 235.568 34.1133C234.11 34.1133 232.88 33.9382 231.876 33.5878C230.904 33.2693 230.111 32.8552 229.495 32.3456C228.912 31.8041 228.443 31.2626 228.087 30.7211H227.212V43H221.091ZM233.722 28.8578C235.633 28.8578 237.203 28.2685 238.434 27.09C239.697 25.8796 240.329 24.1278 240.329 21.8344V21.3567C240.329 19.0633 239.697 17.3274 238.434 16.1489C237.171 14.9385 235.6 14.3333 233.722 14.3333C231.843 14.3333 230.273 14.9385 229.01 16.1489C227.746 17.3274 227.115 19.0633 227.115 21.3567V21.8344C227.115 24.1278 227.746 25.8796 229.01 27.09C230.273 28.2685 231.843 28.8578 233.722 28.8578Z" fill="#F1F1F1" />
             <path d="M249.641 43V9.74667H255.665V12.6133H256.54C257.09 11.6896 257.948 10.8774 259.114 10.1767C260.28 9.44407 261.948 9.07778 264.118 9.07778C266.061 9.07778 267.859 9.55556 269.51 10.5111C271.162 11.4348 272.49 12.8044 273.494 14.62C274.498 16.4356 275 18.6333 275 21.2133V21.9778C275 24.5578 274.498 26.7556 273.494 28.5711C272.49 30.3867 271.162 31.7722 269.51 32.7278C267.859 33.6515 266.061 34.1133 264.118 34.1133C262.661 34.1133 261.43 33.9382 260.426 33.5878C259.454 33.2693 258.661 32.8552 258.046 32.3456C257.463 31.8041 256.993 31.2626 256.637 30.7211H255.762V43H249.641ZM262.272 28.8578C264.183 28.8578 265.754 28.2685 266.984 27.09C268.247 25.8796 268.879 24.1278 268.879 21.8344V21.3567C268.879 19.0633 268.247 17.3274 266.984 16.1489C265.721 14.9385 264.15 14.3333 262.272 14.3333C260.394 14.3333 258.823 14.9385 257.56 16.1489C256.297 17.3274 255.665 19.0633 255.665 21.3567V21.8344C255.665 24.1278 256.297 25.8796 257.56 27.09C258.823 28.2685 260.394 28.8578 262.272 28.8578Z" fill="#F1F1F1" />
           </svg>
-
         </div>
         <div className="flex flex-col mb-0 w-full">
           <h2 className="text-2xl text-whiteT1 font-bold mb-2">Criar conta</h2>
         <div className="flex flex-col mb-8 gap-4 w-full">
-          <InputField placeholder="Email" showIcon={true} Icon="mail" />
-          <PasswordField placeholder="Senha" showIcon={true} />
+          <InputField placeholder="Email" showIcon={true} Icon="mail" value={email} action={handleEmailChange}/>
+          <PasswordField placeholder="Senha" showIcon={true} value={password} action={handlePasswordChange}/>
           <PasswordField placeholder="Senha" showIcon={true} />
         </div>
         </div>
 
         <div className="flex flex-col mb-4 w-full">
-          <Button label="Próximo" icon="arrow"/>
+          <Button action={handleNextClick} label="Próximo" icon="arrow"/>
         </div>
         <div className="flex flex-col mb-2 mt-10 w-full">
           <h1 className="text-center text-sm font-regular mb-0">Ou</h1>

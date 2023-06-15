@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({ placeholder, showIcon = false, Icon }) => {
+const InputField = ({ placeholder, value, action, showIcon = false, Icon }) => {
   return (
     <div className="relative h-14 ring-2 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
       {showIcon && Icon && (
@@ -74,9 +74,12 @@ const InputField = ({ placeholder, showIcon = false, Icon }) => {
       )}
       <input
         type="text"
-        className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-grayT0 ${showIcon ? 'pl-10' : ''
-          }`}
+        className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-grayT0 ${
+          showIcon ? 'pl-10' : ''
+        }`}
         placeholder={placeholder}
+        value={value}
+        onChange={action}
       />
     </div>
   );

@@ -55,6 +55,11 @@ function encrypt($text, $pkey) {
     return base64_encode(openssl_encrypt($text, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $IV)."-[--IV-[-".$IV);
 }
 
+function hash256($string) {
+  $hash = hash("sha256", $string);
+  return $hash;
+}
+
 function convertMonth($month)
 {
     $months = array(
@@ -91,6 +96,88 @@ function getDayOfWeek($dateString)
     );
 
     return $dayNames[$dayOfWeek] ?? $dayOfWeek;
+}
+
+function check_email($email) {
+  $query = "SELECT * FROM users WHERE email = '$email'";
+  $result = queryDBRows($query);
+  $num_rows = mysqli_num_rows($result);
+  
+  if ($num_rows > 0) {
+      return "email_registered";
+  } 
+}
+
+function check_cpf($cpf) {
+  $query = "SELECT * FROM users WHERE cpf = '$cpf'";
+  $result = queryDBRows($query);
+  $num_rows = mysqli_num_rows($result);
+  
+  if ($num_rows > 0) {
+      return "cpf_registered";
+  } 
+}
+
+function check_password($password) {
+  if (strlen($password) < 8) {
+      return "small_password";
+  }
+  
+  elseif (!preg_match("/[0-9]/", $password)) {
+      return "numeric_password";
+  }
+  
+  elseif (!preg_match("/[a-zA-Z]/", $password)) {
+      return "alphabetic_password";
+  }
+  
+  elseif (!preg_match("/[!@#$%^&*()\-_=+{};:,<.>]/", $password)) {
+      return "special_password";
+  }
+}
+
+function random_code($length) {
+  $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  $charactersLength = strlen($characters);
+  $code = '';
+  
+  for ($i = 0; $i < $length; $i++) {
+      $randomIndex = random_int(0, $charactersLength - 1);
+      $code .= $characters[$randomIndex];
+  }
+
+  return $code;
+}
+
+function register_log($user, $type, $action, $description = "NONE") {
+  $variables = array(&$user, &$type, &$action, &$description);
+
+  foreach ($variables as &$var) {
+      $var = sanitize($var);
+  }
+
+  date_default_timezone_set('America/Sao_Paulo');
+  $date = date('d/m/Y H:i');
+
+  $query = "INSERT INTO logs (user, type, action, description, date) VALUES ('$user', '$type', '$action', '$description', '$date')";
+  queryNR($query);
+}
+
+function send_message($embed, $webhook) {
+  $payload = json_encode(array('content' => '', 'embeds' => array($embed)));
+
+  $ch = curl_init($webhook);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $response = curl_exec($ch);
+  curl_close($ch);
+}
+
+function getIp() {
+  $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+
+  return $ip;
 }
 
 if (isset($_POST['function'])) {
@@ -154,13 +241,174 @@ if (isset($_POST['function'])) {
           }
         } 
       else {
-        $response = 'No data found for the provided code';
-        echo json_encode($response);
+        $data = array(
+          'error' => "no_data",
+          'status' => "fail"
+        );
+  
+        header('Content-Type: application/json');
+        echo json_encode($data);
+      }
+
+      break;
+    
+    case 'tryToAuthenticate':
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+      
+      $password_hash = hash256($password);
+    
+      $query = "SELECT id, token, password FROM users WHERE email = '$email'";
+      $user = queryDB($query);
+    
+      if (!$user) {
+          $data = array(
+            'error' => "nonexistent_user",
+            'status' => "fail"
+          );
+    
+          header('Content-Type: application/json');
+          echo json_encode($data);
+      } 
+    
+      elseif ($user["password"] !== $password_hash) {
+          $data = array(
+            'error' => "invalid_credentials",
+            'status' => "fail"
+          );
+    
+          header('Content-Type: application/json');
+          echo json_encode($data);
+      } 
+      
+      elseif (substr($user["token"], 0, 2) == "ec") {
+          $data = array(
+            'error' => "unconfirmed_email",
+            'status' => "fail"
+          );
+    
+          header('Content-Type: application/json');
+          echo json_encode($data);
+      } 
+      
+      elseif ($user) {
+          $user = $user["id"];
+          $validator = hash256($email.$password_hash);
+    
+          $data = array(
+            'user' => $user,
+            'validator' => $validator
+          );
+
+          header('Content-Type: application/json');
+          echo json_encode($data);
+      } 
+    
+      else {
+          $data = array(
+            'error' => "unexpected_error",
+            'status' => "fail"
+          );
+    
+          header('Content-Type: application/json');
+          echo json_encode($data);
       }
       break;
+    
+    case 'tryToCreateUser':
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+      $name = $_POST['name'];
+      $cpf = $_POST['cpf'];
+      $birth = $_POST['birth'];
+
+      $error = check_email($email) or check_password($password) or check_cpf($cpf);
+      
+      if (!isset($error)) {
+          $token = "ec-".encrypt($email, $enckey);
+
+          $api = random_code(24);
+
+          $date = date('d/m/Y H:i');
+
+          $registration = getIp();
+
+          $last = getIp();
+
+          $pix = "NONE";
+
+          $tax = 10;
+
+          $password_hash = hash256($password);
+
+          $confirmation_link = "https://resenha.app/api/?token=$token";
+
+          //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
+
+          if (!$error) {
+              $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
+              queryNR($query);
+          
+              $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
+              $user = queryDB($query)[0];
+          
+              $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
+              queryNR($query);
+          
+              $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
+          
+              $embed = [
+                  'title' => 'Novo usuário criado!',
+                  'color' => hexdec('7d00ff'),
+                  'fields' => [
+                      [
+                          'name' => 'Nome',
+                          'value' => $name,
+                      ],
+                      [
+                          'name' => 'Email',
+                          'value' => $email,
+                      ],
+                      [
+                          'name' => 'IP',
+                          'value' => $registration,
+                      ]
+                  ]
+              ];
+          
+              send_message($embed, $webhook);
+          
+              register_log($user, "host", "user_registered");
+
+              $data = array(
+                'user' => $user,  
+                'status' => "success"
+              );
+    
+              header('Content-Type: application/json');
+              echo json_encode($data);
+          }
+      }
+
+      else {
+        $data = array(
+          'error' => $error,
+          'status' => "fail"
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
+      }
+
+      break;
     default:
-      $response = 'Invalid function specified';
-      echo json_encode($response);
+      $data = array(
+        'error' => "invalid_function",
+        'status' => "fail"
+      );
+
+      header('Content-Type: application/json');
+      echo json_encode($data);
       break;
   }
 }

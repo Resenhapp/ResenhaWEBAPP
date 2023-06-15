@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
-const PasswordField = ({ placeholder, showIcon }) => {
+
+const PasswordField = ({ placeholder, showIcon, value, action }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePassword = () => {
@@ -21,6 +22,8 @@ const PasswordField = ({ placeholder, showIcon }) => {
         className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5 ${showIcon ? 'pl-10' : ''
           }`}
         placeholder={placeholder}
+        value={value}
+        onChange={action}
       />
       <button
         type="button"

@@ -1,3 +1,5 @@
+'use client';
+
 import InputField from '@/src/components/InputField';
 import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
@@ -5,6 +7,9 @@ import GoogleButton from '@/src/components/GoogleButton';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
 import Back from '@/src/components/Back';
+import Cookies from 'js-cookie';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 export const metadata = {
   title: 'Resenha.app • Pessoal',
@@ -12,6 +17,48 @@ export const metadata = {
 }
 
 export default function Personal() {
+  const axios = require('axios');
+  const qs = require('qs');
+
+  const email = Cookies.get('email');
+  const password = Cookies.get('password');
+
+  const [name, setName] = useState('');
+  const [cpf, setCPF] = useState('');
+  const [birth, setBirth] = useState('');
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleCPFChange = (event) => {
+    setCPF(event.target.value);
+  };
+
+  const handleBirthChange = (event) => {
+    setBirth(event.target.value);
+  };
+
+  const handleClick = async () => {
+    try {
+      const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
+      console.log(response);
+    } 
+    
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+  const makeRequest = async (url, data) => {
+    try {
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
+    } catch (error) {
+      throw new Error(`Request failed: ${error}`);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4">
       <section className="flex flex-col items-center w-full max-w-md p-4">
@@ -36,9 +83,9 @@ export default function Personal() {
         <div className="flex flex-col mb-0 w-full">
           <h2 className="text-2xl text-whiteT1 font-bold mb-2">Dados pessoais</h2>
           <div className="flex flex-col mb-8 gap-4 w-full">
-            <InputField placeholder="Seu nome" showIcon={true} Icon="person" />
-            <InputField placeholder="CPF" showIcon={true} Icon="id" />
-            <InputField placeholder="Data de nacimento" showIcon={true} Icon="calendar" />
+            <InputField placeholder="Seu nome" showIcon={true} Icon="person" value={name} action={handleNameChange} />
+            <InputField placeholder="CPF" showIcon={true} Icon="id" value={cpf} action={handleCPFChange} />
+            <InputField placeholder="Data de nacimento" showIcon={true} Icon="calendar" value={birth} action={handleBirthChange} />
             <div className="flex-col items-center justify-center">
               <p className="mr-1 text-center text-[10px]">utilizamos estes dados para que você possa receber os pagamentos pelas suas resenhas. para saber mais <Link href="/login" className="font-bold">toque aqui</Link>.</p>
             </div>
@@ -46,7 +93,7 @@ export default function Personal() {
         </div>
 
         <div className="flex flex-col mb-4 w-full">
-          <Button label="Criar conta!" icon="arrow" />
+          <Button action={handleClick} label="Criar conta!" icon="arrow" />
         </div>
         <div className="flex flex-col mb-2 mt-10 w-full">
           <h1 className="text-center text-sm font-regular mb-0">Ou</h1>

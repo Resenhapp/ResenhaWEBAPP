@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useClient } from 'react';
 
 const Toggle = ({ labelText, showLabel, startToggled, showQuestion, questionAction, textColor }) => {
   return (
