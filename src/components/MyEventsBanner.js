@@ -3,12 +3,11 @@ import Image from 'next/image';
 import RoundButton from './RoundButton';
 
 const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
-
-
     return (
         <div className='flex flex-col items-center'>
-            <div className="z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-2 ring-inset bg-gradient-to-t from-purpleT3 ring-whiteT1 rounded-2xl pb-3 px-4">
-                <div>
+            <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-2 ring-inset bg-gradient-to-t from-purpleT3 ring-whiteT1 rounded-2xl">
+                <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' />
+                <div className='p-4'>
                     <h1 className="font-bold text-xl text-white">{eventName}</h1>
                     <div className='flex flex-row gap-2 items-center'>
                         <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,7 +22,7 @@ const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax
                         <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
                     </div>
                 </div>
-                <div>
+                <div className='p-4'>
                     <RoundButton icon={'share'} />
                 </div>
             </div>

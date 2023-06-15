@@ -1,16 +1,17 @@
-'use client'
+import React from 'react';
 import Button from '@/src/components/Button';
 
-export const metadata = {
-    title: 'Resenha.app • Menu',
-    description: 'Venha fazer suas resenhas!',
-}
+const Menu = ({ isOpen, toggleMenu }) => {
 
-export default function Menu() {
     return (
-        <div className='flex flex-col w-screen h-screen'>
-            <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
+        <div className={`fixed top-0 left-0 w-full h-full bg-purpleT1 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : '-translate-x-full'}`} >
+            <div className="flex flex-row justify-between items-center w-full mt-0 px-6 pt-20">
                 <h1 className='text-2xl px-4 text-purpleT5 font-light'>Menu</h1>
+                <button onClick={toggleMenu}>
+                    <svg width="15" height="15" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6M6 6L1 11M6 6L11 11M6 6L11 1" stroke="#F1F1F1" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
             </div>
             <section className="flex flex-col flex-start items-center w-full max-w-md p-4 gap-4">
             </section>
@@ -18,7 +19,7 @@ export default function Menu() {
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
-                            <div className='h-fit w-full gap-2 mt-16 flex flex-col'>
+                            <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <Button label={'Perfil'} icon={'user'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Carteira'} icon={'wallet'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Resenhas'} icon={'thunder'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
@@ -35,4 +36,6 @@ export default function Menu() {
             </div>
         </div>
     );
-}
+};
+
+export default Menu;

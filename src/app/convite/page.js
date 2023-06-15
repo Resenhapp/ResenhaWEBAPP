@@ -10,8 +10,13 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 export default function Invite() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    let code = '';
+    
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        code = urlParams.get('code');
+        console.log(code);
+    }
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [data, setData] = useState(null);

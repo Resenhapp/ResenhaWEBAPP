@@ -15,6 +15,30 @@ module.exports = {
       boxShadow: {
         glow: '0 0 10px #FF1493',
       },
+      animation: {
+        'zoom-in-out': 'zoom-in-out 5s ease-in-out infinite',
+        'up-down': 'up-down 5s ease-in-out infinite',
+        'left-right': 'left-right 5s ease-in-out infinite',
+        'fade': 'fade 12s ease-in-out infinite',
+      },
+      keyframes: {
+        'zoom-in-out': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.5)' },
+        },
+        'up-down': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        'left-right': { // the left-right keyframes
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(20px)' },
+        },
+        'fade': { // the fade keyframes
+          '0%, 100%': { opacity: '0' },
+          '50%': { opacity: '1' },
+        },
+      },
       colors: {
         blackT1: "#212121",
         blackT2: "#4D4D4D",

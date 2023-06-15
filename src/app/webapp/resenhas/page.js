@@ -1,18 +1,27 @@
+'use client'
 import OutlinedButton from '@/src/components/OutlinedButton';
 import MyEventsBanner from '@/src/components/MyEventsBanner';
 import Button from '@/src/components/Button';
 import NotificationsButton from '@/src/components/NotificationsButton';
 import MenuButton from '@/src/components/MenuButton';
+import Menu from '@/src/components/Menu';
+import React, { useState } from 'react';
 export const metadata = {
     title: 'Resenha.app • Resenhas',
     description: 'Venha fazer suas resenhas!',
 }
 
 export default function Home() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
     return (
         <div className='flex flex-col w-screen h-screen'>
             <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-                <MenuButton />
+            <MenuButton toggleMenu={toggleMenu} />
+                <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
                 <NotificationsButton dotVisible={false} />
             </div>
             <div className="flex flex-col items-center justify-center h-screen px-4">
@@ -24,7 +33,7 @@ export default function Home() {
                                 <OutlinedButton icon={'arrow'} label={'ver todas'} />
                             </div>
                             <div className='w-full h-full flex flex-col'>
-                                <MyEventsBanner eventName={'Festa do João'} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
+                                <MyEventsBanner eventName={'Festa do João'} eventImage={'https://media.istockphoto.com/id/1201443405/pt/foto/people-enjoying-asado-party-at-backyard.jpg?s=170667a&w=0&k=20&c=CuVxJvC6Xj9TFWsW0M7EpXHU_JwKDAwnSpQVemQ72ew='} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
                             </div>
                         </div>
                     </div>
