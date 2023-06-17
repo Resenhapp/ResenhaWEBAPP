@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1, textAlign = 'center' }) => {
+const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1, textAlign = 'center', active = true }) => {
     // map height and width to the respective Tailwind classes
     const sizes = {
         1: 'w-full',
@@ -97,7 +97,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         )
     }
 
-    const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white h-16 font-bold py-2 px-4 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} max-w-[500px]`;
+    const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white h-16 font-bold py-2 px-4 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} ${active ? "bg-whiteT1" : "deactivated"} max-w-[500px]`;
 
     const textStyles = `flex-1 text-${textAlign} ${icon && iconSide === 'right' ? 'ml-7' : 'mr-7'}`;
 

@@ -15,12 +15,17 @@ module.exports = {
         glow: '0 0 10px #FF1493',
       },
       animation: {
-        'zoom-in-out': 'zoom-in-out 15s ease-in-out infinite',
-        'up-down': 'up-down 15s ease-in-out infinite',
-        'left-right': 'left-right 15s ease-in-out infinite',
-        'fade': 'fade 15s ease-in-out infinite',
+        'zoom-in-out': 'zoom-in-out 5s ease-in-out infinite',
+        'up-down': 'up-down 5s ease-in-out infinite',
+        'left-right': 'left-right 5s ease-in-out infinite',
+        'fade': 'fade 5s ease-in-out infinite',
+        fadeout: 'fadeout 3s',
       },
       keyframes: {
+        fadeout: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
         'zoom-in-out': {
           '0%, 100%': { transform: 'scale(1.5)' },
           '50%': { transform: 'scale(1.8)' },
@@ -37,6 +42,7 @@ module.exports = {
           '0%, 100%': { opacity: '0' },
           '50%': { opacity: '1' },
         },
+
       },
       colors: {
         blackT1: "#212121",

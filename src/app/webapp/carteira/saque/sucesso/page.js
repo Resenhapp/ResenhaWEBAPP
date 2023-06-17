@@ -1,13 +1,16 @@
 'use client'
+import EditButton from '@/src/components/EditButton';
 import NotificationsButton from '@/src/components/NotificationsButton';
 import Notifications from '@/src/components/Notifications';
 import MenuButton from '@/src/components/MenuButton';
 import Menu from '@/src/components/Menu';
 import React, { useState, useRef } from 'react';
+import NumberDisplay from '@/src/components/NumberDisplay';
+import Interest from '@/src/components/Interest';
+import MoneyDisplay from '@/src/components/MoneyDisplay';
 import Button from '@/src/components/Button';
+import InputField from '@/src/components/InputField';
 import MoneyInput from '@/src/components/MoneyInput';
-import WithdrawError from '@/src/components/WithdrawError';
-
 export const metadata = {
     title: 'Resenha.app • Saque',
     description: 'Venha fazer suas resenhas!',
@@ -17,26 +20,25 @@ export default function Wallet() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
     const inputRef = useRef(null);
-    const [errorContent, setErrorContent] = useState(null);
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-    const toggleNotifications = () => setNotificationsOpen(!isNotificationsOpen);
-
-    const handleWithdraw = () => {
-        setErrorContent(null);
-        const withdrawalAmount = inputRef.current;
-        const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
-
-        setTimeout(() => {
-            if (withdrawalAmount < 50) {
-                setErrorContent('O valor mínimo de saque é de R$ 50,00.');
-            } else if (withdrawalAmount > availableAmount) {
-                setErrorContent('Saldo insuficiente.');
-            } else {
-                alert(`The amount to withdraw is R$ ${inputRef.current}`);
-            }
-        }, 1);
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+    const toggleNotifications = () => {
+        setNotificationsOpen(!isNotificationsOpen);
     };
 
+    const handleWithdraw = () => {
+        const withdrawalAmount = parseFloat(inputRef.current.replace(',', '.'));
+        const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
+
+        if (withdrawalAmount > availableAmount) {
+            alert('Insufficient funds');
+        } else if (withdrawalAmount < 50) {
+            alert('The minimum withdrawal amount is 50');
+        } else {
+            alert(`The amount to withdraw is R$ ${inputRef.current}`);
+        }
+    };
 
     var accountName = 'João Davi Souza Nascimento';
     var bankName = 'Banco Inter';
@@ -48,7 +50,7 @@ export default function Wallet() {
             <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
                 <MenuButton toggleMenu={toggleMenu} />
                 <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                <h1 className='text-2xl text-whiteT1 font-bold'>Saque</h1>
+                <h1 className='text-2xl text-whiteT1 font-bold'>Pronto!</h1>
                 <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true} />
                 <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
             </div>
@@ -71,8 +73,7 @@ export default function Wallet() {
                             </div>
                         </div>
                         <div>
-                            <Button label={'Solicitar saque'} icon={'arrow'} action={handleWithdraw} iconSide='right' height={1} width={1} textAlign='left' active={false}/>
-                            {errorContent && <WithdrawError errorContent={errorContent} key={new Date().getTime()} />} {/* Error message will only be displayed if errorContent is not null */}
+                            <Button label={'Solicitar saque'} icon={'arrow'} action={handleWithdraw} iconSide='right' height={1} width={1} textAlign='left' />
                         </div>
                     </div>
                 </section>
