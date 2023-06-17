@@ -15,6 +15,10 @@ const MoneyInput = forwardRef((props, ref) => {
     newValue = parseFloat(newValue.replace(',', '.')).toLocaleString('de-DE', {minimumFractionDigits: 2}).replace('.', '.');
     
     setValue(newValue);
+
+    if (props.onChange) {
+      props.onChange(newValue);
+    }
   };
 
   useImperativeHandle(ref, () => parseFloat(value.replace('.', '').replace(',', '.')));

@@ -21,27 +21,27 @@ export default function Wallet() {
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const toggleNotifications = () => setNotificationsOpen(!isNotificationsOpen);
 
+    var avaliableCash = '1234,00';
+
+    const [withdrawalAmount, setWithdrawalAmount] = useState(0);
+
     const handleWithdraw = () => {
-        setErrorContent(null);
-        const withdrawalAmount = inputRef.current;
         const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
-
-        setTimeout(() => {
-            if (withdrawalAmount < 50) {
-                setErrorContent('O valor mínimo de saque é de R$ 50,00.');
-            } else if (withdrawalAmount > availableAmount) {
-                setErrorContent('Saldo insuficiente.');
-            } else {
-                alert(`The amount to withdraw is R$ ${inputRef.current}`);
-            }
-        }, 1);
+        if (withdrawalAmount < 50) {
+            setErrorContent('O valor mínimo de saque é de R$ 50,00.');
+        } else if (withdrawalAmount > availableAmount) {
+            setErrorContent('Saldo insuficiente.');
+        } else {
+            setErrorContent(null); // Clear the error message when the withdraw is valid
+            alert(`The amount to withdraw is R$ ${withdrawalAmount}`);
+        }
     };
-
 
     var accountName = 'João Davi Souza Nascimento';
     var bankName = 'Banco Inter';
     var accountNumber = '123.123.123-45';
-    var avaliableCash = '1234,00';
+
+    const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
 
     return (
         <div className='flex flex-col w-screen h-screen '>
@@ -65,13 +65,13 @@ export default function Wallet() {
                             <div className='w-full'>
                                 <div className='w-full h-fit ring-inset ring-2 flex flex-row gap-2 ring-purpleT3 bg-purpleT2 rounded-2xl p-4 '>
                                     R$
-                                    <MoneyInput ref={inputRef} />
+                                    <MoneyInput ref={inputRef} onChange={(val) => setWithdrawalAmount(parseFloat(val.replace('.', '').replace(',', '.')))} />
                                 </div>
                                 <p className='text-whiteT1 w-full text-left text-sm p-1'>{'Valor disponível: ' + avaliableCash}</p>
                             </div>
                         </div>
                         <div>
-                            <Button label={'Solicitar saque'} icon={'arrow'} action={handleWithdraw} iconSide='right' height={1} width={1} textAlign='left' active={false}/>
+                            <Button label={'Solicitar saque'} icon={'arrow'} action={handleWithdraw} iconSide='right' height={1} width={1} textAlign='left' active={isWithdrawalValid}/>
                             {errorContent && <WithdrawError errorContent={errorContent} key={new Date().getTime()} />} {/* Error message will only be displayed if errorContent is not null */}
                         </div>
                     </div>
