@@ -20,13 +20,14 @@ export default function Home() {
     };
     const toggleNotifications = () => {
         setNotificationsOpen(!isNotificationsOpen);
-    }
+    };
 
     return (
         <div className='flex flex-col w-screen h-screen'>
             <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-            <MenuButton toggleMenu={toggleMenu} />
+                <MenuButton toggleMenu={toggleMenu} />
                 <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+                <h1 className='text-2xl text-whiteT1 font-bold'>Resenhas</h1>
                 <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true}/>
                 <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
             </div>

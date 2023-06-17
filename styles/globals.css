@@ -45,7 +45,7 @@
 }
 
 .moreffect {
-  background: conic-gradient(from 180deg at 50% 50%, #B9DAFB 0deg, #5957a1 0.04deg, #be20d7 15deg, #9834c3 61.87deg, #B9DAFB 360deg);
+  background: conic-gradient(from 180deg at 50% 50%, #B9DAFB 0deg, #5957a1 0.04deg, #be20d7 15deg, #5c147b 61.87deg, #9539e5 360deg);
 opacity: 0.4;
 filter: blur(50px);
 }

@@ -26,6 +26,7 @@ const Notifications = ({ isOpen, toggleNotifications }) => {
                                     <Notification title={'Confirmado!'} content={'Elias acabou de confirmar a presença! Pagamento no Dinheiro.'} />
                                     <Notification title={'Confirmado!'} content={'Juliana acabou de confirmar a presença! Pagamento via PIX.'} />
                                     <Notification title={'Chegou!'} content={'Um dos seus convidados, João, acabou de chegar! Entrada liberada por Juliano.'} />
+                                    <button className='w-full h-fit px-4 py-5 bg-purpleT2 text-whiteT1 rounded-xl'>Limpar notificações</button>
                                 </div>
                             </div>
                         </div>

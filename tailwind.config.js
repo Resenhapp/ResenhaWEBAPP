@@ -9,32 +9,31 @@ module.exports = {
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       boxShadow: {
         glow: '0 0 10px #FF1493',
       },
       animation: {
-        'zoom-in-out': 'zoom-in-out 5s ease-in-out infinite',
-        'up-down': 'up-down 5s ease-in-out infinite',
-        'left-right': 'left-right 5s ease-in-out infinite',
-        'fade': 'fade 12s ease-in-out infinite',
+        'zoom-in-out': 'zoom-in-out 15s ease-in-out infinite',
+        'up-down': 'up-down 15s ease-in-out infinite',
+        'left-right': 'left-right 15s ease-in-out infinite',
+        'fade': 'fade 15s ease-in-out infinite',
       },
       keyframes: {
         'zoom-in-out': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.5)' },
+          '0%, 100%': { transform: 'scale(1.5)' },
+          '50%': { transform: 'scale(1.8)' },
         },
         'up-down': {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' },
+          '50%': { transform: 'translateY(-150px)' },
         },
-        'left-right': { // the left-right keyframes
-          '0%, 100%': { transform: 'translateX(0)' },
-          '50%': { transform: 'translateX(20px)' },
+        'left-right': {
+          '0%, 100%': { transform: 'translateX(-50px)' },
+          '50%': { transform: 'translateX(100px)' },
         },
-        'fade': { // the fade keyframes
+        'fade': {
           '0%, 100%': { opacity: '0' },
           '50%': { opacity: '1' },
         },
@@ -75,7 +74,7 @@ module.exports = {
         yellowT3: "#EFB520",
         yellowT4: "#EEBF45",
         yellowT5: "#F9DE9A",
-      },      
+      },
     },
     screens: {
       xs: "480px",
