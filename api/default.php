@@ -15,6 +15,8 @@ $iv = chr(0x1) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0)
 $method = 'aes-256-cbc';
 $enckey = 'lifeisaparty';
 
+$root_directory = $_SERVER['DOCUMENT_ROOT'];
+
 if ($root_directory == "C:/xampp/htdocs") {
   $pagarmeKey = "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og==";
 }
@@ -210,9 +212,9 @@ function request_pagarme($data) {
   return $array;
 }
 
-if (isset($_POST['function'])) {
-  $function = $_POST['function'];
-  switch ($function) {
+if (isset($_POST['request'])) {
+  $request = $_POST['request'];
+  switch ($request) {
     case 'getInviteData':
       $code = $_POST['code'];
 
@@ -285,7 +287,6 @@ if (isset($_POST['function'])) {
       $name = $_POST['name'];
       $birth = $_POST['birth'];
       $email = $_POST['email'];
-      $charge = $_POST['charge'];
       $method = $_POST['method'];
 
       $date = date("d/m/Y H:i");
@@ -299,8 +300,12 @@ if (isset($_POST['function'])) {
         $result = queryDBRows($query);
       } while (mysqli_num_rows($result) > 0);
 
+      $paid = "0";
+
       if ($method == "cartao") {
         $paid = "1";
+
+        $charge = "none";
       }
 
       else if ($method == "pix") {
@@ -351,6 +356,8 @@ if (isset($_POST['function'])) {
 
       else {
         $paid = "0";
+
+        $charge = "none";
       }
 
       if ($method != "pix") {
@@ -414,17 +421,18 @@ if (isset($_POST['function'])) {
 
       register_log($guest, "guest", "guest_created", "ID: ".$guest);
 
-      $data = array(
-        'guest' => $guest,
-        'charge' => $charge,
-        'status' => "success"
-      );
-
-      header('Content-Type: application/json');
-      echo json_encode($data);
+      if ($method == "pix") {
+        $data = array(
+          'guest' => $guest,
+          'qrcode' => $qrcode,
+          'status' => "success"
+        );
+  
+        header('Content-Type: application/json');
+        echo json_encode($data);
+      }
       break;
     case 'tryToAuthenticate':
-
       $email = $_POST['email'];
       $password = $_POST['password'];
       

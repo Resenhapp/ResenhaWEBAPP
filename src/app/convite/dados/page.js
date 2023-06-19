@@ -30,6 +30,12 @@ export default function Info() {
     const handleNextClick = () => {
         const normalizedStr = method.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const formatted = normalizedStr.toLowerCase();
+
+        Cookies.set('name', name);
+        Cookies.set('email', email);
+        Cookies.set('amount', amount);
+        Cookies.set('method', method);
+        Cookies.set('minor', minor);
         
         window.location.href = formatted;
     };
@@ -75,7 +81,7 @@ export default function Info() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: code });
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
             setData(response);
         }
 

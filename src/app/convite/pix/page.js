@@ -18,6 +18,12 @@ export default function Pix() {
     const [data, setData] = useState(null);
 
     const code = Cookies.get('code');
+    const name = Cookies.get('name');
+    const email = Cookies.get('email');
+    const minor = Cookies.get('minor');
+    const method = Cookies.get('method').toLowerCase();
+
+    const amount = Cookies.get('amount');
 
     useEffect(() => {
         fetchData();
@@ -39,7 +45,7 @@ export default function Pix() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'tryToCreateGuest', method: "pix", code: code, name: "", birth: "", email: "", charge: ""});
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
             console.log(response);
             setData(response);
         }
@@ -53,7 +59,7 @@ export default function Pix() {
         return <p>Loading...</p>;
     }
 
-    const { charge } = data;
+    const { qrcode } = data;
 
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">
@@ -74,7 +80,7 @@ export default function Pix() {
                         <p className="text-sm text-whiteT1 text-center font-thin mb-2">Copie o código abaixo e cole no aplicativo do seu banco para efetuar o pagamento.</p>
                     </div>
                     <div className="flex flex-col mt-12 mb-2 gap-4 w-full">
-                        <CopyInput value={"00020101021126910014br.gov.bcb.pix01368d9f54ec-c00b-4878-9b7d-7096e9b2c0110229Free Donation / QRCODE - GPIX5204000053039865802BR"} showIcon={true} Icon={'copy'} />
+                        <CopyInput value={qrcode} showIcon={true} Icon={'copy'} />
                     </div>
                     <div className='my-12'>
                         <Timer timeInMinutes={10} text="O seu tempo para pagar acaba em:" />

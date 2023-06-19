@@ -37,14 +37,16 @@ export default function Invite() {
         try {
             const response = await axios.post(url, qs.stringify(data));
             return response.data;
-        } catch (error) {
+        } 
+        
+        catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
     };
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'getInviteData', code: code });
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
             console.log(response);
             setData(response);
         }
