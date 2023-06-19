@@ -1,28 +1,13 @@
 'use client'
-import NotificationsButton from '@/src/components/NotificationsButton';
-import Notifications from '@/src/components/Notifications';
-import MenuButton from '@/src/components/MenuButton';
-import Menu from '@/src/components/Menu';
-import React, { useState } from 'react';
-
+import React from 'react';
 import Button from '@/src/components/Button';
+
 export const metadata = {
     title: 'Resenha.app • Sucesso',
     description: 'Venha fazer suas resenhas!',
 }
 
 export default function WithdrawSuccess() {
-
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isNotificationsOpen, setNotificationsOpen] = useState(false);
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
-    const toggleNotifications = () => {
-        setNotificationsOpen(!isNotificationsOpen);
-    };
-
     const handleNavigation = () => {
         window.location.href = '/webapp/carteira/';
     };
@@ -30,11 +15,7 @@ export default function WithdrawSuccess() {
     return (
         <div className='flex flex-col w-screen h-screen '>
             <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-                <MenuButton toggleMenu={toggleMenu} />
-                <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                <h1 className='text-2xl text-whiteT1 font-bold'>Pronto!</h1>
-                <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true} />
-                <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
+                <h1 className='text-2xl text-center w-full text-whiteT1 font-bold'>Pronto!</h1>
             </div>
             <div className="flex flex-col  justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
@@ -58,7 +39,7 @@ export default function WithdrawSuccess() {
                             <h1 className='text-2xl text-center w-full font-bold'>O seu saque foi solicitado com sucesso!</h1>
                             <p className='text-center'>Agora é só aguardar a grana cair na tua conta 😎!</p>
                             <hr className='bg-purpleT3 ring-0 w-full rounded-full' />
-                            <p className='text-center'>Geralmente, leva no máximo um dia para cair, mas qualquer coisa pode entrar em contato conosco pelo atendimento!</p>
+                            <p className='text-center'>Geralmente, leva no máximo <b>um dia</b> para cair, mas qualquer coisa pode entrar em contato conosco pelo atendimento!</p>
                         </div>
                         <div>
                             <Button label={'Concluir!'} icon={'check'} action={handleNavigation} iconSide='right' height={1} width={1} textAlign='left' />
