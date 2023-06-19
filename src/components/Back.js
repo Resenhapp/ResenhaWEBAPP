@@ -3,9 +3,10 @@ import React from 'react';
 // import { useRouter } from 'next/router';
 
 const Back = () => {
-    // const router = useRouter();
+
 
     const handleOnClick = () => {
+        window.history.back();
     }
     return (
         <button onClick={handleOnClick} className="w-16 h-16 ring-2 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">

@@ -1,25 +1,19 @@
 'use client'
-import NotificationsButton from '@/src/components/NotificationsButton';
-import Notifications from '@/src/components/Notifications';
-import MenuButton from '@/src/components/MenuButton';
-import Menu from '@/src/components/Menu';
 import React, { useState, useRef } from 'react';
 import Button from '@/src/components/Button';
 import MoneyInput from '@/src/components/MoneyInput';
 import WithdrawError from '@/src/components/WithdrawError';
+import PageHeader from '@/src/components/PageHeader';
 
 export const metadata = {
     title: 'Resenha.app • Saque',
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Wallet() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isNotificationsOpen, setNotificationsOpen] = useState(false);
+export default function Withdraw() {
+    
     const inputRef = useRef(null);
     const [errorContent, setErrorContent] = useState(null);
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-    const toggleNotifications = () => setNotificationsOpen(!isNotificationsOpen);
 
     var avaliableCash = '1234,00';
 
@@ -34,7 +28,7 @@ export default function Wallet() {
             setErrorContent(null);
             setTimeout(() => setErrorContent('Saldo insuficiente.'), 0);
         } else {
-            setErrorContent(null); // Clear the error message when the withdraw is valid
+            setErrorContent(null);
             alert(`Você está sacando: R$ ${withdrawalAmount}`);
         }
     };
@@ -48,13 +42,7 @@ export default function Wallet() {
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-                <MenuButton toggleMenu={toggleMenu} />
-                <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-                <h1 className='text-2xl text-whiteT1 font-bold'>Saque</h1>
-                <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true} />
-                <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
-            </div>
+            <PageHeader pageTitle={'Saque'} />
             <div className="flex flex-col  justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
