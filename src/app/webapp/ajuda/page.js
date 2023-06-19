@@ -11,21 +11,15 @@ export const metadata = {
 }
 
 export default function Help() {
-
-    const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
-    };
-
     const copyVector = () => {
         return (
-            <button className='inline-flex bg-purpleT2 flex ring-purpleT3 mx-2 ring-inset rounded-full ring-2 w-6 h-6 align-center justify-center items-center'>
+            <div className='inline-flex bg-purpleT2 ring-purpleT3 mx-2 ring-inset rounded-full ring-2 w-6 h-6 align-center justify-center items-center'>
                 <svg width="10" height="10" viewBox="0 0 11 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M3.76608 10.1782H2.33751C1.54853 10.1782 0.908936 9.56691 0.908936 8.81281V2.27451C0.908936 1.52041 1.54853 0.909088 2.33751 0.909088H6.62322C7.4122 0.909088 8.05179 1.52041 8.05179 2.27451V3.63994H9.48036C10.2693 3.63994 10.9089 4.25126 10.9089 5.00537V11.5437C10.9089 12.2978 10.2693 12.9091 9.48036 12.9091H5.19465C4.40567 12.9091 3.76608 12.2978 3.76608 11.5437V10.1782ZM6.26608 2.27451C6.46332 2.27451 6.62322 2.42735 6.62322 2.61587V3.63994H5.19465C4.40567 3.63994 3.76608 4.25126 3.76608 5.00537V8.81281H2.69465C2.49741 8.81281 2.33751 8.65998 2.33751 8.47145L2.33751 2.61587C2.33751 2.42735 2.49741 2.27451 2.69465 2.27451H6.26608Z" fill="#F1F1F1" />
                 </svg>
-            </button>
+            </div>
         )
     }
-
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Ajuda'} />
@@ -68,10 +62,10 @@ export default function Help() {
                                     </div>
                                     <div className='flex flex-col gap-2'>
                                         <Accordion data={[
-                                            { title: 'Como solicito um saque?', content: 'Para criar uma resenha toque acesse a tela de Resenhas e Toque em Nova resenha.' },
+                                            { title: 'Como solicito um saque?', content: 'Para solicitar um saque, toque no botão no canto superior esquerdo, toque em Carteira e toque em Solicitar saque.' },
                                         ]} />
                                         <Accordion data={[
-                                            { title: 'Quanto tempo cai o saque?', content: 'Para adicionar um recepcionista acesse a tela de Recepcionistas e toque em Novo recepcionista.' },
+                                            { title: 'Em quanto tempo cai o saque?', content: 'Para adicionar um recepcionista acesse a tela de Recepcionistas e toque em Novo recepcionista.' },
                                         ]} />
                                     </div>
                                 </div>
