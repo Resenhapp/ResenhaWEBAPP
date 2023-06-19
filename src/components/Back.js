@@ -5,8 +5,8 @@ import React from 'react';
 const Back = () => {
     // const router = useRouter();
 
-    const handleOnClick = () => {}
-    //     router.back();
+    const handleOnClick = () => {
+    }
     return (
         <button onClick={handleOnClick} className="w-16 h-16 ring-2 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

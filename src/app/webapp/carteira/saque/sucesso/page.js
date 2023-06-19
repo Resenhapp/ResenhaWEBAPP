@@ -7,12 +7,11 @@ import React, { useState } from 'react';
 
 import Button from '@/src/components/Button';
 export const metadata = {
-    title: 'Resenha.app • Saque',
+    title: 'Resenha.app • Sucesso',
     description: 'Venha fazer suas resenhas!',
 }
 
 export default function WithdrawSuccess() {
-
 
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);

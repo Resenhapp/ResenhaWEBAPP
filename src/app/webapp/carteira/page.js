@@ -25,6 +25,10 @@ export default function Wallet() {
         setNotificationsOpen(!isNotificationsOpen);
     };
 
+    const handleNavigation = () => {
+        window.location.href = `/webapp/carteira/saque`;
+    };
+
     var availableCash = '1000,00';
 
     return (
@@ -46,7 +50,7 @@ export default function Wallet() {
                             <MoneyDisplay amount={100} cashType="requested" />
                         </div>
                         <div>
-                        <Button label={'Solicitar saque'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='left' />
+                        <Button label={'Solicitar saque'} icon={'arrow'} action={handleNavigation} iconSide='right' height={1} width={1} textAlign='left' />
                         </div>
                     </div>
                 </section>

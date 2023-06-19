@@ -13,11 +13,17 @@ export const metadata = {
 }
 
 export default function Home() {
+
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isNotificationsOpen, setNotificationsOpen] = useState(false);
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+    
     const toggleNotifications = () => {
         setNotificationsOpen(!isNotificationsOpen);
     };
@@ -37,7 +43,7 @@ export default function Home() {
                         <div className='w-full flex flex-col'>
                             <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                                 <h2>Suas resenhas</h2>
-                                <OutlinedButton icon={'arrow'} label={'ver todas'} />
+                                <OutlinedButton icon={'arrow'} label={'ver todas'} action={handleNavigation('resenhas/todas')}/>
                             </div>
                             <div className='w-full h-full flex flex-col'>
                                 <MyEventsBanner eventName={'Festa do João'} eventImage={'https://media.istockphoto.com/id/1201443405/pt/foto/people-enjoying-asado-party-at-backyard.jpg?s=170667a&w=0&k=20&c=CuVxJvC6Xj9TFWsW0M7EpXHU_JwKDAwnSpQVemQ72ew='} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
