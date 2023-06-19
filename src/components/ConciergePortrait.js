@@ -5,17 +5,10 @@ const ConciergePortrait = ({ imgUrl, conciergeName, expirationDate, conciergeTok
     const h3Classes = 'text-[12px]';
     return (
         <div className='w-full h-fit p-4 flex flex-row bg-purpleT2 rounded-2xl ring-inset ring-2 ring-purpleT4 gap-2'>
-            <img src={imgUrl} className='h-full w-28 rounded-md object-cover' />
+            <img src={imgUrl} className='h-28 w-28 rounded-md object-cover' />
             <div className='w-full'>
                 <h1 className='text-xl font-bold'>{conciergeName}</h1>
-                <div className={baseFlexClasses}>
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.83325 0.916748C7.83325 0.640606 7.60939 0.416748 7.33325 0.416748C7.05711 0.416748 6.83325 0.640606 6.83325 0.916748V1.33325H4.16675V0.916748C4.16675 0.640606 3.94289 0.416748 3.66675 0.416748C3.39061 0.416748 3.16675 0.640606 3.16675 0.916748V1.33325H2.29167C1.50926 1.33325 0.875 1.96752 0.875 2.74992V9.16659C0.875 9.94899 1.50926 10.5833 2.29167 10.5833H8.70833C9.49074 10.5833 10.125 9.94899 10.125 9.16659V2.74992C10.125 1.96752 9.49074 1.33325 8.70833 1.33325H7.83325V0.916748ZM9.125 4.08325V2.74992C9.125 2.5198 8.93845 2.33325 8.70833 2.33325H7.83325V2.75008C7.83325 3.02622 7.60939 3.25008 7.33325 3.25008C7.05711 3.25008 6.83325 3.02622 6.83325 2.75008V2.33325H4.16675V2.75008C4.16675 3.02622 3.94289 3.25008 3.66675 3.25008C3.39061 3.25008 3.16675 3.02622 3.16675 2.75008V2.33325H2.29167C2.06155 2.33325 1.875 2.5198 1.875 2.74992V4.08325H9.125ZM1.875 5.08325H9.125V9.16659C9.125 9.3967 8.93845 9.58325 8.70833 9.58325H2.29167C2.06155 9.58325 1.875 9.3967 1.875 9.16659V5.08325Z" fill="white" />
-                    </svg>
-                    <h3 className={h3Classes}>
-                        {expirationDate}
-                    </h3>
-                </div>
+                
                 <div className={baseFlexClasses}>
                     <svg width="10" height="13" viewBox="0 0 10 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M5 1.5C3.89543 1.5 3 2.39543 3 3.5C3 4.60457 3.89543 5.5 5 5.5C6.10457 5.5 7 4.60457 7 3.5C7 2.39543 6.10457 1.5 5 1.5ZM2 3.5C2 1.84315 3.34315 0.5 5 0.5C6.65685 0.5 8 1.84315 8 3.5C8 5.15685 6.65685 6.5 5 6.5C3.34315 6.5 2 5.15685 2 3.5Z" fill="white" />

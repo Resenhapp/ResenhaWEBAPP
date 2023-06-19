@@ -1,9 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 
-const PopUp = ({ title, icon, text, onActionClick, actionTitle, buttonColor, iconColor }) => {
+const PopUp = ({ title, icon, text, onActionClick, actionTitle, buttonColor, iconColor, showStatus }) => {
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(showStatus);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -58,8 +58,8 @@ const PopUp = ({ title, icon, text, onActionClick, actionTitle, buttonColor, ico
                         <p className='text-center text-purpleT3 mt-2'>{text}</p>
                     </div>
                     <div className='flex items-center justify-between p-4'>
-                        <button className='px-8 py-4 text-purpleT2' onClick={handleClose}>Cancelar</button>
-                        <button className={`px-8 py-4 rounded-lg text-white ${buttonColorClass}`} onClick={onActionClick}>{actionTitle}</button>
+                        <button className='px-4 py-4 text-purpleT2' onClick={handleClose}>Cancelar</button>
+                        <button className={`px-12 py-4 rounded-lg text-white ${buttonColorClass}`} onClick={onActionClick}>{actionTitle}</button>
                     </div>
                 </div>
             </div>
