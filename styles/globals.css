@@ -44,6 +44,32 @@
   text-shadow: 0 0 20px #ff00c8, 0 0 20px #8000ff, 0 0 20px #7f00fd;
 }
 
+.moreffect {
+  background: conic-gradient(from 180deg at 50% 50%, #B9DAFB 0deg, #5957a1 0.04deg, #be20d7 15deg, #5c147b 61.87deg, #9539e5 360deg);
+opacity: 0.4;
+filter: blur(50px);
+}
+
+.outerGlow {
+  box-shadow: 0px 0px 25px #ffffff;
+}
+
+.deactivated {
+  color: #bbbbbb;
+  background-color: #F1F1F1;
+}
+
+.deactivated:hover {
+  background-color: #F1F1F1;
+  background: #F1F1F1;
+  cursor: not-allowed;
+}
+
+.deactivated::shadow {
+  box-shadow: none;
+}
+
+
 .gradient {
   height: fit-content;
   z-index: 3;

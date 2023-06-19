@@ -9,11 +9,40 @@ module.exports = {
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       boxShadow: {
         glow: '0 0 10px #FF1493',
+      },
+      animation: {
+        'zoom-in-out': 'zoom-in-out 5s ease-in-out infinite',
+        'up-down': 'up-down 5s ease-in-out infinite',
+        'left-right': 'left-right 5s ease-in-out infinite',
+        'fade': 'fade 5s ease-in-out infinite',
+        fadeout: 'fadeout 3s',
+      },
+      keyframes: {
+        fadeout: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        'zoom-in-out': {
+          '0%, 100%': { transform: 'scale(1.5)' },
+          '50%': { transform: 'scale(1.8)' },
+        },
+        'up-down': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-150px)' },
+        },
+        'left-right': {
+          '0%, 100%': { transform: 'translateX(-50px)' },
+          '50%': { transform: 'translateX(100px)' },
+        },
+        'fade': {
+          '0%, 100%': { opacity: '0' },
+          '50%': { opacity: '1' },
+        },
+
       },
       colors: {
         blackT1: "#212121",
@@ -51,7 +80,7 @@ module.exports = {
         yellowT3: "#EFB520",
         yellowT4: "#EEBF45",
         yellowT5: "#F9DE9A",
-      },      
+      },
     },
     screens: {
       xs: "480px",
