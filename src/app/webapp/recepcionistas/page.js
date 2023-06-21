@@ -28,7 +28,7 @@ export default function Concierges() {
                         <div className='w-full flex flex-col '>
                             <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                 <ConciergePortrait imgUrl={defaultProfileImage}
-                                    activeStatus={true} conciergeName={'Claudio'} conciergeToken={'QEWF34'} />
+                                    activeStatus={true} conciergeName={'Claudio Grandao'} conciergeToken={'QEWF34'} />
                                 <ConciergePortrait imgUrl={defaultProfileImage}
                                     activeStatus={true} conciergeName={'Claudio'} conciergeToken={'QEWF34'} />
                                 <ConciergePortrait imgUrl={defaultProfileImage}

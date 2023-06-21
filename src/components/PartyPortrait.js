@@ -7,8 +7,8 @@ const PartyPortrait = ({ partyName, partyImage, partyDate, partyHour, partyGuest
     const h3Classes = 'text-[12px]';
 
     return (
-        <div className='bg-purpleT2 rounded-2xl p-2 flex flex-row ring-2 ring-inset ring-purpleT4'>
-            <Image src={partyImage} alt="" width={110} height={30} className="bg-purpleT4 mr-2 rounded-xl object-cover" />
+        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
+            <Image src={partyImage} alt="" width={110} height={30} className="mr-2 rounded-lg w-28 h-28 object-cover" />
             <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>
                     {partyName} {/* party name */}

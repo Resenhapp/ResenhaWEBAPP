@@ -17,7 +17,7 @@ export default function Profile() {
     var following = 321;
     var events = 21;
     var aboutme = 'Vamo curtir rapaziadaaaaa!';
-
+    var profileimg = 'https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/9f02e97244dbeacaef9f5ac951db62d6-1659364891510/aa73f77a-cb42-4566-9d3f-30cb2059cb26.png'
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Perfil'} />
@@ -26,7 +26,7 @@ export default function Profile() {
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
                             <div className='flex flex-col items-center gap-4 w-full'>
-                                <img src='https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/9f02e97244dbeacaef9f5ac951db62d6-1659364891510/aa73f77a-cb42-4566-9d3f-30cb2059cb26.png' className='w-40 h-40 object-cover bg-purple-50 ring-2 ring-purpleT3 rounded-full' />
+                                <img src={profileimg} className='w-40 h-40 object-cover ring-2 ring-purpleT3 rounded-full' />
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl'>{username}</h1>
                                     <h3 className='font-normal text-sm'>{'@' + user}</h3>

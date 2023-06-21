@@ -1,14 +1,15 @@
 import React from 'react';
+import Image from 'next/image';
 
-const ConciergePortrait = ({ imgUrl, conciergeName, expirationDate, conciergeToken, activeStatus, deleteaction, editaction, copyaction }) => {
+const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, activeStatus, deleteaction, editaction, copyaction }) => {
     const baseFlexClasses = 'flex flex-row items-center gap-1';
     const h3Classes = 'text-[12px]';
+
     return (
-        <div className='w-full h-fit p-4 flex flex-row bg-purpleT2 rounded-2xl ring-inset ring-2 ring-purpleT4 gap-2'>
-            <img src={imgUrl} className='h-28 w-28 rounded-md object-cover' />
-            <div className='w-full'>
+        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
+            <Image src={imgUrl} alt="" width={110} height={30} className="mr-2 rounded-lg w-28 h-28 object-cover" />
+            <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>{conciergeName}</h1>
-                
                 <div className={baseFlexClasses}>
                     <svg width="10" height="13" viewBox="0 0 10 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M5 1.5C3.89543 1.5 3 2.39543 3 3.5C3 4.60457 3.89543 5.5 5 5.5C6.10457 5.5 7 4.60457 7 3.5C7 2.39543 6.10457 1.5 5 1.5ZM2 3.5C2 1.84315 3.34315 0.5 5 0.5C6.65685 0.5 8 1.84315 8 3.5C8 5.15685 6.65685 6.5 5 6.5C3.34315 6.5 2 5.15685 2 3.5Z" fill="white" />
@@ -27,7 +28,7 @@ const ConciergePortrait = ({ imgUrl, conciergeName, expirationDate, conciergeTok
                     </h3>
                 </div>
                 <div className='flex flex-row justify-between w-full mt-4'> {/* 4 button */}
-                    <div className='gap-2 flex'> {/* 3 buttons */}
+                    <div className='gap-2 flex w-fit'> {/* 3 buttons */}
                         <button onClick={editaction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
                             <svg width="13" height="13" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.48818 2.0261C8.20503 1.74296 7.74597 1.74296 7.46282 2.0261L6.82575 2.66318L8.70053 4.53796L9.33761 3.90089C9.62075 3.61774 9.62075 3.15868 9.33761 2.87554L8.48818 2.0261ZM7.67518 5.56331L5.8004 3.68853L1.66255 7.82638C1.52658 7.96235 1.45019 8.14676 1.45019 8.33906V9.551C1.45019 9.75122 1.6125 9.91352 1.81271 9.91352H3.02466C3.21695 9.91352 3.40136 9.83713 3.53733 9.70116L7.67518 5.56331ZM6.43747 1.00075C7.2869 0.151321 8.6641 0.15132 9.51353 1.00075L10.363 1.85018C11.2124 2.69961 11.2124 4.07681 10.363 4.92624L4.56269 10.7265C4.15477 11.1344 3.60153 11.3636 3.02466 11.3636H1.45019C0.64934 11.3636 0.00012207 10.7144 0.00012207 9.91352V8.33906C0.00012207 7.76218 0.229284 7.20894 0.637195 6.80103L6.43747 1.00075Z" fill="#F1F1F1" />
