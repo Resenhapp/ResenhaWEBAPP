@@ -7,7 +7,7 @@ const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, activeStatus
 
     return (
         <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
-            <Image src={imgUrl} alt="" width={110} height={30} className="mr-2 rounded-lg w-28 h-28 object-cover" />
+            <Image src={imgUrl} alt="" width={110} height={30} className="mr-2 rounded-lg object-cover h-28 w-28" />
             <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>{conciergeName}</h1>
                 <div className={baseFlexClasses}>

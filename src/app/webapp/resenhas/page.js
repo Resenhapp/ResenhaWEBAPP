@@ -37,7 +37,6 @@ export default function Home() {
                         <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha')} iconSide='right' height={1} width={1} textAlign='center' />
                     </div>
                 </section>
-
                 <section className="flex flex-start min-h-fit h-fit items-center w-full max-w-md p-4">
                     <div className='w-full flex'>
                         <div className='w-full flex flex-col'>

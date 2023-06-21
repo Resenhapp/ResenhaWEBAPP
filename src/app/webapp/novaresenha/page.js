@@ -1,59 +1,30 @@
 'use client'
-import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
-import ImageInput from '@/src/components/ImageInput';
 import React, { useState } from 'react';
-import Toggle from '@/src/components/Toggle';
+import ProgressBar from '@/src/components/ProgressBar';
+import Vector from '@/src/components/Vector';
+import InputField from '@/src/components/InputField';
 
 export const metadata = {
     title: 'Resenha.app • Configurações',
     description: 'Venha fazer suas resenhas!',
 }
 export default function NewEvent() {
-    const [selectedImage, setSelectedImage] = useState(null);
-    const inputstyle = 'w-full p-2 bg-whiteT1 ring-2 ring-grayT0 ring- rounded-xl h-12 mt-2';
-    const handleImageChange = (image) => {
-        setSelectedImage(image);
-    };
-    const handleQuestionAction = () => {
-        console.log('a');
-    };
     return (
-        <div className='flex flex-col w-screen h-screen'>
-            <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-                <Back />
-                <h1 className='text-2xl font-bold'>Nova resenha</h1>
+        <div className='flex flex-col justify-around w-screen h-screen'>
+            <div className='w-full gap-4 justify-center align-center flex flex-col content-center py-8 px-4'>
+                <h1 className='text-[49px] leading-[50px] scale-95 items-center font-bold text-center'>Vamos criar uma resenha?</h1>
+                <p className='text-center leading-[30px] text-[23px]'>Primeiro, comece dando um <b>nome</b> para a sua resenha e defina o lugar <b>onde ela vai acontecer:</b></p>
             </div>
-            <div className='mt-4 flex justify-center'>
-                <ImageInput image={selectedImage} onChange={handleImageChange} />
-            </div>
-            <div className='w-full flex justify-center'>
-                <div className='w-5/6 text-blackT1'>
-                    <input placeholder='Nome da resenha' className={inputstyle} />
-                    <div className='flex gap-2'>
-                        <input placeholder='Data' className={inputstyle} />
-                        <input placeholder='Horário' className={inputstyle} />
-                        <input placeholder='Valor' className={inputstyle} />
+            <div className="flex flex-col items-center justify-center h-fit px-4">
+                <section className="flex content-center justify-center flex-col items-center w-full mt-8 h-fit max-w-md p-4">
+
+                    <div className='w-full flex flex-col'>
+                        <InputField Icon={'thunder'} showIcon={true} />
+                        <InputField Icon={'thunder'} showIcon={true} />
                     </div>
-                    <input placeholder='Endereço' className={inputstyle} />
-                    <textarea className='w-full p-2 bg-whiteT1 ring-2 ring-grayT0 rounded-2xl h-24 mt-2'></textarea>
-                    <div className='h-fit flex flex-col gap-2'>
-                        <Toggle labelText="Aceitar pagamento na hora" showLabel={true} startToggled={true} showQuestion={true} questionAction={handleQuestionAction} textColor="white" />
-                        <Toggle labelText="Resenha privada" showLabel={true} startToggled={true} showQuestion={true} questionAction={handleQuestionAction} textColor="white" />
-                        <Toggle labelText="Exigir senha" showLabel={true} startToggled={false} showQuestion={true} questionAction={handleQuestionAction} textColor="white" />
-                        <Toggle labelText="Para maiores" showLabel={true} startToggled={false} showQuestion={true} questionAction={handleQuestionAction} textColor="white" />
-                    </div>
-                    <div className='mt-4'>
-                        <Button label={'Nova Resenha'} icon={'plus'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
-                    </div>
-                    <div className='mt-4 mb-4'>
-                        <p className='text-purpleT5 text-center text-[12px]'>
-                            * cobramos uma taxa de 10% (com um mínimo de R$ 1,00) sobre o valor de cada entrada.{' '}
-                            <a className='font-bold' href='https://google.com' target='_blank' rel='noopener noreferrer'>
-                                Saiba mais.
-                            </a>
-                        </p>
-                    </div>
+                </section>
+                <div className='pb-12 w-full'>
+                    <ProgressBar barAmount={5} barDone={1} />
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@ export default function Concierges() {
     }
 
     const conciergeNameTest = "Claudio";
-    const defaultProfileImage = "https://resenha.app/publico/recursos/imagens/default_concierge.png";
+    const defaultProfileImage = "https://resenha.app/publico/recursos/imagens/concierge_default.png";
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Recepcionistas'} />
@@ -37,7 +37,7 @@ export default function Concierges() {
                         </div>
                     </div>
                 <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                    <Button label={'Novo recepcionista'} icon={'arrow'} action={() => window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+quero+criar+e+gerenciar+minhas+resenhas+com+o+Resenha.app", "_blank")} iconSide='right' height={1} width={1} textAlign='center' />
+                    <Button label={'Novo recepcionista'} icon={'arrow'} action={() => window.open("", "_blank")} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
                 </section>
             </div>
