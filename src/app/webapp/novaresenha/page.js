@@ -19,8 +19,8 @@ export default function NewEvent() {
                 <section className="flex content-center justify-center flex-col items-center w-full mt-8 h-fit max-w-md p-4">
 
                     <div className='w-full flex flex-col'>
-                        <InputField Icon={'thunder'} showIcon={true} />
-                        <InputField Icon={'thunder'} showIcon={true} />
+                        <InputField Icon={'thunder'} showIcon={true} placeholder={'Nome da resenha'}/>
+                        <InputField Icon={'pin'} showIcon={true} placeholder={'Endereço'}/>
                     </div>
                 </section>
                 <div className='pb-12 w-full'>

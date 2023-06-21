@@ -22,6 +22,8 @@ const InputField = ({ placeholder, value, action, showIcon = false, Icon }) => {
             <Vector vectorname={'cvv01'} />
           ) : Icon === 'thunder' ? (
             <Vector vectorname={'thunder01'} />
+          ) : Icon === 'pin' ? (
+            <Vector vectorname={'pin01'} />
           ) : null}
         </div>
       )}
