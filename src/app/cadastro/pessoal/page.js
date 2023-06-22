@@ -41,7 +41,7 @@ export default function Personal() {
 
   const handleClick = async () => {
     try {
-      const response = await makeRequest('http://localhost/resenha.app/api/', { function: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
+      const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
       console.log(response);
     } 
     
