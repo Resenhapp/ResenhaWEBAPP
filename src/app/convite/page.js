@@ -8,6 +8,7 @@ import UserPortrait from "@/src/components/UserPortrait";
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import Vector from "@/src/components/Vector";
 
 export default function Invite() {
     let code = '';
@@ -76,9 +77,7 @@ export default function Invite() {
                     >
                         <span>Mostrar menos</span>
                         <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
-                            <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.85355 1.14645C5.65829 0.951185 5.34171 0.951184 5.14645 1.14645L0.853553 5.43934C0.658291 5.6346 0.341709 5.6346 0.146447 5.43934C-0.0488155 5.24408 -0.0488155 4.9275 0.146447 4.73223L4.43934 0.439339C5.02513 -0.146447 5.97487 -0.146446 6.56066 0.43934L10.8536 4.73223C11.0488 4.9275 11.0488 5.24408 10.8536 5.43934C10.6583 5.6346 10.3417 5.6346 10.1464 5.43934L5.85355 1.14645Z" fill="#D6A3FF" />
-                            </svg>
+                        <Vector vectorname={'verticalArrow01'} />
                         </div>
                     </div >
 
@@ -101,9 +100,7 @@ export default function Invite() {
                 >
                     <span>Mostrar mais</span>
                     <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
-                        <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.85355 4.43934C5.65829 4.6346 5.34171 4.6346 5.14645 4.43934L0.853553 0.146447C0.658291 -0.0488156 0.341709 -0.0488156 0.146447 0.146447C-0.0488155 0.341709 -0.0488155 0.658291 0.146447 0.853553L4.43934 5.14645C5.02513 5.73223 5.97487 5.73223 6.56066 5.14645L10.8536 0.853553C11.0488 0.658291 11.0488 0.341709 10.8536 0.146447C10.6583 -0.0488156 10.3417 -0.0488156 10.1464 0.146447L5.85355 4.43934Z" fill="#D6A3FF" />
-                        </svg>
+                    <Vector vectorname={'verticalArrow02'} />
                     </div>
                 </div>
             </>
