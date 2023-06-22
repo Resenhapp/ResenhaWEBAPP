@@ -5,7 +5,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
     const sizes = {
         1: 'w-full',
         2: 'w-4/5',
-        3: 'w-2/5',
+        3: 'w-[190px]',
     };
 
     let iconSvg;

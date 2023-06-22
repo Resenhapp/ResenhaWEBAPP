@@ -1,11 +1,22 @@
 import React from 'react';
 
-const Checker = ({ labelText, showLabel, startChecked, action}) => {
+const Checker = ({ labelText, showLabel, startChecked, action }) => {
     return (
-        <label className="flex items-center cursor-pointer">
-            <input id="comments" name="comments" type="checkbox" className="h-5 w-5 rounded-xl text-purple-600 bg-purple-600" defaultChecked={startChecked} onChange={action} />
-            {showLabel && <span className="text-sm ml-1 text-whiteT1 font-thin">{labelText}</span>}
-        </label>
+        <div className="flex items-center p-3">
+            <input
+                id=""
+                type="checkbox"
+                value=""
+                defaultChecked={startChecked}
+                onChange={action}
+                className="w-5 h-5 rounded-lg accent-purpleT3 ring-2 ring-whiteT1"
+            />
+            {showLabel &&
+                <label htmlFor="purple-checkbox" className="ml-2 text-sm font-medium text-whiteT1">
+                    {labelText}
+                </label>
+            }
+        </div>
     );
 };
 

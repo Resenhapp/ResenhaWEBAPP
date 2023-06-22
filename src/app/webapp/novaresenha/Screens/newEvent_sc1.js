@@ -1,17 +1,17 @@
 'use client'
 import React, { useState } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
-import Checker from '@/src/components/Checker';
 import InputField from '@/src/components/InputField';
 import AddressField from '@/src/components/AddressField';
 import Button from '@/src/components/Button';
 import Toggle from '@/src/components/Toggle';
+
 export const metadata = {
     title: 'Resenha.app • Nova resenha',
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function NewEvent() {
+export default function NewEventSc01() {
     return (
         <div className='flex flex-col justify-around w-screen h-screen'>
             <div className='w-full gap-4 align-center flex flex-col content-center py-8 px-4'>
@@ -22,7 +22,7 @@ export default function NewEvent() {
                 <section className="flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4">
                     <div className='w-full flex flex-col h-fit gap-3'>
                         <InputField Icon={'thunder'} showIcon={true} placeholder={'Nome da resenha'}/>
-                        <AddressField initialAddress={''} onAddressSelect={''} placeholder={'Enderço'} />
+                        <AddressField initialAddress={'Brasil'} onAddressSelect={''} placeholder={'Enderço'} />
                         <Toggle labelText={'Resenha para +18?'} questionAction={''} showLabel={true} showQuestion={false} startToggled={true} textColor={'white'} />
                     </div>
                     <div className='flex flex-row justify-between w-full'>
