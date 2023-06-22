@@ -15,7 +15,6 @@ export default function Invite() {
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         code = urlParams.get('code');
-        console.log(code);
     }
 
     const [isExpanded, setIsExpanded] = useState(false);

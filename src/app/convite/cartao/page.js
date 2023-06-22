@@ -1,9 +1,12 @@
+'use client';
 
 import Button from '@/src/components/Button';
 import CopyInput from '@/src/components/CopyInput';
 import InputField from '@/src/components/InputField';
 import Timer from '@/src/components/Timer';
 import Back from '@/src/components/Back';
+import { useState } from 'react';
+import axios from 'axios';
 
 export const metadata = {
     title: 'Resenha.app • Cartão',
@@ -11,6 +14,61 @@ export const metadata = {
 }
 
 export default function Credit() {
+    const [owner, setOwner] = useState('');
+    const [number, setNumber] = useState('');
+    const [expiration, setExpiration] = useState('');
+    const [cvv, setCvv] = useState('');
+    const [cpf, setCpf] = useState('');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const handleNextClick = async () => {
+        try {
+            const code = Cookies.get('code');
+            const name = Cookies.get('name');
+            const email = Cookies.get('email');
+            const minor = Cookies.get('minor');
+            const method = Cookies.get('method').toLowerCase();
+
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
+            console.log(response);
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+    };
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const handleOwnerChange = (event) => {
+        setOwner(event.target.value);
+    };
+
+    const handleNumberChange = (event) => {
+        setNumber(event.target.value);
+    };
+
+    const handleExpirationChange = (event) => {
+        setExpiration(event.target.value);
+    };
+
+    const handleCvvChange = (event) => {
+        setCvv(event.target.value);
+    };
+
+    const handleCpfChange = (event) => {
+        setCpf(event.target.value);
+    };
+
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">
             <section className="flex flex-col items-center w-full max-w-md p-4">
@@ -30,13 +88,13 @@ export default function Credit() {
                         <p className="text-sm text-whiteT1 text-center font-thin mb-2">Insira os dados do seu cartão abaixo para efetuar o pagamento.</p>
                     </div>
                     <div className="flex flex-col mt-12 mb-2 gap-4 w-full">
-                        <InputField placeholder="Nome impresso no cartão" showIcon={true} Icon="person" />
-                        <InputField placeholder="Número do cartão" showIcon={true} Icon="card" />
+                        <InputField placeholder="Nome impresso no cartão" showIcon={true} value={owner} action={handleOwnerChange} Icon="person" />
+                        <InputField placeholder="Número do cartão" showIcon={true} value={number} action={handleNumberChange} Icon="card" />
                         <div className='flex flex-row gap-4'>
-                            <InputField placeholder="Validade" showIcon={true} Icon="calendar" />
-                            <InputField placeholder="CVV" showIcon={true} Icon="cvv" />
+                            <InputField placeholder="Validade" value={expiration} action={handleExpirationChange} showIcon={true} Icon="calendar" />
+                            <InputField placeholder="CVV" value={cvv} action={handleCvvChange} showIcon={true} Icon="cvv" />
                         </div>
-                        <InputField placeholder="CPF do titular" showIcon={true} Icon="id" />
+                        <InputField placeholder="CPF do titular" value={cpf} action={handleCpfChange} showIcon={true} Icon="id" />
                     </div>
                 </div>
                 <div className='flex flex-col mt-2 align-center justify-center items-center'>
@@ -48,7 +106,7 @@ export default function Credit() {
                     </h1>
                 </div>
                 <div className="flex flex-col mt-4 mb-4 w-full">
-                    <Button label="Pagar!" icon="arrow" />
+                    <Button label="Pagar!" icon="arrow" action={handleNextClick} />
                 </div>
                 <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
                     <h1 className="font-regular">

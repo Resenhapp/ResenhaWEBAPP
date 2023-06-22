@@ -56,7 +56,7 @@ export default function Pix() {
     };
 
     if (!data) {
-        return <p>Loading...</p>;
+        return <p>Gerando PIX...</p>;
     }
 
     const { qrcode } = data;

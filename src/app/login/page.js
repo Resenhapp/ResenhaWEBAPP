@@ -32,7 +32,6 @@ export default function Login() {
   const handleClick = async () => {
     try {
       const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToAuthenticate', email: email, password: password });
-      console.log(response);
     } 
     
     catch (error) {

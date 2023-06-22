@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import InputField from '@/src/components/InputField';
 import Button from '@/src/components/Button';
 import Link from 'next/link';
@@ -129,7 +130,7 @@ export default function Info() {
                             <AmountSelector onChange={handleAmountChange} className="text-purpleT1" />
                         </div>
                         <Checker labelText={`Tenho mais de 18 anos.`} showLabel={true} startChecked={false} action={handleCheckerChange} />
-                        <Dropdown showIcon={true} Icon="coin" options={options} action={handleSelectChange} placeholder='Forma de pagamento' />
+                        <OptionsList showIcon={true} Icon="coin" options={options} action={handleSelectChange} placeholder='Forma de pagamento' />
                     </div>
                 </div>
                 <div className="flex flex-col mb-4 w-full">
