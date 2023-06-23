@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
+import Piece03 from './components/piece03';
 import Button from '@/src/components/Button';
 
 export const metadata = {
@@ -23,6 +24,8 @@ export default function NewEvent() {
                 return <Piece01 />;
             case 2:
                 return <Piece02 />;
+            case 3:
+                return <Piece03 />;
 
             default:
                 return null;
@@ -52,7 +55,7 @@ export default function NewEvent() {
 
     return (
         <div className='flex flex-col justify-around w-screen h-screen'>
-            <div className='w-full gap-4 align-center flex flex-col content-center py-8 px-4'>
+            <div className='w-full  gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
                 <h1 className='text-[49px] leading-[50px] scale-95 items-center font-bold text-center'>
                     {title}
                 </h1>
@@ -60,7 +63,7 @@ export default function NewEvent() {
                 </p>
             </div>
             <div className='flex flex-col h-full items-center justify-end px-4'>
-                <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
+                <section className='flex h-full  content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
                     {renderPiece()}
                     <div className='flex flex-row justify-between w-full'>
                         {progress > 0 && (

@@ -92,7 +92,11 @@ export default function Info() {
     };
 
     if (!data) {
-        return <p>Loading...</p>;
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <p className="text-4xl">Carregando...</p>
+            </div>
+        );
     }
 
     const { pricePerItem, month, year, day, confirmed, maxguests, hour, address, host, title, description, dayOfWeek, users } = data;

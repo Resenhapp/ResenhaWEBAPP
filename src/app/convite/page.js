@@ -12,7 +12,7 @@ import Vector from "@/src/components/Vector";
 
 export default function Invite() {
     let code = '';
-    
+
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         code = urlParams.get('code');
@@ -42,8 +42,8 @@ export default function Invite() {
         try {
             const response = await axios.post(url, qs.stringify(data));
             return response.data;
-        } 
-        
+        }
+
         catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
@@ -62,7 +62,11 @@ export default function Invite() {
     };
 
     if (!data) {
-        return <p>Loading...</p>;
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <p className="text-4xl">Carregando...</p>
+            </div>
+        );
     }
 
     const { pricePerItem, month, year, day, confirmed, maxguests, hour, address, host, title, description, dayOfWeek, users } = data;
@@ -78,7 +82,7 @@ export default function Invite() {
                     >
                         <span>Mostrar menos</span>
                         <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
-                        <Vector vectorname={'verticalArrow01'} />
+                            <Vector vectorname={'verticalArrow01'} />
                         </div>
                     </div >
 
@@ -101,7 +105,7 @@ export default function Invite() {
                 >
                     <span>Mostrar mais</span>
                     <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
-                    <Vector vectorname={'verticalArrow02'} />
+                        <Vector vectorname={'verticalArrow02'} />
                     </div>
                 </div>
             </>
@@ -251,11 +255,11 @@ export default function Invite() {
                                         Quem vai:
                                     </h1>
                                 </div>
-                                <div className="flex justify-center flex-row mb-4 gap-4 h-fit w-full">
-                                    {users.map((user) => (
-                                        <UserPortrait key={user.id} image={defaultImage} name={user.name}/>
-                                    ))}
-                                </div>
+                                <div className="grid grid-cols-2 gap-4 h-[550px] overflow-y-auto">
+    {users.map((user) => (
+      <UserPortrait key={user.id} image={defaultImage} name={user.name} />
+    ))}
+  </div>
                             </div>
                             <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
                                 <h1 className="font-regular">
