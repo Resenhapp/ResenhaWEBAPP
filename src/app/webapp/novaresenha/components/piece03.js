@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Vector from '@/src/components/Vector';
+import PlusValue from '@/src/components/PlusValue';
 
 const Piece03 = () => {
     var [value, setValue] = useState('2,00');
-    var [guestsValue, setGuestsValue] = useState (1);
+    var [guestsValue, setGuestsValue] = useState(1);
     const handleChange = (event) => {
         let inputValue = event.target.value.replace(/[^0-9]/g, '');
 
@@ -23,7 +24,7 @@ const Piece03 = () => {
     const handleGuestsChange = (event) => {
         const inputValue = event.target.value;
         setGuestsValue(inputValue);
-      };
+    };
 
     const handleButtonClick = (amount) => {
         const currentValue = parseFloat(value.replace(/[^0-9.,-]/g, '').replace(',', '.'));
@@ -39,8 +40,8 @@ const Piece03 = () => {
         const currentValue = parseInt(guestsValue);
         const newValue = currentValue + amount;
         setGuestsValue(newValue);
-      };
-      
+    };
+
 
     return (
         <div className="w-full flex flex-col h-fit gap-6">
@@ -71,24 +72,9 @@ const Piece03 = () => {
                         </button>
                     </div>
                     <div className="flex flex-row gap-2 justify-center">
-                        <button
-                            className="p-4 bg-purpleT2 ring-2 ring-inset text-xl ring-purpleT3 rounded-xl"
-                            onClick={() => handleButtonClick(5)}
-                        >
-                            +R$ 5
-                        </button>
-                        <button
-                            className="p-4 bg-purpleT2 ring-2 ring-inset text-xl ring-purpleT3 rounded-xl"
-                            onClick={() => handleButtonClick(10)}
-                        >
-                            +R$ 10
-                        </button>
-                        <button
-                            className="p-4 bg-purpleT2 ring-2 ring-inset text-xl ring-purpleT3 rounded-xl"
-                            onClick={() => handleButtonClick(20)}
-                        >
-                            +R$ 20
-                        </button>
+                        <PlusValue value={5} handleClick={handleButtonClick} />
+                        <PlusValue value={10} handleClick={handleButtonClick} />
+                        <PlusValue value={20} handleClick={handleButtonClick} />
                     </div>
                 </div>
                 <hr className='bg-purpleT4 h-[2px] my-8 border-none rounded-full' />
@@ -117,7 +103,7 @@ const Piece03 = () => {
                             <Vector vectorname={'plus01'} />
                         </button>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

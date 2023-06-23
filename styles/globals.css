@@ -198,4 +198,3 @@ filter: blur(50px);
 .flex-between {
   @apply flex justify-between items-center;
 }
-
