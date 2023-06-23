@@ -4,6 +4,7 @@ import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
 import Piece03 from './components/piece03';
+import Piece04 from './components/piece04';
 import Button from '@/src/components/Button';
 
 export const metadata = {
@@ -26,13 +27,13 @@ export default function NewEvent() {
                 return <Piece02 />;
             case 3:
                 return <Piece03 />;
-
+            case 4:
+                return <Piece04 />;
             default:
                 return null;
         }
     };
 
-    // Define the titles and subtitles based on the current step
     let title, subtitle;
     switch (progress) {
         case 1:
@@ -47,6 +48,14 @@ export default function NewEvent() {
             title = 'E quem entra?';
             subtitle = 'Agora, defina a <b>quanto é para entrar</b> e o <b>limite máximo</b> de convidados:';
             break;
+        case 4:
+            title = 'Algo a acrescentar?';
+            subtitle = 'E por fim, adicione uma <b>descrição</b> (como regras, brincadeiras e tals) e <b>tags</b> para sua resenha:';
+            break;
+        case 5:
+            title = 'E que tal uma foto?';
+            subtitle = 'Pronto! Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
+            break;
         default:
             title = '';
             subtitle = '';
@@ -55,11 +64,11 @@ export default function NewEvent() {
 
     return (
         <div className='flex flex-col justify-around w-screen h-screen'>
-            <div className='w-full  gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
-                <h1 className='text-[49px] leading-[50px] scale-95 items-center font-bold text-center'>
+            <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
+                <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
                     {title}
                 </h1>
-                <p className='text-center leading-[30px] text-[23px]' dangerouslySetInnerHTML={{ __html: subtitle }}>
+                <p className='text-center leading-[30px] text-[20px]' dangerouslySetInnerHTML={{ __html: subtitle }}>
                 </p>
             </div>
             <div className='flex flex-col h-full items-center justify-end px-4'>

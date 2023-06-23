@@ -38,7 +38,7 @@ const AddressField = ({ placeholder, onAddressSelect, initialAddress }) => {
             </div>
             <input
                 type="text"
-                className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-purpleT2 placeholder-purpleT5 pl-10`}
+                className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-purpleT2 placeholder-purpleT5`}
                 placeholder={placeholder}
                 value={address}
                 onChange={onChange}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Vector from './Vector';
 
-const EventHour = ({ hasEnd, returnedStart, returnedEnd }) => {
+const EventHour = ({ hasEnd, returnedStart, returnedEnd, placeHolderStart, placeHolderEnd }) => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
 
@@ -52,10 +52,11 @@ const EventHour = ({ hasEnd, returnedStart, returnedEnd }) => {
         <h1 className={`w-fit ${startHourColor}`}>Começa</h1>
         <input
           type="text"
-          className={`w-full text-3xl bg-transparent ${startHourColor}`}
+          className={`w-full placeholder-purpleT2 text-3xl bg-transparent ${startHourColor}`}
           value={formatTime(startTime)}
           onChange={handleStartTimeChange}
           maxLength={5}
+          placeholder={placeHolderStart}
         />
       </div>
       <div className="w-8 h-8">
@@ -65,11 +66,12 @@ const EventHour = ({ hasEnd, returnedStart, returnedEnd }) => {
         <h1 className={`w-fit ${endHourColor}`}>Termina</h1>
         <input
           type="text"
-          className={`w-full text-3xl bg-transparent ${endHourColor}`}
+          className={`w-full placeholder-purpleT2 text-3xl bg-transparent ${endHourColor}`}
           value={formatTime(endTime)}
           onChange={handleEndTimeChange}
           maxLength={5}
           disabled={!hasEnd}
+          placeholder={placeHolderEnd}
         />
       </div>
     </div>

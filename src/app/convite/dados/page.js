@@ -10,6 +10,7 @@ import Checker from '@/src/components/Checker';
 import { useState } from 'react';
 import Cookies from 'js-cookie';
 import React, { useEffect } from 'react';
+import Loading from '@/src/components/Loading';
 
 export const metadata = {
     title: 'Resenha.app • Dados',
@@ -94,7 +95,7 @@ export default function Info() {
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <p className="text-4xl">Carregando...</p>
+                <Loading/>
             </div>
         );
     }

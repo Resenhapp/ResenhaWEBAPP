@@ -11,6 +11,21 @@ const Piece02 = ({ }) => {
         setHasEnd(!hasEnd);
     };
 
+    const currentTime = new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+
+      const currentDate = new Date();
+      currentDate.setHours(currentDate.getHours() + 2);
+      
+      const lateTime = currentDate.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+
     return (
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">
@@ -22,7 +37,7 @@ const Piece02 = ({ }) => {
             <DateScroll currentDate={'X'} daysToShow={'x'} selectedDate={'x'} />
             <hr className='bg-purpleT4 h-[2px] border-none rounded-full' />
             <div className='flex flex-col gap-2'>
-                <EventHour hasEnd={hasEnd} />
+                <EventHour hasEnd={hasEnd} placeHolderStart={currentTime} placeHolderEnd={lateTime}/>
                 <Toggle
                     labelText={'Não tem hora pra acabar'}
                     questionAction={''}

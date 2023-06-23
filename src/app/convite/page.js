@@ -8,6 +8,7 @@ import UserPortrait from "@/src/components/UserPortrait";
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 
 export default function Invite() {
@@ -64,7 +65,7 @@ export default function Invite() {
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <p className="text-4xl">Carregando...</p>
+                <Loading/>
             </div>
         );
     }
