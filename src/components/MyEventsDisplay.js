@@ -3,6 +3,7 @@ import React from 'react';
 import Button from './Button';
 import MyEventsBanner from './MyEventsBanner';
 import DualButton from './DualButton';
+
 const MyEventsDisplay = () => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;

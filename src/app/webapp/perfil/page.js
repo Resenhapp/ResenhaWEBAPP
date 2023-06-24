@@ -4,6 +4,7 @@ import React from 'react';
 import NumberDisplay from '@/src/components/NumberDisplay';
 import Interest from '@/src/components/Interest';
 import PageHeader from '@/src/components/PageHeader';
+import Vector from '@/src/components/Vector';
 
 export const metadata = {
     title: 'Resenha.app • Perfil',
@@ -11,13 +12,20 @@ export const metadata = {
 }
 
 export default function Profile() {
+
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
+
+
     var username = "Joao Davi";
     var user = "joaodavisn";
     var followers = 213;
     var following = 321;
     var events = 21;
     var aboutme = 'Vamo curtir rapaziadaaaaa!';
-    var profileimg = 'https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/9f02e97244dbeacaef9f5ac951db62d6-1659364891510/aa73f77a-cb42-4566-9d3f-30cb2059cb26.png'
+    var profileimg = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'
+    var interestslist = [1, 2, 3, 4, 5]
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Perfil'} />
@@ -28,7 +36,7 @@ export default function Profile() {
                             <div className='flex flex-col items-center gap-4 w-full'>
                                 <img src={profileimg} className='w-40 h-40 object-cover ring-2 ring-purpleT3 rounded-full' />
                                 <div className='flex flex-col items-center'>
-                                    <h1 className='font-bold text-2xl'>{username}</h1>
+                                    <div className='flex flex-row items-center content-center gap-1'><h1 className='font-bold text-2xl'>{username}</h1><Vector vectorname={'verified01'} /></div>
                                     <h3 className='font-normal text-sm'>{'@' + user}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
@@ -39,7 +47,7 @@ export default function Profile() {
                                     <NumberDisplay amount={events} label={'resenhas'} />
                                 </div>
                                 <div>
-                                    <EditButton content="Editar perfil" />
+                                    <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')}/>
                                 </div>
                             </div>
                             <div className='w-full'>
@@ -49,12 +57,9 @@ export default function Profile() {
                             <div className='w-full mt-8'>
                                 <h1 className='font-bold text-xl'>Interesses</h1>
                                 <div className='w-full flex flex-wrap gap-1'>
-                                    <Interest interestIndex={1} />
-                                    <Interest interestIndex={2} />
-                                    <Interest interestIndex={3} />
-                                    <Interest interestIndex={4} />
-                                    <Interest interestIndex={5} />
-                                    <Interest interestIndex={6} />
+                                    {interestslist.map((interest, index) =>
+                                        <Interest key={index} interestIndex={interest} />
+                                    )}
                                 </div>
                             </div>
                         </div>

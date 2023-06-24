@@ -1,6 +1,7 @@
 import React from 'react';
+import Vector from './Vector';
 
-const Interest = ({ interestIndex }) => {
+const Interest = ({ interestIndex, isRemovable, removeEvent }) => {
     const labels = ['Jogar no PC','Eventos','Música','Arte','Fimes','Outros'];
 
     let className;
@@ -30,10 +31,17 @@ const Interest = ({ interestIndex }) => {
 
     const label = labels[interestIndex - 1];
     
+    const handleClick = () => {
+        if (isRemovable) {
+            removeEvent();
+        }
+    }
+
     return (
-        <div className={`${className} w-fit h-fit py-2 px-4 rounded-full`}>
+        <button onClick={handleClick} className={`${className} w-fit flex flex-row items-center gap-1 h-fit py-2 px-4 rounded-full`}>
+            {isRemovable && <Vector vectorname={'xmark01'} />}
             <h1 className='text-sm'>{label}</h1>
-        </div>
+        </button>
     )
 }
 

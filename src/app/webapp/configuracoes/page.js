@@ -9,6 +9,11 @@ export const metadata = {
 }
 
 export default function Settings() {
+
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
+
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Configurações'} />
@@ -17,11 +22,11 @@ export default function Settings() {
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
                             <div className='h-fit w-full gap-4 flex flex-col'>
-                                <Button label={'Conta'} icon={'user'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Segurança'} icon={'shield'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Privacidade'} icon={'lock'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Pagamentos'} icon={'money'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Notificações'} icon={'bell'} action={() => { }} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Conta'} icon={'user'} action={() => handleNavigation('configuracoes/conta/')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Segurança'} icon={'shield'} action={() => handleNavigation('configuracoes/seguranca/')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Privacidade'} icon={'lock'} action={() => handleNavigation('configuracoes/privacidade/')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Pagamentos'} icon={'money'} action={() => handleNavigation('configuracoes/pagamentos/')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Notificações'} icon={'bell'} action={() => handleNavigation('configuracoes/notificacoes/')} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                         </div>
                     </div>
