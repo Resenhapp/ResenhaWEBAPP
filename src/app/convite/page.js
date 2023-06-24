@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
+import Tag from '@/src/components/Tag';
 
 export default function Invite() {
     let code = '';
@@ -76,7 +77,7 @@ export default function Invite() {
         if (isExpanded) {
             return (
                 <>
-                    <h1>{description}</h1>
+                    <h1>{description}<div className="mt-4"><h1 className="mb-1 font-bold">Tags:</h1><div className="flex flex-wrap gap-1 w-full"><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /></div></div></h1>
                     <div
                         className="flex flex-row items-center align-center cursor-pointer text-purpleT5"
                         onClick={handleToggleDescription}
@@ -86,7 +87,6 @@ export default function Invite() {
                             <Vector vectorname={'verticalArrow01'} />
                         </div>
                     </div >
-
                 </>
             );
         }
@@ -119,7 +119,7 @@ export default function Invite() {
 
     const getAppleMapsURL = (address) => {
         var newAddress = encodeURIComponent(address);
-        return `maps://maps.apple.com/?q=${newAddress}`;
+        return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
     };
 
     const getGoogleMapsURL = (address) => {
@@ -233,6 +233,7 @@ export default function Invite() {
                             <div>
                                 {renderDescription()}
                             </div>
+                            
                             <div className="flex flex-row mb-4 gap-4 w-full mt-4">
                                 <div className="flex flex-col mb-4 w-fit">
                                     <RoundButton label="" icon="share" onClick={handleShare} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
+
 const ImageInput = ({ image, onChange }) => {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
