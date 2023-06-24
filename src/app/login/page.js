@@ -8,6 +8,7 @@ import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export const metadata = {
   title: 'Resenha.app • Login',
@@ -32,7 +33,16 @@ export default function Login() {
   const handleClick = async () => {
     try {
       const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToAuthenticate', email: email, password: password });
-    } 
+
+      if (response.user && response.validator) {
+        Cookies.set('user', response.user);
+        Cookies.set('validator', response.validator);
+      }
+
+      else {
+        console.log(response);
+      } 
+    }
     
     catch (error) {
       console.error(error);
