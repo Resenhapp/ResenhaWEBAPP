@@ -3,6 +3,7 @@ import Button from '@/src/components/Button';
 import Back from '@/src/components/Back';
 import PartyPortrait from '@/src/components/PartyPortrait';
 import DefaulEventImage from '@/assets/images/default.jpg'
+import PageHeader from '@/src/components/PageHeader';
 export const metadata = {
     title: 'Resenha.app • Todas as Resenhas',
     description: 'Venha fazer suas resenhas!',
@@ -11,10 +12,7 @@ export const metadata = {
 export default function MyParties() {
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-                <Back />
-                <h1 className='text-2xl font-bold'>Suas resenhas</h1>
-            </div>
+               <PageHeader pageTitle={'Suas resenhas'} isBack={true}/>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
                     <div className=' h3 w-full flex'>
