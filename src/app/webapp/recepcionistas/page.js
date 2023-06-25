@@ -18,6 +18,10 @@ export default function Concierges() {
 
     }
 
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
+
     const defaultProfileImage = "https://resenha.app/publico/recursos/imagens/concierge_default.png";
 
     const id = Cookies.get('user');
@@ -86,7 +90,7 @@ export default function Concierges() {
                         </div>
                     </div>
                 <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                    <Button label={'Novo recepcionista'} icon={'arrow'} action={() => window.open("", "_blank")} iconSide='right' height={1} width={1} textAlign='center' />
+                    <Button label={'Novo recepcionista'} icon={'arrow'} action={() => handleNavigation('recepcionistas/criar')} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
                 </section>
             </div>
