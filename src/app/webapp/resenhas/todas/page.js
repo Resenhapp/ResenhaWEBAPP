@@ -12,7 +12,7 @@ export const metadata = {
 export default function MyParties() {
     return (
         <div className='flex flex-col w-screen h-screen'>
-               <PageHeader pageTitle={'Suas resenhas'} isBack={true}/>
+               <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
                     <div className=' h3 w-full flex'>

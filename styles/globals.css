@@ -28,7 +28,12 @@
   height: 100%;
   top: 0;
 }
-
+.bg-gradi {
+  background-image: linear-gradient(to right, #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787);
+}
+textarea {
+  resize: none;
+}
 .main:after {
   content: "";
   background-image: url("/assets/images/grid.svg");
