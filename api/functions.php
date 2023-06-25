@@ -209,6 +209,48 @@ function checkRequest($request) {
     }
 }
 
+function getHelpData() {
+    $response = [];
+
+    $query = "SELECT * FROM help";
+    $result = queryDBRows($query);
+
+    if (mysqli_num_rows($result) > 0) {
+        foreach ($result as $row) {
+            $category = $row["category"];
+            $question = $row["question"];
+            $answer = $row["answer"];
+    
+            $foundCategory = false;
+    
+            foreach ($response as &$item) {
+                if (isset($item[$category])) {
+                    $item[$category][] = [
+                        "question" => $question,
+                        "answer" => $answer
+                    ];
+                    $foundCategory = true;
+                    break;
+                }
+            }
+    
+            if (!$foundCategory) {
+                $response[] = [
+                    $category => [
+                        [
+                            "question" => $question,
+                            "answer" => $answer
+                        ]
+                    ]
+                ];
+            }
+        }
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
 function getUserData() {
     global $enckey;
 
@@ -222,6 +264,36 @@ function getUserData() {
             $query = "SELECT COUNT(*) as total_parties FROM parties WHERE host = '$id'";
             $events = queryDB($query)[0];
 
+            $query = "SELECT * FROM balances WHERE user = '$id'";
+            $info = queryDBRows($query);
+
+            if (mysqli_num_rows($info) > 0) {
+                foreach ($info as $i) {
+                    $balances = [
+                        "available" => number_format($i["available"], 2, ',', '.'),
+                        "processing" => number_format($i["processing"], 2, ',', '.'),
+                        "retained" => number_format($i["retained"], 2, ',', '.'),
+                        "requested" => number_format($i["requested"], 2, ',', '.')
+                    ];
+                }
+            }
+
+            $query = "SELECT * FROM concierges WHERE host = '$id'";
+            $userConcierges = queryDBRows($query);
+
+            $concierges = [];
+
+            if (mysqli_num_rows($info) > 0) {
+                foreach ($userConcierges as $concierge) {
+                    $temp = [
+                        "name" => $concierge["name"],
+                        "token" => $concierge["token"]
+                    ];
+
+                    array_push($concierges, $temp);
+                }
+            }
+
             $data = array(
                 'username' => $row["username"],
                 'name' => $row["name"],
@@ -229,7 +301,10 @@ function getUserData() {
                 'interests' => $row["interests"],
                 'followers' => 0,
                 'following' => 0,
-                'events' => $events
+                'cpf' => $row["cpf"],
+                'events' => $events,
+                'balances' => $balances,
+                'concierges' => $concierges
             );
 
             header('Content-Type: application/json');

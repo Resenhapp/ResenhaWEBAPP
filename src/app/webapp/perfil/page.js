@@ -52,7 +52,9 @@ export default function Profile() {
 
     if (!data) {
         return (
-            <Loading/>
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
         );
     }
 
@@ -93,12 +95,9 @@ export default function Profile() {
                             <div className='w-full mt-8'>
                                 <h1 className='font-bold text-xl'>Interesses</h1>
                                 <div className='w-full flex flex-wrap gap-1'>
-                                    <Interest interestIndex={1} />
-                                    <Interest interestIndex={2} />
-                                    <Interest interestIndex={3} />
-                                    <Interest interestIndex={4} />
-                                    <Interest interestIndex={5} />
-                                    <Interest interestIndex={6} />
+                                    {interests.map((interest, index) =>
+                                        <Interest key={index} interestIndex={interest} />
+                                    )}
                                 </div>
                             </div>
                         </div>

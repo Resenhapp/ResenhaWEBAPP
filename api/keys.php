@@ -30,6 +30,7 @@ else {
 $requests = [
     "getInviteData",
     "getUserData",
+    "getHelpData",
     "tryToCreateGuest",
     "tryToAuthenticate",
     "tryToCreateUser",

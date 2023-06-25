@@ -4,6 +4,11 @@ import Button from '@/src/components/Button';
 import MoneyInput from '@/src/components/MoneyInput';
 import WithdrawError from '@/src/components/WithdrawError';
 import PageHeader from '@/src/components/PageHeader';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import Loading from "@/src/components/Loading";
+
 
 export const metadata = {
     title: 'Resenha.app • Saque',
@@ -11,12 +16,8 @@ export const metadata = {
 }
 
 export default function Withdraw() {
-    
     const inputRef = useRef(null);
     const [errorContent, setErrorContent] = useState(null);
-
-    var avaliableCash = '1234,00';
-
     const [withdrawalAmount, setWithdrawalAmount] = useState(0);
 
     const handleWithdraw = () => {
@@ -33,10 +34,51 @@ export default function Withdraw() {
         }
     };
 
+    const id = Cookies.get('user');
 
-    var accountName = 'João Davi Souza Nascimento';
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
+    var { name, cpf, balances} = data;
+
+    var avaliableCash = balances.available;
     var bankName = 'Banco Inter';
-    var accountNumber = '123.123.123-45';
 
     const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
 
@@ -49,8 +91,8 @@ export default function Withdraw() {
                         <div className='w-full flex flex-col items-center gap-4'>
                             <div className='w-full h-fit bg-purpleT2 rounded-2xl ring-2 ring-inset ring-purpleT3 p-4'>
                                 <h1 className='font-bold text-2xl'>Dados bancários</h1>
-                                <h1 className=''><b>Conta: </b>{accountNumber}</h1>
-                                <h1 className=''><b>Nome: </b>{accountName}</h1>
+                                <h1 className=''><b>Conta: </b>{cpf}</h1>
+                                <h1 className=''><b>Nome: </b>{name}</h1>
                                 <h1 className=''><b>Banco: </b>{bankName}</h1>
                             </div>
                             <div className='w-full'>
@@ -60,7 +102,7 @@ export default function Withdraw() {
                                 <div className='w-full h-fit ring-inset ring-2 flex flex-row gap-2 ring-purpleT3 bg-purpleT2 rounded-2xl p-4 '>
                                     R$<MoneyInput ref={inputRef} onChange={(val) => setWithdrawalAmount(parseFloat(val.replace('.', '').replace(',', '.')))} />
                                 </div>
-                                <p className='text-whiteT1 w-full text-left text-sm p-1'>{'Valor disponível: ' + avaliableCash}</p>
+                                <p className='text-whiteT1 w-full text-left text-sm p-1'>{'Valor disponível: R$ ' + avaliableCash}</p>
                             </div>
                         </div>
                         <div>
