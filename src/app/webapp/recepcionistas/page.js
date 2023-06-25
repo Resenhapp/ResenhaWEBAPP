@@ -46,6 +46,11 @@ export default function Concierges() {
         }
     };
 
+    const [show, setShow] = useState(false);
+    const showPopUp = () => {
+        setShow(true);
+    };
+
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
@@ -60,7 +65,7 @@ export default function Concierges() {
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }
@@ -70,9 +75,16 @@ export default function Concierges() {
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Recepcionistas'} />
-            <PopUp icon={'question'} iconColor={'purple'} onActionClick={RemoveConcierge()} title={'Excluir recepcionista?'}
+            <PopUp
+                icon={'question'}
+                iconColor={'purple'}
+                onActionClick={RemoveConcierge}
+                title={'Excluir recepcionista?'}
                 text={`Você tem certeza de que quer excluir TESTE da lista de Recepcionistas? `}
-                actionTitle={'Excluir'} buttonColor={'red'} showStatus={false}/>
+                actionTitle={'Excluir'}
+                buttonColor={'red'}
+                showStatus={show}
+            />
             <div className="flex flex-col items-centser justify-center h-screen px-4 ">
                 <section className="flex flex-col w-full max-w-md p-4 ">
                     <div className='h3 w-full flex '>
@@ -81,17 +93,19 @@ export default function Concierges() {
                                 {concierges.map((concierge) => (
                                     <ConciergePortrait
                                         imgUrl={defaultProfileImage}
-                                        activeStatus={true}
                                         conciergeName={concierge.name}
                                         conciergeToken={concierge.token}
+                                        relativeEvent={'Resenha de Los Manos'}
+                                        deleteAction={showPopUp}
+                                        editAction={() => handleNavigation('recepcionistas/editar')}
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
-                <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                    <Button label={'Novo recepcionista'} icon={'arrow'} action={() => handleNavigation('recepcionistas/criar')} iconSide='right' height={1} width={1} textAlign='center' />
-                </div>
+                    <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
+                        <Button label={'Novo recepcionista'} icon={'arrow'} action={() => handleNavigation('recepcionistas/criar')} iconSide='right' height={1} width={1} textAlign='center' />
+                    </div>
                 </section>
             </div>
         </div>

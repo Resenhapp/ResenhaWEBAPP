@@ -17,7 +17,9 @@ export default function EditConcierge() {
     const [selectedOption, setSelectedOption] = useState('');
     const options = ['Option 1', 'Option 2', 'Option 3'];
     const [isModalOpen, setModalOpen] = useState(false);
-    const [isFilled, setIsFilled] = useState(false);
+
+    const conciergeCurrentName = 'Claudinho bochecha';
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName); // initialize new name as current name
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -32,20 +34,22 @@ export default function EditConcierge() {
     };
 
     const handleInputChange = (e) => {
-        setIsFilled(e.target.value !== '');
-        console.log(e.target.value)
+        setConciergeNewName(e.target.value); // update new name as the user types
     };
+
+    const isFilled = conciergeNewName !== '';  // Check if the field is filled or not
+
 
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Novo recepcionista'} isBack={true} checker={() => { null }} />
+            <PageHeader pageTitle={'Editar recepcionista'} isBack={true} checker={() => { null }} />
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-col justify-around content-center align-center gap-4 h-full items-center w-full max-w-md p-4">
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
-                            <h1 className='text-2xl font-bold'>Adicione um novo recepcionista!</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a href='https://resenha.app/aprenda/recepcionistas'><b>toque aqui</b></a></p>
+                            <h1 className='text-2xl font-bold'>Editando recepcionista...</h1>
+                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a href='https://resenha.app/aprenda/recepcionistas'><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
                             <InputField
@@ -53,6 +57,7 @@ export default function EditConcierge() {
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
                                 action={handleInputChange}
+                                value={conciergeNewName}  // change this line
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
@@ -67,15 +72,16 @@ export default function EditConcierge() {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-10 w-full'>
+                    <div className='mt-10 w-full flex flex-row justify-between'>
+                        <button className='px-5 py-4' onClick={() => window.history.back()}>Cancelar</button>
                         <Button
-                            label={'Criar recepcionista'}
+                            label={'Salvar'}
                             active={isFilled}
-                            icon={'plus'}
+                            icon={'check'}
                             action={() => handleNavigation('recepcionistas')}
                             iconSide='right'
                             height={1}
-                            width={1}
+                            width={3}
                             textAlign='center'
                         />
                     </div>
