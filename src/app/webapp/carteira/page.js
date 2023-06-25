@@ -1,7 +1,13 @@
 'use client'
+
 import MoneyDisplay from '@/src/components/MoneyDisplay';
 import Button from '@/src/components/Button';
 import PageHeader from '@/src/components/PageHeader';
+import axios from 'axios';
+import { useState } from "react";
+import { useEffect } from 'react';
+import Loading from "@/src/components/Loading";
+import Cookies from 'js-cookie';
 
 export const metadata = {
     title: 'Resenha.app • Carteira',
@@ -13,7 +19,48 @@ export default function Wallet() {
         window.location.href = `/webapp/carteira/saque`;
     };
 
-    var availableCash = '1000,00';
+    const id = Cookies.get('user');
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
+    var { balances } = data;
 
     return (
         <div className='flex flex-col w-screen h-screen '>
@@ -22,13 +69,13 @@ export default function Wallet() {
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
                         <div className='w-full flex flex-col items-center gap-4'>
-                            <MoneyDisplay amount={100} cashType="available" />
-                            <MoneyDisplay amount={100} cashType="secured" />
-                            <MoneyDisplay amount={100} cashType="processing" />
-                            <MoneyDisplay amount={100} cashType="requested" />
+                            <MoneyDisplay amount={balances.available} cashType="available" />
+                            <MoneyDisplay amount={balances.retained} cashType="secured" />
+                            <MoneyDisplay amount={balances.processing} cashType="processing" />
+                            <MoneyDisplay amount={balances.requested} cashType="requested" />
                         </div>
                         <div>
-                        <Button label={'Solicitar saque'} icon={'arrow'} action={handleNavigation} iconSide='right' height={1} width={1} textAlign='left' />
+                            <Button label={'Solicitar saque'} icon={'arrow'} action={handleNavigation} iconSide='right' height={1} width={1} textAlign='left' />
                         </div>
                     </div>
                 </section>

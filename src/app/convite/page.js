@@ -54,7 +54,6 @@ export default function Invite() {
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
-            console.log(response);
             setData(response);
         }
 

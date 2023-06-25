@@ -4,6 +4,10 @@ import Button from '@/src/components/Button';
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Accordion from '@/src/components/Accordion';
+import { useState } from "react";
+import { useEffect } from 'react';
+import Loading from "@/src/components/Loading";
+import Cookies from 'js-cookie';
 
 export const metadata = {
     title: 'Resenha.app • Ajuda',
@@ -20,63 +24,101 @@ export default function Help() {
             </div>
         )
     }
+
+    const id = Cookies.get('user');
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
+    data.forEach((categoryData, index) => {
+        const category = Object.keys(categoryData)[0];
+        console.log(`Category ${index + 1}: ${category}`);
+        
+        const questions = categoryData[category];
+        questions.forEach((qa, qIndex) => {
+          console.log(`Question ${qIndex + 1}: ${qa.question}`);
+          console.log(`Answer ${qIndex + 1}: ${qa.answer}`);
+        });
+    });
+
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Ajuda'} />
-            <div className="flex flex-col items-center justify-center h-screen px-4">
-                <section className="flex flex-col flex-start items-center w-full max-w-md p-4">
-                    <div className=' h3 w-full flex'>
-                        <div className='w-full flex flex-col'>
-                            <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
-                                <h2>Aqui estão as dúvidas mais frequentes. Caso você precise saber sobre algo mais específico toque em Entrar em contato na parte inferior da página.</h2>
-                            </div>
-                            <div className='w-full h-full flex flex-col'>
-                                <div class="bg-scroll flex flex-col gap-4 h-[50vh] w-full overflow-y-auto">
-                                    <div>
-                                        <h1 className='text-purpleT5 text-2xl'>Resenhas</h1><div className='w-full h-[1px] bg-purpleT5' />
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <Accordion data={[
-                                            { title: 'Como crio uma resenha?', content: 'Para criar uma resenha, toque no botão superior esquerdo, e toque em Nova resenha. Após isso, você receberá um link único da sua resenha para compartilhar com seus convidados. Lembre-se também de enviar o link de recepcionista para a pessoa que você cadastrou, assim, no dia do evento ela possa permitir a entrada dos seus convidados.' },
-                                        ]} />
-                                        <Accordion data={[
-                                            { title: 'Como adiciono um recepcionista?', content: 'Para adicionar um recepcionista acesse a tela de Recepcionistas e toque em Novo Recepcionista.' },
-                                        ]} />
-                                        <Accordion data={[
-                                            {
-                                                title: 'Perdi o link da resenha',
-                                                content: (
-                                                    <div>
-                                                        <p>
-                                                            Caso tenha esquecido de salvar o link da sua resenha ou perdeu ele por engano, toque em Resenhas no menu lateral, toque em Ver Todas e em seguida toque no botão de copiar
-                                                            <span>{copyVector()}</span>
-                                                            localizado na resenha que você quer o link.
-                                                        </p>
-                                                    </div>
-                                                ),
-                                            },
-                                        ]} />
-                                    </div>
-                                    <div>
-                                        <h1 className='text-purpleT5 text-2xl'>Saques</h1><div className='w-full h-[1px] bg-purpleT5' />
-                                    </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <Accordion data={[
-                                            { title: 'Como solicito um saque?', content: 'Para solicitar um saque, toque no botão no canto superior esquerdo, toque em Carteira e toque em Solicitar saque.' },
-                                        ]} />
-                                        <Accordion data={[
-                                            { title: 'Em quanto tempo cai o saque?', content: 'Para adicionar um recepcionista acesse a tela de Recepcionistas e toque em Novo recepcionista.' },
-                                        ]} />
-                                    </div>
-                                </div>
-                            </div>
+          <PageHeader pageTitle={'Ajuda'} />
+          <div className="flex flex-col items-center justify-center h-screen px-4">
+            <section className="flex flex-col flex-start items-center w-full max-w-md p-4">
+              <div className=' h3 w-full flex'>
+                <div className='w-full flex flex-col'>
+                  <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
+                    <h2>Aqui estão as dúvidas mais frequentes. Caso você precise saber sobre algo mais específico toque em Entrar em contato na parte inferior da página.</h2>
+                  </div>
+                  <div className='w-full h-full flex flex-col'>
+                    {data.map((categoryData, index) => {
+                      const category = Object.keys(categoryData)[0];
+                      const questions = categoryData[category];
+                      return (
+                        <div key={index}>
+                          <h1 className='text-purpleT5 text-2xl'>{category}</h1>
+                          <div className='w-full h-[1px] bg-purpleT5' />
+                          <div className='flex flex-col gap-2'>
+                            {questions.map((qa, qIndex) => (
+                              <Accordion key={qIndex} data={[{ title: qa.question, content: qa.answer }]} />
+                            ))}
+                          </div>
                         </div>
-                    </div>
-                </section >
-                <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
-                    <Button label={'Entrar em contato'} icon={'arrow'} action={() => window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+quero+criar+e+gerenciar+minhas+resenhas+com+o+Resenha.app", "_blank")} iconSide='right' height={1} width={1} textAlign='center' />
+                      );
+                    })}
+                  </div>
                 </div>
-            </div >
-        </div >
-    );
+              </div>
+            </section>
+            <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
+              <Button
+                label={'Entrar em contato'}
+                icon={'arrow'}
+                action={() => window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+eu+preciso+de+ajuda+com+o+Resenha.app", "_blank")}
+                iconSide='right'
+                height={1}
+                width={1}
+                textAlign='center'
+              />
+            </div>
+          </div>
+        </div>
+      );
 }
