@@ -8,11 +8,11 @@ import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
 
 export const metadata = {
-    title: 'Resenha.app • Novo recepcionista',
+    title: 'Resenha.app • Editar recepcionista',
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function NewConcierge() {
+export default function EditConcierge() {
 
     const [selectedOption, setSelectedOption] = useState('');
     const options = ['Option 1', 'Option 2', 'Option 3'];
@@ -52,7 +52,7 @@ export default function NewConcierge() {
                                 Icon={'user'}
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
-                                action={handleInputChange} // Update state on input change
+                                action={handleInputChange}
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
