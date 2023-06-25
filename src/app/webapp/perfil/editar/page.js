@@ -28,30 +28,25 @@ export default function EditProfile() {
     const [isUsernameModalOpen, setUsernameModalOpen] = useState(false);
     const [isAboutmeModalOpen, setAboutmeModalOpen] = useState(false);
     const [newUsername, setNewUsername] = useState(username);
-    const [newUser, setNewUser] = useState(user); // new state for user
+    const [newUser, setNewUser] = useState(user);
     const [newAboutme, setNewAboutme] = useState(aboutme);
     const closeModal = () => setModalOpen(false);
     const [selectedInterests, setSelectedInterests] = useState([]);
 
-
-    // The old "isModalOpen" is now "isUnsavedChangesModalOpen"
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
 
-    // You still use "isModalOpen" for interests modal
-    const [isInterestsModalOpen, setInterestsModalOpen] = useState(false);
 
+    const [isInterestsModalOpen, setInterestsModalOpen] = useState(false);
     const toggleInterest = (interest) => {
         setSelectedInterests(prevInterests => {
-            // if the interest is already selected, remove it
+
             if (prevInterests.includes(interest)) {
                 return prevInterests.filter(i => i !== interest);
             }
 
-            // otherwise, add the interest
             return [...prevInterests, interest];
         });
     };
-
     return (
         <div>
             <div className='flex flex-col w-screen h-screen'>
@@ -60,32 +55,29 @@ export default function EditProfile() {
                     isBack={true}
                     checker={() => new Promise((resolve, reject) => {
                         if (hasChange) {
-                            setUnsavedChangesModalOpen(true); // Changed here
-                            setCheckerCallback(() => resolve);  // Set checkerCallback to resolve the promise
+                            setUnsavedChangesModalOpen(true);
+                            setCheckerCallback(() => resolve);
                         } else {
-                            resolve(true); // if there are no changes, resolve immediately
+                            resolve(true); 
                         }
                     })}
                 />
-
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
                         <Modal show={isUnsavedChangesModalOpen} close={() => setUnsavedChangesModalOpen(false)}>
                             <div className='gap-2 flex flex-col'>
                                 <h1 className='text-center'>Ei! Você tem alterações que não foram salvas! Vai sair sem salvar?</h1>
-                                <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full ring-inset py-2 px-4' onClick={() => {
+                                <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                                     if (typeof checkerCallback === 'function') {
                                         checkerCallback(false);   // <-- note this change
                                     }
                                     setModalOpen(false);
                                 }}>Sim eu vou.</button>
-                                <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full ring-inset py-2 px-4' onClick={() => {
+                                <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                                     setUnsavedChangesModalOpen(false);
                                 }}>Não, peraí!</button>
                             </div>
-
                         </Modal>
-
                         <Modal show={isModalOpen} close={closeModal}>
                             <h1 className='text-xl mb-2 font-bold'>Escolha Interesses!</h1>
                             <p>Os interesses servem para as pessoas entenderem melhor suas preferências</p>
@@ -125,11 +117,11 @@ export default function EditProfile() {
 
                                 </div>
                                 <div className='flex flex-row gap-2 w-full'>
-                                    <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
+                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
                                         setUsernameModalOpen(false);
                                         // do something with newUsername and newUser
                                     }}>Cancelar</button>
-                                    <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
+                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
                                         setUsernameModalOpen(false);
                                         // do something with newUsername and newUser
                                     }}>Salvar</button>
@@ -144,11 +136,11 @@ export default function EditProfile() {
                                 <h1 className='text-center'>Conta um pouco sobre você</h1>
                                 <textarea rows={4} className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-2 ring-purpleT3 rounded-xl' type="text" value={newAboutme} onChange={(e) => setNewAboutme(e.target.value)} />
                                 <div className='flex flex-row gap-2 w-full'>
-                                    <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
+                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
                                         setAboutmeModalOpen(false);
                                         // do something with the description
                                     }}>Cancelar</button>
-                                    <button className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
+                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
                                         setAboutmeModalOpen(false);
                                         // do something with the description
                                     }}>Salvar</button>
@@ -213,7 +205,7 @@ export default function EditProfile() {
                             </div>
                         </div>
                         <div className='w-full flex flex-row justify-between'>
-                            <button className='px-5 py-4'>Cancelar</button>
+                            <button className='px-5 py-4' onClick={() => window.history.back()}>Cancelar</button>
                             <Button label={'Salvar'} icon={'check'} action={() => handleNavigation('perfil')} iconSide='right' height={1} width={3} textAlign='center' />
                         </div>
                     </section>

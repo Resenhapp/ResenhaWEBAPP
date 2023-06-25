@@ -19,7 +19,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker }) => {
         <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
             {isBack ? <Back defaultEvent={async () => { await checker(); }}/> : <MenuButton toggleMenu={toggleMenu} />}
             <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
-            <h1 className='text-2xl text-whiteT1 font-bold'>{pageTitle}</h1>
+            <h1 className='text-2xl text-center text-whiteT1 font-bold'>{pageTitle}</h1>
             <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={true} />
             <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} />
         </div>

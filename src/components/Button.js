@@ -110,7 +110,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
     const iconStyles = `${iconSide === 'right' ? 'ml-3' : 'mr-3'}`;
 
     return (
-        <button onClick={action} className={containerStyles}>
+        <button disabled={!active} onClick={action} className={containerStyles}>
             {icon && iconSide === 'left' && <div className={iconStyles}>{iconSvg}</div>}
             <span className={textStyles}>{label}</span>
             {icon && iconSide === 'right' && <div className={iconStyles}>{iconSvg}</div>}
