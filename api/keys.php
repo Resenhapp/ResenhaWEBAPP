@@ -28,12 +28,12 @@ else {
 }
 
 $requests = [
-    "getInviteData",
-    "getUserData",
-    "getHelpData",
-    "tryToCreateGuest",
-    "tryToAuthenticate",
-    "tryToCreateUser",
+  "getInviteData",
+  "getUserData",
+  "getHelpData",
+  "tryToCreateGuest",
+  "tryToAuthenticate",
+  "tryToCreateUser",
 ];
 
 ?>

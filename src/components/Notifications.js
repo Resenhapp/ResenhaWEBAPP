@@ -1,8 +1,54 @@
+'use client'
+
 import React from 'react';
 import Notification from './Notification';
+import { useState } from "react";
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 const Notifications = ({ isOpen, toggleNotifications }) => {
-    
+    const id = Cookies.get('user');
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!data) {
+        return (
+            null
+        );
+    }
+
+    var { notifications } = data;
+
     return (
         <div className={`fixed top-0 right-0 w-full h-full bg-purpleT1 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="flex flex-row-reverse justify-between items-center w-full mt-0 px-6 pt-20">
@@ -22,8 +68,12 @@ const Notifications = ({ isOpen, toggleNotifications }) => {
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <p>Abaixo você pode conferir todas as suas notificações!</p>
                                 <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                    <Notification title={'Confirmado!'} content={'Ananda acabou de confirmar a presença! Pagamento via PIX.'} />
-                                    <Notification title={'Chegou!'} content={'Um dos seus convidados, João, acabou de chegar! Entrada liberada por Juliano.'} />
+                                    {notifications.map((notification) => (
+                                        <Notification
+                                            title={notification.title} 
+                                            content={notification.content}
+                                        />
+                                    ))}
                                     <button className='w-full h-fit px-4 py-5 bg-purpleT2 text-whiteT1 rounded-xl'>Limpar notificações</button>
                                 </div>
                             </div>
