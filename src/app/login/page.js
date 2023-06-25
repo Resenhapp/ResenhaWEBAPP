@@ -37,6 +37,8 @@ export default function Login() {
       if (response.user && response.validator) {
         Cookies.set('user', response.user);
         Cookies.set('validator', response.validator);
+
+        window.location.href = 'webapp/perfil/';
       }
 
       else {
