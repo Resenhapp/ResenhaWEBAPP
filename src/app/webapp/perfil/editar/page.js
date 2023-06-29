@@ -6,6 +6,7 @@ import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
 import Interest from '@/src/components/Interest';
 import Button from '@/src/components/Button';
+import ModalButton from '@/src/components/ModalButton';
 
 export const metadata = {
     title: 'Resenha.app • Perfil',
@@ -35,7 +36,6 @@ export default function EditProfile() {
 
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
 
-
     const [isInterestsModalOpen, setInterestsModalOpen] = useState(false);
     const toggleInterest = (interest) => {
         setSelectedInterests(prevInterests => {
@@ -58,7 +58,7 @@ export default function EditProfile() {
                             setUnsavedChangesModalOpen(true);
                             setCheckerCallback(() => resolve);
                         } else {
-                            resolve(true); 
+                            resolve(true);
                         }
                     })}
                 />
@@ -95,6 +95,22 @@ export default function EditProfile() {
                                     )
                                 })}
                             </div>
+                            <div className='flex flex-row gap-2 w-full'>
+                                <ModalButton
+                                    label="Cancelar"
+                                    action={() => {
+                                        setInterestsModalOpen(false);
+                                        // do something with newUsername and newUser
+                                    }}
+                                />
+                                <ModalButton
+                                    label="Salvar"
+                                    action={() => {
+                                        setInterestsModalOpen(false);
+                                        // do something with newUsername and newUser
+                                    }}
+                                />
+                            </div>
                         </Modal>
                         <Modal show={isUsernameModalOpen} close={() => setUsernameModalOpen(false)}>
                             <div className='gap-2 flex flex-col'>
@@ -117,14 +133,20 @@ export default function EditProfile() {
 
                                 </div>
                                 <div className='flex flex-row gap-2 w-full'>
-                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
-                                        setUsernameModalOpen(false);
-                                        // do something with newUsername and newUser
-                                    }}>Cancelar</button>
-                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
-                                        setUsernameModalOpen(false);
-                                        // do something with newUsername and newUser
-                                    }}>Salvar</button>
+                                    <ModalButton
+                                        label="Cancelar"
+                                        action={() => {
+                                            setUsernameModalOpen(false);
+                                            // do something with newUsername and newUser
+                                        }}
+                                    />
+                                    <ModalButton
+                                        label="Salvar"
+                                        action={() => {
+                                            setUsernameModalOpen(false);
+                                            // do something with newUsername and newUser
+                                        }}
+                                    />
 
                                 </div>
                                 <p className='text-[14px] text-center '>Atenção: você só pode alterar o seu nome <b>uma vez</b>.</p>
@@ -136,14 +158,20 @@ export default function EditProfile() {
                                 <h1 className='text-center'>Conta um pouco sobre você</h1>
                                 <textarea rows={4} className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-2 ring-purpleT3 rounded-xl' type="text" value={newAboutme} onChange={(e) => setNewAboutme(e.target.value)} />
                                 <div className='flex flex-row gap-2 w-full'>
-                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
-                                        setAboutmeModalOpen(false);
-                                        // do something with the description
-                                    }}>Cancelar</button>
-                                    <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={() => {
-                                        setAboutmeModalOpen(false);
-                                        // do something with the description
-                                    }}>Salvar</button>
+                                    <ModalButton
+                                        label="Cancelar"
+                                        action={() => {
+                                            setAboutmeModalOpen(false);
+                                            // do something with newUsername and newUser
+                                        }}
+                                    />
+                                    <ModalButton
+                                        label="Salvar"
+                                        action={() => {
+                                            setAboutmeModalOpen(false);
+                                            // do something with newUsername and newUser
+                                        }}
+                                    />
 
                                 </div>
                             </div>

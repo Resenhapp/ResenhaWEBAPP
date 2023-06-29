@@ -14,7 +14,7 @@ export const metadata = {
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Home() {
+export default function HomePage() {
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
     
     const handleDisplayToggle = () => {

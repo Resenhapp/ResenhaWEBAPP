@@ -1,9 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
+import Vector from './Vector';
 
-const Tag = ({tagname}) => {
+const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = false, selected: selectedProp = false, onClick }) => {
+  
+    const [selected, setSelected] = useState(selectedProp);
+    const vectorName = selected ? 'xmark02' : 'plus04';
+  
+    useEffect(() => {
+      setSelected(selectedProp);
+    }, [selectedProp]);
+  
+    const handleClick = () => {
+      if (!isEditable) return;
+      setSelected(!selected);
+      onClick && onClick(!selected);
+      const action = selected ? 'deselected' : 'selected';
+      console.log(`${type} ${action}: ${tagname}`);
+    };
+  
+    const baseClasses = 'flex flex-row gap-1 items-center w-fit px-3 py-2 rounded-full ring-0 ring-inset';
+    const colorClasses = {
+      tag: selected ? 'bg-purpleT4 ring-[#FFFFFF80] ring-2' : `bg-purpleT3`,
+      interest: selected ? `bg-${highlightColor} ring-2 ring-[#FFFFFF80]` : `bg-${colorName}`,
+    };
+  
+    const buttonClasses = classNames(
+      baseClasses,
+      colorClasses[type]
+    );
+  
     return (
-        <div className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-2 rounded-full ring-2 ring-inset ring-purpleT4"><h1>{tagname}</h1></div>
-    )
-}
-
+      <button onClick={handleClick} className={buttonClasses}>
+        {isEditable && <Vector vectorname={vectorName} />}
+        {tagname}
+      </button>
+    );
+};
+  
 export default Tag;
