@@ -21,7 +21,7 @@ const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = fa
   
     const baseClasses = 'flex flex-row gap-1 items-center w-fit px-3 py-2 rounded-full ring-0 ring-inset';
     const colorClasses = {
-      tag: selected ? 'bg-purpleT4 ring-[#FFFFFF80] ring-2' : `bg-purpleT3`,
+      tag: selected ? 'bg-purpleT3 ring-[#FFFFFF80] ring-0' : `bg-purpleT2`,
       interest: selected ? `bg-${highlightColor} ring-2 ring-[#FFFFFF80]` : `bg-${colorName}`,
     };
   

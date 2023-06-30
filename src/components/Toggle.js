@@ -24,7 +24,15 @@ const Toggle = ({ labelText, showLabel, startToggled, showQuestion, questionActi
       <div className="w-11 h-6 rounded-full peer dark:bg-purpleT2 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-purpleT3 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-whiteT1"></div>
       {showLabel && <span className="text-sm ml-2 font-thin">{labelText}</span>}
       {showQuestion && (
+        <div 
+        className='flex justify-center content-center items-center scale-125' 
+        onClick={(e) => {
+            e.stopPropagation();
+            questionAction();
+        }}
+    >
         <Vector vectorname={'question01'} />
+    </div>
       )}
     </label>
   );

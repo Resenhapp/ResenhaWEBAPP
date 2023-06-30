@@ -1,12 +1,12 @@
 'use client'
-import PageHeader from "@/src/components/PageHeader"
+import Button from "@/src/components/Button"
 import Image from "next/image"
 import Vector from "@/src/components/Vector"
 import EditInfoPage from "@/src/components/EditInfoPage"
 import React, { useState, useEffect } from 'react';
 import Tag from "@/src/components/Tag"
-import { getInterest } from "@/src/components/interestsData"
 import { tagsData } from "@/src/components/tagsData"
+import Toggle from "@/src/components/Toggle"
 
 export default function EditEvent() {
 
@@ -45,12 +45,19 @@ export default function EditEvent() {
         setIsEditTagsPageOpen(!isEditTagsPageOpen);
     };
 
+    const [isEditPricePageOpen, setIsEditPricePageOpen] = useState(false);
+    const toggleEditPricePageOpen = () => {
+        setIsEditPricePageOpen(!isEditPricePageOpen);
+    };
+
     var initialName = "Resenha de los Manos";
     var initialDate = "20/03/2023";
     var initialHour = "20:00";
+    var initialFinalHour = "20:00";
     var initialLimit = "80";
     var initialAddress = "Rua ramiro barcelos, 1450";
     var initialDescription = "Vai ter muitos amigos festejando e dançando pra valer venha curtir com a gente na resenha de los manos! realmente vamos botar para quebrar! contaremos com a ilustre presença de Estevan e Bisteca.";
+    var initialPrice = "R$ 20,00";
 
     // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
     const [eventTags, setEventTags] = useState([1, 2, 4]);
@@ -123,52 +130,158 @@ export default function EditEvent() {
     // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC
     const [date, setDate] = useState(initialDate);
     const handleDateChange = (event) => {
-        setDate(event.target.value);
+        let input = event.target.value.replace(/\D/g, "");
+        input = input.replace(/(\d{2})(\d)/, "$1/$2");
+        input = input.replace(/(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+        input = input.replace(/(\d{2})\/(\d{2})\/(\d{4}).*/, "$1/$2/$3");
+        setDate(input);
     };
+
     const saveDate = () => {
-        console.log(date);
-        toggleEditDatePageOpen(); // close the page after saving
+        const [day, month, year] = date.split('/').map(Number);
+        const currentYear = new Date().getFullYear();
+
+        let maxDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
+            maxDaysInMonth[1] = 29;
+        }
+
+        if (year < currentYear) {
+            setDateError('O ano inserido é inválido. Por favor, insira um ano atual ou futuro.');
+        } else if (month < 1 || month > 12) {
+            setDateError('O mês inserido é inválido. Por favor, insira um mês entre 01 e 12.');
+        } else if (day < 1 || day > maxDaysInMonth[month - 1]) {
+            setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
+        } else {
+            setDateError('');
+            console.log(date);
+            toggleEditDatePageOpen();
+        }
     };
+
+    const formatDate = (dateString) => {
+        const months = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
+        const parts = dateString.split("/");
+        const day = parts[0];
+        const month = months[parseInt(parts[1]) - 1];
+
+        return { day, month };
+    }
+
+    const [dateError, setDateError] = useState('');
+    const { day, month } = formatDate(date);
+
+    const getDayOfWeek = (dateString) => {
+        const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+        const parts = dateString.split("/");
+        const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
+        const dayOfWeek = days[dateObject.getDay()];
+
+        return dayOfWeek;
+    }
+
+    const dayOfWeek = getDayOfWeek(date);
 
     // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC
     const [hour, setHour] = useState(initialHour);
+    const [isEndTime, setIsEndTime] = useState(false);
+
+    const handleToggle = () => {
+        setIsEndTime(!isEndTime);
+    };
+
+    const [startHour, setStartHour] = useState(initialHour);
+    const handleStartHourChange = (event) => {
+        let inputHour = event.target.value;
+
+        inputHour = inputHour.replace(/\D/g, '');
+
+        if (inputHour.length >= 2) {
+            inputHour = inputHour.substring(0, inputHour.length - 2) + ':' + inputHour.substring(inputHour.length - 2, inputHour.length);
+        }
+
+        setStartHour(inputHour);
+    };
+
+    const [endHour, setEndHour] = useState(initialFinalHour);
+    const handleEndHourChange = (event) => {
+        let inputHour = event.target.value;
+
+        inputHour = inputHour.replace(/\D/g, '');
+
+        if (inputHour.length >= 2) {
+            inputHour = inputHour.substring(0, inputHour.length - 2) + ':' + inputHour.substring(inputHour.length - 2, inputHour.length);
+        }
+
+        setEndHour(inputHour);
+    };
+
     const handleHourChange = (event) => {
-        setHour(event.target.value);
+        let inputHour = event.target.value;
+
+        inputHour = inputHour.replace(/\D/g, '');
+
+        if (inputHour.length >= 2) {
+            inputHour = inputHour.substring(0, inputHour.length - 2) + ':' + inputHour.substring(inputHour.length - 2, inputHour.length);
+        }
+
+        setHour(inputHour);
     };
     const saveHour = () => {
-        console.log(hour);
-        toggleEditHourPageOpen(); // close the page after saving
+        console.log(startHour);
+        console.log(endHour);
+        toggleEditHourPageOpen();
     };
+
+
 
     // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC
     const [limit, setLimit] = useState(initialLimit);
     const handleLimitChange = (event) => {
-        setLimit(event.target.value);
+        const onlyNumbers = event.target.value.replace(/\D/g, '');
+        setLimit(onlyNumbers);
     };
     const saveLimit = () => {
         console.log(limit);
-        toggleEditMaxGuestsPageOpen(); // close the page after saving
+        toggleEditMaxGuestsPageOpen();
     };
 
     // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
 
     const [name, setName] = useState(initialName);
 
-    // Function to handle changes to the name
     const handleNameChange = (event) => {
         setName(event.target.value);
     };
 
-    // Function to save the name
     const saveName = () => {
-        console.log(name); // for now, we're just logging the name, but you can replace this with the actual save logic
+        console.log(name);
         toggleEditNamePageOpen();
     };
 
+    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC
 
+    const [price, setPrice] = useState(initialPrice);
+
+    const handlePriceChange = (event) => {
+        const onlyNumbers = event.target.value.replace(/\D/g, "");
+        const formattedPrice = (parseInt(onlyNumbers) / 100).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2
+        });
+
+        setPrice(formattedPrice);
+    };
+
+    const savePrice = () => {
+        console.log(price);
+        toggleEditPricePageOpen();
+    };
 
     return (
-        <div className='flex flex-col w-screen h-screen'>
+        <div className="bg-purpleT1 h-screen min-h-fit">
 
             {/* TITULO */}
             <EditInfoPage
@@ -196,7 +309,8 @@ export default function EditEvent() {
                 isOpen={isEditDatePageOpen}
                 pageTitle={'Data da resenha'}
                 togglePage={toggleEditDatePageOpen}
-                saveAction={saveDate}>
+                saveAction={saveDate}
+            >
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
@@ -205,18 +319,18 @@ export default function EditEvent() {
                         onChange={handleDateChange}
                     />
                 </div>
-                <div className="w-full flex flex-row justify-end">
-                    <button className="py-1 px-6 text-purpleT3 bg-whiteT1 rounded-full">
+                <div className="w-full flex flex-row justify-start">
+                    <button className="py-1 px-6 text-purpleT2 bg-whiteT1 rounded-full">
                         Abrir calendário
                     </button>
                 </div>
                 <div>
+                    {dateError && <div className='text-red-500'>{dateError}</div>} {/* Error message div */}
                     <p className='text-sm'>
                         A data da resenha é a informação que as pessoas verão quando acessarem o seu convite para saberem quando que sua resenha vai acontecer.
                     </p>
                 </div>
             </EditInfoPage>
-
             {/* HORARIO */}
             <EditInfoPage
                 isOpen={isEditHourPageOpen}
@@ -224,19 +338,33 @@ export default function EditEvent() {
                 togglePage={toggleEditHourPageOpen}
                 saveAction={saveHour}>
                 <div className='w-full'>
+                    <p>Hora de início</p>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='20:00'
-                        value={hour}
-                        onChange={handleHourChange}
+                        placeholder='hora de início'
+                        value={startHour}
+                        onChange={handleStartHourChange}
+                        maxLength={5}
                     />
                 </div>
+                {isEndTime && <div className='w-full'>
+                    <p>Hora de fim</p>
+                    <input
+                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                        placeholder='hora de fim'
+                        value={endHour}
+                        onChange={handleEndHourChange}
+                        maxLength={5}
+                    />
+                </div>}
+                <Toggle labelText={'Hora pra acabar'} showLabel={true} showQuestion={true} onToggle={handleToggle} startToggled={isEndTime} />
                 <div>
                     <p className='text-sm'>
                         A hora da resenha é a informação que as pessoas verão quando acessarem o seu convite para saberem exatamente a que horas sua resenha vai começar.
                     </p>
                 </div>
             </EditInfoPage>
+
 
             {/* LIMITE */}
             <EditInfoPage
@@ -247,7 +375,7 @@ export default function EditEvent() {
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='80'
+                        placeholder='máximo de convidados'
                         value={limit}
                         onChange={handleLimitChange}
                     />
@@ -269,8 +397,8 @@ export default function EditEvent() {
                         placeholder='Rua ramiro barcelos, 1450'
                     ></input>
                 </div>
-                <div className="w-full flex flex-row justify-end">
-                    <button className="py-1 px-6 text-purpleT3 bg-whiteT1 rounded-full">
+                <div className="w-full flex flex-row justify-start">
+                    <button className="py-1 px-6 text-purpleT2 bg-whiteT1 rounded-full">
                         Ver no mapa
                     </button>
                 </div>
@@ -324,101 +452,135 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
+            {/* PREÇO */}
+            <EditInfoPage
+                isOpen={isEditPricePageOpen}
+                pageTitle={'Preço do Evento'}
+                saveAction={savePrice}
+                togglePage={toggleEditPricePageOpen}>
+                <div className='w-full'>
+                    <input
+                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                        placeholder='R$00.00'
+                        value={price}
+                        onChange={handlePriceChange}
+                    />
+                </div>
+                <div>
+                    <p className='text-sm'>
+                        O preço do evento é a informação que as pessoas verão quando acessarem o seu convite para saberem quanto custará para participar do evento. Defina um preço que esteja de acordo com o que será oferecido no evento.
+                    </p>
+                </div>
+            </EditInfoPage>
 
-
-            <PageHeader pageTitle={'Editar resenha'} isBack={true} checker={() => { null }} />
-            <div className="flex flex-col items-center justify-start h-screen px-4">
-                <section className="flex flex-col items-center w-full max-w-md p-4">
-                    <div class="bg-scroll flex flex-col gap-4 h-[70vh] w-full overflow-y-auto">
-                        <div className="relative w-full">
-                            <Image
-                                src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
-                                alt=""
-                                layout="responsive"
-                                width={400}
-                                height={270}
-                                className="object-cover w-full h-[48px]"
-                            />
-                            <div className="absolute inset-0">
-                                <div className="absolute bottom-0 bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
-                            </div>
+            <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
+                <section className="flex flex-col items-center w-full max-w-md">
+                    <div className="relative w-full">
+                        <Image
+                            src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
+                            alt=""
+                            width={400}
+                            height={270}
+                            className="object-cover w-full h-[260px]"
+                        />
+                        <div className="absolute inset-0">
+                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-3/5" />
                         </div>
-                        <div className="w-full gap-2 flex flex-col">
-                            <div className="flex flex-row justify-between items-center w-full max-w-screen-xs">
-                                <button
-                                    onClick={toggleEditNamePageOpen}
-                                    className="flex items-center justify-start text-xl font-bold text-whiteT1 overflow-hidden whitespace-nowrap overflow-ellipsis mr-2"
-                                    style={{ maxWidth: "calc(100% - 100px)" }} // Subtraia o espaço necessário para o componente de preço 
-                                >
-                                    {name}
+                    </div>
+                    <div className="w-full gap-2 flex flex-col p-5">
+                        <div className="flex flex-row justify-between items-center w-full max-w-screen-xs">
+                            <div
+                                onClick={toggleEditNamePageOpen}
+                                className="flex items-start justify-start text-left w-fit text-xl font-bold text-whiteT1 gap-2"
+                            >
+                                {name}
+                                <div className="my-2">
                                     <Vector vectorname={'edit02'} />
-                                </button>
-                                <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
-                                    <p className="text-purpleT2 text-center font-bold">
-                                        <span className="mr-1">R$</span>15
-                                    </p>
                                 </div>
                             </div>
-                            <div className="flex flex-row justify-between">
-                                <button onClick={toggleEditDatePageOpen} className="bg-purpleT2 w-fit h-fit p-1 rounded-lg">
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>20</p>
-                                        <Vector vectorname={'edit02'} />
-                                    </div>
-                                    <p>de maio</p>
-                                </button>
-                                <div className="">
-                                    <p>Sábado</p>
-                                    <button onClick={toggleEditHourPageOpen} className="bg-purpleT2 rounded-lg w-fit h-fit p-1 flex flex-row gap-2 items-center">
-                                        <p>às 20:00h</p>
-                                        <Vector vectorname={'edit02'} />
-                                    </button>
-                                </div>
-                                <button onClick={toggleEditMaxGuestsPageOpen} className="bg-purpleT2 flex flex-col w-fit h-fit p-1 rounded-lg">
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Limite máximo</p>
-                                        <Vector vectorname={'edit02'} />
-                                    </div>
-                                    <p>10/80</p>
-                                </button>
-                            </div>
-                            <button onClick={toggleEditAddressPageOpen} className="bg-purpleT2 flex flex-col w-full h-fit p-2 rounded-lg">
-                                <div className="flex flex-row gap-2 items-center">
-                                    <p>Endereço</p>
-                                    <Vector vectorname={'edit02'} />
-                                </div>
-                                <p className="text-left">{address}</p>
-                            </button>
-                            <button onClick={toggleEditDescriptionPageOpen} className="bg-purpleT2 flex flex-col w-full h-fit p-2 rounded-lg">
-                                <div className="flex flex-row gap-2 items-center">
-                                    <p>Descrição</p>
-                                    <Vector vectorname={'edit02'} />
-                                </div>
-                                <p className="text-left">{description}</p>
-                            </button>
                             <div onClick={(e) => {
                                 e.stopPropagation();
-                                toggleEditTagsPageOpen();
-                            }}
-                                className="bg-purpleT2 flex flex-col w-full h-fit p-2 gap-2 rounded-lg"
-                            >
+                                toggleEditPricePageOpen();
+                            }} className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
+                                <p className="text-purpleT2 text-center font-bold">
+                                    <span className="" style={{ whiteSpace: "nowrap" }}>{price}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between">
+                            <button onClick={toggleEditDatePageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 w-fit h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
-                                    <p>Tags</p>
+                                    <p className="font-bold">{dayOfWeek}</p>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {renderTags.map((tag) => (
-                                        <Tag
-                                            key={tag.id}
-                                            tagname={tag.name}
-                                            type={tag.type}
-                                            colorName={tag.colorName}
-                                            highlightColor={tag.highlightColor}
-                                            isEditable={false}
-                                        />
-                                    ))}
+                                <p>{day} de {month}</p>
+                            </button>
+                            <div className="">
+                                <div onClick={toggleEditHourPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 rounded-2xl w-fit h-fit p-2 flex flex-row gap-2 items-center">
+                                    <div className="flex flex-col">
+                                        <p className="font-bold">Horário</p>
+                                        <div className="flex flex-row gap-1">
+                                            <p className="text-left flex flex-row gap-1">
+                                                {startHour.endsWith(":00") ? `${startHour.slice(0, -3)}h` : startHour}
+                                            </p>
+                                            {isEndTime &&
+                                                <p className="text-left flex flex-row">
+                                                    até {endHour.endsWith(":00") ? `${endHour.slice(0, -3)}h` : endHour}
+                                                </p>}
+                                        </div>
+                                    </div>
+
+                                    <Vector vectorname={'edit02'} />
                                 </div>
                             </div>
+                            <button onClick={toggleEditMaxGuestsPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-fit h-fit p-2 rounded-2xl">
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p className="font-bold">Limite</p>
+                                    <Vector vectorname={'edit02'} />
+                                </div>
+                                <p>10/{limit}</p>
+                            </button>
+                        </div>
+                        <button onClick={toggleEditAddressPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                            <div className="flex flex-row gap-2 items-center">
+                                <p>Endereço</p>
+                                <Vector vectorname={'edit02'} />
+                            </div>
+                            <p className="text-left">{address}</p>
+                        </button>
+                        <button onClick={toggleEditDescriptionPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                            <div className="flex flex-row gap-2 items-center">
+                                <p>Descrição</p>
+                                <Vector vectorname={'edit02'} />
+                            </div>
+                            <p className="text-left">{description}</p>
+                        </button>
+                        <div onClick={(e) => {
+                            e.stopPropagation();
+                            toggleEditTagsPageOpen();
+                        }}
+                            className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
+                        >
+                            <div className="flex flex-row gap-2 items-center">
+                                <p>Tags</p>
+                                <Vector vectorname={'edit02'} />
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {renderTags.map((tag) => (
+                                    <Tag
+                                        key={tag.id}
+                                        tagname={tag.name}
+                                        type={tag.type}
+                                        colorName={tag.colorName}
+                                        highlightColor={tag.highlightColor}
+                                        isEditable={false}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-around w-full">
+                            <button className="py-4 w-2/3 px-8">Voltar</button>
+                            <Button label={'Salvar'} icon={'check'} action={() => handleNavigation('perfil')} iconSide='right' height={1} width={1} textAlign='center' />
                         </div>
                     </div>
                 </section>
