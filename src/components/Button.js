@@ -29,7 +29,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         );
     } else if (icon === 'wallet') {
         iconSvg = (
-            <Vector vectorname={'arrowRight04'} />
+            <Vector vectorname={'wallet01'} />
         );
     } else if (icon === 'thunder') {
         iconSvg = (

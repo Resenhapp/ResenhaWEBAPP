@@ -8,7 +8,7 @@ const MyInvitesBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMa
     };
     return (
         <div className='flex flex-col items-center'>
-            <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-1 ring-inset bg-gradient-to-t from-purpleT3 ring-whiteT1 rounded-2xl">
+            <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-1 ring-inset bg-gradient-to-t from-purpleT0 ring-whiteT1 rounded-2xl">
                 <div className='w-full absolute h-full p-2 flex flex-row-reverse'>
                     <button onClick={() => handleNavigation('resenhas/convites/')} className='w-fit h-fit py-1 gap-2 font-thin px-3 rounded-full ring-1 ring-inset ring-whiteT1 flex flex-row justify-center items-center content-center backdrop-blur-xl bg-[#0000004D]'>Ver todos <Vector vectorname={'arrowRight05'} /></button>
                     </div>
