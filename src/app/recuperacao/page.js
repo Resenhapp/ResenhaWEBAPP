@@ -46,7 +46,7 @@ export default function Recovery() {
 
         <div className="flex items-center justify-end">
           <p className="mr-1">Lembrou da senha?</p>
-          <Link href="/cadastro" className="font-bold">Entre aqui!</Link>
+          <Link href="/login" className="font-bold">Entre aqui!</Link>
         </div>
       </section>
     </div>
