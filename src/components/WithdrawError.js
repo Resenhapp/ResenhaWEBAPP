@@ -14,7 +14,7 @@ const WithdrawError = ({ errorContent }) => {
   return (
     isVisible && (
       <div
-        className={`w-full bg-redT1 my-4 ring-2 ring-inset rounded-2xl flex flex-row justify-center items-center content-center gap-2 ring-redT4 p-4 transition duration-3000 opacity-100 ${isVisible ? '' : 'opacity-0'}`}
+        className={`w-full bg-redT1 my-4 ring-1 ring-inset rounded-2xl flex flex-row justify-center items-center content-center gap-2 ring-redT4 p-4 transition duration-3000 opacity-100 ${isVisible ? '' : 'opacity-0'}`}
       >
         <svg width="15" height="15" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.5 5.5C11.9477 5.5 11.5 5.94771 11.5 6.5V13.5C11.5 14.0523 11.9477 14.5 12.5 14.5C13.0523 14.5 13.5 14.0523 13.5 13.5V6.5C13.5 5.94771 13.0523 5.5 12.5 5.5Z" fill="#F1F1F1" />

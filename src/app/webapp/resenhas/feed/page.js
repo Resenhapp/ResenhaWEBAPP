@@ -101,7 +101,7 @@ export default function Map() {
     return (
         <div className='p-4 gap-2 flex flex-col'>
             <div>Onde que tu tá?</div>
-        <div className='w-full flex flex-row rounded-xl bg-purpleT2 px-4 py-2 items-center ring-2 ring-inset ring-purpleT3'>
+        <div className='w-full flex flex-row rounded-xl bg-purpleT2 px-4 py-2 items-center ring-1 ring-inset ring-purpleT3'>
             <input type='text' className='w-full bg-transparent text-whiteT1' onChange={handleInputChange} />
             <button onClick={handleSearch} className='w-fit h-fit scale-150'>
                 <Vector vectorname={'magnifier01'} />
@@ -120,7 +120,7 @@ export default function Map() {
                 </Marker>
                 <Markers />
             </MapContainer>
-            <button onClick={getMyPosition} className='w-fit h-fit py-1 px-4 rounded-full ring-2 ring-inset ring-whiteT1 flex flex-row justify-center items-center gap-1 backdrop-blur-xl bg-[#F1F1F14D]'>Me encontre</button>
+            <button onClick={getMyPosition} className='w-fit h-fit py-1 px-4 rounded-full ring-1 ring-inset ring-whiteT1 flex flex-row justify-center items-center gap-1 backdrop-blur-xl bg-[#F1F1F14D]'>Me encontre</button>
             <h1>Voce esta em {userPositionToAddress}</h1>
         </div>
     )

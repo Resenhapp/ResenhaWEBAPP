@@ -15,7 +15,7 @@ const OutlinedButton = ({ label, icon, action }) => {
         iconSvg = null;
     }
     return (
-        <button onClick={action} className="bg-transparent text-whiteT1 h-8 font-regular rounded-full flex justify-between ring-2 ring-inset ring-whiteT1 items-center">
+        <button onClick={action} className="bg-transparent text-whiteT1 h-8 font-regular rounded-full flex justify-between ring-1 ring-inset ring-whiteT1 items-center">
             <span className="mx-4  mb-[2px]">{label}</span>
             {iconSvg && <div className="mx-2">{iconSvg}</div>}
         </button>

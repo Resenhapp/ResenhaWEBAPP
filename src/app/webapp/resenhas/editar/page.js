@@ -571,7 +571,7 @@ export default function EditEvent() {
                                         accept=".gif, .png, .jpg, .jpeg"
                                         onChange={handleImageChange}
                                     />
-                                    <div className="bg-purpleT1 p-3 rounded-full ring-2 ring-whiteT1">
+                                    <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
                                         <Vector vectorname={"edit02"} />
                                     </div>
                                 </label>

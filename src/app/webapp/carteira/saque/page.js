@@ -89,7 +89,7 @@ export default function Withdraw() {
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
                         <div className='w-full flex flex-col items-center gap-4'>
-                            <div className='w-full h-fit bg-purpleT2 rounded-2xl ring-2 ring-inset ring-purpleT3 p-4'>
+                            <div className='w-full h-fit bg-purpleT2 rounded-2xl ring-1 ring-inset ring-purpleT3 p-4'>
                                 <h1 className='font-bold text-2xl'>Dados bancários</h1>
                                 <h1 className=''><b>Conta: </b>{cpf}</h1>
                                 <h1 className=''><b>Nome: </b>{name}</h1>
@@ -99,7 +99,7 @@ export default function Withdraw() {
                                 <div>
                                 <h1 className='w-full p-1 text-sm'>Digite abaixo o valor que você deseja sacar:</h1>
                                 </div>
-                                <div className='w-full h-fit ring-inset ring-2 flex flex-row gap-2 ring-purpleT3 bg-purpleT2 rounded-2xl p-4 '>
+                                <div className='w-full h-fit ring-inset ring-1 flex flex-row gap-2 ring-purpleT3 bg-purpleT2 rounded-2xl p-4 '>
                                     R$<MoneyInput ref={inputRef} onChange={(val) => setWithdrawalAmount(parseFloat(val.replace('.', '').replace(',', '.')))} />
                                 </div>
                                 <p className='text-whiteT1 w-full text-left text-sm p-1'>{'Valor disponível: R$ ' + avaliableCash}</p>

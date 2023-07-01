@@ -21,7 +21,7 @@ const TimeSelectList = ({ range, onClick, selected }) => {
                     <button
                         ref={num === selected ? selectedRef : null}
                         onClick={() => onClick(num)}
-                        className={`bg-purpleT1 px-5 py-4 w-28 text-2xl rounded-lg ring-2 ring-inset ring-purpleT2 ${num === selected ? 'bg-purpleT3 ring-purpleT4' : 'bg-purpleT1'}`}
+                        className={`bg-purpleT1 px-5 py-4 w-28 text-2xl rounded-lg ring-1 ring-inset ring-purpleT2 ${num === selected ? 'bg-purpleT3 ring-purpleT4' : 'bg-purpleT1'}`}
                     >
                         {num < 10 ? '0' + num : num}
                     </button>

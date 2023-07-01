@@ -17,10 +17,10 @@ export default function Confirmation() {
                         <h2 className="text-2xl text-whiteT1 text-center font-bold">Pronto!</h2>
                         <p className="text-sm text-whiteT1 text-center font-thin mb-2">Utilize o código abaixo no dia da resenha para entrar! <b className='font-bold'>Ele também será enviado ao e-mail informado anteriormente</b>.</p>
                     </div>
-                    <div className='flex flex-col rounded-2xl ring-2 ring-whiteT2 bg-white p-6' id='ticket'>
+                    <div className='flex flex-col rounded-2xl ring-1 ring-whiteT2 bg-white p-6' id='ticket'>
                         <div className='flex flex-col'>
                             <div className='flex flex-row'>
-                                <div className='flex items-center rounded-md ring-2 w-fit h-fit ring-whiteT2 justify-center'>
+                                <div className='flex items-center rounded-md ring-1 w-fit h-fit ring-whiteT2 justify-center'>
                                     <Image
                                         src={defaultImage}
                                         width={50}

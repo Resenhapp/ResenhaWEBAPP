@@ -2,7 +2,7 @@ import React from 'react';
 
 const OptionsList = ({ placeholder = 'Escolha uma opção', action, showIcon = false, Icon, options = [] }) => {
   return (
-    <div className="relative h-14 ring-2 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
+    <div className="relative h-14 ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
       {showIcon && Icon && (
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center justify-center pointer-events-none">
           {Icon === 'coin' ? (

@@ -32,7 +32,7 @@ const AddressField = ({ placeholder, onAddressSelect, initialAddress }) => {
     };
 
     return (
-        <div className="relative h-14 ring-2 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
+        <div className="relative h-14 ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
             <div className="absolute left-0 pl-3 flex">
                 <Vector vectorname={'pin01'} />
             </div>

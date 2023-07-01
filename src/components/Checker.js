@@ -9,7 +9,7 @@ const Checker = ({ labelText, showLabel, startChecked, action }) => {
                 value=""
                 defaultChecked={startChecked}
                 onChange={action}
-                className="w-5 h-5 rounded-lg accent-purpleT3 ring-2 ring-whiteT1"
+                className="w-5 h-5 rounded-lg accent-purpleT3 ring-1 ring-whiteT1"
             />
             {showLabel &&
                 <label htmlFor="purple-checkbox" className="ml-2 text-sm font-medium text-whiteT1">

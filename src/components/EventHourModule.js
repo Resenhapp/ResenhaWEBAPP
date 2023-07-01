@@ -8,7 +8,7 @@ const EventHour = ({ hasEnd, placeHolderStart, placeHolderEnd, onStartTimeClick,
   const endHourColor = hasEnd ? 'text-whiteT1' : 'text-purpleT3';
 
   return (
-    <div className="w-full h-fit p-4 rounded-xl bg-purpleT1 ring-2 ring-inset ring-purpleT2 flex flex-row items-center justify-between">
+    <div className="w-full h-fit p-4 rounded-xl bg-purpleT1 ring-1 ring-inset ring-purpleT2 flex flex-row items-center justify-between">
       <div className="w-[30%]">
         <h1 className={`w-fit ${startHourColor}`}>Começa</h1>
         <button

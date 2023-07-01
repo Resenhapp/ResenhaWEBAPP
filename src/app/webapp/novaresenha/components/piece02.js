@@ -55,7 +55,7 @@ const Piece02 = ({ }) => {
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">
                 <button
-                    className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-4 py-2 rounded-full ring-2 ring-inset ring-purpleT4"
+                    className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-4 py-2 rounded-full ring-1 ring-inset ring-purpleT4"
                     onClick={() => setIsOpen(true)}
                 >
                     <Vector vectorname={'calendar03'} />
@@ -69,7 +69,7 @@ const Piece02 = ({ }) => {
                         locale="pt"
                     />
                     <div className='w-full flex-end'>
-                        <button onClick={() => setIsOpen(false)} className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Fechar</button>
+                        <button onClick={() => setIsOpen(false)} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Fechar</button>
                     </div>
                 </Modal>
 
