@@ -2,7 +2,7 @@ import React from 'react';
 import RoundButton from './RoundButton';
 import Vector from './Vector';
 
-const MyInvitesBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
+const MyInvitesBanner = ({ eventName, eventDate, eventHour, token, eventImage }) => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
@@ -20,8 +20,8 @@ const MyInvitesBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMa
                         <h2 className='text-sm font-thin text-white'>{eventDate}, às {eventHour}h</h2>
                     </div>
                     <div className='flex flex-row gap-2 items-center'>
-                    <Vector vectorname={'user01'} />
-                        <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
+                    <Vector vectorname={'qr01'} />
+                        <h2 className="text-sm font-thin text-white">{token}</h2>
                     </div>
                 </div>
                 <div className='p-4 z-[1]'>

@@ -4,7 +4,6 @@ import PageHeader from '@/src/components/PageHeader';
 import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
-import FeedDualButton from '@/src/components/FeedDualButton';
 
 export const metadata = {
     title: 'Resenha.app • Resenhas',
@@ -28,8 +27,7 @@ export default function HomePage() {
     const exampleNameMyInvite = "Resenha Super Divertida!";
     const exampleDateMyInvite = "14/07/2023";
     const exampleHourMyInvite = "19";
-    const exampleGuestsMyInvite = "100";
-    const exampleLimitMyInvite = "350";
+    const exampleTokenMyInvite = "4253";
     const exampleImageMyInvite = "https://resenha.app/publico/recursos/resenhas/QljskFiO.png";
 
     return (
@@ -43,10 +41,9 @@ export default function HomePage() {
                 <MyInvitesDisplay
                 eventName={exampleNameMyInvite} 
                 eventDate={exampleDateMyInvite}
-                eventGuests={exampleGuestsMyInvite} 
                 eventHour={exampleHourMyInvite}
-                eventMax={exampleLimitMyInvite}
-                eventImage={exampleImageMyEvent}
+                token={exampleTokenMyInvite}
+                eventImage={exampleImageMyInvite}
                 /> : 
                 <MyEventsDisplay 
                 eventName={exampleNameMyEvent} 
@@ -54,7 +51,7 @@ export default function HomePage() {
                 eventGuests={exampleGuestsMyEvent} 
                 eventHour={exampleHourMyEvent}
                 eventMax={exampleLimitMyEvent}
-                eventImage={exampleImageMyInvite}
+                eventImage={exampleImageMyEvent}
                 />
                 }
             </div>
