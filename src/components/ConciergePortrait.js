@@ -7,7 +7,7 @@ const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, relativeEven
     const h3Classes = 'text-[12px]';
 
     return (
-        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
+        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-1 ring-inset ring-purpleT4'>
             <Image src={imgUrl} alt="" width={110} height={30} className="mr-2 rounded-lg object-cover h-28 w-28" />
             <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>{conciergeName}</h1>
@@ -25,14 +25,14 @@ const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, relativeEven
                 </div>
                 <div className='flex flex-row justify-between w-full mt-4'> {/* 4 button */}
                     <div className='gap-2 flex w-fit'> {/* 3 buttons */}
-                        <button onClick={editAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                        <button onClick={editAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'edit02'} />
                         </button> {/* edit */}
-                        <button onClick={copyAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                        <button onClick={copyAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
                         </button> {/* copy link */}
                     </div>
-                    <button onClick={deleteAction} className='bg-redT2 flex ring-redT4 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                    <button onClick={deleteAction} className='bg-redT2 flex ring-redT4 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                         <Vector vectorname={'trash01'} />
                     </button> {/* delete */}
                 </div>

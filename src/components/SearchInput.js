@@ -27,7 +27,7 @@ const SearchInput = ({ placeholder, onChange }) => {
   };
 
   return (
-    <div className="relative h-14 w-full bg-whiteT1 ring-2 ring-whiteT2 ring-inset rounded-2xl text-sm">
+    <div className="relative h-14 w-full bg-whiteT1 ring-1 ring-whiteT2 ring-inset rounded-2xl text-sm">
       <MagnifierIcon />
       <input
         type="search"

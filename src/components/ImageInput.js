@@ -17,7 +17,7 @@ const ImageInput = ({ image, onChange }) => {
     };
 
     return (
-        <div className='relative flex w-60 h-60 justify-center content-center items-center bg-purpleT2 rounded-2xl ring-2 ring-inset ring-purpleT4'>
+        <div className='relative flex w-60 h-60 justify-center content-center items-center bg-purpleT2 rounded-2xl ring-1 ring-inset ring-purpleT4'>
             {!image && (
                 <label className='absolute inset-0 flex items-center justify-center cursor-pointer'>
                     <input
@@ -41,7 +41,7 @@ const ImageInput = ({ image, onChange }) => {
                             alt="Selected Image"
                             layout='fill'
                             objectFit='cover'
-                            className='rounded-2xl ring-2 ring-purpleT3'
+                            className='rounded-2xl ring-1 ring-purpleT3'
                         />
                     </div>
                     <button

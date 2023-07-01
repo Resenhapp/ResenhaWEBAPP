@@ -8,9 +8,9 @@ const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax
     };
     return (
         <div className='flex flex-col items-center'>
-            <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-2 ring-inset bg-gradient-to-t from-purpleT3 ring-whiteT1 rounded-2xl">
+            <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-1 ring-inset bg-gradient-to-t from-purpleT3 ring-whiteT1 rounded-2xl">
                 <div className='w-full absolute h-full p-2 flex flex-row-reverse'>
-                    <button onClick={() => handleNavigation('resenhas/todas/')} className='w-fit h-fit py-1 px-2 rounded-full ring-2 ring-inset ring-whiteT1 flex flex-row justify-center items-center gap-1 backdrop-blur-xl bg-[#F1F1F14D]'>Ver todas <Vector vectorname={'arrowRight02'} /></button>
+                    <button onClick={() => handleNavigation('resenhas/todas/')} className='w-fit h-fit py-1 px-2 rounded-full ring-1 ring-inset ring-whiteT1 flex flex-row justify-center items-center gap-1 backdrop-blur-xl bg-[#F1F1F14D]'>Ver todas <Vector vectorname={'arrowRight02'} /></button>
                     </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' />
                 <div className='p-4'>

@@ -11,7 +11,7 @@ const MoneyDisplay = ({ amount, cashType }) => {
     const config = configMap[cashType] || configMap['available'];
 
     return (
-        <div className={`w-full h-fit p-4 ${config.bg} ${config.ring} ring-2 ring-inset rounded-2xl flex flex-col justify-center items-center`}>
+        <div className={`w-full h-fit p-4 ${config.bg} ${config.ring} ring-1 ring-inset rounded-2xl flex flex-col justify-center items-center`}>
             <h3 className='text-sm font-bold'>{config.title}</h3>
             <h1 className='text-2xl font-normal'> {'R$ ' + amount}</h1>
         </div>

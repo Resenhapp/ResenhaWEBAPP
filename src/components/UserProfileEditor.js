@@ -25,7 +25,7 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
     };
 
     return (
-        <div className='relative flex w-44 h-44 justify-center content-center items-center bg-purpleT1 rounded-full ring-2 ring-inset ring-purpleT3'>
+        <div className='relative flex w-44 h-44 justify-center content-center items-center bg-purpleT1 rounded-full ring-1 ring-inset ring-purpleT3'>
             {!image && (
                 <label className='absolute inset-0 flex items-center justify-center cursor-pointer'>
                     <input
@@ -48,7 +48,7 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
                             alt="Selected Image"
                             layout='fill'
                             objectFit='cover'
-                            className='rounded-full ring-2 ring-purpleT3'
+                            className='rounded-full ring-1 ring-purpleT3'
                         />
                     </div>
                     <button
@@ -58,7 +58,7 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
                     </button>
                 </>
             )}
-            <div className='absolute right-0 top-0 bg-whiteT1 ring-2 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
+            <div className='absolute right-0 top-0 bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
             <Vector vectorname={'edit01'} />
             </div>
         </div>

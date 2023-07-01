@@ -49,7 +49,7 @@ const PopUp = ({ title, icon, text, onActionClick, actionTitle, buttonColor, ico
         return (
             <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center'>
                 <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50' />
-                <div className='relative w-[90%] max-w-md mx-auto bg-whiteT1 rounded-2xl ring-2 ring-inset ring-whiteT2 shadow-lg z-50'>
+                <div className='relative w-[90%] max-w-md mx-auto bg-whiteT1 rounded-2xl ring-1 ring-inset ring-whiteT2 shadow-lg z-50'>
                     <div className='h-fit p-4'>
                         <div className='w-full flex justify-center'>
                             {getIcon(icon)}

@@ -22,7 +22,7 @@ const Piece04 = () => {
 
     return (
         <div className="w-full flex flex-col h-fit gap-3">
-            <div className="h-fit ring-2 p-3 ring-inset ring-purpleT4 bg-purpleT1 rounded-2xl">
+            <div className="h-fit ring-1 p-3 ring-inset ring-purpleT4 bg-purpleT1 rounded-2xl">
                 <textarea
                     className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
                     placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
@@ -32,7 +32,7 @@ const Piece04 = () => {
                 
                 {selectedTags.map(tag => <Tag key={tag} tagname={tag} />)}
                 <button 
-                    className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-2 rounded-full ring-2 ring-inset ring-purpleT4"
+                    className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-2 rounded-full ring-1 ring-inset ring-purpleT4"
                     onClick={() => setIsModalOpen(true)}
                 >
                     <h1>Nova tag</h1>
@@ -46,7 +46,7 @@ const Piece04 = () => {
                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
                     {allTags.map(tag => (
                         <button 
-                            className={`bg-purpleT2 p-2 rounded-lg ${selectedTags.includes(tag) ? 'ring-2 ring-inset ring-purpleT4' : ''}`}
+                            className={`bg-purpleT2 p-2 rounded-lg ${selectedTags.includes(tag) ? 'ring-1 ring-inset ring-purpleT4' : ''}`}
                             onClick={() => toggleTag(tag)}
                             key={tag}
                         >
@@ -55,8 +55,8 @@ const Piece04 = () => {
                     ))}
                 </div>
                 <div className='w-full flex justify-between flex-row-reverse mt-4 gap-3'>
-                    <button onClick={closeModal} className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Salvar</button>
-                    <button onClick={() => {setSelectedTags([]); closeModal();}} className='bg-purpleT3 ring-2 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Cancelar</button>
+                    <button onClick={closeModal} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Salvar</button>
+                    <button onClick={() => {setSelectedTags([]); closeModal();}} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Cancelar</button>
                 </div>
             </Modal>
             }

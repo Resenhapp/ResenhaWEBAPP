@@ -22,7 +22,7 @@ const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = fa
     const baseClasses = `flex font-${weight} flex-row gap-1 items-center ring-inset w-fit px-3 py-1 rounded-full `;
     const colorClasses = {
       tag: selected ? `bg-${highlightColor} ring-${ringColor} ring-${ringThickness}` : `bg-${colorName} ring-${ringThickness} ring-${ringColor}`,
-      interest: selected ? `bg-${highlightColor} ring-2 ring-[#FFFFFF80]` : `bg-${colorName}`,
+      interest: selected ? `bg-${highlightColor} ring-1 ring-[#FFFFFF80]` : `bg-${colorName}`,
     };
   
     const buttonClasses = classNames(

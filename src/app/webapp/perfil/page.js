@@ -78,7 +78,7 @@ export default function Profile() {
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
                             <div className='flex flex-col items-center gap-4 w-full'>
-                                <img src={profileimg} className='w-40 h-40 object-cover ring-2 ring-purpleT3 rounded-full' />
+                                <img src={profileimg} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl'>{name}</h1>
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>

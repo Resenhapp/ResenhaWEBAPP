@@ -67,13 +67,13 @@ export default function EditProfile() {
                         <Modal show={isUnsavedChangesModalOpen} close={() => setUnsavedChangesModalOpen(false)}>
                             <div className='gap-2 flex flex-col'>
                                 <h1 className='text-center'>Ei! Você tem alterações que não foram salvas! Vai sair sem salvar?</h1>
-                                <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
+                                <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                                     if (typeof checkerCallback === 'function') {
                                         checkerCallback(false);   // <-- note this change
                                     }
                                     setModalOpen(false);
                                 }}>Sim eu vou.</button>
-                                <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
+                                <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                                     setUnsavedChangesModalOpen(false);
                                 }}>Não, peraí!</button>
                             </div>
@@ -116,20 +116,20 @@ export default function EditProfile() {
                             <div className='gap-2 flex flex-col'>
                                 <h1 className='text-center'>Editar nome e seu @</h1>
                                 <input
-                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-2 ring-purpleT3 rounded-xl'
+                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl'
                                     type="text"
                                     placeholder="Nome"
                                     value={newUsername}
                                     onChange={(e) => setNewUsername(e.target.value)}
                                 />
                                 <input
-                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-2 ring-purpleT3 rounded-xl'
+                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl'
                                     type="text"
                                     placeholder="usuário"
                                     value={newUser}
                                     onChange={(e) => setNewUser(e.target.value)}
                                 />
-                                <div className='w-full h-fit bg-redT1 ring-2 ring-redT3'>
+                                <div className='w-full h-fit bg-redT1 ring-1 ring-redT3'>
 
                                 </div>
                                 <div className='flex flex-row gap-2 w-full'>
@@ -156,7 +156,7 @@ export default function EditProfile() {
                         <Modal show={isAboutmeModalOpen} close={() => setAboutmeModalOpen(false)}>
                             <div className='gap-2 flex flex-col'>
                                 <h1 className='text-center'>Conta um pouco sobre você</h1>
-                                <textarea rows={4} className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-2 ring-purpleT3 rounded-xl' type="text" value={newAboutme} onChange={(e) => setNewAboutme(e.target.value)} />
+                                <textarea rows={4} className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl' type="text" value={newAboutme} onChange={(e) => setNewAboutme(e.target.value)} />
                                 <div className='flex flex-row gap-2 w-full'>
                                     <ModalButton
                                         label="Cancelar"
@@ -189,23 +189,23 @@ export default function EditProfile() {
                             />
                         </div>
                         <div className='w-full flex flex-col items-center'>
-                            <button onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit bg-purpleT1 py-2 px-4 rounded-2xl ring-2 ring-inset ring-purpleT3'>
+                            <button onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit bg-purpleT1 py-2 px-4 rounded-2xl ring-1 ring-inset ring-purpleT3'>
                                 <div className='flex flex-col items-center'>
                                     <div className='flex flex-row items-center content-center gap-1'>
                                         <h1 className='font-bold text-2xl'>{username}</h1><Vector vectorname={'verified01'} />
                                     </div>
                                     <h3 className='font-normal text-sm'>{'@' + user}</h3>
                                 </div>
-                                <div className='right-0 top-0 bg-whiteT1 ring-2 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
+                                <div className='right-0 top-0 bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
                                     <Vector vectorname={'edit01'} />
                                 </div>
                             </button>
                         </div>
                         <div className='w-full'>
-                            <button onClick={() => setAboutmeModalOpen(true)} className='w-full bg-purpleT1 flex flex-col ring-2 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
+                            <button onClick={() => setAboutmeModalOpen(true)} className='w-full bg-purpleT1 flex flex-col ring-1 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
                                 <div className='flex flex-row justify-between w-full'>
                                     <h1 className='font-bold text-xl'>Sobre</h1>
-                                    <div className='right-0 top-0 w-fit h-fit bg-whiteT1 ring-2 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
+                                    <div className='right-0 top-0 w-fit h-fit bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
                                         <Vector vectorname={'edit01'} />
                                     </div>
                                 </div>
@@ -213,7 +213,7 @@ export default function EditProfile() {
                             </button>
                         </div>
                         <div className='w-full'>
-                            <div className='w-full bg-purpleT1 gap-4 flex flex-col ring-2 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
+                            <div className='w-full bg-purpleT1 gap-4 flex flex-col ring-1 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
                                 <div className='flex flex-row justify-between w-full'>
                                     <h1 className='font-bold text-xl'>Interesses</h1>
                                 </div>
@@ -223,7 +223,7 @@ export default function EditProfile() {
                                     <Interest interestIndex={3} isRemovable={true} removeEvent={() => { }} />
 
                                     <button
-                                        className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-1 rounded-full ring-2 ring-inset ring-purpleT4"
+                                        className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-1 rounded-full ring-1 ring-inset ring-purpleT4"
                                         onClick={() => setModalOpen(true)}
                                     >
                                         <h1>Adicionar</h1>

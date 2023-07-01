@@ -71,7 +71,7 @@ const Interest = ({ interestIndex, isRemovable, removeEvent, isAppend, appendEve
     }
 
     return (
-        <button onClick={handleClick} className={`${className} w-fit flex flex-row items-center gap-1 h-fit py-2 px-4 rounded-full ${isSelected ? 'ring-2 ring-inset ring-[#FFFFFF80]' : ''}`}>
+        <button onClick={handleClick} className={`${className} w-fit flex flex-row items-center gap-1 h-fit py-2 px-4 rounded-full ${isSelected ? 'ring-1 ring-inset ring-[#FFFFFF80]' : ''}`}>
             {(isRemovable || isAppend) && <Vector vectorname={isSelected ? 'minus01' : (isAppend ? 'plus01' : 'xmark01')} />}
             <h1 className='text-sm'>{label}</h1>
         </button>

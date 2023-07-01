@@ -115,13 +115,13 @@ export default function Info() {
                        <h2 className="text-2xl text-whiteT1 text-center font-bold">Informações</h2>
                         <p className="text-sm text-whiteT1 text-center font-thin mb-4">Antes de continuar, precisamos de algumas informações...</p>
                     </div>
-                    <div className='bg-purpleT2 items-center justify-center align-center flex flex-col ring-2 p-2 ring-inset ring-purpleT3 rounded-2xl'>
+                    <div className='bg-purpleT2 items-center justify-center align-center flex flex-col ring-1 p-2 ring-inset ring-purpleT3 rounded-2xl'>
                         <h2 className="text-xl text-whiteT1 text-left font-bold">Você está comprando:</h2>
                         <div className='flex flex-row'>
                             <div>
                                 <p className="text-2md text-whiteT1 text-left font-normal">{title}</p>
                             </div>
-                            <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-2 ring-purpleT3'>
+                            <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-1 ring-purpleT3'>
                                 <p className="text-sm text-whiteT1 text-left font-normal">{amount}x</p>
                                 <p className="text-sm text-whiteT1 text-left font-bold">R$ {price}</p>
                             </div>
@@ -130,7 +130,7 @@ export default function Info() {
                     <div className="flex flex-col mt-4 mb-12 gap-4 w-full">
                         <InputField placeholder="Nome" showIcon={true} Icon="person" value={name} action={handleNameChange} />
                         <InputField placeholder="E-mail" showIcon={true} Icon="mail" value={email} action={handleEmailChange} />
-                        <div className="flex bg-whiteT1 ring-2 px-4 ring-whiteT2 ring-inset rounded-2xl h-14 flex-row items-center justify-between">
+                        <div className="flex bg-whiteT1 ring-1 px-4 ring-whiteT2 ring-inset rounded-2xl h-14 flex-row items-center justify-between">
                             <h2 className="text-purpleT2 text-2md font-normal">Entradas</h2>
                             <AmountSelector onChange={handleAmountChange} className="text-purpleT1" />
                         </div>

@@ -9,7 +9,7 @@ const DateComponent = ({ number, day, month, selectedDate, onDateSelect }) => {
 
   return (
     <div
-      className={`bg-purpleT1 w-32 items-center ring-2 flex flex-col justify-center content-center ring-inset rounded-xl ${
+      className={`bg-purpleT1 w-32 items-center ring-1 flex flex-col justify-center content-center ring-inset rounded-xl ${
         isSelected ? 'ring-purpleT3 bg-purpleT2' : 'ring-purpleT2'
       } px-7 py-5 cursor-pointer`}
       onClick={handleClick}

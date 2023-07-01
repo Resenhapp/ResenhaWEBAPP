@@ -8,7 +8,7 @@ const PartyPortrait = ({ partyName, partyImage, partyDate, partyHour, partyGuest
     const h3Classes = 'text-[12px]';
 
     return (
-        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
+        <div className='bg-purpleT2 rounded-2xl p-3 flex flex-row ring-1 ring-inset ring-purpleT4'>
             <Image src={partyImage} alt="" width={110} height={30} className="mr-2 rounded-lg w-28 h-28 object-cover" />
             <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>
@@ -26,17 +26,17 @@ const PartyPortrait = ({ partyName, partyImage, partyDate, partyHour, partyGuest
                 </div>
                 <div className='flex flex-row  justify-between'>
                     <div className='gap-2 flex'> {/* view */}
-                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'magnifier01'} />
                         </button> {/* edit */}
-                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'pencil01'} />
                         </button> {/* copy */}
-                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                        <button className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
                         </button> {/* copy link */}
                     </div>
-                    <button className='bg-redT2 flex ring-redT4 ring-inset rounded-full ring-2 w-8 h-8 align-center justify-center items-center'>
+                    <button className='bg-redT2 flex ring-redT4 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                         <Vector vectorname={'trash01'} />
                     </button> {/* delete */}
                 </div>

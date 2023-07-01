@@ -84,7 +84,7 @@ export default function NewConcierge() {
             <Modal show={isModalOpen} close={handleModalClose}>
                 <h1 className='text-2xl font-bold'>Resenha atribuída:</h1>
                 <p className='mb-4'>Um recepcionista atribuído é o responsável por administrar a entrada dos convidados no dia do evento. Isso significa que, durante a resenha, esse indivíduo cuidará do acesso e garantirá uma recepção suave para todos os participantes.</p>
-                <button className='bg-purpleT2 ring-2 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={handleModalClose}>Ok, entendi!</button>
+                <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={handleModalClose}>Ok, entendi!</button>
             </Modal>
         </div>
     )

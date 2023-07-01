@@ -7,7 +7,7 @@ const MyParty = ({ partyName, partyDate, partyHour, partyCode, imageUrl }) => {
     const baseFlexClasses = 'flex flex-row items-center gap-1';
 
     return (
-        <div className='bg-purpleT2 h-fit w-full rounded-2xl p-3 flex flex-row ring-2 ring-inset ring-purpleT4'>
+        <div className='bg-purpleT2 h-fit w-full rounded-2xl p-3 flex flex-row ring-1 ring-inset ring-purpleT4'>
             <Image src={imageUrl} alt="" width={110} height={30} className="mr-2 rounded-lg object-cover h-28 w-28" />
             <div className='flex flex-col'>
                 <h1 className='text-xl font-bold'>

@@ -50,12 +50,12 @@ const Piece03 = () => {
                 <div className="justify-center flex flex-col items-center gap-3">
                     <div className='flex flex-row gap-2 items-center'>
                         <button
-                            className=" bg-purpleT2 h-fit w-fit p-4 ring-2 ring-inset text-xl ring-purpleT3 rounded-full"
+                            className=" bg-purpleT2 h-fit w-fit p-4 ring-1 ring-inset text-xl ring-purpleT3 rounded-full"
                             onClick={() => handleButtonClick(-1)}
                         >
                             <Vector vectorname={'minus01'} />
                         </button>
-                        <div className="w-48 p-4 bg-purpleT2 gap-1 ring-2 ring-inset rounded-full content-center items-center justify-center flex flex-row ring-purpleT3">
+                        <div className="w-48 p-4 bg-purpleT2 gap-1 ring-1 ring-inset rounded-full content-center items-center justify-center flex flex-row ring-purpleT3">
                             <h1 className="bg-transparent w-fit h-fit text-whiteT1 text-2xl font-bold">R$</h1>
                             <input
                                 type="text"
@@ -65,7 +65,7 @@ const Piece03 = () => {
                             />
                         </div>
                         <button
-                            className=" bg-purpleT2 h-fit w-fit p-4 ring-2 ring-inset text-xl ring-purpleT3 rounded-full"
+                            className=" bg-purpleT2 h-fit w-fit p-4 ring-1 ring-inset text-xl ring-purpleT3 rounded-full"
                             onClick={() => handleButtonClick(1)}
                         >
                             <Vector vectorname={'plus01'} />
@@ -83,12 +83,12 @@ const Piece03 = () => {
                 <div className="justify-center flex flex-col items-center gap-3">
                     <div className='flex flex-row gap-2 items-center'>
                         <button
-                            className=" bg-purpleT2 h-fit w-fit p-4 ring-2 ring-inset text-xl ring-purpleT3 rounded-full"
+                            className=" bg-purpleT2 h-fit w-fit p-4 ring-1 ring-inset text-xl ring-purpleT3 rounded-full"
                             onClick={() => handleGuestsPlus(-1)}
                         >
                             <Vector vectorname={'minus01'} />
                         </button>
-                        <div className="w-48 p-4 bg-purpleT2 gap-1 ring-2 ring-inset rounded-full content-center items-center justify-center flex flex-row ring-purpleT3">
+                        <div className="w-48 p-4 bg-purpleT2 gap-1 ring-1 ring-inset rounded-full content-center items-center justify-center flex flex-row ring-purpleT3">
                             <input
                                 type="text"
                                 className="w-28 text-center bg-transparent text-whiteT1 text-2xl font-bold"
@@ -97,7 +97,7 @@ const Piece03 = () => {
                             />
                         </div>
                         <button
-                            className=" bg-purpleT2 h-fit w-fit p-4 ring-2 ring-inset text-xl ring-purpleT3 rounded-full"
+                            className=" bg-purpleT2 h-fit w-fit p-4 ring-1 ring-inset text-xl ring-purpleT3 rounded-full"
                             onClick={() => handleGuestsPlus(1)}
                         >
                             <Vector vectorname={'plus01'} />
