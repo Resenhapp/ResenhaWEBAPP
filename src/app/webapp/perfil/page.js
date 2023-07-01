@@ -17,6 +17,12 @@ export const metadata = {
 }
 
 export default function Profile() {
+
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
+
+
     const id = Cookies.get('user');
 
     const [data, setData] = useState(null);
@@ -85,7 +91,7 @@ export default function Profile() {
                                     <NumberDisplay amount={events} label={'resenhas'} />
                                 </div>
                                 <div>
-                                    <EditButton content="Editar perfil" />
+                                    <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
                                 </div>
                             </div>
                             <div className='w-full'>

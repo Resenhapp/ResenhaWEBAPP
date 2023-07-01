@@ -1,10 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import OutlinedButton from '@/src/components/OutlinedButton';
-import MyEventsBanner from '@/src/components/MyEventsBanner';
-import Button from '@/src/components/Button';
 import PageHeader from '@/src/components/PageHeader';
-import MyParty from '@/src/components/MyParty';
 import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
@@ -14,7 +10,7 @@ export const metadata = {
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Home() {
+export default function HomePage() {
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
     
     const handleDisplayToggle = () => {
@@ -27,7 +23,7 @@ export default function Home() {
                 <div className='w-[90%] align-center mt-12 justify-between items-center flex flex-row'>
                     <DualButton leftButtonText={'Suas resenhas'} rightButtonText={'Seus convites'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
-                {isDisplayingEvents ? <MyEventsDisplay /> : <MyInvitesDisplay />}
+                {isDisplayingEvents ? <MyEventsDisplay eventName={'Resenha dos Manos'} /> : <MyInvitesDisplay />}
             </div>
         </div>
     );

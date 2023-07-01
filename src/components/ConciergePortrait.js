@@ -12,7 +12,7 @@ const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, relativeEven
             <div className='flex flex-col w-full justify-around'>
                 <h1 className='text-xl font-bold'>{conciergeName}</h1>
                 <div className={baseFlexClasses}>
-                    <Vector vectorname={'thunder02'} />
+                    <Vector vectorname={'thunder03'} />
                     <h3 className={h3Classes}>
                         {relativeEvent}
                     </h3>

@@ -2,9 +2,8 @@
 import React from 'react';
 import Button from './Button';
 import MyEventsBanner from './MyEventsBanner';
-import DualButton from './DualButton';
 
-const MyEventsDisplay = () => {
+const MyEventsDisplay = ({eventName}) => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
@@ -13,7 +12,7 @@ const MyEventsDisplay = () => {
             <div className=' h3 w-full flex'>
                 <div className='w-full flex flex-col'>
                     <div className='w-full h-full flex flex-col'>
-                        <MyEventsBanner eventName={'Festa do João'} eventImage={'https://resenha.app/publico/recursos/resenhas/mjCvJEPv.jpg'} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
+                        <MyEventsBanner eventName={eventName} eventImage={'https://resenha.app/publico/recursos/resenhas/mjCvJEPv.jpg'} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
                     </div>
                 </div>
             </div>

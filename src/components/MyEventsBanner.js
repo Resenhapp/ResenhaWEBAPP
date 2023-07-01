@@ -1,8 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
 import RoundButton from './RoundButton';
 import Vector from './Vector';
-import OutlinedButton from './OutlinedButton';
 
 const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
     const handleNavigation = (pageToGo) => {

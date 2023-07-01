@@ -1,6 +1,5 @@
 'use client'
 import React from 'react';
-import MyParty from './MyParty';
 import Button from './Button';
 import MyInvitesBanner from './MyInvitesBanner';
 const MyInvitesDisplay = () => {
