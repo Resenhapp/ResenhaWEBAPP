@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import Vector from './Vector';
 
-const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = false, selected: selectedProp = false, onClick }) => {
+const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = false, selected: selectedProp = false, onClick, ringColor, ringThickness, weight }) => {
   
     const [selected, setSelected] = useState(selectedProp);
     const vectorName = selected ? 'xmark02' : 'plus04';
@@ -19,9 +19,9 @@ const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = fa
       console.log(`${type} ${action}: ${tagname}`);
     };
   
-    const baseClasses = 'flex flex-row gap-1 items-center w-fit px-3 py-2 rounded-full ring-0 ring-inset';
+    const baseClasses = `flex font-${weight} flex-row gap-1 items-center ring-inset w-fit px-3 py-1 rounded-full `;
     const colorClasses = {
-      tag: selected ? 'bg-purpleT3 ring-[#FFFFFF80] ring-0' : `bg-purpleT2`,
+      tag: selected ? `bg-${highlightColor} ring-${ringColor} ring-${ringThickness}` : `bg-${colorName} ring-${ringThickness} ring-${ringColor}`,
       interest: selected ? `bg-${highlightColor} ring-2 ring-[#FFFFFF80]` : `bg-${colorName}`,
     };
   

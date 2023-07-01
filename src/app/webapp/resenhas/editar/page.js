@@ -55,10 +55,10 @@ export default function EditEvent() {
     var initialHour = "20:00";
     var initialFinalHour = "20:00";
     var initialLimit = "80";
+    var initialVipLimit = "0";
     var initialAddress = "Rua ramiro barcelos, 1450";
     var initialDescription = "Vai ter muitos amigos festejando e dançando pra valer venha curtir com a gente na resenha de los manos! realmente vamos botar para quebrar! contaremos com a ilustre presença de Estevan e Bisteca.";
     var initialPrice = "R$ 20,00";
-
     // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
     const [eventTags, setEventTags] = useState([1, 2, 4]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
@@ -184,7 +184,6 @@ export default function EditEvent() {
     const dayOfWeek = getDayOfWeek(date);
 
     // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC
-    const [hour, setHour] = useState(initialHour);
     const [isEndTime, setIsEndTime] = useState(false);
 
     const handleToggle = () => {
@@ -217,17 +216,6 @@ export default function EditEvent() {
         setEndHour(inputHour);
     };
 
-    const handleHourChange = (event) => {
-        let inputHour = event.target.value;
-
-        inputHour = inputHour.replace(/\D/g, '');
-
-        if (inputHour.length >= 2) {
-            inputHour = inputHour.substring(0, inputHour.length - 2) + ':' + inputHour.substring(inputHour.length - 2, inputHour.length);
-        }
-
-        setHour(inputHour);
-    };
     const saveHour = () => {
         console.log(startHour);
         console.log(endHour);
@@ -238,14 +226,69 @@ export default function EditEvent() {
 
     // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC
     const [limit, setLimit] = useState(initialLimit);
+    const [isVip, setIsVip] = useState(false);
+    const [vipLimit, setVipLimit] = useState(initialVipLimit);
+    const [limitError, setLimitError] = useState('');
+
+    useEffect(() => {
+        if (!isVip) {
+          setVipLimit(0);
+        }
+      }, [isVip]);
+
+
+    const handleToggleVip = () => {
+        setIsVip(!isVip);
+    };
+
     const handleLimitChange = (event) => {
         const onlyNumbers = event.target.value.replace(/\D/g, '');
         setLimit(onlyNumbers);
     };
+
+    const handleVipLimitChange = (event) => {
+        const onlyNumbers = event.target.value.replace(/\D/g, '');
+        setVipLimit(onlyNumbers);
+    };
+
     const saveLimit = () => {
+        if (limit <= 0) {
+            setLimitError('O número de vagas normais deve ser maior que zero.');
+            return;
+        }
+        if (isVip && vipLimit <= 0) {
+            setLimitError('O número de vagas VIP deve ser maior que zero quando o modo VIP está ativado.');
+            return;
+        }
+        
+        setLimitError('');
         console.log(limit);
+        console.log(vipLimit);
         toggleEditMaxGuestsPageOpen();
     };
+
+
+    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC
+    var currentImage = 'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png';
+    const [image, setImage] = useState(currentImage);
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setImage(reader.result);
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const clearImage = () => {
+        setImage(null);
+    };
+
 
     // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
 
@@ -317,12 +360,11 @@ export default function EditEvent() {
                         placeholder='20/03/2023'
                         value={date}
                         onChange={handleDateChange}
+                        type="tel"
                     />
                 </div>
                 <div className="w-full flex flex-row justify-start">
-                    <button className="py-1 px-6 text-purpleT2 bg-whiteT1 rounded-full">
-                        Abrir calendário
-                    </button>
+
                 </div>
                 <div>
                     {dateError && <div className='text-red-500'>{dateError}</div>} {/* Error message div */}
@@ -345,6 +387,7 @@ export default function EditEvent() {
                         value={startHour}
                         onChange={handleStartHourChange}
                         maxLength={5}
+                        type="tel"
                     />
                 </div>
                 {isEndTime && <div className='w-full'>
@@ -355,6 +398,7 @@ export default function EditEvent() {
                         value={endHour}
                         onChange={handleEndHourChange}
                         maxLength={5}
+                        type="tel"
                     />
                 </div>}
                 <Toggle labelText={'Hora pra acabar'} showLabel={true} showQuestion={true} onToggle={handleToggle} startToggled={isEndTime} />
@@ -373,14 +417,28 @@ export default function EditEvent() {
                 togglePage={toggleEditMaxGuestsPageOpen}
                 saveAction={saveLimit}>
                 <div className='w-full'>
+                    <p>Vagas Gerais</p>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
                         placeholder='máximo de convidados'
                         value={limit}
                         onChange={handleLimitChange}
+                        type="tel"
                     />
                 </div>
+                {isVip && <div className='w-full'>
+                    <p>Vagas VIP</p>
+                    <input
+                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                        placeholder='máximo de vagas VIP'
+                        value={vipLimit}
+                        onChange={handleVipLimitChange}
+                        type="tel"
+                    />
+                </div>}
+                <Toggle labelText={'Vagas VIP'} showLabel={true} showQuestion={true} onToggle={handleToggleVip} startToggled={isVip} />
                 <div>
+                {limitError && <div className='text-red-500'>{limitError}</div>} {/* Error message div */}
                     <p className='text-sm'>
                         O limite de convidados é o número máximo de pessoas que você pode receber em sua resenha. Este é o número que os convidados verão ao acessar o seu convite, o que os ajudará a entender a escala e a exclusividade do evento.
                     </p>
@@ -398,9 +456,6 @@ export default function EditEvent() {
                     ></input>
                 </div>
                 <div className="w-full flex flex-row justify-start">
-                    <button className="py-1 px-6 text-purpleT2 bg-whiteT1 rounded-full">
-                        Ver no mapa
-                    </button>
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -442,6 +497,9 @@ export default function EditEvent() {
                                 isEditable={true}
                                 onClick={() => handleTagClick(tag.id)}
                                 selected={tag.selected}
+                                ringColor={tag.ringColor}
+                                ringThickness={tag.ringThickness}
+                                weight={tag.weight}
                             />
                         ))}
                     </div>
@@ -464,7 +522,14 @@ export default function EditEvent() {
                         placeholder='R$00.00'
                         value={price}
                         onChange={handlePriceChange}
+                        type="tel"
                     />
+                </div>
+
+                <div>
+                    <Toggle labelText={'Pagamento com PIX'} showLabel={true} startToggled={true} showQuestion={true} />
+                    <Toggle labelText={'Pagamento com cartão'} showLabel={true} startToggled={true} showQuestion={true} />
+                    <Toggle labelText={'Pagamento com dinheiro'} showLabel={true} startToggled={true} showQuestion={true} />
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -475,23 +540,54 @@ export default function EditEvent() {
 
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
+
                     <div className="relative w-full">
-                        <Image
-                            src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
-                            alt=""
-                            width={400}
-                            height={270}
-                            className="object-cover w-full h-[260px]"
-                        />
+                        {!image && (
+                            <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
+                                <input
+                                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
+                                    type="file"
+                                    accept=".gif, .png, .jpg, .jpeg"
+                                    onChange={handleImageChange}
+                                />
+                                <div className='flex flex-col gap-2 justify-center items-center content-center'>
+                                    <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
+                                </div>
+                            </label>
+                        )}
+                        {image && (
+                            <>
+                                <Image
+                                    src={image}
+                                    alt="Selected Image"
+                                    width={400}
+                                    height={270}
+                                    className="object-cover w-full h-[260px]"
+                                />
+                                <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
+                                    <input
+                                        style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
+                                        type="file"
+                                        accept=".gif, .png, .jpg, .jpeg"
+                                        onChange={handleImageChange}
+                                    />
+                                    <div className="bg-purpleT1 p-3 rounded-full ring-2 ring-whiteT1">
+                                        <Vector vectorname={"edit02"} />
+                                    </div>
+                                </label>
+                            </>
+                        )}
                         <div className="absolute inset-0">
-                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-3/5" />
+                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
                         </div>
                     </div>
+
+                    
                     <div className="w-full gap-2 flex flex-col p-5">
                         <div className="flex flex-row justify-between items-center w-full max-w-screen-xs">
                             <div
                                 onClick={toggleEditNamePageOpen}
-                                className="flex items-start justify-start text-left w-fit text-xl font-bold text-whiteT1 gap-2"
+                                className="flex items-start justify-start text-left w-full text-xl font-bold text-whiteT1 gap-2"
                             >
                                 {name}
                                 <div className="my-2">
@@ -503,11 +599,11 @@ export default function EditEvent() {
                                 toggleEditPricePageOpen();
                             }} className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
                                 <p className="text-purpleT2 text-center font-bold">
-                                    <span className="" style={{ whiteSpace: "nowrap" }}>{price}</span>
+                                    <span className="flex flex-row items-center gap-1" style={{ whiteSpace: "nowrap" }}>{price}<Vector vectorname={"edit03"} /></span>
                                 </p>
                             </div>
                         </div>
-                        <div className="flex flex-row justify-between">
+                        <div className="flex flex-row justify-around gap-2">
                             <button onClick={toggleEditDatePageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 w-fit h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
                                     <p className="font-bold">{dayOfWeek}</p>
@@ -515,30 +611,28 @@ export default function EditEvent() {
                                 </div>
                                 <p>{day} de {month}</p>
                             </button>
-                            <div className="">
-                                <div onClick={toggleEditHourPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 rounded-2xl w-fit h-fit p-2 flex flex-row gap-2 items-center">
-                                    <div className="flex flex-col">
-                                        <p className="font-bold">Horário</p>
-                                        <div className="flex flex-row gap-1">
-                                            <p className="text-left flex flex-row gap-1">
-                                                {startHour.endsWith(":00") ? `${startHour.slice(0, -3)}h` : startHour}
-                                            </p>
-                                            {isEndTime &&
-                                                <p className="text-left flex flex-row">
-                                                    até {endHour.endsWith(":00") ? `${endHour.slice(0, -3)}h` : endHour}
-                                                </p>}
-                                        </div>
+                            <div onClick={toggleEditHourPageOpen} className="bg-transparent ring-1 ring-inset min-w-fit ring-whiteT1 rounded-2xl h-fit p-2 flex flex-row gap-2 w-full items-center">
+                                <div className="flex flex-col">
+                                    <div className="flex flex-row items-center gap-2">
+                                        <p className="font-bold">Horário</p><Vector vectorname={'edit02'} />
                                     </div>
-
-                                    <Vector vectorname={'edit02'} />
+                                    <div className="flex flex-row gap-1">
+                                        <p className="text-left flex flex-row gap-1">
+                                            {startHour.endsWith(":00") ? `${startHour.slice(0, -3)}h` : startHour}
+                                        </p>
+                                        {isEndTime &&
+                                            <p className="text-left flex flex-row">
+                                                até {endHour.endsWith(":00") ? `${endHour.slice(0, -3)}h` : endHour}
+                                            </p>}
+                                    </div>
                                 </div>
                             </div>
-                            <button onClick={toggleEditMaxGuestsPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-fit h-fit p-2 rounded-2xl">
+                            <button onClick={toggleEditMaxGuestsPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
                                     <p className="font-bold">Limite</p>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p>10/{limit}</p>
+                                <p>10/{parseInt(limit) + parseInt(vipLimit)}</p>
                             </button>
                         </div>
                         <button onClick={toggleEditAddressPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
@@ -574,6 +668,9 @@ export default function EditEvent() {
                                         colorName={tag.colorName}
                                         highlightColor={tag.highlightColor}
                                         isEditable={false}
+                                        ringThickness={tag.ringThickness}
+                                        ringColor={tag.ringColor}
+                                        weight={tag.weight}
                                     />
                                 ))}
                             </div>
