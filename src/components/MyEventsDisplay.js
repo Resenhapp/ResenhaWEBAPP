@@ -3,7 +3,7 @@ import React from 'react';
 import Button from './Button';
 import MyEventsBanner from './MyEventsBanner';
 
-const MyEventsDisplay = ({eventName}) => {
+const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax, eventImage}) => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
@@ -12,7 +12,7 @@ const MyEventsDisplay = ({eventName}) => {
             <div className=' h3 w-full flex'>
                 <div className='w-full flex flex-col'>
                     <div className='w-full h-full flex flex-col'>
-                        <MyEventsBanner eventName={eventName} eventImage={'https://resenha.app/publico/recursos/resenhas/mjCvJEPv.jpg'} eventDate={'25 de maio'} eventHour={'21'} eventGuests={'10'} eventMax={'100'} />
+                        <MyEventsBanner eventName={eventName} eventImage={eventImage} eventDate={eventDate} eventHour={eventHour} eventGuests={eventGuests} eventMax={eventMax} />
                     </div>
                 </div>
             </div>
