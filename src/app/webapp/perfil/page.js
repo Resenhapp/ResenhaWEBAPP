@@ -10,6 +10,9 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import { interestsData } from '@/src/components/interestsData';
+import Vector from '@/src/components/Vector';
+import ProfileEvent from '@/src/components/ProfileEvent';
+import Comment from '@/src/components/Comment';
 export const metadata = {
     title: 'Resenha.app • Perfil',
     description: 'Venha fazer suas resenhas!',
@@ -77,7 +80,7 @@ export default function Profile() {
     const [userInterests, setUserInterests] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
     interestsData.filter(interest => userInterests.includes(interest.id))
     const [tempUserInterests, setTempUserInterests] = useState(userInterests);
-
+    var isVerified = true;
     const [activeTab, setActiveTab] = useState('Sobre');
 
     return (
@@ -90,7 +93,10 @@ export default function Profile() {
                             <div className='flex flex-col items-center gap-4 w-full'>
                                 <img src={profileimg} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
                                 <div className='flex flex-col items-center'>
-                                    <h1 className='font-bold text-2xl'>{name}</h1>
+                                    <h1 className='font-bold text-2xl flex flex-row justify-center items-center gap-1'>
+                                        {name}
+                                        {isVerified && <Vector vectorname={'verified02'} />}
+                                    </h1>
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
@@ -139,13 +145,73 @@ export default function Profile() {
 
                                 {activeTab === 'Resenhas' && (
                                     <div> {/* CONTEUDO DE RESENHAS */}
-                                        RESENHAS
+                                        <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                            <div>
+                                                • Vou
+                                            </div>
+                                            <ProfileEvent
+                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
+                                                partyGuests={'480'}
+                                                partyDate={'17/12'}
+                                                partyHour={'20:00'}
+                                                partyName={'MATUÊ - Porto Alegre'} />
+                                            <div>
+                                                • Fui
+                                            </div>
+                                            <ProfileEvent
+                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
+                                                partyGuests={'480'}
+                                                partyDate={'17/12'}
+                                                partyHour={'20:00'}
+                                                partyName={'MATUÊ - Porto Alegre'} />
+                                        </div>
                                     </div>
                                 )}
 
                                 {activeTab === 'Comentários' && (
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
-                                        COMENTÁRIOS
+                                        <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                            <Comment
+                                            userName={'Gabriel Valentim'}
+                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                            rate={1}
+                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
+                                            day={12}
+                                            month={4}
+                                            />
+                                            <Comment
+                                            userName={'Gabriel Valentim'}
+                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                            rate={2}
+                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
+                                            day={12}
+                                            month={4}
+                                            />
+                                            <Comment
+                                            userName={'Gabriel Valentim'}
+                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                            rate={3}
+                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
+                                            day={12}
+                                            month={4}
+                                            />
+                                            <Comment
+                                            userName={'Gabriel Valentim'}
+                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                            rate={4}
+                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
+                                            day={12}
+                                            month={4}
+                                            />
+                                            <Comment
+                                            userName={'Gabriel Valentim'}
+                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                            rate={5}
+                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
+                                            day={12}
+                                            month={4}
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>
