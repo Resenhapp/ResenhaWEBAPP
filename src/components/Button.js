@@ -29,7 +29,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         );
     } else if (icon === 'user2') {
         iconSvg = (
-            <Vector vectorname={'user04'} />
+            <Vector vectorname={'user02'} />
         );
     } else if (icon === 'wallet') {
         iconSvg = (

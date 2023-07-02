@@ -2,8 +2,8 @@
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
-import InputField from '@/src/components/InputField';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
+import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
     title: 'Resenha.app • Detalhes da conta',
@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function Account() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
     };
 
     return (
@@ -23,21 +23,18 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <InputField />
                                 <InputFieldPurple />
                                 <hr className='border-purpleT4' />
-                                <Button
+                                <ButtonConfig
                                     label="Detalhes da conta"
-                                    action={() => handleNavigation('conta/detalhes')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
+                                    action={() => handleNavigation('/detalhes')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'user03'}
                                     textAlign="left"
                                 />
                                 <Button
                                     label="Resenhas salvas"
-                                    action={() => handleNavigation('conta/resenhas')}
+                                    action={() => handleNavigation('/resenhas')}
                                     iconSide="right"
                                     icon={'arrow'}
                                     height={1}
