@@ -21,8 +21,8 @@ export default function Settings() {
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
-                            <div className='h-fit w-full gap-4 flex flex-col'>
-                                <Button label={'Conta'} icon={'user'} action={() => handleNavigation('configuracoes/conta/')} iconSide='left' height={1} width={1} textAlign='left' />
+                            <div className='h-fit w-full gap-2 flex flex-col'>
+                                <Button label={'Conta'} icon={'user2'} action={() => handleNavigation('configuracoes/conta/')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Segurança'} icon={'shield'} action={() => handleNavigation('configuracoes/seguranca/')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Privacidade'} icon={'lock'} action={() => handleNavigation('configuracoes/privacidade/')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Pagamentos'} icon={'money'} action={() => handleNavigation('configuracoes/pagamentos/')} iconSide='left' height={1} width={1} textAlign='left' />
