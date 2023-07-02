@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function Account() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
     };
 
     return (
@@ -23,7 +23,7 @@ export default function Account() {
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <Button
                                     label="Detalhes da conta"
-                                    action={() => handleNavigation('conta/detalhes')}
+                                    action={() => handleNavigation('/detalhes')}
                                     iconSide="right"
                                     icon={'arrow'}
                                     height={1}
@@ -32,7 +32,7 @@ export default function Account() {
                                 />
                                 <Button
                                     label="Informações pessoais"
-                                    action={() => handleNavigation('conta/informacoes')}
+                                    action={() => handleNavigation('/informacoes')}
                                     iconSide="right"
                                     icon={'arrow'}
                                     height={1}
@@ -41,7 +41,7 @@ export default function Account() {
                                 />
                                 <Button
                                     label="Histórico de atividades"
-                                    action={() => handleNavigation('conta/historico')}
+                                    action={() => handleNavigation('/historico')}
                                     iconSide="right"
                                     icon={'arrow'}
                                     height={1}
@@ -50,7 +50,7 @@ export default function Account() {
                                 />
                                 <Button
                                     label="Resenhas salvas"
-                                    action={() => handleNavigation('conta/resenhas')}
+                                    action={() => handleNavigation('/resenhas')}
                                     iconSide="right"
                                     icon={'arrow'}
                                     height={1}
