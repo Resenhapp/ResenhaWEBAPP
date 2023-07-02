@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
-
+import { interestsData } from '@/src/components/interestsData';
 export const metadata = {
     title: 'Resenha.app • Perfil',
     description: 'Venha fazer suas resenhas!',
@@ -73,14 +73,17 @@ export default function Profile() {
     const username = "joaodavisn";
     const followers = "1";
     const following = "1";
-    const about = "text";
+    const about = "Eu curto ir em resenhas, pode me chamar pra todas que eu sempre vou. Geralmente eu trabalho aqui nessa plataforma trazendo problema pros dev 🐸.";
+    const [userInterests, setUserInterests] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    interestsData.filter(interest => userInterests.includes(interest.id))
+    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
 
     const [activeTab, setActiveTab] = useState('Sobre');
 
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Perfil'} />
-            <div className="flex flex-col  justify-start h-screen px-4 ">
+            <div className="flex flex-col justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
@@ -99,25 +102,38 @@ export default function Profile() {
                                     <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
                                 </div>
                             </div>
-                            <div className='flex flex-col bg- w-full'>
-                                <div className='flex flex-row justify-between'>
-                                <button className={`uppercase ${activeTab === 'Sobre' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Sobre')}>Sobre</button>
-                                <button className={`uppercase ${activeTab === 'Resenhas' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Resenhas')}>Resenhas</button>
-                                <button className={`uppercase ${activeTab === 'Comentários' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Comentários')}>Comentários</button>
+                            <div className='flex flex-col bg- w-full mt-5'>
+                                <div className='flex flex-row justify-between mb-4'>
+                                    <button className={`uppercase ${activeTab === 'Sobre' ? 'text-whiteT1 underline underline-offset-4 underline-t-3' : 'text-purpleT5'}`} onClick={() => setActiveTab('Sobre')}>Sobre</button>
+                                    <button className={`uppercase ${activeTab === 'Resenhas' ? 'text-whiteT1 underline underline-offset-4 underline-t-3' : 'text-purpleT5'}`} onClick={() => setActiveTab('Resenhas')}>Resenhas</button>
+                                    <button className={`uppercase ${activeTab === 'Comentários' ? 'text-whiteT1 underline underline-offset-4 underline-t-3' : 'text-purpleT5'}`} onClick={() => setActiveTab('Comentários')}>Comentários</button>
                                 </div>
 
                                 {activeTab === 'Sobre' && (
                                     <div> {/* CONTEUDO DE SOBRE */}
                                         <div className='w-full'>
-                                            <h1 className='font-bold text-xl'>Sobre</h1>
+                                            <h1 className='font-bold text-lg'>Resumo</h1>
                                             <p>{about}</p>
                                         </div>
                                         <div className='w-full mt-8'>
-                                            <h1 className='font-bold text-xl'>Interesses</h1>
+                                            <h1 className='font-bold text-lg'>Interesses</h1>
                                             <div className='w-full flex flex-wrap gap-1'>
-
+                                                {interestsData.filter(interest => userInterests.includes(interest.id)).map(interest => (
+                                                    <Tag
+                                                        key={interest.id}
+                                                        tagname={interest.name}
+                                                        type={interest.type}
+                                                        colorName={interest.colorName}
+                                                        highlightColor={interest.highlightColor}
+                                                        isEditable={false}
+                                                        ringThickness={interest.ringThickness}
+                                                        ringColor={interest.ringColor}
+                                                        weight={interest.weight}
+                                                    />
+                                                ))}
                                             </div>
                                         </div>
+
                                     </div>
                                 )}
 

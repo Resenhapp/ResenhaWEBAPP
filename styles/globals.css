@@ -75,6 +75,14 @@ filter: blur(50px);
   box-shadow: none;
 }
 
+.underline-t-3 {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+}
+.underline-t-2 {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
 
 .gradient {
   height: fit-content;
