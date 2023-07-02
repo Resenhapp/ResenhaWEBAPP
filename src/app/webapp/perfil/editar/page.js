@@ -69,7 +69,7 @@ export default function EditProfile() {
                                 <h1 className='text-center'>Ei! Você tem alterações que não foram salvas! Vai sair sem salvar?</h1>
                                 <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                                     if (typeof checkerCallback === 'function') {
-                                        checkerCallback(false);   // <-- note this change
+                                        checkerCallback(false);
                                     }
                                     setModalOpen(false);
                                 }}>Sim eu vou.</button>

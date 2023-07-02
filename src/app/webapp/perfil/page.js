@@ -1,9 +1,8 @@
 'use client'
-
 import EditButton from '@/src/components/EditButton';
 import React from 'react';
 import NumberDisplay from '@/src/components/NumberDisplay';
-import Interest from '@/src/components/Interest';
+import Tag from '@/src/components/Tag';
 import PageHeader from '@/src/components/PageHeader';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -23,53 +22,61 @@ export default function Profile() {
     };
 
 
-    const id = Cookies.get('user');
+    // const id = Cookies.get('user');
 
-    const [data, setData] = useState(null);
+    // const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
 
-    const axios = require('axios');
-    const qs = require('qs');
+    // const axios = require('axios');
+    // const qs = require('qs');
 
-    const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
+    // const makeRequest = async (url, data) => {
+    //     try {
+    //         const response = await axios.post(url, qs.stringify(data));
+    //         return response.data;
+    //     }
 
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
-    };
+    //     catch (error) {
+    //         throw new Error(`Request failed: ${error}`);
+    //     }
+    // };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
-            setData(response);
-        }
+    // const fetchData = async () => {
+    //     try {
+    //         const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+    //         setData(response);
+    //     }
 
-        catch (error) {
-            console.error(error);
-        }
-    };
+    //     catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
-    if (!data) {
-        return (
-            <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
-            </div>
-        );
-    }
+    // if (!data) {
+    //     return (
+    //         <div className="h-screen w-full flex justify-center content-center items-center">
+    //             <Loading />
+    //         </div>
+    //     );
+    // }
 
-    var { name, username, about, followers, following, events, interests} = data;
+    // var { name, username, about, followers, following, events, interests } = data;
 
-    var interests = JSON.parse(interests).interests;
+    // var interests = JSON.parse(interests).interests;
 
     var profileimg = 'https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/9f02e97244dbeacaef9f5ac951db62d6-1659364891510/aa73f77a-cb42-4566-9d3f-30cb2059cb26.png'
-    
+
+    const name = "Joao Davi";
+    const username = "joaodavisn";
+    const followers = "1";
+    const following = "1";
+    const about = "text";
+
+    const [activeTab, setActiveTab] = useState('Sobre');
+
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Perfil'} />
@@ -84,28 +91,49 @@ export default function Profile() {
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
-                                    <NumberDisplay amount={followers} label={'seguidores'} />
-                                    <div className='h-full w-[2px] bg-whiteT1 rounded-full' />
-                                    <NumberDisplay amount={following} label={'seguindo'} />
-                                    <div className='h-full w-[2px] bg-whiteT1 rounded-full' />
-                                    <NumberDisplay amount={events} label={'resenhas'} />
+                                    <NumberDisplay amount={followers} label={'Seguindo'} />
+                                    <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full' />
+                                    <NumberDisplay amount={following} label={'Seguidores'} />
                                 </div>
                                 <div>
                                     <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
                                 </div>
                             </div>
-                            <div className='w-full'>
-                                <h1 className='font-bold text-xl'>Sobre</h1>
-                                <p>{about}</p>
-                            </div>
-                            <div className='w-full mt-8'>
-                                <h1 className='font-bold text-xl'>Interesses</h1>
-                                <div className='w-full flex flex-wrap gap-1'>
-                                    {interests.map((interest, index) =>
-                                        <Interest key={index} interestIndex={interest} />
-                                    )}
+                            <div className='flex flex-col bg- w-full'>
+                                <div className='flex flex-row justify-between'>
+                                <button className={`uppercase ${activeTab === 'Sobre' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Sobre')}>Sobre</button>
+                                <button className={`uppercase ${activeTab === 'Resenhas' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Resenhas')}>Resenhas</button>
+                                <button className={`uppercase ${activeTab === 'Comentários' ? 'underline underline-offset-4' : ''}`} onClick={() => setActiveTab('Comentários')}>Comentários</button>
                                 </div>
+
+                                {activeTab === 'Sobre' && (
+                                    <div> {/* CONTEUDO DE SOBRE */}
+                                        <div className='w-full'>
+                                            <h1 className='font-bold text-xl'>Sobre</h1>
+                                            <p>{about}</p>
+                                        </div>
+                                        <div className='w-full mt-8'>
+                                            <h1 className='font-bold text-xl'>Interesses</h1>
+                                            <div className='w-full flex flex-wrap gap-1'>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'Resenhas' && (
+                                    <div> {/* CONTEUDO DE RESENHAS */}
+                                        RESENHAS
+                                    </div>
+                                )}
+
+                                {activeTab === 'Comentários' && (
+                                    <div> {/* CONTEUDO DE COMENTÁRIOS */}
+                                        COMENTÁRIOS
+                                    </div>
+                                )}
                             </div>
+
                         </div>
                     </div>
                 </section>
