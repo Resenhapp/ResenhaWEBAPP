@@ -7,6 +7,7 @@ import Modal from '@/src/components/Modal';
 import Interest from '@/src/components/Interest';
 import Button from '@/src/components/Button';
 import ModalButton from '@/src/components/ModalButton';
+import EditInfoPage from '@/src/components/EditInfoPage';
 
 export const metadata = {
     title: 'Resenha.app • Perfil',
@@ -23,30 +24,10 @@ export default function EditProfile() {
     var aboutme = 'Vamo curtir rapaziadaaaaa!';
 
     const [hasChange, setHasChange] = useState(false);
-    const [isModalOpen, setModalOpen] = useState(false);
-    const labels = ['Gamer', 'Eventos', 'Música', 'Arte', 'Fimes', 'Outros', 'Anime', 'Cultura', 'Baile Funk', 'Festa Temática', 'LGBTQ+', 'Nerd', 'F1', 'Pool Party', 'Novas experiências'];
-    const allInterests = ['Gamer', 'Eventos', 'Música', 'Arte', 'Fimes', 'Outros', 'Anime', 'Cultura', 'Baile Funk', 'Festa Temática', 'LGBTQ+', 'Nerd', 'F1', 'Pool Party', 'Novas experiências'];
-    const [isUsernameModalOpen, setUsernameModalOpen] = useState(false);
-    const [isAboutmeModalOpen, setAboutmeModalOpen] = useState(false);
-    const [newUsername, setNewUsername] = useState(username);
-    const [newUser, setNewUser] = useState(user);
-    const [newAboutme, setNewAboutme] = useState(aboutme);
-    const closeModal = () => setModalOpen(false);
-    const [selectedInterests, setSelectedInterests] = useState([]);
-
+    var isVerified = true;
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
 
-    const [isInterestsModalOpen, setInterestsModalOpen] = useState(false);
-    const toggleInterest = (interest) => {
-        setSelectedInterests(prevInterests => {
 
-            if (prevInterests.includes(interest)) {
-                return prevInterests.filter(i => i !== interest);
-            }
-
-            return [...prevInterests, interest];
-        });
-    };
     return (
         <div>
             <div className='flex flex-col w-screen h-screen'>
@@ -78,105 +59,6 @@ export default function EditProfile() {
                                 }}>Não, peraí!</button>
                             </div>
                         </Modal>
-                        <Modal show={isModalOpen} close={closeModal}>
-                            <h1 className='text-xl mb-2 font-bold'>Escolha Interesses!</h1>
-                            <p>Os interesses servem para as pessoas entenderem melhor suas preferências</p>
-                            <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
-                                {allInterests.map(interest => {
-                                    const interestIndex = labels.indexOf(interest) + 1; // +1 because interestIndex starts from 1 in the Interest component
-                                    return (
-                                        <Interest
-                                            interestIndex={interestIndex}
-                                            isRemovable={false}
-                                            isAppend={true}
-                                            appendEvent={() => toggleInterest(interest)}
-                                            key={interest}
-                                        />
-                                    )
-                                })}
-                            </div>
-                            <div className='flex flex-row gap-2 w-full'>
-                                <ModalButton
-                                    label="Cancelar"
-                                    action={() => {
-                                        setInterestsModalOpen(false);
-                                        // do something with newUsername and newUser
-                                    }}
-                                />
-                                <ModalButton
-                                    label="Salvar"
-                                    action={() => {
-                                        setInterestsModalOpen(false);
-                                        // do something with newUsername and newUser
-                                    }}
-                                />
-                            </div>
-                        </Modal>
-                        <Modal show={isUsernameModalOpen} close={() => setUsernameModalOpen(false)}>
-                            <div className='gap-2 flex flex-col'>
-                                <h1 className='text-center'>Editar nome e seu @</h1>
-                                <input
-                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl'
-                                    type="text"
-                                    placeholder="Nome"
-                                    value={newUsername}
-                                    onChange={(e) => setNewUsername(e.target.value)}
-                                />
-                                <input
-                                    className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl'
-                                    type="text"
-                                    placeholder="usuário"
-                                    value={newUser}
-                                    onChange={(e) => setNewUser(e.target.value)}
-                                />
-                                <div className='w-full h-fit bg-redT1 ring-1 ring-redT3'>
-
-                                </div>
-                                <div className='flex flex-row gap-2 w-full'>
-                                    <ModalButton
-                                        label="Cancelar"
-                                        action={() => {
-                                            setUsernameModalOpen(false);
-                                            // do something with newUsername and newUser
-                                        }}
-                                    />
-                                    <ModalButton
-                                        label="Salvar"
-                                        action={() => {
-                                            setUsernameModalOpen(false);
-                                            // do something with newUsername and newUser
-                                        }}
-                                    />
-
-                                </div>
-                                <p className='text-[14px] text-center '>Atenção: você só pode alterar o seu nome <b>uma vez</b>.</p>
-                            </div>
-                        </Modal>
-
-                        <Modal show={isAboutmeModalOpen} close={() => setAboutmeModalOpen(false)}>
-                            <div className='gap-2 flex flex-col'>
-                                <h1 className='text-center'>Conta um pouco sobre você</h1>
-                                <textarea rows={4} className='bg-purpleT1 placeholder-purpleT4 text-whiteT1 p-2 ring-1 ring-purpleT3 rounded-xl' type="text" value={newAboutme} onChange={(e) => setNewAboutme(e.target.value)} />
-                                <div className='flex flex-row gap-2 w-full'>
-                                    <ModalButton
-                                        label="Cancelar"
-                                        action={() => {
-                                            setAboutmeModalOpen(false);
-                                            // do something with newUsername and newUser
-                                        }}
-                                    />
-                                    <ModalButton
-                                        label="Salvar"
-                                        action={() => {
-                                            setAboutmeModalOpen(false);
-                                            // do something with newUsername and newUser
-                                        }}
-                                    />
-
-                                </div>
-                            </div>
-                        </Modal>
-
                         <div className='w-full flex justify-center'>
                             <UserProfileEditor
                                 currentProfile={CurrentProfile}
@@ -189,10 +71,10 @@ export default function EditProfile() {
                             />
                         </div>
                         <div className='w-full flex flex-col items-center'>
-                            <button onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit bg-purpleT1 py-2 px-4 rounded-2xl ring-1 ring-inset ring-purpleT3'>
+                            <button onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit py-2 px-4 rounded-2xl'>
                                 <div className='flex flex-col items-center'>
-                                    <div className='flex flex-row items-center content-center gap-1'>
-                                        <h1 className='font-bold text-2xl'>{username}</h1><Vector vectorname={'verified01'} />
+                                    <div className='flex flex-row items-center justify-center content-center gap-1'>
+                                        <h1 className='font-bold text-2xl'>{username}</h1>{isVerified && <Vector vectorname={'verified02'} />}
                                     </div>
                                     <h3 className='font-normal text-sm'>{'@' + user}</h3>
                                 </div>
@@ -202,7 +84,7 @@ export default function EditProfile() {
                             </button>
                         </div>
                         <div className='w-full'>
-                            <button onClick={() => setAboutmeModalOpen(true)} className='w-full bg-purpleT1 flex flex-col ring-1 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
+                            <button onClick={() => setAboutmeModalOpen(true)} className='w-full flex flex-col rounded-2xl'>
                                 <div className='flex flex-row justify-between w-full'>
                                     <h1 className='font-bold text-xl'>Sobre</h1>
                                     <div className='right-0 top-0 w-fit h-fit bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
@@ -213,7 +95,7 @@ export default function EditProfile() {
                             </button>
                         </div>
                         <div className='w-full'>
-                            <div className='w-full bg-purpleT1 gap-4 flex flex-col ring-1 ring-inset ring-purpleT3 px-4 py-4 rounded-2xl'>
+                            <div className='w-full gap-4 flex flex-col rounded-2xl'>
                                 <div className='flex flex-row justify-between w-full'>
                                     <h1 className='font-bold text-xl'>Interesses</h1>
                                 </div>
@@ -221,7 +103,6 @@ export default function EditProfile() {
                                     <Interest interestIndex={1} isRemovable={true} removeEvent={() => { }} />
                                     <Interest interestIndex={2} isRemovable={true} removeEvent={() => { }} />
                                     <Interest interestIndex={3} isRemovable={true} removeEvent={() => { }} />
-
                                     <button
                                         className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-1 rounded-full ring-1 ring-inset ring-purpleT4"
                                         onClick={() => setModalOpen(true)}

@@ -178,6 +178,7 @@ export default function Profile() {
                                             comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
                                             day={12}
                                             month={4}
+                                            userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
                                             userName={'Gabriel Valentim'}
@@ -186,6 +187,7 @@ export default function Profile() {
                                             comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
                                             day={12}
                                             month={4}
+                                            userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
                                             userName={'Gabriel Valentim'}
@@ -194,6 +196,7 @@ export default function Profile() {
                                             comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
                                             day={12}
                                             month={4}
+                                            userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
                                             userName={'Gabriel Valentim'}
@@ -202,6 +205,7 @@ export default function Profile() {
                                             comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
                                             day={12}
                                             month={4}
+                                            userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
                                             userName={'Gabriel Valentim'}
@@ -210,6 +214,7 @@ export default function Profile() {
                                             comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
                                             day={12}
                                             month={4}
+                                            userUrl={'https://resenha.app/'}
                                             />
                                         </div>
                                     </div>

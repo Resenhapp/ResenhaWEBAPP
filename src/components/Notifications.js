@@ -3,7 +3,7 @@ import Notification from './Notification';
 const Notifications = ({ isOpen, toggleNotifications }) => {
 
     return (
-        <div className={`fixed top-0 right-0 w-full h-full bg-purpleT1 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`fixed top-0 right-0 w-full h-full bg-purpleT0 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="flex flex-row-reverse justify-between items-center w-full mt-0 px-6 pt-20">
                 <h1 className='text-2xl px-4 text-purpleT5 font-light'>Notificações</h1>
                 <button onClick={toggleNotifications} className="p-4">

@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
+import Link from 'next/link'; // Adicione esta linha
 
-const Comment = ({ userName, rate, month, day, comment, imageUrl }) => {
+const Comment = ({ userName, userUrl, rate, month, day, comment, imageUrl }) => {
 
     const h3Classes = 'text-[12px]';
     const baseFlexClasses = 'flex flex-row items-center gap-1';
@@ -28,9 +29,9 @@ const Comment = ({ userName, rate, month, day, comment, imageUrl }) => {
             <Image src={imageUrl} alt="" width={110} height={30} className="mr-2 rounded-full object-cover h-10 w-10" />
             <div className='flex flex-col w-full'>
                 <div className='flex flex-row w-full justify-between'>
-                    <h1 className='text-base font-bold'>
-                        {userName}
-                    </h1>
+                    <Link href={userUrl}> {/* Adicione isto */}
+                        <a className='text-base font-bold'> {userName} </a>
+                    </Link>
                     <p className='text-purpleT5'>
                         {day + ' de ' + months[month - 1]}
                     </p>
