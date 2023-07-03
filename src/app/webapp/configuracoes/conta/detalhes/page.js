@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
@@ -11,8 +11,28 @@ export const metadata = {
 };
 
 export default function Account() {
-    const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
+    const [username, setUsername] = useState('@dabilas');
+    const [email, setEmail] = useState('joao*****n@gmail.com');
+    const [newUsername, setNewUsername] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [isEditing, setEditing] = useState(false);
+
+    const handleEdit = () => {
+        setNewUsername(username);
+        setNewEmail(email);
+        setEditing(true);
+    };
+
+    const handleSave = () => {
+        setUsername(newUsername);
+        setEmail(newEmail);
+        setEditing(false);
+    };
+
+    const handleCancel = () => {
+        setNewUsername('');
+        setNewEmail('');
+        setEditing(false);
     };
 
     return (
@@ -23,28 +43,39 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <InputFieldPurple />
-                                <hr className='border-purpleT4' />
-                                <ButtonConfig
-                                    label="Detalhes da conta"
-                                    action={() => handleNavigation('/detalhes')}
-                                    rightIcon={'arrowRight06'}
-                                    leftIcon={'user03'}
-                                    textAlign="left"
-                                />
-                                <Button
-                                    label="Resenhas salvas"
-                                    action={() => handleNavigation('/resenhas')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
-                                    textAlign="left"
-                                />
+                                <p className="text-whiteT1 text-sm font-semibold">Nome de usuário</p>
+                                {isEditing ? (
+                                    <InputFieldPurple
+                                        value={newUsername}
+                                        onChange={(e) => setNewUsername(e.target.value)}
+                                    />
+                                ) : (
+                                    <InputFieldPurple value={username} readOnly />
+                                )}
+                                <hr className="border-purpleT4" />
+                                <p className="text-whiteT1 text-sm font-semibold">E-mail</p>
+                                {isEditing ? (
+                                    <InputFieldPurple
+                                        value={newEmail}
+                                        onChange={(e) => setNewEmail(e.target.value)}
+                                    />
+                                ) : (
+                                    <InputFieldPurple value={email} readOnly />
+                                )}
                             </div>
                         </div>
                     </div>
                 </section>
+            </div>
+            <div className="flex justify-end px-4 py-2">
+                {isEditing ? (
+                    <>
+                        <ButtonConfig label="Cancelar" action={handleCancel} />
+                        <ButtonConfig label="Salvar" action={handleSave} />
+                    </>
+                ) : (
+                    <ButtonConfig label="Editar" action={handleEdit} />
+                )}
             </div>
         </div>
     );

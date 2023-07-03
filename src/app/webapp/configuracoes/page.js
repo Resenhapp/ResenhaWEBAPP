@@ -27,7 +27,7 @@ export default function Settings() {
                                     label="Conta"
                                     action={() => handleNavigation('/conta')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'user03'}
+                                    leftIcon={'user02'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig

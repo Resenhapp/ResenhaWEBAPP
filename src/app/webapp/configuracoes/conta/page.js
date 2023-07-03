@@ -2,6 +2,7 @@
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
+import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
     title: 'Resenha.app • Conta',
@@ -21,40 +22,32 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <Button
+                                <ButtonConfig
                                     label="Detalhes da conta"
                                     action={() => handleNavigation('/detalhes')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
-                                <Button
+                                <ButtonConfig
                                     label="Informações pessoais"
                                     action={() => handleNavigation('/informacoes')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
-                                <Button
+                                <ButtonConfig
                                     label="Histórico de atividades"
                                     action={() => handleNavigation('/historico')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
-                                <Button
+                                <ButtonConfig
                                     label="Resenhas salvas"
                                     action={() => handleNavigation('/resenhas')}
-                                    iconSide="right"
-                                    icon={'arrow'}
-                                    height={1}
-                                    width={1}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                             </div>
