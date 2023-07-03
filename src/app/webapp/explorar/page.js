@@ -10,7 +10,10 @@ import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
 import SearchInput from '@/src/components/SearchInput';
-import PasswordField from '@/src/components/PasswordField';
+import FeedDualButton from '@/src/components/FeedDualButton';
+import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
+import MyEventsDisplay from '@/src/components/MyEventsDisplay';
+import PartyDisplay from '@/src/components/PartyDisplay';
 
 export const metadata = {
     title: 'Resenha.app • Explorar',
@@ -59,6 +62,27 @@ export default function Help() {
     //     );
     // }
 
+    const exampleNameMyEvent = "Baile Funk";
+    const exampleDateMyEvent = "16/09/2023";
+    const exampleHourMyEvent = "20";
+    const exampleGuestsMyEvent = "10";
+    const exampleLimitMyEvent = "100";
+    const exampleImageMyEvent = "https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png";
+    const examplePriceEvent = 100;
+    
+
+    const exampleNameMyInvite = "Baile Funk";
+    const exampleDateMyInvite = "14/07/2023";
+    const exampleHourMyInvite = "19";
+    const exampleTokenMyInvite = "4253";
+    const exampleImageMyInvite = "https://resenha.app/publico/recursos/resenhas/QljskFiO.png";
+
+    const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
+    
+    const handleDisplayToggle = () => {
+        setIsDisplayingEvents(!isDisplayingEvents);
+    };
+
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Explorar'} />
@@ -69,6 +93,26 @@ export default function Help() {
                   <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                     <div className="flex flex-col mb-4 gap-4 w-full">
                       <SearchInput placeholder={"Busque por nome ou tag"}/>
+                      <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"} onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}/>
+                      {isDisplayingEvents ? 
+                          <PartyDisplay
+                          eventName={exampleNameMyInvite} 
+                          eventDate={exampleDateMyInvite}
+                          eventHour={exampleHourMyInvite}
+                          eventGuests={exampleGuestsMyEvent} 
+                          eventMax={exampleLimitMyEvent}
+                          eventImage={exampleImageMyInvite}
+                          eventPrice={examplePriceEvent}
+                          /> : 
+                          <MyEventsDisplay 
+                          eventName={exampleNameMyEvent} 
+                          eventDate={exampleDateMyEvent}
+                          eventGuests={exampleGuestsMyEvent} 
+                          eventHour={exampleHourMyEvent}
+                          eventMax={exampleLimitMyEvent}
+                          eventImage={exampleImageMyEvent}
+                          />
+                      }
                     </div>
                   </div>
                 </div>

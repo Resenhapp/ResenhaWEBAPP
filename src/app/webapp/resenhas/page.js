@@ -4,6 +4,7 @@ import PageHeader from '@/src/components/PageHeader';
 import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
+import PartyDisplay from '@/src/components/PartyDisplay';
 
 export const metadata = {
     title: 'Resenha.app • Resenhas',
@@ -38,21 +39,21 @@ export default function HomePage() {
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ? 
-                <MyInvitesDisplay
-                eventName={exampleNameMyInvite} 
-                eventDate={exampleDateMyInvite}
-                eventHour={exampleHourMyInvite}
-                token={exampleTokenMyInvite}
-                eventImage={exampleImageMyInvite}
-                /> : 
-                <MyEventsDisplay 
-                eventName={exampleNameMyEvent} 
-                eventDate={exampleDateMyEvent}
-                eventGuests={exampleGuestsMyEvent} 
-                eventHour={exampleHourMyEvent}
-                eventMax={exampleLimitMyEvent}
-                eventImage={exampleImageMyEvent}
-                />
+                    <PartyDisplay
+                    eventName={exampleNameMyInvite} 
+                    eventDate={exampleDateMyInvite}
+                    eventHour={exampleHourMyInvite}
+                    token={exampleTokenMyInvite}
+                    eventImage={exampleImageMyInvite}
+                    /> : 
+                    <MyEventsDisplay 
+                    eventName={exampleNameMyEvent} 
+                    eventDate={exampleDateMyEvent}
+                    eventGuests={exampleGuestsMyEvent} 
+                    eventHour={exampleHourMyEvent}
+                    eventMax={exampleLimitMyEvent}
+                    eventImage={exampleImageMyEvent}
+                    />
                 }
             </div>
         </div>
