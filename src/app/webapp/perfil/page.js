@@ -146,81 +146,95 @@ export default function Profile() {
                                 {activeTab === 'Resenhas' && (
                                     <div> {/* CONTEUDO DE RESENHAS */}
                                         <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                            <div>
-                                                • Vou
+                                            <div className='text-purpleT5'>
+                                                Vou
+                                            </div>
+                                            <ProfileEvent
+                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'}
+                                                partyGuests={'480'}
+                                                partyDate={'12/07'}
+                                                partyHour={'21:30'}
+                                                partyName={'Resenha no Terraço'}
+                                            />
+                                            <div className='text-purpleT5'>
+                                                Fui
                                             </div>
                                             <ProfileEvent
                                                 imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
                                                 partyGuests={'480'}
-                                                partyDate={'17/12'}
+                                                partyDate={'17/03'}
                                                 partyHour={'20:00'}
-                                                partyName={'MATUÊ - Porto Alegre'} />
-                                            <div>
-                                                • Fui
-                                            </div>
+                                                partyName={'Show na CB'}
+                                            />
                                             <ProfileEvent
-                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
+                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/mjCvJEPv.jpg'}
                                                 partyGuests={'480'}
-                                                partyDate={'17/12'}
-                                                partyHour={'20:00'}
-                                                partyName={'MATUÊ - Porto Alegre'} />
+                                                partyDate={'01/03'}
+                                                partyHour={'22:00'}
+                                                partyName={'Rolezin dos cria'}
+                                            />
+                                            <ProfileEvent
+                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/lr_dEUsxUJp.png'}
+                                                partyGuests={'480'}
+                                                partyDate={'23/02'}
+                                                partyHour={'21:00'}
+                                                partyName={'Baderninha do Rik'}
+                                            />
                                         </div>
                                     </div>
                                 )}
-
                                 {activeTab === 'Comentários' && (
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
                                         <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                             <Comment
-                                            userName={'Gabriel Valentim'}
-                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
-                                            rate={1}
-                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
-                                            day={12}
-                                            month={4}
-                                            userUrl={'https://resenha.app/'}
+                                                userName={'Maria Eduarda'}
+                                                imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
+                                                rate={4}
+                                                comment={'Ótimo evento! Adorei a organização e a atenção aos detalhes. Com certeza irei novamente.'}
+                                                day={18}
+                                                month={6}
+                                                userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
-                                            userName={'Gabriel Valentim'}
-                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
-                                            rate={2}
-                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
-                                            day={12}
-                                            month={4}
-                                            userUrl={'https://resenha.app/'}
+                                                userName={'Roberto Alves'}
+                                                imageUrl={'https://resenha.app/publico/recursos/imagens/u/rg.jpg'}
+                                                rate={5}
+                                                comment={'Ambiente incrível e pessoas maravilhosas. O melhor evento que já participei este ano.'}
+                                                day={22}
+                                                month={5}
+                                                userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
-                                            userName={'Gabriel Valentim'}
-                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
-                                            rate={3}
-                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
-                                            day={12}
-                                            month={4}
-                                            userUrl={'https://resenha.app/'}
+                                                userName={'Julia Fernandes'}
+                                                imageUrl={'https://resenha.app/publico/recursos/imagens/u/fe.jpg'}
+                                                rate={4}
+                                                comment={'Adorei o espaço, bem aconchegante e agradável. Comida e bebida excelentes também!'}
+                                                day={5}
+                                                month={7}
+                                                userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
-                                            userName={'Gabriel Valentim'}
-                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
-                                            rate={4}
-                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
-                                            day={12}
-                                            month={4}
-                                            userUrl={'https://resenha.app/'}
+                                                userName={'Lucas Martins'}
+                                                imageUrl={'https://resenha.app/publico/recursos/imagens/u/sd.jpg'}
+                                                rate={3}
+                                                comment={'O evento foi bom, mas a música estava um pouco alta para o meu gosto.'}
+                                                day={30}
+                                                month={6}
+                                                userUrl={'https://resenha.app/'}
                                             />
                                             <Comment
-                                            userName={'Gabriel Valentim'}
-                                            imageUrl={'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'}
-                                            rate={5}
-                                            comment={'O cara é mto gente boa, o espaço mto bacana e já to esperando a próxima!! Recomendo demais.'}
-                                            day={12}
-                                            month={4}
-                                            userUrl={'https://resenha.app/'}
+                                                userName={'Carla Souza'}
+                                                imageUrl={'https://resenha.app/publico/recursos/imagens/u/qe.jpg'}
+                                                rate={5}
+                                                comment={'Simplesmente incrível! Já estou ansiosa para o próximo evento. Recomendo fortemente a todos.'}
+                                                day={12}
+                                                month={4}
+                                                userUrl={'https://resenha.app/'}
                                             />
                                         </div>
                                     </div>
                                 )}
                             </div>
-
                         </div>
                     </div>
                 </section>

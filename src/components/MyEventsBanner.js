@@ -28,8 +28,8 @@ const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax
                     <RoundButton icon={'share'} onClick={() => { console.log('Button Clicked!'); window.alert('Button clicked!')} } />
                 </div>
             </div>
-            <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px] border-r-[1px] border-l-[1px] border-purpleT4 w-[90%] bg-gradient-to-t from-purpleT1 rounded-b-3xl" />
-            <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px] border-r-[1px] border-l-[1px] border-purpleT3 w-[80%] bg-gradient-to-t from-purpleT1 rounded-b-3xl" />
+            <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px] border-r-[1px] border-l-[1px] border-purpleT4 w-[90%] bg-gradient-to-t from-purpleT0 to-purpleT1 rounded-b-3xl" />
+            <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px] border-r-[1px] border-l-[1px] border-purpleT3 w-[80%] bg-gradient-to-t from-purpleT0 to-purpleT1 rounded-b-3xl" />
         </div>
     );
 };

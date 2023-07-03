@@ -66,17 +66,6 @@ export default function Help() {
         );
     }
 
-    data.forEach((categoryData, index) => {
-        const category = Object.keys(categoryData)[0];
-        console.log(`Category ${index + 1}: ${category}`);
-        
-        const questions = categoryData[category];
-        questions.forEach((qa, qIndex) => {
-          console.log(`Question ${qIndex + 1}: ${qa.question}`);
-          console.log(`Answer ${qIndex + 1}: ${qa.answer}`);
-        });
-    });
-
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Ajuda'} />

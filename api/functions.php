@@ -283,7 +283,7 @@ function getUserData() {
 
             $concierges = [];
 
-            if (mysqli_num_rows($info) > 0) {
+            if (mysqli_num_rows($userConcierges) > 0) {
                 foreach ($userConcierges as $concierge) {
                     $temp = [
                         "name" => $concierge["name"],
@@ -291,6 +291,26 @@ function getUserData() {
                     ];
 
                     array_push($concierges, $temp);
+                }
+            }
+
+            $query = "SELECT * FROM notifications WHERE user = '$id'";
+            $userNotifications = queryDBRows($query);
+
+            $notifications = [];
+
+            if (mysqli_num_rows($userNotifications) > 0) {
+                foreach ($userNotifications as $notification) {
+                    if ($notification["cleared"] == "0") {
+                        $temp = [
+                            "id" => $notification["id"],
+                            "title" => $notification["title"],
+                            "content" => $notification["content"],
+                            "date" => $notification["date"]
+                        ];
+    
+                        array_push($notifications, $temp);
+                    }
                 }
             }
 
@@ -304,6 +324,7 @@ function getUserData() {
                 'cpf' => $row["cpf"],
                 'events' => $events,
                 'balances' => $balances,
+                'notifications' => $notifications,
                 'concierges' => $concierges
             );
 
