@@ -22,7 +22,6 @@ export default function EditProfile() {
 
     var username = "João Davi S. N.";
     var user = "joaodavisn";
-    var aboutme = 'Vamo curtir rapaziadaaaaa!';
 
     const [hasChange, setHasChange] = useState(false);
     var isVerified = true;
@@ -31,11 +30,6 @@ export default function EditProfile() {
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
     const toggleEditInterestsPageOpen = () => {
         setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
-    };
-
-    const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
-    const toggleEditAboutPageOpen = () => {
-        setIsEditAboutPageOpen(!isEditAboutPageOpen);
     };
 
 
@@ -87,20 +81,36 @@ export default function EditProfile() {
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
     const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
 
-    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
-    // ABOUT LOGIC
+    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC
+
+    const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
+    var initialAbout = "Bisteca";
     const [about, setAbout] = useState(initialAbout);
-    const handleAboutChange = (event) => {
-        setAbout(event.target.value);
+    const [tempAbout, setTempAbout] = useState(about);
+
+    useEffect(() => {
+        setTempAbout(about);
+    }, [about]);
+
+    useEffect(() => {
+        if (!isEditAboutPageOpen) {
+            setTempAbout(about);
+        }
+    }, [isEditAboutPageOpen]);
+
+    const toggleEditAboutPageOpen = () => {
+        setIsEditAboutPageOpen(!isEditAboutPageOpen);
     };
+
+    const handleAboutChange = (event) => {
+        setTempAbout(event.target.value);
+    };
+
     const saveAbout = () => {
-        console.log(about);
+        setAbout(tempAbout);
         toggleEditAboutPageOpen();
     };
-    var initialAbout = "Bisteca";
-
-
     ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
     return (
@@ -134,7 +144,7 @@ export default function EditProfile() {
                                 }}>Não, peraí!</button>
                             </div>
                         </Modal>
-                        <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Interesses do usuário'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
+                        <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
                             <div className='w-full'>
                                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
                                     {[...allInterests].sort((a, b) => b.selected - a.selected).map((interest) => (
@@ -166,8 +176,8 @@ export default function EditProfile() {
                                     rows="4"
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
                                     placeholder='Fale sobre você'
-                                    value={about}  // The value of the textarea is now controlled by the 'about' state
-                                    onChange={handleAboutChange}  // Updates the 'about' state every time the user changes the textarea content
+                                    value={tempAbout}
+                                    onChange={handleAboutChange}
                                 ></textarea>
                             </div>
                             <div>
@@ -201,13 +211,13 @@ export default function EditProfile() {
                                 </div>
                             </div>
                         </div>
-                        <div className='w-full'>
+                        <div className='w-full h-fit'>
                             <div onClick={toggleEditAboutPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
-                                    <p>Sobre</p>
+                                    <h1 className='font-bold text-lg'>Sobre</h1>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p className="text-left">{about}</p>
+                                <p className="text-left h-fit" style={{ whiteSpace: "normal", overflowWrap: "break-word" }}>{about}</p>
                             </div>
                         </div>
                         <div className='w-full'>
@@ -218,7 +228,7 @@ export default function EditProfile() {
                                 className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
                             >
                                 <div className="flex flex-row gap-2 items-center">
-                                    <h1 className='font-bold text-xl'>Interesses</h1>
+                                    <h1 className='font-bold text-lg'>Interesses</h1>
                                     <Vector vectorname={'edit02'} />
                                 </div>
                                 <div className="flex flex-wrap gap-2">
