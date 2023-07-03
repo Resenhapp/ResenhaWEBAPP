@@ -20,7 +20,7 @@ export const metadata = {
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Help() {
+export default function Feed() {
     const id = Cookies.get('user');
 
     // const [data, setData] = useState(null);
@@ -77,6 +77,7 @@ export default function Help() {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
 
+    const images = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg']
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Explorar'} />
@@ -89,8 +90,8 @@ export default function Help() {
                       <SearchInput placeholder={"Busque por nome ou tag"}/>
                       <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"} onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}/>
                       <div className='w-full h-full flex flex-col'>
-                        <PartyBanner eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
-                        <PartyBanner eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
+                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
+                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
                       </div>
                     </div>
                   </div>
