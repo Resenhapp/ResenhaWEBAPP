@@ -9,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className='h-full'>
-      <body className='bg-purpleT1 w-screen min-h-screenh-fit text-whiteT1'>
+      <body className='bg-purpleT0 w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
           <div className="bg-blackT2" />
