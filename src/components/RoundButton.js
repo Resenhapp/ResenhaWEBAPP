@@ -23,7 +23,7 @@ const RoundButton = ({ icon, onClick }) => {
   }
 
   return (
-    <button onClick={onClick} className="bg-whiteT1 z-[10] align-center justify-center items-center flex shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white w-16 h-16 font-bold p-4 rounded-full">
+    <button onClick={onClick} className="bg-[#0000004D] z-[10] ring-1 ring-inset ring-whiteT1 backdrop-blur-xl align-center justify-center items-center flex shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white w-16 h-16 font-bold p-4 rounded-full">
       {iconSvg && <div className="">{iconSvg}</div>}
     </button>
   );

@@ -16,7 +16,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         );
     } else if (icon === 'arrow') {
         iconSvg = (
-            <Vector vectorname={'arrowRight04'} />
+            <Vector vectorname={'arrowRight06'} />
         );
     } else if (icon === 'share') {
         iconSvg = (
@@ -27,9 +27,13 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         iconSvg = (
             <Vector vectorname={'user03'} />
         );
+    } else if (icon === 'user2') {
+        iconSvg = (
+            <Vector vectorname={'user02'} />
+        );
     } else if (icon === 'wallet') {
         iconSvg = (
-            <Vector vectorname={'arrowRight04'} />
+            <Vector vectorname={'wallet01'} />
         );
     } else if (icon === 'thunder') {
         iconSvg = (
@@ -52,22 +56,22 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         );
     } else if (icon === 'money') {
         iconSvg = (
-            <Vector vectorname={'money01'} />
+            <Vector vectorname={'money02'} />
             
         )
     } else if (icon === 'shield') {
         iconSvg = (
-            <Vector vectorname={'shield01'} />
+            <Vector vectorname={'shield02'} />
             
         )
     } else if (icon === 'lock') {
         iconSvg = (
-            <Vector vectorname={'lock02'} />
+            <Vector vectorname={'lock03'} />
             
         )
     } else if (icon === 'bell') {
         iconSvg = (
-            <Vector vectorname={'bell01'} />
+            <Vector vectorname={'bell03'} />
             
         )
     } else if (icon === 'arrowDown') {
@@ -82,7 +86,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         )
     }
 
-    const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white h-16 font-bold py-2 px-4 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} ${active ? "bg-whiteT1" : "deactivated"} max-w-[500px]`;
+    const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white font-bold py-5 px-5 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} ${active ? "bg-whiteT1" : "deactivated"} max-w-[500px]`;
 
     const textStyles = `flex-1 text-${textAlign} w-full ${icon && iconSide === 'right' ? 'ml-7' : 'mr-7'}`;
 

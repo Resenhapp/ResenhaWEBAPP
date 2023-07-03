@@ -13,7 +13,7 @@ const Toggle = ({ labelText, showLabel, startToggled, showQuestion, questionActi
   };
 
   return (
-    <label className={`relative inline-flex items-center cursor-pointer ${textColor === 'purple' ? 'text-purpleT2' : 'text-whiteT1'}`}>
+    <label className={`relative flex-none inline-flex items-center cursor-pointer ${textColor === 'purple' ? 'text-purpleT2' : 'text-whiteT1'}`}>
       <input
         type="checkbox"
         value=""

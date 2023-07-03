@@ -19,24 +19,31 @@ export default function MyInvites() {
                     <div className=' h3 w-full flex'>
                         <div className='w-full flex flex-col'>
                             <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
-                                <h2>Aqui estão todos os seus convites</h2>
+                                <h2>Aqui estão todos os seus convites:</h2>
                             </div>
                             <div className='w-full h-full flex flex-col'>
-                                <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
-                                    <MyParty imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'} partyCode={'XXX'} partyDate={'XXXX'} partyHour={'XXXX'} partyName={'XXXXXXX'} />
+                                <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                    <MyParty
+                                    imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
+                                     partyCode={'3453'}
+                                     partyGuests={'480'}
+                                     partyDate={'17/12'}
+                                     partyHour={'20:00'}
+                                     partyName={'MATUÊ - Porto Alegre'} />
+                                    <MyParty
+                                    imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
+                                     partyCode={'3453'}
+                                     partyGuests={'480'}
+                                     partyDate={'17/12'}
+                                     partyHour={'20:00'}
+                                     partyName={'MATUÊ - Porto Alegre'} />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-                <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
-                <Button label={'Encontrar Resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+                <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
+                <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 'use client'
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
+import ButtonConfig from '@/src/components/ButtonConfig';
 import React from 'react';
 
 export const metadata = {
@@ -11,22 +12,52 @@ export const metadata = {
 export default function Settings() {
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        window.location.href = `/webapp/configuracoes/${pageToGo}`;
     };
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Configurações'} />
+            <PageHeader pageTitle={'Configurações'} /> 
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
-                            <div className='h-fit w-full gap-4 flex flex-col'>
-                                <Button label={'Conta'} icon={'user'} action={() => handleNavigation('configuracoes/conta/')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Segurança'} icon={'shield'} action={() => handleNavigation('configuracoes/seguranca/')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Privacidade'} icon={'lock'} action={() => handleNavigation('configuracoes/privacidade/')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Pagamentos'} icon={'money'} action={() => handleNavigation('configuracoes/pagamentos/')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Notificações'} icon={'bell'} action={() => handleNavigation('configuracoes/notificacoes/')} iconSide='left' height={1} width={1} textAlign='left' />
+                            <div className='h-fit w-full gap-2 flex flex-col'>
+                                <ButtonConfig
+                                    label="Conta"
+                                    action={() => handleNavigation('/conta')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'user03'}
+                                    textAlign="left"
+                                />
+                                <ButtonConfig
+                                    label="Segurança"
+                                    action={() => handleNavigation('/seguranca')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'shield02'}
+                                    textAlign="left"
+                                />
+                                <ButtonConfig
+                                    label="Privacidade"
+                                    action={() => handleNavigation('/privacidade')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'lock03'}
+                                    textAlign="left"
+                                />
+                                <ButtonConfig
+                                    label="Pagamentos"
+                                    action={() => handleNavigation('/pagamentos')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'money02'}
+                                    textAlign="left"
+                                />
+                                <ButtonConfig
+                                    label="Notificações"
+                                    action={() => handleNavigation('/notificacoes')}
+                                    rightIcon={'arrowRight06'}
+                                    leftIcon={'bell03'}
+                                    textAlign="left"
+                                />
                             </div>
                         </div>
                     </div>

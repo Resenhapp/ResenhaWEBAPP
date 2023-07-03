@@ -21,24 +21,21 @@ export default function MyParties() {
                                 <h2>Aqui estão todas as suas resenhas</h2>
                             </div>
                             <div className='w-full h-full flex flex-col'>
-                                <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
-                                    <PartyPortrait partyDate={'2312'} partyGuests={'22'} partyHour={'21312'} partyImage={DefaulEventImage} partyMaxGuests={'123'} partyName={'daviloide'} />
+                                <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                    <PartyPortrait partyDate={'25/07'} partyGuests={'22'} 
+                                    partyHour={'20:00'} partyImage={DefaulEventImage} partyMaxGuests={'123'} 
+                                    partyName={'Resenha no Terraço'} />
+                                    <PartyPortrait partyDate={'25/07'} partyGuests={'22'} 
+                                    partyHour={'20:00'} partyImage={DefaulEventImage} partyMaxGuests={'123'} 
+                                    partyName={'Resenha no Terraço'} canBeDeleted={false} />
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-                <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
-                <Button label={'Nova Resenha'} icon={'plus'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+                <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
+                <Button label={'Criar resenha'} icon={'plus'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
             </div>
         </div>
