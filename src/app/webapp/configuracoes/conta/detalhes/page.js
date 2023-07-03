@@ -1,9 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ButtonConfig from '@/src/components/ButtonConfig';
+import Modal from '@/src/components/Modal';
 
 export const metadata = {
     title: 'Resenha.app • Detalhes da conta',
@@ -16,6 +16,7 @@ export default function Account() {
     const [newUsername, setNewUsername] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [isEditing, setEditing] = useState(false);
+    const [showExitConfirmation, setShowExitConfirmation] = useState(false);
 
     const handleEdit = () => {
         setNewUsername(username);
@@ -35,9 +36,23 @@ export default function Account() {
         setEditing(false);
     };
 
+    const handleGoBack = () => {
+        if (isEditing) {
+            setShowExitConfirmation(true);
+        }
+    };
+
+    const handleConfirmExit = () => {
+        setShowExitConfirmation(false);
+    };
+
+    const handleCancelExit = () => {
+        setShowExitConfirmation(false);
+    };
+
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Detalhes da conta" />
+            <PageHeader isBack={true} checker={() => setShowExitConfirmation(true)} pageTitle="Detalhes da conta" />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">
@@ -77,6 +92,13 @@ export default function Account() {
                     <ButtonConfig label="Editar" action={handleEdit} />
                 )}
             </div>
+            <Modal show={showExitConfirmation} close={handleCancelExit}>
+                <h2>Deseja sair sem salvar as alterações?</h2>
+                <div>
+                    <button onClick={handleConfirmExit}>Sim</button>
+                    <button onClick={handleCancelExit}>Não</button>
+                </div>
+            </Modal>
         </div>
     );
 }
