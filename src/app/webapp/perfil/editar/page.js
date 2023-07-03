@@ -20,23 +20,16 @@ export default function EditProfile() {
     const [newProfile, setNewProfile] = useState(null);
     const CurrentProfile = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'
 
-    var username = "João Davi S. N.";
-    var user = "joaodavisn";
-
     const [hasChange, setHasChange] = useState(false);
     var isVerified = true;
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
 
-    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
-    const toggleEditInterestsPageOpen = () => {
-        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
-    };
 
 
     // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC
+    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
     const [userInterests, setUserInterests] = useState([1, 2, 4]);
     const [tempUserInterests, setTempUserInterests] = useState(userInterests);
-
     const [allInterests, setAllInterests] = useState(
         [...interestsData].map((interest) => {
             const isSelected = userInterests.includes(interest.id);
@@ -57,20 +50,19 @@ export default function EditProfile() {
         );
     }, [tempUserInterests]);
 
-    const handleInterestClick = (interestId) => {
-        let updatedInterests = allInterests.map((interest) => {
-            if (interest.id === interestId) {
-                return { ...interest, selected: !interest.selected };
-            } else {
-                return interest;
-            }
-        });
-        setAllInterests(updatedInterests);
-        if (updatedInterests.find(interest => interest.id === interestId).selected) {
-            setTempUserInterests([...tempUserInterests, interestId]);
-        } else {
-            setTempUserInterests(tempUserInterests.filter(interestIdTemp => interestIdTemp !== interestId));
+    const toggleEditInterestsPageOpen = () => {
+        if (isEditInterestsPageOpen) {
+            setTempUserInterests(userInterests);
         }
+        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
+    };
+
+    const handleInterestClick = (interestId) => {
+        setTempUserInterests(
+            tempUserInterests.includes(interestId)
+                ? tempUserInterests.filter(id => id !== interestId)
+                : [...tempUserInterests, interestId]
+        );
     };
 
     const saveInterests = () => {
@@ -81,7 +73,40 @@ export default function EditProfile() {
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
     const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
 
+    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
+const [username, setUsername] = useState("João Davi");
+const [tempUsername, setTempUsername] = useState(username);
+const [handle, setHandle] = useState("joaodavisn");
+const [tempHandle, setTempHandle] = useState(handle);
 
+useEffect(() => {
+    setTempUsername(username);
+    setTempHandle(handle);
+}, [username, handle]);
+
+const [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+const toggleEditUsernamePageOpen = () => {
+    if (isEditUsernamePageOpen) {
+        // Reset tempUsername and tempHandle to their original values when closing the modal
+        setTempUsername(username);
+        setTempHandle(handle);
+    }
+    setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
+};
+
+const handleUsernameChange = (event) => {
+    setTempUsername(event.target.value);
+};
+
+const handleHandleChange = (event) => {
+    setTempHandle(event.target.value);
+};
+
+const saveUsernameAndHandle = () => {
+    setUsername(tempUsername);
+    setHandle(tempHandle);
+    toggleEditUsernamePageOpen();
+};
     // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC
 
     const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
@@ -170,6 +195,24 @@ export default function EditProfile() {
                                 </p>
                             </div>
                         </EditInfoPage>
+                        <EditInfoPage isOpen={isEditUsernamePageOpen} pageTitle={'Nome e @utilizador'} saveAction={saveUsernameAndHandle} togglePage={toggleEditUsernamePageOpen}>
+                            <div className='w-full'>
+                                <label>Nome:</label>
+                                <input
+                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                    placeholder='Nome de usuário'
+                                    value={tempUsername}
+                                    onChange={handleUsernameChange}
+                                />
+                                <label>Nome de usuário:</label>
+                                <input
+                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                    placeholder='@'
+                                    value={tempHandle}
+                                    onChange={handleHandleChange}
+                                />
+                            </div>
+                        </EditInfoPage>
                         <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={toggleEditAboutPageOpen}>
                             <div className='w-full'>
                                 <textarea
@@ -199,18 +242,19 @@ export default function EditProfile() {
                             />
                         </div>
                         <div className='w-full flex flex-col items-center'>
-                            <div onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
+                            <div onClick={toggleEditUsernamePageOpen} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
                                 <div className='flex flex-col items-center'>
                                     <div className='flex flex-row items-center justify-center content-center gap-1'>
                                         <h1 className='font-bold text-2xl'>{username}</h1>{isVerified && <Vector vectorname={'verified02'} />}
                                     </div>
-                                    <h3 className='font-normal text-sm'>{'@' + user}</h3>
+                                    <h3 className='font-normal text-sm'>@{handle}</h3>
                                 </div>
                                 <div className='right-0 top-0 rounded-full'>
                                     <Vector vectorname={'edit02'} />
                                 </div>
                             </div>
                         </div>
+
                         <div className='w-full h-fit'>
                             <div onClick={toggleEditAboutPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
