@@ -4,10 +4,11 @@ import PageHeader from '@/src/components/PageHeader';
 import UserProfileEditor from '@/src/components/UserProfileEditor';
 import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
-import Interest from '@/src/components/Interest';
 import Button from '@/src/components/Button';
 import ModalButton from '@/src/components/ModalButton';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Tag from '@/src/components/Tag';
+import { interestsData } from '@/src/components/interestsData';
 
 export const metadata = {
     title: 'Resenha.app • Perfil',
@@ -27,6 +28,80 @@ export default function EditProfile() {
     var isVerified = true;
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
 
+    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
+    const toggleEditInterestsPageOpen = () => {
+        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
+    };
+
+    const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
+    const toggleEditAboutPageOpen = () => {
+        setIsEditAboutPageOpen(!isEditAboutPageOpen);
+    };
+
+
+    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC
+    const [userInterests, setUserInterests] = useState([1, 2, 4]);
+    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+
+    const [allInterests, setAllInterests] = useState(
+        [...interestsData].map((interest) => {
+            const isSelected = userInterests.includes(interest.id);
+            return { ...interest, selected: isSelected };
+        }).sort((a, b) => b.selected - a.selected)
+    );
+
+    useEffect(() => {
+        setTempUserInterests(userInterests);
+    }, [userInterests]);
+
+    useEffect(() => {
+        setAllInterests(
+            [...interestsData].map((interest) => {
+                const isSelected = tempUserInterests.includes(interest.id);
+                return { ...interest, selected: isSelected };
+            }).sort((a, b) => b.selected - a.selected)
+        );
+    }, [tempUserInterests]);
+
+    const handleInterestClick = (interestId) => {
+        let updatedInterests = allInterests.map((interest) => {
+            if (interest.id === interestId) {
+                return { ...interest, selected: !interest.selected };
+            } else {
+                return interest;
+            }
+        });
+        setAllInterests(updatedInterests);
+        if (updatedInterests.find(interest => interest.id === interestId).selected) {
+            setTempUserInterests([...tempUserInterests, interestId]);
+        } else {
+            setTempUserInterests(tempUserInterests.filter(interestIdTemp => interestIdTemp !== interestId));
+        }
+    };
+
+    const saveInterests = () => {
+        setUserInterests(tempUserInterests);
+        toggleEditInterestsPageOpen();
+    };
+
+    const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
+    const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
+
+    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
+
+    // ABOUT LOGIC
+    const [about, setAbout] = useState(initialAbout);
+    const handleAboutChange = (event) => {
+        setAbout(event.target.value);
+    };
+    const saveAbout = () => {
+        console.log(about);
+        toggleEditAboutPageOpen();
+    };
+    var initialAbout = "Bisteca";
+
+
+    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
     return (
         <div>
@@ -59,6 +134,49 @@ export default function EditProfile() {
                                 }}>Não, peraí!</button>
                             </div>
                         </Modal>
+                        <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Interesses do usuário'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
+                            <div className='w-full'>
+                                <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
+                                    {[...allInterests].sort((a, b) => b.selected - a.selected).map((interest) => (
+                                        <Tag
+                                            key={interest.id}
+                                            tagname={interest.name}
+                                            type={interest.type}
+                                            colorName={interest.colorName}
+                                            highlightColor={interest.highlightColor}
+                                            isEditable={true}
+                                            onClick={() => handleInterestClick(interest.id)}
+                                            selected={interest.selected}
+                                            ringColor={interest.ringColor}
+                                            ringThickness={interest.ringThickness}
+                                            weight={interest.weight}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <p className='text-sm'>
+                                    Os interesses do usuário são palavras-chave que você pode incluir para ajudar a descrever e categorizar suas preferências. Eles serão visíveis a outros usuários ao visitarem seu perfil e podem ajudar a dar uma ideia rápida do que você gosta. Escolha interesses que representem bem suas preferências e estilo.
+                                </p>
+                            </div>
+                        </EditInfoPage>
+                        <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={toggleEditAboutPageOpen}>
+                            <div className='w-full'>
+                                <textarea
+                                    rows="4"
+                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                    placeholder='Fale sobre você'
+                                    value={about}  // The value of the textarea is now controlled by the 'about' state
+                                    onChange={handleAboutChange}  // Updates the 'about' state every time the user changes the textarea content
+                                ></textarea>
+                            </div>
+                            <div>
+                                <p className='text-sm'>
+                                    Falar sobre você é uma grande oportunidade para se apresentar aos outros usuários.
+                                    Essas informações serão visíveis no seu perfil, portanto, escreva de forma clara e atrativa, mostrando o que as pessoas podem esperar ao interagir com você.
+                                </p>
+                            </div>
+                        </EditInfoPage>
                         <div className='w-full flex justify-center'>
                             <UserProfileEditor
                                 currentProfile={CurrentProfile}
@@ -71,45 +189,52 @@ export default function EditProfile() {
                             />
                         </div>
                         <div className='w-full flex flex-col items-center'>
-                            <button onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit py-2 px-4 rounded-2xl'>
+                            <div onClick={() => setUsernameModalOpen(true)} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
                                 <div className='flex flex-col items-center'>
                                     <div className='flex flex-row items-center justify-center content-center gap-1'>
                                         <h1 className='font-bold text-2xl'>{username}</h1>{isVerified && <Vector vectorname={'verified02'} />}
                                     </div>
                                     <h3 className='font-normal text-sm'>{'@' + user}</h3>
                                 </div>
-                                <div className='right-0 top-0 bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
-                                    <Vector vectorname={'edit01'} />
+                                <div className='right-0 top-0 rounded-full'>
+                                    <Vector vectorname={'edit02'} />
                                 </div>
-                            </button>
+                            </div>
                         </div>
                         <div className='w-full'>
-                            <button onClick={() => setAboutmeModalOpen(true)} className='w-full flex flex-col rounded-2xl'>
-                                <div className='flex flex-row justify-between w-full'>
-                                    <h1 className='font-bold text-xl'>Sobre</h1>
-                                    <div className='right-0 top-0 w-fit h-fit bg-whiteT1 ring-1 ring-whiteT2 ring-inset shadow-lg p-2 rounded-full'>
-                                        <Vector vectorname={'edit01'} />
-                                    </div>
+                            <div onClick={toggleEditAboutPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p>Sobre</p>
+                                    <Vector vectorname={'edit02'} />
                                 </div>
-                                <p>{aboutme}</p>
-                            </button>
+                                <p className="text-left">{about}</p>
+                            </div>
                         </div>
                         <div className='w-full'>
-                            <div className='w-full gap-4 flex flex-col rounded-2xl'>
-                                <div className='flex flex-row justify-between w-full'>
+                            <div onClick={(e) => {
+                                e.stopPropagation();
+                                toggleEditInterestsPageOpen();
+                            }}
+                                className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
+                            >
+                                <div className="flex flex-row gap-2 items-center">
                                     <h1 className='font-bold text-xl'>Interesses</h1>
+                                    <Vector vectorname={'edit02'} />
                                 </div>
-                                <div className='w-full flex flex-wrap gap-2'>
-                                    <Interest interestIndex={1} isRemovable={true} removeEvent={() => { }} />
-                                    <Interest interestIndex={2} isRemovable={true} removeEvent={() => { }} />
-                                    <Interest interestIndex={3} isRemovable={true} removeEvent={() => { }} />
-                                    <button
-                                        className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-1 rounded-full ring-1 ring-inset ring-purpleT4"
-                                        onClick={() => setModalOpen(true)}
-                                    >
-                                        <h1>Adicionar</h1>
-                                        <Vector vectorname={'plus02'} />
-                                    </button>
+                                <div className="flex flex-wrap gap-2">
+                                    {renderInterests.map((interest) => (
+                                        <Tag
+                                            key={interest.id}
+                                            tagname={interest.name}
+                                            type={interest.type}
+                                            colorName={interest.colorName}
+                                            highlightColor={interest.highlightColor}
+                                            isEditable={false}
+                                            ringThickness={interest.ringThickness}
+                                            ringColor={interest.ringColor}
+                                            weight={interest.weight}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
