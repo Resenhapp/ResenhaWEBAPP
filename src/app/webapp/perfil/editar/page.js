@@ -18,7 +18,7 @@ export const metadata = {
 export default function EditProfile() {
     const [checkerCallback, setCheckerCallback] = useState(null);
     const [newProfile, setNewProfile] = useState(null);
-    const CurrentProfile = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpeg'
+    const CurrentProfile = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpg'
 
     const [hasChange, setHasChange] = useState(false);
     var isVerified = true;
