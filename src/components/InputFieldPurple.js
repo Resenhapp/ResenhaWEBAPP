@@ -1,9 +1,15 @@
 import React from 'react';
 import Vector from './Vector';
 
-const InputFieldPurple = ({ placeholder, value, action, showIcon = false, Icon }) => {
+const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon }) => {
+    const handleInputChange = (event) => {
+        if (onChange) {
+            onChange(event.target.value);
+        }
+    };
+
     return (
-        <div className="relative h-14 ring-1 ring-inset ring-purpleT2 bg-purpleT2 rounded-2xl flex items-center">
+        <div className="relative h-12 ring-1 ring-inset ring-purpleT2 bg-purpleT2 rounded-2xl flex items-center">
             {showIcon && Icon && (
                 <div className="absolute left-0 pl-3 flex">
                     {Icon === 'lock' ? (
@@ -31,11 +37,10 @@ const InputFieldPurple = ({ placeholder, value, action, showIcon = false, Icon }
             )}
             <input
                 type="text"
-                className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-whiteT1 placeholder-purpleT5 ${showIcon ? 'pl-10' : ''
-                    }`}
+                className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl outline-none text-whiteT placeholder-purpleT5 ${showIcon ? 'pl-10' : ''}`}
                 placeholder={placeholder}
                 value={value}
-                onChange={action}
+                onChange={handleInputChange}
             />
         </div>
     );
