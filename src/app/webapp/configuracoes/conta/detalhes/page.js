@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import Modal from '@/src/components/Modal';
+import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
     title: 'Resenha.app • Detalhes da conta',
@@ -12,15 +13,36 @@ export const metadata = {
 export default function Account() {
     const [username, setUsername] = useState('@dabilas');
     const [tempUsername, setTempUsername] = useState(username);
+
+    const [email, setEmail] = useState('joao*****n@gmail.com')
+    const [tempEmail, setTempEmail] = useState(email)
+
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
     const [checkerCallback, setCheckerCallback] = useState(null);
 
     const [hasChange, setHasChange] = useState(false);
 
-    const handleUsernameChange2 = (newValue) => {
+    const handleUsernameChange = (newValue) => {
         setHasChange(true);
         setTempUsername(newValue);
     };
+
+    const handleEmailChange = (newValue) => {
+        setHasChange(true);
+        setTempEmail(newValue);
+    };
+
+    const handleCancel = () => {
+        setHasChange(false);
+        setTempUsername(username);
+        setTempEmail(email);
+    }
+
+    const handleSave = () => {
+        setHasChange(false);
+        setUsername(tempUsername);
+        setEmail(tempEmail);
+    }
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -41,11 +63,23 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <InputFieldPurple value={tempUsername} onChange={handleUsernameChange2} />
+                                <p className="text-whiteT1 text-sm font-semibold">Nome de usuário</p>
+                                <InputFieldPurple value={tempUsername} onChange={handleUsernameChange} />
+                                <hr className="border-purpleT4" />
+                                <p className="text-whiteT1 text-sm font-semibold">E-mail</p>
+                                <InputFieldPurple value={tempEmail} onChange={handleEmailChange} />
                             </div>
                         </div>
                     </div>
                 </section>
+            </div>
+            <div className='flex flex-row justify-center p-8'>
+                {hasChange && (
+                    <div className="flex p-8 space-x-4">
+                        <ButtonConfig label="Cancelar" action={handleCancel} />
+                        <ButtonConfig label="Salvar" action={handleSave} />
+                    </div>
+                )}
             </div>
             <Modal show={isUnsavedChangesModalOpen} close={setUnsavedChangesModalOpen}>
                 <div className="gap-2 flex flex-col">
