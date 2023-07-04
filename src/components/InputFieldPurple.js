@@ -16,22 +16,6 @@ const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon
                         <Vector vectorname={'lock01'} />
                     ) : Icon === 'mail' ? (
                         <Vector vectorname={'mail01'} />
-                    ) : Icon === 'id' ? (
-                        <Vector vectorname={'id01'} />
-                    ) : Icon === 'calendar' ? (
-                        <Vector vectorname={'calendar02'} />
-                    ) : Icon === 'person' ? (
-                        <Vector vectorname={'person01'} />
-                    ) : Icon === 'card' ? (
-                        <Vector vectorname={'card01'} />
-                    ) : Icon === 'cvv' ? (
-                        <Vector vectorname={'cvv01'} />
-                    ) : Icon === 'thunder' ? (
-                        <Vector vectorname={'thunder01'} />
-                    ) : Icon === 'pin' ? (
-                        <Vector vectorname={'pin01'} />
-                    ) : Icon === 'user' ? (
-                        <Vector vectorname={'user02'} />
                     ) : null}
                 </div>
             )}
