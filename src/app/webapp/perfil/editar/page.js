@@ -68,45 +68,47 @@ export default function EditProfile() {
     const saveInterests = () => {
         setUserInterests(tempUserInterests);
         toggleEditInterestsPageOpen();
+        setHasChange(true);
     };
 
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
     const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
 
     // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
-const [username, setUsername] = useState("João Davi");
-const [tempUsername, setTempUsername] = useState(username);
-const [handle, setHandle] = useState("joaodavisn");
-const [tempHandle, setTempHandle] = useState(handle);
+    const [username, setUsername] = useState("João Davi");
+    const [tempUsername, setTempUsername] = useState(username);
+    const [handle, setHandle] = useState("joaodavisn");
+    const [tempHandle, setTempHandle] = useState(handle);
 
-useEffect(() => {
-    setTempUsername(username);
-    setTempHandle(handle);
-}, [username, handle]);
-
-const [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
-const toggleEditUsernamePageOpen = () => {
-    if (isEditUsernamePageOpen) {
-        // Reset tempUsername and tempHandle to their original values when closing the modal
+    useEffect(() => {
         setTempUsername(username);
         setTempHandle(handle);
-    }
-    setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
-};
+    }, [username, handle]);
 
-const handleUsernameChange = (event) => {
-    setTempUsername(event.target.value);
-};
+    const [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+    const toggleEditUsernamePageOpen = () => {
+        if (isEditUsernamePageOpen) {
+            // Reset tempUsername and tempHandle to their original values when closing the modal
+            setTempUsername(username);
+            setTempHandle(handle);
+        }
+        setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
+    };
 
-const handleHandleChange = (event) => {
-    setTempHandle(event.target.value);
-};
+    const handleUsernameChange = (event) => {
+        setTempUsername(event.target.value);
+    };
 
-const saveUsernameAndHandle = () => {
-    setUsername(tempUsername);
-    setHandle(tempHandle);
-    toggleEditUsernamePageOpen();
-};
+    const handleHandleChange = (event) => {
+        setTempHandle(event.target.value);
+    };
+
+    const saveUsernameAndHandle = () => {
+        setUsername(tempUsername);
+        setHandle(tempHandle);
+        toggleEditUsernamePageOpen();
+        setHasChange(true);
+    };
     // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC
 
     const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
@@ -135,6 +137,7 @@ const saveUsernameAndHandle = () => {
     const saveAbout = () => {
         setAbout(tempAbout);
         toggleEditAboutPageOpen();
+        setHasChange(true);
     };
     ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
@@ -197,21 +200,24 @@ const saveUsernameAndHandle = () => {
                         </EditInfoPage>
                         <EditInfoPage isOpen={isEditUsernamePageOpen} pageTitle={'Nome e @utilizador'} saveAction={saveUsernameAndHandle} togglePage={toggleEditUsernamePageOpen}>
                             <div className='w-full'>
-                                <label>Nome:</label>
+                                <label className='font-bold'>Nome:</label>
                                 <input
-                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='Nome de usuário'
                                     value={tempUsername}
                                     onChange={handleUsernameChange}
                                 />
-                                <label>Nome de usuário:</label>
+                                <label className='font-bold'>Nome de usuário:</label>
                                 <input
-                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                    className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='@'
                                     value={tempHandle}
                                     onChange={handleHandleChange}
                                 />
                             </div>
+                            <p className='text-sm'>
+                                Seu nome e nome de usuário são identificações importantes. O nome pode ser livremente escolhido e o nome de usuário é único, permitindo que outros usuários possam mencionar ou buscar você na plataforma. Escolha um que represente sua identidade.
+                            </p>
                         </EditInfoPage>
                         <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={toggleEditAboutPageOpen}>
                             <div className='w-full'>

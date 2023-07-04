@@ -13,14 +13,14 @@ import SearchInput from '@/src/components/SearchInput';
 import FeedDualButton from '@/src/components/FeedDualButton';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
-import PartyDisplay from '@/src/components/PartyDisplay';
+import PartyBanner from '@/src/components/PartyBanner';
 
 export const metadata = {
     title: 'Resenha.app • Explorar',
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Help() {
+export default function Feed() {
     const id = Cookies.get('user');
 
     // const [data, setData] = useState(null);
@@ -62,27 +62,22 @@ export default function Help() {
     //     );
     // }
 
-    const exampleNameMyEvent = "Baile Funk";
-    const exampleDateMyEvent = "16/09/2023";
-    const exampleHourMyEvent = "20";
-    const exampleGuestsMyEvent = "10";
-    const exampleLimitMyEvent = "100";
-    const exampleImageMyEvent = "https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png";
+    const exampleNameEvent = "BAILE FUNK NA...";
+    const exampleDateEvent = "16/09/2023";
+    const exampleHourEvent = "20";
+    const exampleGuestsEvent = "10";
+    const exampleLimitEvent = "100";
+    const exampleImageEvent = "https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png";
     const examplePriceEvent = 100;
+    const exampleSavedEvent = false;
     
-
-    const exampleNameMyInvite = "Baile Funk";
-    const exampleDateMyInvite = "14/07/2023";
-    const exampleHourMyInvite = "19";
-    const exampleTokenMyInvite = "4253";
-    const exampleImageMyInvite = "https://resenha.app/publico/recursos/resenhas/QljskFiO.png";
-
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
     
     const handleDisplayToggle = () => {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
 
+    const images = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg']
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Explorar'} />
@@ -94,25 +89,10 @@ export default function Help() {
                     <div className="flex flex-col mb-4 gap-4 w-full">
                       <SearchInput placeholder={"Busque por nome ou tag"}/>
                       <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"} onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}/>
-                      {isDisplayingEvents ? 
-                          <PartyDisplay
-                          eventName={exampleNameMyInvite} 
-                          eventDate={exampleDateMyInvite}
-                          eventHour={exampleHourMyInvite}
-                          eventGuests={exampleGuestsMyEvent} 
-                          eventMax={exampleLimitMyEvent}
-                          eventImage={exampleImageMyInvite}
-                          eventPrice={examplePriceEvent}
-                          /> : 
-                          <MyEventsDisplay 
-                          eventName={exampleNameMyEvent} 
-                          eventDate={exampleDateMyEvent}
-                          eventGuests={exampleGuestsMyEvent} 
-                          eventHour={exampleHourMyEvent}
-                          eventMax={exampleLimitMyEvent}
-                          eventImage={exampleImageMyEvent}
-                          />
-                      }
+                      <div className='w-full h-full flex flex-col'>
+                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
+                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -16,7 +16,7 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
         );
     } else if (icon === 'arrow') {
         iconSvg = (
-            <Vector vectorname={'arrowRight06'} />
+            <Vector vectorname={'arrowRight04'} />
         );
     } else if (icon === 'share') {
         iconSvg = (
