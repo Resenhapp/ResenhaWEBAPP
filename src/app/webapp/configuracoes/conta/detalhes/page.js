@@ -11,15 +11,23 @@ export const metadata = {
 
 export default function Account() {
     const [username, setUsername] = useState('@dabilas');
+    const [tempUsername, setTempUsername] = useState(username);
     const [unsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
     const [checkerCallback, setCheckerCallback] = useState(null);
+
+    const [hasChange, setHasChange] = useState(false);
+
+    const handleUsernameChange2 = (newValue) => {
+        setTempUsername(newValue);
+    };
+
 
     const handleUsernameChange = (newValue) => {
         setUsername(newValue);
     };
 
     const handleBackClick = () => {
-        if (username !== '@dabilas') {
+        if (tempUsername !== username) {
             return new Promise((resolve, reject) => {
                 setCheckerCallback(() => resolve);
                 setUnsavedChangesModalOpen(true);
@@ -44,7 +52,7 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <InputFieldPurple value={username} onChange={handleUsernameChange} />
+                                <InputFieldPurple value={tempUsername} onChange={handleUsernameChange2} />
                             </div>
                         </div>
                     </div>
