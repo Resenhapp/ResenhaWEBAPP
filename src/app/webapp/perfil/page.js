@@ -70,7 +70,7 @@ export default function Profile() {
 
     // var interests = JSON.parse(interests).interests;
 
-    var profileimg = 'https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/9f02e97244dbeacaef9f5ac951db62d6-1659364891510/aa73f77a-cb42-4566-9d3f-30cb2059cb26.png'
+    var profileimg = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpg'
 
     const name = "Joao Davi";
     const username = "joaodavisn";
