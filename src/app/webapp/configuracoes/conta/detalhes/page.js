@@ -12,41 +12,30 @@ export const metadata = {
 export default function Account() {
     const [username, setUsername] = useState('@dabilas');
     const [tempUsername, setTempUsername] = useState(username);
-    const [unsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
+    const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
     const [checkerCallback, setCheckerCallback] = useState(null);
 
     const [hasChange, setHasChange] = useState(false);
 
     const handleUsernameChange2 = (newValue) => {
+        setHasChange(true);
         setTempUsername(newValue);
-    };
-
-
-    const handleUsernameChange = (newValue) => {
-        setUsername(newValue);
-    };
-
-    const handleBackClick = () => {
-        if (tempUsername !== username) {
-            return new Promise((resolve, reject) => {
-                setCheckerCallback(() => resolve);
-                setUnsavedChangesModalOpen(true);
-            });
-        } else {
-            return Promise.resolve(true);
-        }
-    };
-
-    const handleModalClose = () => {
-        setUnsavedChangesModalOpen(false);
-        if (typeof checkerCallback === 'function') {
-            checkerCallback(false);
-        }
     };
 
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={handleBackClick} pageTitle="Conta" />
+            <PageHeader
+                pageTitle="Conta"
+                isBack={true}
+                checker={() => new Promise((resolve, reject) => {
+                    if (hasChange) {
+                        setUnsavedChangesModalOpen(true);
+                        setCheckerCallback(() => resolve);
+                    } else {
+                        resolve(true);
+                    }
+                })}
+            />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">
@@ -58,7 +47,7 @@ export default function Account() {
                     </div>
                 </section>
             </div>
-            <Modal show={unsavedChangesModalOpen} close={handleModalClose}>
+            <Modal show={isUnsavedChangesModalOpen} close={setUnsavedChangesModalOpen}>
                 <div className="gap-2 flex flex-col">
                     <h1 className="text-center">Ei! Você tem alterações que não foram salvas! Vai sair sem salvar?</h1>
                     <button className="bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4" onClick={() => {
@@ -67,10 +56,7 @@ export default function Account() {
                         }
                         setUnsavedChangesModalOpen(false);
                     }}>Sim, eu vou.</button>
-                    <button className="bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4" onClick={() => {
-                        if (typeof checkerCallback === 'function') {
-                            checkerCallback(true);
-                        }
+                    <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
                         setUnsavedChangesModalOpen(false);
                     }}>Não, peraí!</button>
                 </div>
