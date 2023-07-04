@@ -70,6 +70,7 @@ export default function Feed() {
     const exampleImageEvent = "https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png";
     const examplePriceEvent = 100;
     const exampleSavedEvent = false;
+    const exampleTagsEvent = [0, 1]
     
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
     
@@ -77,7 +78,8 @@ export default function Feed() {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
 
-    const images = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg']
+    const exampleImagesEvent = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg','https://resenha.app/publico/recursos/imagens/u/fe.jpg']
+    
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Explorar'} />
@@ -90,8 +92,8 @@ export default function Feed() {
                       <SearchInput placeholder={"Busque por nome ou tag"}/>
                       <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"} onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}/>
                       <div className='w-full h-full flex flex-col'>
-                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
-                        <PartyBanner imageUrl={images} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} />
+                        <PartyBanner imageUrl={exampleImagesEvent} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} eventTags={exampleTagsEvent}/>
+                        <PartyBanner imageUrl={exampleImagesEvent} eventName={exampleNameEvent} eventImage={exampleImageEvent} eventDate={exampleDateEvent} eventHour={exampleHourEvent} eventGuests={exampleGuestsEvent} eventMax={exampleLimitEvent} eventPrice={examplePriceEvent} eventSaved={exampleSavedEvent} eventTags={exampleTagsEvent}/>
                       </div>
                     </div>
                   </div>
