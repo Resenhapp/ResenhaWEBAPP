@@ -68,6 +68,7 @@ export default function EditProfile() {
     const saveInterests = () => {
         setUserInterests(tempUserInterests);
         toggleEditInterestsPageOpen();
+        setHasChange(true);
     };
 
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
@@ -106,6 +107,7 @@ export default function EditProfile() {
         setUsername(tempUsername);
         setHandle(tempHandle);
         toggleEditUsernamePageOpen();
+        setHasChange(true);
     };
     // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC
 
@@ -135,6 +137,7 @@ export default function EditProfile() {
     const saveAbout = () => {
         setAbout(tempAbout);
         toggleEditAboutPageOpen();
+        setHasChange(true);
     };
     ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
@@ -213,8 +216,8 @@ export default function EditProfile() {
                                 />
                             </div>
                             <p className='text-sm'>
-    Seu nome e nome de usuário são identificações importantes. O nome pode ser livremente escolhido e o nome de usuário é único, permitindo que outros usuários possam mencionar ou buscar você na plataforma. Escolha um que represente sua identidade.
-</p>
+                                Seu nome e nome de usuário são identificações importantes. O nome pode ser livremente escolhido e o nome de usuário é único, permitindo que outros usuários possam mencionar ou buscar você na plataforma. Escolha um que represente sua identidade.
+                            </p>
                         </EditInfoPage>
                         <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={toggleEditAboutPageOpen}>
                             <div className='w-full'>
