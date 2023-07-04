@@ -3,10 +3,11 @@ import RoundButton from './RoundButton';
 import Vector from './Vector';
 import PartyTag from './PartyTag';
 import Image from 'next/image';
+import { partyData } from '@/src/components/PartyData';
 
-const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved }) => {
-    const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags }) => {
+    const handleButton = () => {
+        
     };
 
     var vectorSaved = 'bookmarkOutlined01';
@@ -20,10 +21,12 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
             <div className="relative z-1 flex flex-row items-end w-full justify-between h-[29vh] ring-1 ring-inset bg-gradient-to-t from-black ring-purpleT4 rounded-2xl">
                 <div className='w-full  absolute h-fit top-0 p-2 flex justify-between flex-row'>
                     <div className='flex flex-row w-full gap-1'>
-                        <PartyTag bgColor={'purpleT2'} icon={'xmark01'} special={false} tagname={'teste'} />
-                        <PartyTag bgColor={'purpleT2'} icon={'verified03'} special={true} tagname={'teste'} />
+                        {eventTags.map((index) => (
+                            <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname}/>
+                        ))
+                        }
                     </div>
-                    <button onClick={() => handleNavigation('resenhas/convites/')}
+                    <button onClick={() => handleButton()}
                         className='w-9 h-8 gap-2 font-thin rounded-full ring-1 ring-inset ring-whiteT1 flex justify-center 
                     items-center content-center backdrop-blur-xl bg-[#0000004D]'>
                         <Vector vectorname={vectorSaved} /></button>
