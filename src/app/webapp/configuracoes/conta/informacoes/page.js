@@ -4,14 +4,13 @@ import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import Modal from '@/src/components/Modal';
 import ButtonConfig from '@/src/components/ButtonConfig';
-import { arDZ } from 'date-fns/locale';
 
 export const metadata = {
     title: 'Resenha.app • Informações pessoais',
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Account() {
+export default function AccountInformation() {
     const [nickname, setNickname] = useState('João Davi S. N.');
     const [tempNickname, setTempNickname] = useState(nickname);
 

@@ -1,19 +1,17 @@
 import React from 'react';
-import RoundButton from './RoundButton';
 import Vector from './Vector';
 import PartyTag from './PartyTag';
 import Image from 'next/image';
 import { partyData } from '@/src/components/PartyData';
 
-const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags }) => {
-    const handleButton = () => {
-        
-    };
+const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton }) => {
 
     var vectorSaved = 'bookmarkOutlined01';
 
-    if (eventSaved) {
-        vectorSaved = 'bookmarkOutlined01';
+    if (eventSaved === 'delete') {
+        vectorSaved = 'bookmarkRemove01';
+    } else if (eventSaved) {
+        vectorSaved = 'bookmarkFill01';
     }
 
     return (
@@ -26,7 +24,7 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
                         ))
                         }
                     </div>
-                    <button onClick={() => handleButton()}
+                    <button onClick={handleSaveButton}
                         className='w-9 h-8 gap-2 font-thin rounded-full ring-1 ring-inset ring-whiteT1 flex justify-center 
                     items-center content-center backdrop-blur-xl bg-[#0000004D]'>
                         <Vector vectorname={vectorSaved} /></button>

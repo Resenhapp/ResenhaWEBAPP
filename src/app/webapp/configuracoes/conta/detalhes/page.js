@@ -10,7 +10,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Account() {
+export default function AccountDetails() {
     const [username, setUsername] = useState('@dabilas');
     const [tempUsername, setTempUsername] = useState(username);
 

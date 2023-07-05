@@ -1,8 +1,6 @@
 'use client'
 import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import InputFieldPurple from '@/src/components/InputFieldPurple';
-import ProfileEvent from '@/src/components/ProfileEvent';
 import Modal from '@/src/components/Modal';
 import ButtonConfig from '@/src/components/ButtonConfig';
 import NotificationBase from '@/src/components/NotificationBase';
@@ -12,7 +10,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Account() {
+export default function AccountHistory() {
     const [username, setUsername] = useState('@dabilas');
     const [tempUsername, setTempUsername] = useState(username);
 
@@ -65,14 +63,14 @@ export default function Account() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <NotificationBase 
+                                <NotificationBase
                                     imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'}
                                     title={'Resenha criada!'}
                                     description={'A resenha Resenha no Terraço foi criada com sucesso.'}
                                     date={'Hoje'}
                                     hour={'17:00'}
                                 />
-                                <NotificationBase 
+                                <NotificationBase
                                     imageUrl={'https://resenha.app/publico/recursos/resenhas/dEUsxUJp.png'}
                                     title={'Presença confirmada!'}
                                     description={'Sua presença no MATUÊ - Porto Alegre  foi confirmada! Seu código é 6478.'}
