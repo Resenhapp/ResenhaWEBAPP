@@ -26,10 +26,10 @@ const Menu = ({ isOpen, toggleMenu }) => {
                         <div className='w-full flex flex-col'>
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <Button label={'Perfil'} icon={'user'} action={() => handleNavigation('perfil')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Carteira'} icon={'wallet'} action={() => handleNavigation('carteira')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Feed'} icon={'lit'} action={() => handleNavigation('explorar')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Resenhas'} icon={'thunder'} action={() => handleNavigation('resenhas')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Configurações'} icon={'gear'} action={() => handleNavigation('configuracoes')} iconSide='left' height={1} width={1} textAlign='left' />
-                                <Button label={'Recepcionistas'} icon={'trusted'} action={() => handleNavigation('recepcionistas')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Carteira'} icon={'wallet'} action={() => handleNavigation('carteira')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Ajuda'} icon={'question'} action={() => handleNavigation('ajuda')} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                             <div className='mt-10'>

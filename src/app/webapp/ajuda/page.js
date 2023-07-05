@@ -73,17 +73,17 @@ export default function Help() {
             <section className="flex flex-col flex-start items-center w-full max-w-md p-4">
               <div className=' h3 w-full flex'>
                 <div className='w-full flex flex-col'>
-                  <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
+                  <div className='w-full align-center justify-between items-center mb-2 flex flex-row'>
                     <h2>Aqui estão as dúvidas mais frequentes. Caso você precise saber sobre algo mais específico toque em Entrar em contato na parte inferior da página.</h2>
                   </div>
-                  <div className='w-full h-full flex flex-col'>
+                  <div className='bg-scroll flex flex-col gap-2 h-[50vh] w-full overflow-y-auto'>
                     {data.map((categoryData, index) => {
                       const category = Object.keys(categoryData)[0];
                       const questions = categoryData[category];
                       return (
                         <div key={index}>
-                          <h1 className='text-purpleT5 text-2xl'>{category}</h1>
-                          <div className='w-full h-[1px] bg-purpleT5' />
+                          <h1 className='text-purpleT5 text-xl mt-2'>{category}</h1>
+                          <div className='w-full h-[1px] bg-purpleT5 mt-1 mb-2' />
                           <div className='flex flex-col gap-2'>
                             {questions.map((qa, qIndex) => (
                               <Accordion key={qIndex} data={[{ title: qa.question, content: qa.answer }]} />
@@ -96,7 +96,7 @@ export default function Help() {
                 </div>
               </div>
             </section>
-            <div className="flex flex-col mb-4 w-[80%] mt-8 items-center justify-center content-center">
+            <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
               <Button
                 label={'Entrar em contato'}
                 icon={'arrow'}

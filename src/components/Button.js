@@ -84,6 +84,11 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
             <Vector vectorname={'check01'} />
             
         )
+    } else if (icon === 'lit') {
+        iconSvg = (
+            <Vector vectorname={'lit02'} />
+            
+        )
     }
 
     const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white font-bold py-5 px-5 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} ${active ? "bg-whiteT1" : "deactivated"} max-w-[500px]`;

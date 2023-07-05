@@ -19,17 +19,13 @@ export default function EditProfile() {
     const [checkerCallback, setCheckerCallback] = useState(null);
     const [newProfile, setNewProfile] = useState(null);
     const CurrentProfile = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpg'
-
     const [hasChange, setHasChange] = useState(false);
     var isVerified = true;
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
-
-
-
-    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC    // INTERESTS LOGIC
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
     const [userInterests, setUserInterests] = useState([1, 2, 4]);
     const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+
     const [allInterests, setAllInterests] = useState(
         [...interestsData].map((interest) => {
             const isSelected = userInterests.includes(interest.id);
@@ -74,7 +70,6 @@ export default function EditProfile() {
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
     const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
 
-    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
     const [username, setUsername] = useState("João Davi");
     const [tempUsername, setTempUsername] = useState(username);
     const [handle, setHandle] = useState("joaodavisn");
@@ -88,7 +83,6 @@ export default function EditProfile() {
     const [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
     const toggleEditUsernamePageOpen = () => {
         if (isEditUsernamePageOpen) {
-            // Reset tempUsername and tempHandle to their original values when closing the modal
             setTempUsername(username);
             setTempHandle(handle);
         }
@@ -109,7 +103,6 @@ export default function EditProfile() {
         toggleEditUsernamePageOpen();
         setHasChange(true);
     };
-    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC    // ABOUT LOGIC
 
     const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
     var initialAbout = "Bisteca";
@@ -139,7 +132,6 @@ export default function EditProfile() {
         toggleEditAboutPageOpen();
         setHasChange(true);
     };
-    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////    ///////////////////////////////////
 
     return (
         <div>
@@ -147,11 +139,10 @@ export default function EditProfile() {
                 <PageHeader
                     pageTitle={'Editar perfil'}
                     isBack={true}
-                    checker={()=>{null}}
+                    checker={() => { null }}
                 />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
-                        
                         <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
                             <div className='w-full'>
                                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
@@ -240,7 +231,6 @@ export default function EditProfile() {
                                 </div>
                             </div>
                         </div>
-
                         <div className='w-full h-fit'>
                             <div onClick={toggleEditAboutPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
@@ -278,7 +268,6 @@ export default function EditProfile() {
                                 </div>
                             </div>
                         </div>
-                       
                     </section>
                 </div>
             </div>

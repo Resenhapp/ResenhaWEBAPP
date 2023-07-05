@@ -11,6 +11,7 @@ import axios from 'axios';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
+import { tagsData } from "@/src/components/tagsData";
 
 export default function Invite() {
     let code = '';
@@ -62,10 +63,21 @@ export default function Invite() {
         }
     };
 
+    const [eventTags, setEventTags] = useState([1, 2, 4]);
+    const [allTags, setAllTags] = useState(
+        [...tagsData].map((tag) => {
+            const isSelected = eventTags.includes(tag.id);
+            return { ...tag, selected: isSelected };
+        }).sort((a, b) => b.selected - a.selected)
+    );
+    const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
+    const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
+    
+
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }
@@ -76,7 +88,7 @@ export default function Invite() {
         if (isExpanded) {
             return (
                 <>
-                    <h1>{description}<div className="mt-4"><h1 className="mb-1 font-bold">Tags:</h1><div className="flex flex-wrap gap-1 w-full"><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /><Tag tagname={'Tag 1'} /></div></div></h1>
+                    <h1>{description}<div className="mt-4"></div></h1>
                     <div
                         className="flex flex-row items-center align-center cursor-pointer text-purpleT5"
                         onClick={handleToggleDescription}
@@ -153,21 +165,21 @@ export default function Invite() {
         }
     };
 
-
+ 
     return (
-        <div className="flex flex-col justify-start min-h-screen h-fit relative">
+        <div className="flex flex-col justify-start min-h-screen h-fit relative bg-purpleT01">
             <section className="relative">
                 <div className="relative">
                     <Image
                         src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
                         alt="Picture of the author"
-                        layout="responsive"
-                        width={5000}
-                        height={3000}
-                        className="object-cover"
+                        layout=""
+                        width={300}
+                        height={300}
+                        className="object-cover w-full h-[300px]"
                     />
                     <div className="absolute inset-0">
-                        <div className="absolute bottom-0 bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
+                        <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT01 opacity-100 w-full h-2/5" />
                     </div>
                 </div>
 
@@ -188,22 +200,24 @@ export default function Invite() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                        <div className="flex flex-row justify-left gap-6 w-full h-fit">
-                            <div className="flex-column justify-left text-purple-100 items-center px-2">
-                                <h1 className="font-bold">
-                                    {'Dia ' + day}
-                                </h1>
-                                <h1>  {'de ' + month} </h1>
-                            </div>
-                            <div className="flex-column justify-left text-purple-100 items-center px-2">
+                        <div className="flex flex-row justify-start gap-2 w-full h-fit">
+                            <div className="flex-column justify-left text-whiteT1 items-center">
                                 <h1 className="font-bold">
                                     {dayOfWeek}
+                                </h1>
+                                <h1> {day} {'de ' + month} </h1>
+                            </div>
+                            <div className="w-[1px] bg-purpleT5 mx-1" />
+                            <div className="flex-column justify-left text-whiteT1 items-center">
+                                <h1 className="font-bold">
+                                    Horário
                                 </h1>
                                 <h1>
                                     {'às ' + hour}
                                 </h1>
                             </div>
-                            <div className="flex-column justify-left text-purple-100 items-center px-2">
+                            <div className="w-[1px] bg-purpleT5 mx-1" />
+                            <div className="flex-column justify-left text-whiteT1 items-center">
                                 <h1 className="font-bold">
                                     Confirmados
                                 </h1>
@@ -212,7 +226,7 @@ export default function Invite() {
                                 </h1>
                             </div>
                         </div>
-                        <div className="flex-column justify-left text-purple-100 items-center">
+                        <div className="flex-column justify-left text-whiteT1 items-center">
                             <div>
                                 <h1 className="font-bold">
                                     Endereço:
@@ -228,14 +242,36 @@ export default function Invite() {
                                 </h1>
                             </div>
                         </div>
-                        <div className="flex-column justify-left max-w-screen-xs text-purple-100 items-center">
+                        <div className="flex-column justify-left max-w-screen-xs text-whiteT1 items-center">
                             <div>
+                                <h1 className="font-bold">
+                                    Descrição:
+                                </h1>
                                 {renderDescription()}
                             </div>
-                            
+                            <div className="mt-4">
+                                <h1 className="font-bold mb-1">
+                                        Tags:
+                                    </h1>
+                                <div className="flex flex-wrap gap-2">
+                                    {renderTags.map((tag) => (
+                                        <Tag
+                                            key={tag.id}
+                                            tagname={tag.name}
+                                            type={tag.type}
+                                            colorName={tag.colorName}
+                                            highlightColor={tag.highlightColor}
+                                            isEditable={false}
+                                            ringThickness={tag.ringThickness}
+                                            ringColor={tag.ringColor}
+                                            weight={tag.weight}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
                             <div className="flex flex-row mb-4 gap-4 w-full mt-4">
                                 <div className="flex flex-col mb-4 w-fit">
-                                    <RoundButton label="" icon="share" onClick={handleShare} />
+                                    <RoundButton white={false} label="" icon="share" onClick={handleShare} />
                                 </div>
                                 <div className="flex flex-col mb-4 w-full">
                                     <Button
@@ -247,22 +283,19 @@ export default function Invite() {
                                         width={1}
                                         textAlign='center'
                                     />
-
                                 </div>
                             </div>
-                            <div className="flex flex-col mb-4 gap-4 w-full">
-                                <div className="flex justify-center flex-row mb-2 gap-4 h-fit w-full">
-                                    <h1 className="text-whiteT1 text-2xl font-bold w-full text-left">
-                                        Quem vai:
-                                    </h1>
+                            <div className="flex flex-col mb-4 w-full">
+                                <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
+                                    Quem vai:
+                                </h1>
+                                <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
+                                    {users.map((user) => (
+                                        <UserPortrait isBlurried={false} key={user.id} imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'} name={user.name} />
+                                    ))}
                                 </div>
-                                <div className="grid grid-cols-2 gap-4 h-[550px] overflow-y-auto">
-    {users.map((user) => (
-      <UserPortrait key={user.id} image={defaultImage} name={user.name} />
-    ))}
-  </div>
                             </div>
-                            <div className="justify-center align-center w-full max-w-screen-xs flex mb-8">
+                            <div className="justify-center align-center w-full max-w-screen-xs flex mb-3">
                                 <h1 className="font-regular">
                                     Feito com: <a href="https://resenha.app"><b><u>Resenha.app</u></b></a>
                                 </h1>

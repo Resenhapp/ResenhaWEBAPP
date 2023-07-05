@@ -65,6 +65,7 @@ module.exports = {
         orangeT5: "#F9A987",
         purpleT0: "#200039",
         purpleT1: "#5900A0",
+        purpleT01: "#48047E",
         purpleT2: "#6805B8",
         purpleT3: "#8E00FF",
         purpleT4: "#B04DFF",

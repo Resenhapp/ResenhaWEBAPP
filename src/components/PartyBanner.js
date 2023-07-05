@@ -20,7 +20,7 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
                 <div className='w-full  absolute h-fit top-0 p-2 flex justify-between flex-row'>
                     <div className='flex flex-row w-full gap-1'>
                         {eventTags.map((index) => (
-                            <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname}/>
+                            <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname} />
                         ))
                         }
                     </div>
@@ -31,7 +31,7 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
                 </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' />
                 <div className='py-4 pl-4'>
-                    <h1 className="font-bold text-xl text-white">{eventName}</h1>
+                    <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]">{eventName}</h1>
                     <div className='flex flex-row gap-2 items-center'>
                         <div className='flex flex-row'>
                             {imageUrl.map((url, index) => (

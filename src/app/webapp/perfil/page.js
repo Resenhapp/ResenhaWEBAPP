@@ -85,7 +85,7 @@ export default function Profile() {
     var isVerified = true;
     const [activeTab, setActiveTab] = useState('Sobre');
 
-    var isMyProfile = true;
+    var isMyProfile = !true;
 
     return (
         <div className='flex flex-col w-screen h-screen '>
@@ -132,7 +132,7 @@ export default function Profile() {
                                             <h1 className='font-bold text-lg'>Resumo</h1>
                                             <p>{about}</p>
                                         </div>
-                                        <div className='w-full mt-8'>
+                                        <div className='w-full mt-4'>
                                             <h1 className='font-bold text-lg'>Interesses</h1>
                                             <div className='w-full flex flex-wrap gap-1'>
                                                 {interestsData.filter(interest => userInterests.includes(interest.id)).map(interest => (
