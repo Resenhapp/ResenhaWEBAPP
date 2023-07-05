@@ -12,7 +12,7 @@ export default function AccountHistory() {
 
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Histórico de atividades" />
+            <PageHeader isBack={true} checker={() => { null }} pageTitle="Hist. de atividades" />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">
