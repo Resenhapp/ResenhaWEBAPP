@@ -2,7 +2,6 @@ import React from 'react';
 import Vector from './Vector';
 
 const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1, textAlign = 'center', active = true }) => {
-    // map height and width to the respective Tailwind classes
     const sizes = {
         1: 'w-full',
         2: 'w-4/5',

@@ -9,12 +9,11 @@ const AddressField = ({ placeholder, onAddressSelect, initialAddress }) => {
     const onChange = (e) => {
         const value = e.target.value;
         setAddress(value);
-        fetchSuggestions(value); // You'll replace this with your actual API call
+        fetchSuggestions(value);
     };
 
     const fetchSuggestions = async (query) => {
         if (query.length > 0) {
-            // Replace this with your actual API call
             const res = await fetch(`/api/address?q=${query}`);
             const json = await res.json();
             setSuggestions(json.addresses);

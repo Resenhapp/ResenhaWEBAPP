@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function HomePage() {
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
-    
+
     const handleDisplayToggle = () => {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
@@ -37,22 +37,22 @@ export default function HomePage() {
                 <div className='w-[90%] align-center mt-12 justify-between items-center flex flex-row'>
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
-                {isDisplayingEvents ? 
-                <MyInvitesDisplay
-                eventName={exampleNameMyInvite} 
-                eventDate={exampleDateMyInvite}
-                eventHour={exampleHourMyInvite}
-                token={exampleTokenMyInvite}
-                eventImage={exampleImageMyInvite}
-                /> : 
-                <MyEventsDisplay 
-                eventName={exampleNameMyEvent} 
-                eventDate={exampleDateMyEvent}
-                eventGuests={exampleGuestsMyEvent} 
-                eventHour={exampleHourMyEvent}
-                eventMax={exampleLimitMyEvent}
-                eventImage={exampleImageMyEvent}
-                />
+                {isDisplayingEvents ?
+                    <MyInvitesDisplay
+                        eventName={exampleNameMyInvite}
+                        eventDate={exampleDateMyInvite}
+                        eventHour={exampleHourMyInvite}
+                        token={exampleTokenMyInvite}
+                        eventImage={exampleImageMyInvite}
+                    /> :
+                    <MyEventsDisplay
+                        eventName={exampleNameMyEvent}
+                        eventDate={exampleDateMyEvent}
+                        eventGuests={exampleGuestsMyEvent}
+                        eventHour={exampleHourMyEvent}
+                        eventMax={exampleLimitMyEvent}
+                        eventImage={exampleImageMyEvent}
+                    />
                 }
             </div>
         </div>

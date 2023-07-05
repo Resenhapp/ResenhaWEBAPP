@@ -238,37 +238,8 @@ border-radius: inherit;
 animation: gradient-wave 3s linear infinite;
 }
 
-.ccCheckStyle {
-  --check-color: #9b59b6; /* Substitua por qualquer tom de roxo que desejar */
-  --check-background-color: white;
-}
 
-.ccCheckStyle input[type="checkbox"] {
-  display: none;
-}
 
-.ccCheckStyle input[type="checkbox"] + label {
-  position: relative;
-  padding-left: 24px; /* espaço para desenhar o checkbox */
-  cursor: pointer;
-}
-
-.ccCheckStyle input[type="checkbox"] + label:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--check-color);
-  background: var(--check-background-color);
-  border-radius: 3px;
-  box-sizing: border-box;
-}
-
-.ccCheckStyle input[type="checkbox"]:checked + label:before {
-  content: '✓';
-  color: var(--check-color);
-  text-align: center;
-  line-height: 16px;
+.break-words {
+  word-wrap: break-word;
 }

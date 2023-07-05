@@ -114,7 +114,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton />
-                                            <SendMessageButton />
+                                            <SendMessageButton onClick={() => handleNavigation('/chat')}/>
                                         </div>
                                     )}
                                 </div>

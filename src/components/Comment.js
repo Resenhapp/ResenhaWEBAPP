@@ -29,9 +29,9 @@ const Comment = ({ userName, userUrl, rate, month, day, comment, imageUrl }) => 
             <Image src={imageUrl} alt="" width={110} height={30} className="mr-2 rounded-full object-cover h-10 w-10" />
             <div className='flex flex-col w-full'>
                 <div className='flex flex-row w-full justify-between'>
-                    <Link href={userUrl}> {/* Adicione isto */}
+                    <a href={userUrl}>
                         <a className='text-base font-bold'> {userName} </a>
-                    </Link>
+                    </a>
                     <p className='text-purpleT5'>
                         {day + ' de ' + months[month - 1]}
                     </p>
