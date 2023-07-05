@@ -30,6 +30,7 @@ export default function RootLayout({ children }) {
           <div className="bg-orangeT5" />
           <div className="bg-purpleT0" />
           <div className="bg-purpleT1" />
+          <div className="bg-purpleT01" />
           <div className="bg-purpleT2" />
           <div className="bg-purpleT3" />
           <div className="bg-purpleT4" />

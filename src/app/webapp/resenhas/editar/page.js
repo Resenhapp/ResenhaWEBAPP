@@ -59,7 +59,7 @@ export default function EditEvent() {
     var initialAddress = "Rua ramiro barcelos, 1450";
     var initialDescription = "Vai ter muitos amigos festejando e dançando pra valer venha curtir com a gente na resenha de los manos! realmente vamos botar para quebrar! contaremos com a ilustre presença de Estevan e Bisteca.";
     var initialPrice = "R$ 20,00";
-    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
+
     const [eventTags, setEventTags] = useState([1, 2, 4]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
 
@@ -108,7 +108,6 @@ export default function EditEvent() {
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
 
-    // DESCRIPTION LOGIC    // DESCRIPTION LOGIC    // DESCRIPTION LOGIC    // DESCRIPTION LOGIC    // DESCRIPTION LOGIC
     const [description, setDescription] = useState(initialDescription);
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
@@ -118,7 +117,6 @@ export default function EditEvent() {
         toggleEditDescriptionPageOpen();
     };
 
-    // ADDRESS LOGIC    // ADDRESS LOGIC    // ADDRESS LOGIC    // ADDRESS LOGIC    // ADDRESS LOGIC    // ADDRESS LOGIC
     const [address, setAddress] = useState(initialAddress);
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
@@ -127,7 +125,6 @@ export default function EditEvent() {
         toggleEditAddressPageOpen();
     };
 
-    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC    // DATE LOGIC
     const [date, setDate] = useState(initialDate);
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
@@ -183,7 +180,6 @@ export default function EditEvent() {
 
     const dayOfWeek = getDayOfWeek(date);
 
-    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC    // HOUR LOGIC
     const [isEndTime, setIsEndTime] = useState(false);
 
     const handleToggle = () => {
