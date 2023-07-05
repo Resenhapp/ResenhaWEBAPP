@@ -1,7 +1,7 @@
 'use client'
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
+import SearchInput from '@/src/components/SearchInput';
 import React from 'react';
 
 export const metadata = {
@@ -18,11 +18,14 @@ export default function Settings() {
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Configurações'} /> 
-            <div className="flex flex-col items-center justify-center h-screen px-4">
+            <div className="flex flex-col items-center justify-start h-screen px-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
-                            <div className='h-fit w-full gap-2 flex flex-col'>
+                            <div className='h-fit w-full gap-2 flex flex-col pt-4'>
+                                <div className='pb-4'>
+                                <SearchInput placeholder={"Busque uma configuração"} />
+                                </div>
                                 <ButtonConfig
                                     label="Conta"
                                     action={() => handleNavigation('/conta')}

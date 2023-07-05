@@ -1,7 +1,6 @@
 'use client'
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
@@ -9,7 +8,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Account() {
+export default function Config() {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
     };
@@ -26,28 +25,24 @@ export default function Account() {
                                     label="Detalhes da conta"
                                     action={() => handleNavigation('/detalhes')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Informações pessoais"
                                     action={() => handleNavigation('/informacoes')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Histórico de atividades"
                                     action={() => handleNavigation('/historico')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Resenhas salvas"
                                     action={() => handleNavigation('/resenhas')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                             </div>
