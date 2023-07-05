@@ -1,65 +1,138 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Vector from '@/src/components/Vector';
 import Tag from '@/src/components/Tag';
 import Modal from '@/src/components/Modal';
+import { tagsData } from '@/src/components/tagsData';
+import EditInfoPage from '@/src/components/EditInfoPage';
 
 const Piece04 = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [allTags, setAllTags] = useState(['Nerd', 'Funk', 'Baile', 'Pop', 'Baderninha', 'Festa', 'Evento', 'Música ao vivo', 'DJ', 'Pista de Dança', 'Luzes', 'Balada', 'AfterParty', 'Universitário', 'Drinks', 'VIP', 'Lounge', 'Entrada', 'Banda', 'NightLife', 'Show']);
-    const [selectedTags, setSelectedTags] = useState([]);
 
-    const toggleTag = (tag) => {
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter(t => t !== tag));
+    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
+
+    const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);
+    const toggleEditTagsPageOpen = () => {
+        setIsEditTagsPageOpen(!isEditTagsPageOpen);
+    };
+
+    const [eventTags, setEventTags] = useState([]);
+    const [tempEventTags, setTempEventTags] = useState(eventTags);
+
+    const [allTags, setAllTags] = useState(
+        [...tagsData].map((tag) => {
+            const isSelected = eventTags.includes(tag.id);
+            return { ...tag, selected: isSelected };
+        }).sort((a, b) => b.selected - a.selected)
+    );
+
+    useEffect(() => {
+        setTempEventTags(eventTags);
+    }, [eventTags]);
+
+    useEffect(() => {
+        setAllTags(
+            [...tagsData].map((tag) => {
+                const isSelected = tempEventTags.includes(tag.id);
+                return { ...tag, selected: isSelected };
+            }).sort((a, b) => b.selected - a.selected)
+        );
+    }, [tempEventTags]);
+
+    const handleTagClick = (tagId) => {
+        let updatedTags = allTags.map((tag) => {
+            if (tag.id === tagId) {
+                return { ...tag, selected: !tag.selected };
+            } else {
+                return tag;
+            }
+        });
+        setAllTags(updatedTags);
+        if (updatedTags.find(tag => tag.id === tagId).selected) {
+            setTempEventTags([...tempEventTags, tagId]);
         } else {
-            setSelectedTags([...selectedTags, tag]);
+            setTempEventTags(tempEventTags.filter(tagIdTemp => tagIdTemp !== tagId));
         }
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const saveTags = () => {
+        setEventTags(tempEventTags);
+        toggleEditTagsPageOpen();
     };
+
+    const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
+    const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
+
+
 
     return (
         <div className="w-full flex flex-col h-fit gap-3">
-            <div className="h-fit ring-1 p-3 ring-inset ring-purpleT4 bg-purpleT1 rounded-2xl">
-                <textarea
-                    className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
-                    placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
-                />
+            <div className=''>
+                <p className='text-md font-bold mb-2'>Descrição</p>
+                <div className="h-fit ring-1 p-3 ring-inset ring-purpleT4 bg-purpleT1 rounded-2xl">
+                    <textarea
+                        className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
+                        placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
+                    />
+                </div>
             </div>
-            <div className='flex flex-wrap gap-2'>
-                
-                {selectedTags.map(tag => <Tag key={tag} tagname={tag} />)}
-                <button 
-                    className="flex flex-row gap-1 items-center bg-purpleT2 w-fit px-3 py-2 rounded-full ring-1 ring-inset ring-purpleT4"
-                    onClick={() => setIsModalOpen(true)}
+            <div>
+                <p className='text-md font-bold mb-2'>Tags</p>
+                <div onClick={(e) => {
+                    e.stopPropagation();
+                    toggleEditTagsPageOpen();
+                }}
+                    className="flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
                 >
-                    <h1>Nova tag</h1>
-                    <Vector vectorname={'plus02'} />
-                </button>
+                    <div className="flex flex-row gap-2 items-center">
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {renderTags.length > 0 ?
+                            renderTags.map((tag) => (
+                                <Tag
+                                    key={tag.id}
+                                    tagname={tag.name}
+                                    type={tag.type}
+                                    colorName={tag.colorName}
+                                    highlightColor={tag.highlightColor}
+                                    isEditable={false}
+                                    ringThickness={tag.ringThickness}
+                                    ringColor={tag.ringColor}
+                                    weight={tag.weight}
+                                />
+                            ))
+                            :
+                            <p className='py-1 px-2 bg-purpleT1 rounded-full ring-1 flex flex-row items-center gap-2 ring-inset ring-purpleT3'>Toque aqui para escolher tags! <Vector vectorname={'plus02'} /></p>
+                        }
+                    </div>
+                </div>
             </div>
-            {isModalOpen && 
-                <Modal show={isModalOpen} close={closeModal}>
-                <h1 className='text-xl mb-2 font-bold'>Escolha Tags!</h1>
-                <p>As tags servem para as pessoas entenderem melhor a vibe da sua resenha</p>
-                <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
-                    {allTags.map(tag => (
-                        <button 
-                            className={`bg-purpleT2 p-2 rounded-lg ${selectedTags.includes(tag) ? 'ring-1 ring-inset ring-purpleT4' : ''}`}
-                            onClick={() => toggleTag(tag)}
-                            key={tag}
-                        >
-                            {tag}
-                        </button>
-                    ))}
+            {/* TAGS */}
+            <EditInfoPage isOpen={isEditTagsPageOpen} pageTitle={'Tags da resenha'} saveAction={saveTags} togglePage={toggleEditTagsPageOpen}>
+                <div className='w-full'>
+                    <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
+                        {[...allTags].sort((a, b) => b.selected - a.selected).map((tag) => (
+                            <Tag
+                                key={tag.id}
+                                tagname={tag.name}
+                                type={tag.type}
+                                colorName={tag.colorName}
+                                highlightColor={tag.highlightColor}
+                                isEditable={true}
+                                onClick={() => handleTagClick(tag.id)}
+                                selected={tag.selected}
+                                ringColor={tag.ringColor}
+                                ringThickness={tag.ringThickness}
+                                weight={tag.weight}
+                            />
+                        ))}
+                    </div>
                 </div>
-                <div className='w-full flex justify-between flex-row-reverse mt-4 gap-3'>
-                    <button onClick={closeModal} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Salvar</button>
-                    <button onClick={() => {setSelectedTags([]); closeModal();}} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Cancelar</button>
+                <div>
+                    <p className='text-sm'>
+                        As tags da resenha são palavras-chave que você pode incluir para ajudar a descrever e categorizar o seu evento. Elas serão visíveis aos convidados quando acessarem o convite e podem ajudar a dar uma ideia rápida do que esperar da resenha. Escolha tags que representem bem o tema, o estilo ou a vibe da sua resenha.
+                    </p>
                 </div>
-            </Modal>
-            }
+            </EditInfoPage>
         </div>
     );
 };

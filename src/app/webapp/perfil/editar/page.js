@@ -147,31 +147,11 @@ export default function EditProfile() {
                 <PageHeader
                     pageTitle={'Editar perfil'}
                     isBack={true}
-                    checker={() => new Promise((resolve, reject) => {
-                        if (hasChange) {
-                            setUnsavedChangesModalOpen(true);
-                            setCheckerCallback(() => resolve);
-                        } else {
-                            resolve(true);
-                        }
-                    })}
+                    checker={()=>{null}}
                 />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
-                        <Modal show={isUnsavedChangesModalOpen} close={() => setUnsavedChangesModalOpen(false)}>
-                            <div className='gap-2 flex flex-col'>
-                                <h1 className='text-center'>Ei! Você tem alterações que não foram salvas! Vai sair sem salvar?</h1>
-                                <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
-                                    if (typeof checkerCallback === 'function') {
-                                        checkerCallback(false);
-                                    }
-                                    setModalOpen(false);
-                                }}>Sim eu vou.</button>
-                                <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full ring-inset py-2 px-4' onClick={() => {
-                                    setUnsavedChangesModalOpen(false);
-                                }}>Não, peraí!</button>
-                            </div>
-                        </Modal>
+                        
                         <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
                             <div className='w-full'>
                                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
@@ -298,10 +278,7 @@ export default function EditProfile() {
                                 </div>
                             </div>
                         </div>
-                        <div className='w-full flex flex-row justify-between'>
-                            <button className='px-5 py-4' onClick={() => window.history.back()}>Cancelar</button>
-                            <Button label={'Salvar'} icon={'check'} action={() => handleNavigation('perfil')} iconSide='right' height={1} width={3} textAlign='center' />
-                        </div>
+                       
                     </section>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 export const tagsData = [
-    { id: 1, name: '+18', type: 'tag', colorName: '[#212121]', highlightColor: '[#494949]', ringColor: 'redT3', ringThickness: "2", weight: "bold" },
+    { id: 1, name: '+18', type: 'tag', colorName: 'blackT1', highlightColor: 'blackT2', ringColor: 'redT3', ringThickness: "2", weight: "bold" },
     { id: 2, name: 'Universitário', type: 'tag', colorName: 'purpleT2', highlightColor: 'purpleT3', ringColor: 'transparent', ringThickness: "0", },
     { id: 3, name: 'Baile', type: 'tag', colorName: 'purpleT2', highlightColor: 'purpleT3', ringColor: 'transparent', ringThickness: "0", },
     { id: 4, name: 'Solteirões', type: 'tag', colorName: 'purpleT2', highlightColor: 'purpleT3', ringColor: 'transparent', ringThickness: "0", },

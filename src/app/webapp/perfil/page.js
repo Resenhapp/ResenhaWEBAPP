@@ -9,8 +9,10 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
+import FollowButton from '@/src/components/FollowButton';
 import { interestsData } from '@/src/components/interestsData';
 import Vector from '@/src/components/Vector';
+import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
 export const metadata = {
@@ -83,6 +85,8 @@ export default function Profile() {
     var isVerified = true;
     const [activeTab, setActiveTab] = useState('Sobre');
 
+    var isMyProfile = true;
+
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Perfil'} />
@@ -105,7 +109,14 @@ export default function Profile() {
                                     <NumberDisplay amount={following} label={'Seguidores'} />
                                 </div>
                                 <div>
-                                    <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
+                                    {isMyProfile ? (
+                                        <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
+                                    ) : (
+                                        <div className='flex flex-row gap-2'>
+                                            <FollowButton />
+                                            <SendMessageButton />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className='flex flex-col bg- w-full mt-5'>
