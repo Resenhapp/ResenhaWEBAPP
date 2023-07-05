@@ -13,7 +13,7 @@ export const metadata = {
 export default function PasswordConfig() {
 
     const options = ['Desabilitado', 'Telefone', 'E-mail']
-    var initialPassword = 'daviloide'
+    var initialPassword = '•••••••'
     
     const [method, setMethod] = useState('');
     const [isEditPasswordPageOpen, setIsEditPasswordPageOpen] = useState(false);

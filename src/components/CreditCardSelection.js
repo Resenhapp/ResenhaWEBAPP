@@ -12,6 +12,16 @@ const CreditCardSelection = ({ ccFlag, ccName, ccFinal, ccUsage, ccType, startSe
         cardFlag = 'amex';
     } else if (ccFlag === 4) {
         cardFlag = 'discover';
+    } else if (ccFlag === 5) {
+        cardFlag = 'cirrus';
+    } else if (ccFlag === 6) {
+        cardFlag = 'jcb';
+    } else if (ccFlag === 7) {
+        cardFlag = 'maestro';
+    } else if (ccFlag === 8) {
+        cardFlag = 'dinersclub';
+    } else if (ccFlag === 9) {
+        cardFlag = 'elo';
     }
     useEffect(() => {
         setChecked(startSelected);
@@ -48,7 +58,7 @@ const CreditCardSelection = ({ ccFlag, ccName, ccFinal, ccUsage, ccType, startSe
                 </p>
                 <p className='text-[12px]'>
                     {ccUsage === 0 ?
-                        "Você ainda não usou este cartão."
+                        `Você ainda não usou este cartão. Ele termina com os dígitos ${ccFinal}.`
                         :
                         `Você já usou esse cartão ${ccUsage} vez${ccUsage > 1 ? 'es' : ''}. Ele termina com os dígitos ${ccFinal}.`
                     }

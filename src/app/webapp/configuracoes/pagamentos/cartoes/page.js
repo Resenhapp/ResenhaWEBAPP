@@ -36,7 +36,7 @@ export default function CreditCards() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <CreditCardSelection ccFinal={1234} ccFlag={1} ccName={'Noh'} ccType={'Credito'} ccUsage={2} startSelected={selectedCard === 0} onCheck={handleCheck(0)} />
-                                <CreditCardSelection ccFinal={1234} ccFlag={1} ccName={'Noh'} ccType={'Credito'} ccUsage={2} startSelected={selectedCard === 1} onCheck={handleCheck(1)} />
+                                <CreditCardSelection ccFinal={1234} ccFlag={2} ccName={'Nubank'} ccType={'Débito'} ccUsage={0} startSelected={selectedCard === 1} onCheck={handleCheck(1)} />
                             </div>
                         </div>
                     </div>
