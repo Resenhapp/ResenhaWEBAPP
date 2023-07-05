@@ -8,7 +8,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Config() {
+export default function Account() {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
     };

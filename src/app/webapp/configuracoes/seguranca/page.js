@@ -1,7 +1,6 @@
 'use client'
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
@@ -26,14 +25,12 @@ export default function Account() {
                                     label="Configurações de senha"
                                     action={() => handleNavigation('/senha')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Histórico de sessões"
                                     action={() => handleNavigation('/historico')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                             </div>

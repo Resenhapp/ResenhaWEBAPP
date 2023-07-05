@@ -1,7 +1,7 @@
 import React from 'react';
 import Vector from './Vector';
 
-const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon }) => {
+const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon, readOnly = false }) => {
     const handleInputChange = (event) => {
         if (onChange) {
             onChange(event.target.value);
@@ -25,6 +25,7 @@ const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon
                 placeholder={placeholder}
                 value={value}
                 onChange={handleInputChange}
+                readOnly={readOnly} // Adicione esta linha
             />
         </div>
     );
