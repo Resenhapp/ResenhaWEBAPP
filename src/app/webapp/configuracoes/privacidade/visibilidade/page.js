@@ -8,7 +8,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Page() {
+export default function PrivacyVisibility() {
 
     const whoSeeProfileOptions = ['Todos', 'Apenas seguidores']
     const whoSendMessage = ['Todos', 'Apenas seguidores']

@@ -9,7 +9,7 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function AccountDetails() {
+export default function AccountInfo() {
     const initialName = 'João Davi S. N.';
     const initialBirthday = 'joao*****n@gmail.com';
     const initialPhone = '(51) 9 9535-3595';

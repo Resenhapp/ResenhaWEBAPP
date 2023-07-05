@@ -7,7 +7,7 @@ export const metadata = {
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function Privacy() {
+export default function Subscription() {
 
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;

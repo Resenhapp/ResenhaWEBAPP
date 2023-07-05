@@ -8,7 +8,7 @@ export const metadata = {
     description: 'Venha fazer suas resenhas!',
 }
 
-export default function PartySaved() {
+export default function AccountPartySaved() {
 
     const exampleNameEvent = "BAILE FUNK NA...";
     const exampleDateEvent = "16/09/2023";
