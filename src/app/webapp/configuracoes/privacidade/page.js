@@ -1,7 +1,6 @@
 'use client'
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export const metadata = {
@@ -16,7 +15,7 @@ export default function Account() {
 
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Segurança" />
+            <PageHeader isBack={true} checker={() => { null }} pageTitle="Privacidade" />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">

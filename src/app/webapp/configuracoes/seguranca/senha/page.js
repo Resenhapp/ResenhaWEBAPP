@@ -67,6 +67,7 @@ export default function PasswordConfig() {
                                     <p className="text-whiteT1 text-sm font-semibold">Senha</p>
                                     <InputFieldPurple value={password} readOnly={true} />
                                 </div>
+                                <hr className="border-purpleT4" />
                                 <p className="text-whiteT1 text-sm font-semibold">Autenticação de dois fatores (2FA)</p>
                                 <ConfigDropDown 
                                     options={options}
