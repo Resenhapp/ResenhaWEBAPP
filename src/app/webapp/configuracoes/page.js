@@ -15,6 +15,10 @@ export default function Settings() {
         window.location.href = `/webapp/configuracoes/${pageToGo}`;
     };
 
+    const handleLogOut = () => {
+
+    }
+
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Configurações'} /> 
@@ -65,6 +69,15 @@ export default function Settings() {
                         </div>
                     </div>
                 </section>
+            </div>
+            <div className='flex flex-col justify-end mb-10 max-w-md p-4 px-8'>
+                <ButtonConfig
+                    label="Sair"
+                    action={handleLogOut}
+                    rightIcon={'arrowRight06'}
+                    leftIcon={'user02'}
+                    textAlign="left"
+                />
             </div>
         </div>
     );
