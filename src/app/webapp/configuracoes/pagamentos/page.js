@@ -9,14 +9,14 @@ export const metadata = {
     description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
 };
 
-export default function Account() {
+export default function Payments() {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/configuracoes/pagamentos/${pageToGo}`;
     };
 
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Segurança" />
+            <PageHeader isBack={true} checker={() => { null }} pageTitle="Pagamentos" />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">
@@ -26,28 +26,24 @@ export default function Account() {
                                     label="Cartões salvos"
                                     action={() => handleNavigation('/cartoes')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Histórico de compras"
                                     action={() => handleNavigation('/historico')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Assinaturas ativas"
                                     action={() => handleNavigation('/assinatura')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Configurações de reembolso"
                                     action={() => handleNavigation('/reembolso')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                             </div>

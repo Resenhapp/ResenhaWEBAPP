@@ -25,21 +25,18 @@ export default function Account() {
                                     label="Visibilidade da conta"
                                     action={() => handleNavigation('/visibilidade')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Configurações de bloqueio"
                                     action={() => handleNavigation('/bloqueio')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                                 <ButtonConfig
                                     label="Gerenciamento de dados"
                                     action={() => handleNavigation('/dados')}
                                     rightIcon={'arrowRight06'}
-                                    leftIcon={'nullV'}
                                     textAlign="left"
                                 />
                             </div>
