@@ -1,9 +1,5 @@
 <?php
 
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Methods: GET, POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
 define("DB_SERVER", "31.170.160.154");
 define("DB_NAME", "u878630845_resenhadb");
 define("DB_USERNAME", "u878630845_resenhadb");

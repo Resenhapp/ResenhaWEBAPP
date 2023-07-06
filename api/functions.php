@@ -20,6 +20,11 @@ function queryDBRows($query) {
     return $result;
 }
 
+function hash256($string) {
+    $hash = hash("sha256", $string);
+    return $hash;
+}
+
 function sanitize($s) {
     return filter_var($s, FILTER_SANITIZE_STRING);
 }
@@ -38,11 +43,6 @@ function encrypt($text, $pkey) {
     $IV = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
 
     return base64_encode(openssl_encrypt($text, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $IV)."-[--IV-[-".$IV);
-}
-
-function hash256($string) {
-  $hash = hash("sha256", $string);
-  return $hash;
 }
 
 function convertMonth($month)
@@ -264,6 +264,8 @@ function getUserData() {
             $query = "SELECT COUNT(*) as total_parties FROM parties WHERE host = '$id'";
             $events = queryDB($query)[0];
 
+            $hash = hash256($id);
+
             $query = "SELECT * FROM balances WHERE user = '$id'";
             $info = queryDBRows($query);
 
@@ -315,6 +317,7 @@ function getUserData() {
             }
 
             $data = array(
+                'hash' => $hash,
                 'username' => $row["username"],
                 'name' => $row["name"],
                 'about' => $row["about"],
@@ -322,9 +325,11 @@ function getUserData() {
                 'followers' => 0,
                 'following' => 0,
                 'cpf' => $row["cpf"],
+                'verified' => $row["verified"],
                 'events' => $events,
                 'balances' => $balances,
                 'notifications' => $notifications,
+                'comments' => $row["comments"],
                 'concierges' => $concierges
             );
 

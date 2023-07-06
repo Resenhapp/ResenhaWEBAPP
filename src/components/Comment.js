@@ -26,7 +26,7 @@ const Comment = ({ userName, userUrl, rate, month, day, comment, imageUrl }) => 
 
     return (
         <div className='h-fit w-full rounded-2xl flex flex-row'>
-            <Image src={imageUrl} alt="" width={110} height={30} className="mr-2 rounded-full object-cover h-10 w-10" />
+            <img src={imageUrl} alt="" width={110} height={30} className="mr-2 rounded-full object-cover h-10 w-10" />
             <div className='flex flex-col w-full'>
                 <div className='flex flex-row w-full justify-between'>
                     <a href={userUrl}>

@@ -17,7 +17,7 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
     return (
         <div className='flex  flex-col items-center mt-3'>
             <div className="relative z-1 flex flex-row items-end w-full justify-between h-[29vh] ring-1 ring-inset bg-gradient-to-t from-black ring-purpleT4 rounded-2xl">
-                <div className='w-full  absolute h-fit top-0 p-2 flex justify-between flex-row'>
+                <div className='w-full absolute h-fit top-0 p-2 flex justify-between flex-row'>
                     <div className='flex flex-row w-full gap-1'>
                         {eventTags.map((index) => (
                             <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname} />
