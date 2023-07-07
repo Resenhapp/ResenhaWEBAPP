@@ -34,11 +34,11 @@ export default function Login() {
     try {
       const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToAuthenticate', email: email, password: password });
 
-      if (response.user && response.validator) {
-        Cookies.set('user', response.user);
+      if (response.username && response.validator) {
+        Cookies.set('username', response.username);
         Cookies.set('validator', response.validator);
 
-        window.location.href = 'webapp/perfil/';
+        window.location.href = 'webapp/resenhas/';
       }
 
       else {

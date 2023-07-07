@@ -251,16 +251,88 @@ function getHelpData() {
     echo json_encode($response);
 }
 
-function getUserData() {
-    global $enckey;
+function check_session($username, $validator) {
+    $userQuery = "SELECT * FROM users WHERE username = '$username'";
+    $user = queryDBRows($userQuery);
 
-    $id = decrypt($_POST['id'], $enckey);
+    if (mysqli_num_rows($user) > 0) {
+        foreach ($user as $row) {
+            $password = $row["password"];
+        }
+    }
 
-    $query = "SELECT * FROM users WHERE id = '$id'";
+    $generatedValidator = hash256($username.$password);
+
+    if ($generatedValidator == $validator) {
+        return true;
+    }
+    
+    else {
+        return false;
+    }
+}
+
+function getFeedData() {
+    // $username = $_POST['username'];
+
+    $query = "SELECT * FROM parties";
+  
+    $result = queryDBRows($query);
+
+    $parties = [];
+
+    $query = "SELECT * FROM parties";
   
     $result = queryDBRows($query);
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
+            $code = $row["code"];
+            $hash = hash256($code);
+    
+            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+            $confirmed = queryDB($guests_query)['total_guests'];
+    
+            $data = [
+                'hash' => $hash,
+                'price' => $row["price"],
+                'code' => $code,
+                'time' => $row["time"],
+                'confirmed' => $confirmed,
+                'capacity' => $row["capacity"],
+                'tags' => $row["tags"],
+                'title' => $row["name"]
+            ];
+
+            array_push($parties, $data);
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($parties);
+    } 
+
+    else {
+        returnError("no_data");
+    }
+}
+
+function getUserData() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    $query = "SELECT * FROM users WHERE username = '$username'";
+  
+    $result = queryDBRows($query);
+    
+    if (mysqli_num_rows($result) > 0) {
+        foreach ($result as $row) {
+            $id = $row["id"];
+
             $query = "SELECT COUNT(*) as total_parties FROM parties WHERE host = '$id'";
             $events = queryDB($query)[0];
 
@@ -316,22 +388,56 @@ function getUserData() {
                 }
             }
 
+            $query = "SELECT c.*, u.name FROM comments AS c 
+            INNER JOIN parties AS p ON c.party = p.code 
+            INNER JOIN users AS u ON c.user = u.id 
+            WHERE p.host = '$id'";
+  
+            $userComments = queryDBRows($query);
+            
+            $comments = [];
+            
+            if (mysqli_num_rows($userComments) > 0) {
+                foreach ($userComments as $comment) {
+                    $temp = [
+                        "user" => $comment["user"],
+                        "name" => $comment["name"],
+                        "content" => $comment["content"],
+                        "rate" => $comment["rate"],
+                        "date" => $comment["date"]
+                    ];
+            
+                    array_push($comments, $temp);
+                }
+            }
+
+            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$id'";
+            $followers = queryDB($query)[0];
+            
+            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
+            $following = queryDB($query)[0];
+
             $data = array(
                 'hash' => $hash,
-                'username' => $row["username"],
+                'username' => $username,
                 'name' => $row["name"],
                 'about' => $row["about"],
                 'interests' => $row["interests"],
-                'followers' => 0,
-                'following' => 0,
-                'cpf' => $row["cpf"],
+                'followers' => $followers,
+                'following' => $following,
                 'verified' => $row["verified"],
                 'events' => $events,
-                'balances' => $balances,
-                'notifications' => $notifications,
-                'comments' => $row["comments"],
-                'concierges' => $concierges
+                'comments' => $comments,
+                'mine' => false
             );
+
+            if (check_session($username, $validator)) {
+                $data['cpf'] = $row["cpf"];
+                $data['balances'] = $balances;
+                $data['notifications'] = $notifications;
+                $data['concierges'] = $concierges;
+                $data['mine'] = true;
+            }
 
             header('Content-Type: application/json');
             echo json_encode($data);
@@ -562,7 +668,7 @@ function tryToAuthenticate() {
     
     $password_hash = hash256($password);
 
-    $query = "SELECT id, token, password FROM users WHERE email = '$email'";
+    $query = "SELECT username, token, password FROM users WHERE email = '$email'";
     $user = queryDB($query);
 
     if (!$user) {
@@ -578,11 +684,12 @@ function tryToAuthenticate() {
     } 
     
     elseif ($user) {
-        $user = encrypt($user["id"], $enckey);
-        $validator = hash256($email.$password_hash);
+        $validator = hash256($user["username"].$user["password"]);
+
+        $username = encrypt($user["username"], $enckey);
 
         $data = array(
-            'user' => $user,
+            'username' => $username,
             'validator' => $validator
         );
 
@@ -594,7 +701,6 @@ function tryToAuthenticate() {
         returnError("unexpected_error");
     }
 }
-
 function tryToCreateUser() {
   global $enckey;
 

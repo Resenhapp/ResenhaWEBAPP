@@ -16,7 +16,7 @@ const MyInvitesDisplay = ({eventName, eventDate, eventHour, token, eventImage}) 
                 </div>
             </div>
             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                <Button label={'Descobrir Resenhas'} icon={'arrow'} action={() => handleNavigation('explorar/')} iconSide='right' height={3} width={1} textAlign='center' />
+                <Button label={'Descobrir Resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={3} width={1} textAlign='center' />
             </div>
         </section>
     )

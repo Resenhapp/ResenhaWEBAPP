@@ -4,18 +4,23 @@ import PartyTag from './PartyTag';
 import Image from 'next/image';
 import { partyData } from '@/src/components/PartyData';
 
-const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton }) => {
-
+const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton}) => {
     var vectorSaved = 'bookmarkOutlined01';
 
     if (eventSaved === 'delete') {
         vectorSaved = 'bookmarkRemove01';
-    } else if (eventSaved) {
+    } 
+    
+    else if (eventSaved) {
         vectorSaved = 'bookmarkFill01';
     }
 
+    var handleClick = (pageToGo) => {
+        window.location.href = `/convite/?code=${pageToGo}`;
+    };
+
     return (
-        <div className='flex  flex-col items-center mt-3'>
+        <div onClick={() => handleClick(eventCode)} className='flex flex-col items-center mt-3'>
             <div className="relative z-1 flex flex-row items-end w-full justify-between h-[29vh] ring-1 ring-inset bg-gradient-to-t from-black ring-purpleT4 rounded-2xl">
                 <div className='w-full absolute h-fit top-0 p-2 flex justify-between flex-row'>
                     <div className='flex flex-row w-full gap-1'>
@@ -47,7 +52,6 @@ const PartyBanner = ({ imageUrl, eventName, eventGuests, eventMax, eventImage, e
                         </div>
                         <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
                     </div>
-
                 </div>
                 <div className='p-4 z-[1]'>
                     <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">

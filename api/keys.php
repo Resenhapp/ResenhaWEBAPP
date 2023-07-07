@@ -19,9 +19,11 @@ $requests = [
   "getInviteData",
   "getUserData",
   "getHelpData",
+  "getFeedData",
   "tryToCreateGuest",
   "tryToAuthenticate",
-  "tryToCreateUser"
+  "tryToCreateUser",
+  "tryToDecrypt"
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

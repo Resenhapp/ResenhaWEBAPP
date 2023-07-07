@@ -23,22 +23,22 @@ export const metadata = {
 }
 
 export default function Profile() {
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        username = urlParams.get('u');
+    }
+
+    const validator = Cookies.get('validator');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [activeTab, setActiveTab] = useState('Sobre');
+    const [data, setData] = useState(null);
 
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
-
-
-    const id = Cookies.get('user');
-
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
 
     const makeRequest = async (url, data) => {
         try {
@@ -53,16 +53,26 @@ export default function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
             setData(response);
-        }
-
+        } 
+        
         catch (error) {
             console.error(error);
         }
     };
 
-    const [activeTab, setActiveTab] = useState('Sobre');
+    const handleFollowButton = async () => {
+        console.log("teste")
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     if (!data) {
         return (
@@ -72,20 +82,11 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, followers, following, events, interests, comments, verified } = data;
-
-    var profileimg = 'https://media.resenha.app/u/joaodavi.jpg'
-
+    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine } = data
+    
     var interests = JSON.parse(interests).interests;
-    var comments = JSON.parse(comments).comments;
 
     interestsData.filter(interest => interests.includes(interest.id))
-
-    console.log(verified)
-
-    var isMyProfile = !true;
-
-    console.log(comments)
 
     return (
         <div className='flex flex-col w-screen h-screen '>
@@ -95,7 +96,7 @@ export default function Profile() {
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
                             <div className='flex flex-col items-center gap-4 w-full'>
-                                <img src={profileimg} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
+                                <img src={`https://media.resenha.app/u/${hash}.png`} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl flex flex-row justify-center items-center gap-1'>
                                         {name}
@@ -104,16 +105,16 @@ export default function Profile() {
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
-                                    <NumberDisplay amount={followers} label={'Seguindo'} />
+                                    <NumberDisplay amount={following} label={'Seguindo'} />
                                     <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full' />
-                                    <NumberDisplay amount={following} label={'Seguidores'} />
+                                    <NumberDisplay amount={followers} label={'Seguidores'} />
                                 </div>
                                 <div>
-                                    {isMyProfile ? (
+                                    {mine ? (
                                         <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
                                     ) : (
                                         <div className='flex flex-row gap-2'>
-                                            <FollowButton />
+                                            <FollowButton onClick={handleFollowButton}/>
                                             <SendMessageButton onClick={() => handleNavigation('/chat')}/>
                                         </div>
                                     )}
@@ -199,10 +200,10 @@ export default function Profile() {
                                         <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
                                             <Comment
-                                                userName={comment.userName}
-                                                imageUrl={`https://media.resenha.app/u/${SHA256(comment.userId.toString())}.png`}
-                                                rate={comment.rate}
-                                                comment={comment.comment}
+                                                userName={comment.name}
+                                                imageUrl={`https://media.resenha.app/u/${SHA256(comment.user)}.png`}
+                                                rate={parseInt(comment.rate)}
+                                                comment={comment.content}
                                                 day={parseInt(comment.date.split('/')[0])}
                                                 month={parseInt(comment.date.split('/')[1])}
                                                 userUrl="https://resenha.app/"

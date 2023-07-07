@@ -1,9 +1,14 @@
 'use client'
-import React, { useState } from 'react';
+
+import React from 'react';
+import Cookies from 'js-cookie';
 import PageHeader from '@/src/components/PageHeader';
 import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
+
+import { useState } from "react";
+import { useEffect } from 'react';
 
 export const metadata = {
     title: 'Resenha.app • Resenhas',
@@ -11,11 +16,47 @@ export const metadata = {
 }
 
 export default function HomePage() {
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
 
     const handleDisplayToggle = () => {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+  
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+  
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
+            setData(response);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const exampleNameMyEvent = "Resenha Divertida!";
     const exampleDateMyEvent = "16/09/2023";

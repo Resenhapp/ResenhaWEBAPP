@@ -15,20 +15,17 @@ export const metadata = {
 }
 
 export default function Wallet() {
-    const handleNavigation = () => {
-        window.location.href = `/webapp/carteira/saque`;
-    };
-
-    const id = Cookies.get('user');
-
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
 
     const axios = require('axios');
     const qs = require('qs');
+
+    const [data, setData] = useState(null);
+
+    const handleNavigation = () => {
+        window.location.href = `/webapp/carteira/saque`;
+    };
 
     const makeRequest = async (url, data) => {
         try {
@@ -43,14 +40,22 @@ export default function Wallet() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
             setData(response);
-        }
-
+        } 
+        
         catch (error) {
             console.error(error);
         }
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     if (!data) {
         return (

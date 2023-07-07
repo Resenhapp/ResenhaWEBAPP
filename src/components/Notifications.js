@@ -8,7 +8,8 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 const Notifications = ({ isOpen, toggleNotifications }) => {
-    const id = Cookies.get('user');
+    const username = Cookies.get('username');
+    var validator = Cookies.get('validator');
 
     const [data, setData] = useState(null);
 
@@ -32,10 +33,14 @@ const Notifications = ({ isOpen, toggleNotifications }) => {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
             setData(response);
-        }
-
+        } 
+        
         catch (error) {
             console.error(error);
         }

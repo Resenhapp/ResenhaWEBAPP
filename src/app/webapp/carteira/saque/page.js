@@ -16,6 +16,13 @@ export const metadata = {
 }
 
 export default function Withdraw() {
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+
+    const [data, setData] = useState(null);
+    const axios = require('axios');
+    const qs = require('qs');
+
     const inputRef = useRef(null);
     const [errorContent, setErrorContent] = useState(null);
     const [withdrawalAmount, setWithdrawalAmount] = useState(0);
@@ -25,25 +32,18 @@ export default function Withdraw() {
         if (withdrawalAmount < 50) {
             setErrorContent(null);
             setTimeout(() => setErrorContent('O valor mínimo de saque é de R$ 50,00.'), 0);
-        } else if (withdrawalAmount > availableAmount) {
+        } 
+        
+        else if (withdrawalAmount > availableAmount) {
             setErrorContent(null);
             setTimeout(() => setErrorContent('Saldo insuficiente.'), 0);
-        } else {
+        } 
+        
+        else {
             setErrorContent(null);
             alert(`Você está sacando: R$ ${withdrawalAmount}`);
         }
     };
-
-    const id = Cookies.get('user');
-
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
 
     const makeRequest = async (url, data) => {
         try {
@@ -58,7 +58,7 @@ export default function Withdraw() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', username: username, validator: validator });
             setData(response);
         }
 
@@ -66,6 +66,10 @@ export default function Withdraw() {
             console.error(error);
         }
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     if (!data) {
         return (
@@ -78,6 +82,7 @@ export default function Withdraw() {
     var { name, cpf, balances} = data;
 
     var avaliableCash = balances.available;
+    
     var bankName = 'Banco Inter';
 
     const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
