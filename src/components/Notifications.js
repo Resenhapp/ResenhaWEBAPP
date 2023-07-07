@@ -5,54 +5,9 @@ import Notification from './Notification';
 import { useState } from "react";
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
-import Loading from "@/src/components/Loading";
 
-const Notifications = ({ isOpen, toggleNotifications }) => {
-    const username = Cookies.get('username');
-    var validator = Cookies.get('validator');
-
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
-
-    const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
-    };
-
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
-                request: 'getUserData',
-                username: username,
-                validator: validator
-            });
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
-    };
-
-    if (!data) {
-        return (
-            null
-        );
-    }
-
-    var { notifications } = data;
+const Notifications = ({ isOpen, toggleNotifications, userData }) => {
+    var { notifications } = userData;
 
     return (
         <div className={`fixed top-0 right-0 w-full h-full bg-purpleT0 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>

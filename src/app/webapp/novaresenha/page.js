@@ -19,13 +19,13 @@ export default function NewEvent() {
     const [progress, setProgress] = useState(1);
     const maxProgress = 5;
 
-const handleNextStep = () => {
-  setProgress(progress + 1);
+    const handleNextStep = () => {
+        setProgress(progress + 1);
 
-  if (progress + 1 > maxProgress) {
-    window.location.href = '/webapp/resenhas/';
-  }
-};
+        if (progress + 1 > maxProgress) {
+            window.location.href = '/webapp/resenhas/';
+        }
+    };
 
     const renderPiece = () => {
         switch (progress) {
@@ -93,7 +93,7 @@ const handleNextStep = () => {
                 </p>
             </div>
             <div className='flex flex-col h-full items-center justify-end px-4'>
-                <section className='flex h-full  content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
+                <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
                     {renderPiece()}
                     <div className='flex flex-row justify-between w-full'>
                         {progress > 0 && (

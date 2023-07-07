@@ -1,11 +1,14 @@
+'use client'
+
 import React from 'react';
 import Button from '@/src/components/Button';
 
-const Menu = ({ isOpen, toggleMenu }) => {
-
+const Menu = ({ isOpen, toggleMenu, userData }) => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
+
+    var { username } = userData;
 
     return (
         <div className={`fixed top-0 left-0 w-full h-full bg-purpleT0 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : '-translate-x-full'}`} >
@@ -25,7 +28,7 @@ const Menu = ({ isOpen, toggleMenu }) => {
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
-                                <Button label={'Perfil'} icon={'user'} action={() => handleNavigation('perfil')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Perfil'} icon={'user'} action={() => handleNavigation(`perfil?u=${username}`)} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Feed'} icon={'lit'} action={() => handleNavigation('feed')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Resenhas'} icon={'thunder'} action={() => handleNavigation('resenhas')} iconSide='left' height={1} width={1} textAlign='left' />
                                 <Button label={'Configurações'} icon={'gear'} action={() => handleNavigation('configuracoes')} iconSide='left' height={1} width={1} textAlign='left' />

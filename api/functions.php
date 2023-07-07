@@ -368,6 +368,69 @@ function getUserData() {
                 }
             }
 
+            $query = "SELECT * FROM guests WHERE user = '$id'";
+            $userParties = queryDBRows($query);
+            
+            $partiesWent = [];
+            
+            if (mysqli_num_rows($userParties) > 0) {
+                foreach ($userParties as $userParty) {
+                    $partyCode = $userParty["party"];
+                    $userCode = $userParty["code"];
+                    $codeUsed = $userParty["used"];
+                    
+                    $partyQuery = "SELECT name, date, time FROM parties WHERE code = '$partyCode'";
+                    $partyResult = queryDBRows($partyQuery);
+                    
+                    if (mysqli_num_rows($partyResult) > 0) {
+                        $userParty = mysqli_fetch_assoc($partyResult);
+                        
+                        $hash = hash256($partyCode);
+
+                        $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                        $confirmed = queryDB($guests_query)['total_guests'];
+            
+                        $temp = [
+                            "hash" => $hash,
+                            "name" => $userParty["name"],
+                            "date" => $userParty["date"],
+                            "time" => $userParty["time"], 
+                            "confirmed" => $confirmed,
+                            "used" => $codeUsed, 
+                            "code" => $userCode
+                        ];
+            
+                        array_push($partiesWent, $temp);
+                    }
+                }
+            }
+
+            $query = "SELECT * FROM parties WHERE host = '$id'";
+            $userParties = queryDBRows($query);
+
+            $partiesMade = [];
+
+            if (mysqli_num_rows($userParties) > 0) {
+                foreach ($userParties as $party) {
+                    $code = $party["code"];
+                    $hash = hash256($code);
+
+                    $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+                    $confirmed = queryDB($guests_query)['total_guests'];
+
+                    $temp = [
+                        "hash" => $hash,
+                        "name" => $party["name"],
+                        "date" => $party["date"],
+                        "time" => $party["time"],
+                        "capacity" => $party["capacity"],
+                        "confirmed" => $confirmed
+                    ];
+
+                    array_push($partiesMade, $temp);
+                }
+            }
+
             $query = "SELECT * FROM notifications WHERE user = '$id'";
             $userNotifications = queryDBRows($query);
 
@@ -399,8 +462,14 @@ function getUserData() {
             
             if (mysqli_num_rows($userComments) > 0) {
                 foreach ($userComments as $comment) {
+                    $id = $comment["user"];
+
+                    $query = "SELECT username FROM users WHERE id = '$id'";
+                    $unm = queryDB($query)[0];
+
                     $temp = [
-                        "user" => $comment["user"],
+                        "user" => $id,
+                        "username" => $unm,
                         "name" => $comment["name"],
                         "content" => $comment["content"],
                         "rate" => $comment["rate"],
@@ -428,6 +497,8 @@ function getUserData() {
                 'verified' => $row["verified"],
                 'events' => $events,
                 'comments' => $comments,
+                'partiesMade' => $partiesMade,
+                'partiesWent' => $partiesWent,
                 'mine' => false
             );
 
@@ -704,79 +775,79 @@ function tryToAuthenticate() {
 function tryToCreateUser() {
   global $enckey;
 
-  $email = $_POST['email'];
-      $password = $_POST['password'];
-      $name = $_POST['name'];
-      $cpf = $_POST['cpf'];
-      $birth = $_POST['birth'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $name = $_POST['name'];
+    $cpf = $_POST['cpf'];
+    $birth = $_POST['birth'];
 
-      $error = check_email($email) or check_password($password) or check_cpf($cpf);
-      
-      if (!isset($error)) {
-          $token = "ec-".encrypt($email, $enckey);
+        $error = check_email($email) or check_password($password) or check_cpf($cpf);
+        
+        if (!isset($error)) {
+            $token = "ec-".encrypt($email, $enckey);
 
-          $api = random_code(24);
+            $api = random_code(24);
 
-          $date = date('d/m/Y H:i');
+            $date = date('d/m/Y H:i');
 
-          $registration = getIp();
+            $registration = getIp();
 
-          $last = getIp();
+            $last = getIp();
 
-          $pix = "NONE";
+            $pix = "NONE";
 
-          $tax = 10;
+            $tax = 10;
 
-          $password_hash = hash256($password);
+            $password_hash = hash256($password);
 
-          $confirmation_link = "https://resenha.app/api/?token=$token";
+            $confirmation_link = "https://resenha.app/api/?token=$token";
 
-          //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
+            //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
 
-          if (!$error) {
-              $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
-              queryNR($query);
-          
-              $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
-              $user = queryDB($query)[0];
-          
-              $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
-              queryNR($query);
-          
-              $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
-          
-              $embed = [
-                  'title' => 'Novo usuário criado!',
-                  'color' => hexdec('7d00ff'),
-                  'fields' => [
-                      [
-                          'name' => 'Nome',
-                          'value' => $name,
-                      ],
-                      [
-                          'name' => 'Email',
-                          'value' => $email,
-                      ],
-                      [
-                          'name' => 'IP',
-                          'value' => $registration,
-                      ]
-                  ]
-              ];
-          
-              send_message($embed, $webhook);
-          
-              register_log($user, "host", "user_registered");
+            if (!$error) {
+                $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
+                queryNR($query);
+            
+                $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
+                $user = queryDB($query)[0];
+            
+                $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
+                queryNR($query);
+            
+                $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
+            
+                $embed = [
+                    'title' => 'Novo usuário criado!',
+                    'color' => hexdec('7d00ff'),
+                    'fields' => [
+                        [
+                            'name' => 'Nome',
+                            'value' => $name,
+                        ],
+                        [
+                            'name' => 'Email',
+                            'value' => $email,
+                        ],
+                        [
+                            'name' => 'IP',
+                            'value' => $registration,
+                        ]
+                    ]
+                ];
+            
+                send_message($embed, $webhook);
+            
+                register_log($user, "host", "user_registered");
 
-              $data = array(
+                $data = array(
                 'user' => $user,  
                 'status' => "success"
-              );
-    
-              header('Content-Type: application/json');
-              echo json_encode($data);
-          }
-      }
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
 
     else {
         returnError($error);

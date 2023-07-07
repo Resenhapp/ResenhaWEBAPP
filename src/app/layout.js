@@ -63,7 +63,6 @@ export default function RootLayout({ children }) {
         <div className='w-80 h-80 animate-left-right bg-transparent rounded-full moreffect fixed z-[-1] left-[-50px] top-[656px]' />
         {children}
       </body>
-
     </html>
   )
 }
