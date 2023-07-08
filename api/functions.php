@@ -274,7 +274,15 @@ function check_session($username, $validator) {
 function getFeedData() {
     // $username = $_POST['username'];
 
-    $query = "SELECT * FROM parties";
+    if (isset($_POST['searchTerm'])) {
+        $searchTerm = $_POST['searchTerm'];
+        $query = "SELECT * FROM parties WHERE name LIKE '%".$searchTerm."%'";
+    }
+
+    else {
+        $query = "SELECT * FROM parties";
+    }
+
     $result = queryDBRows($query);
 
     $parties = [];
@@ -322,7 +330,6 @@ function getFeedData() {
             if ($differenceInDays <= 2) {
                 array_push($headers, 6);
             }
-
     
             $data = [
                 'hash' => $hash,

@@ -26,7 +26,6 @@ export default function Feed() {
   const axios = require('axios');
   const qs = require('qs');
 
-  const exampleDateEvent = "16/09/2023";
   const exampleSavedEvent = false;
   const exampleImagesEvent = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg']
 
@@ -62,6 +61,20 @@ export default function Feed() {
       catch (error) {
           console.error(error);
       }
+  };
+
+  const searchFeedData = async searchTerm => {
+    try {
+      const response = await makeRequest('http://localhost/resenha.app/api/', {
+        request: 'getFeedData',
+        searchTerm: searchTerm,
+      });
+      setData(response);
+    } 
+    
+    catch (error) {
+      console.error(error);
+    }
   };
 
   const toggleEditFilterPageOpen = () => {
@@ -261,34 +274,37 @@ export default function Feed() {
             <div className='w-full flex flex-col'>
               <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                 <div className="flex flex-col mb-4 gap-4 w-full">
-                  <SearchInput placeholder={"Busque por nome ou tag"} />
+                  <SearchInput placeholder="Busque por nome ou tag" onDelayedChange={searchFeedData} />
                   <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"}
                     onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}
                     onFilterClick={toggleEditFilterPageOpen} />
                   <div className='bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto'>
-                    {data.map((party) => {
-                      var { hash, price, time, confirmed, capacity, title, code, headers } = party;
+                    {data.length > 0 ? (
+                      data.map((party) => {
+                        var { hash, price, time, confirmed, capacity, title, code, headers } = party;
 
-                      if (headers.length >= 2) {
-                        headers = [headers[0], headers[1]]
-                      }
+                        if (headers.length >= 2) {
+                          headers = [headers[0], headers[1]];
+                        }
 
-                      return (
-                        <PartyBanner
-                          imageUrl={exampleImagesEvent}
-                          eventName={title}
-                          eventImage={`https://media.resenha.app/r/${hash}.png`}
-                          eventDate={exampleDateEvent}
-                          eventHour={time}
-                          eventGuests={confirmed}
-                          eventMax={capacity}
-                          eventPrice={price}
-                          eventSaved={exampleSavedEvent}
-                          eventTags={headers}
-                          eventCode={code}
-                        />
-                      );
-                    })}
+                        return (
+                          <PartyBanner
+                            imageUrl={exampleImagesEvent}
+                            eventName={title}
+                            eventImage={`https://media.resenha.app/r/${hash}.png`}
+                            eventHour={time}
+                            eventGuests={confirmed}
+                            eventMax={capacity}
+                            eventPrice={price}
+                            eventSaved={exampleSavedEvent}
+                            eventTags={headers}
+                            eventCode={code}
+                          />
+                        );
+                      })
+                    ) : (
+                      <p>Nenhuma resenha encontrada com os seus termos 🤐</p>
+                  )}
                   </div>
                 </div>
               </div>

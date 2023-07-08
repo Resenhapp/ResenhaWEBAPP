@@ -17,7 +17,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const axios = require('axios');
     const qs = require('qs');
 
-    var updateInterval = 3;
+    var updateInterval = 150;
   
     const makeRequest = async (url, data) => {
       try {
