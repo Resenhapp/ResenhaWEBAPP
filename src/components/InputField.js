@@ -35,7 +35,7 @@ const InputField = ({ placeholder, value, action, showIcon = false, Icon }) => {
           }`}
         placeholder={placeholder}
         value={value}
-        onChange={(event) => action(event.target.value)}
+        onChange={action}
       />
     </div>
   );
