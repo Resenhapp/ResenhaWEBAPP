@@ -45,8 +45,7 @@ function encrypt($text, $pkey) {
     return base64_encode(openssl_encrypt($text, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $IV)."-[--IV-[-".$IV);
 }
 
-function convertMonth($month)
-{
+function convertMonth($month) {
     $months = array(
       '01' => 'Janeiro',
       '02' => 'Fevereiro',
@@ -276,21 +275,54 @@ function getFeedData() {
     // $username = $_POST['username'];
 
     $query = "SELECT * FROM parties";
-  
     $result = queryDBRows($query);
 
     $parties = [];
 
-    $query = "SELECT * FROM parties";
-  
-    $result = queryDBRows($query);
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
+            // 0 - Fecha em breve | 1 - Impulsionada | 2 - Bombando | 3 - Criada recentemente | 4 - Com desconto | 5 - Esgotando | 6 - Verificada
+            $headers = [];
+
             $code = $row["code"];
+            $capacity = $row["capacity"];
             $hash = hash256($code);
     
             $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
             $confirmed = queryDB($guests_query)['total_guests'];
+
+            $todayDate = date("d/m/Y");
+
+            $date = DateTime::createFromFormat("d/m/Y", $row["date"]);
+            $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
+            $differenceInDays = intval($diff->format("%a"));
+            
+            if ($differenceInDays <= 2) {
+                array_push($headers, 0);
+            }
+            
+            $date = DateTime::createFromFormat("d/m/Y", $row["creation"]);
+            $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
+            $differenceInDays = intval($diff->format("%a"));
+            
+            if ($differenceInDays <= 2) {
+                array_push($headers, 3);
+            }
+
+            if ($confirmed >= $capacity * 0.9) {
+                array_push($headers, 5);
+            }
+
+            $query = "SELECT host FROM parties WHERE code = '$code'";
+            $host = queryDB($query)[0];
+
+            $query = "SELECT verified FROM users WHERE id = '$host'";
+            $verified = queryDB($query)[0];
+
+            if ($differenceInDays <= 2) {
+                array_push($headers, 6);
+            }
+
     
             $data = [
                 'hash' => $hash,
@@ -298,8 +330,8 @@ function getFeedData() {
                 'code' => $code,
                 'time' => $row["time"],
                 'confirmed' => $confirmed,
-                'capacity' => $row["capacity"],
-                'tags' => $row["tags"],
+                'capacity' => $capacity,
+                'headers' => $headers,
                 'title' => $row["name"]
             ];
 
@@ -320,6 +352,10 @@ function getUserData() {
 
     $username = $_POST['username'];
     $validator = $_POST['validator'];
+
+    if (isset($_POST["requested"])) {
+        $requested = $_POST["requested"];
+    }
     
     if (strlen($username) >= 30) {
         $username = decrypt($_POST['username'], $enckey);
@@ -436,6 +472,8 @@ function getUserData() {
 
             $notifications = [];
 
+            $notified = false;
+
             if (mysqli_num_rows($userNotifications) > 0) {
                 foreach ($userNotifications as $notification) {
                     if ($notification["cleared"] == "0") {
@@ -447,6 +485,10 @@ function getUserData() {
                         ];
     
                         array_push($notifications, $temp);
+                    }
+
+                    if ($notification["seen"] == "0") {
+                        $notified = true;
                     }
                 }
             }
@@ -486,7 +528,7 @@ function getUserData() {
             $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
             $following = queryDB($query)[0];
 
-            $data = array(
+            $data = [
                 'hash' => $hash,
                 'username' => $username,
                 'name' => $row["name"],
@@ -500,14 +542,23 @@ function getUserData() {
                 'partiesMade' => $partiesMade,
                 'partiesWent' => $partiesWent,
                 'mine' => false
-            );
+            ];
 
             if (check_session($username, $validator)) {
                 $data['cpf'] = $row["cpf"];
                 $data['balances'] = $balances;
                 $data['notifications'] = $notifications;
+                $data['notified'] = $notified;
                 $data['concierges'] = $concierges;
                 $data['mine'] = true;
+            }
+
+            if (isset($requested)) {
+                $var = $data[$requested];
+
+                $data = [
+                    $requested => $var
+                ];
             }
 
             header('Content-Type: application/json');
@@ -555,7 +606,7 @@ function getInviteData() {
           }
         }
 
-        $data = array(
+        $data = [
             'pricePerItem' => $row["price"],
             'day' => $day,
             'month' => $month,
@@ -569,7 +620,7 @@ function getInviteData() {
             'title' => $row["name"],
             'description' => $row["description"],
             'users' => $users
-        );
+        ];
 
         header('Content-Type: application/json');
         echo json_encode($data);
@@ -772,6 +823,81 @@ function tryToAuthenticate() {
         returnError("unexpected_error");
     }
 }
+
+function clearUserNotifications() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT * FROM users WHERE username = '$username'";
+    
+        $result = queryDBRows($query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            foreach ($result as $row) {
+                $id = $row["id"];
+
+                $query = "UPDATE notifications SET cleared = '1' WHERE user = '$id' AND cleared = '0'";
+                queryNR($query);
+
+                $data = array(
+                    'status' => "success"
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
+    }
+
+    else {
+      returnError("invalid_session");
+    }
+}
+
+function seeUserNotifications() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT * FROM users WHERE username = '$username'";
+    
+        $result = queryDBRows($query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            foreach ($result as $row) {
+                $id = $row["id"];
+
+                $query = "UPDATE notifications SET seen = '1' WHERE user = '$id' AND seen = '0'";
+                queryNR($query);
+
+                $data = array(
+                    'status' => "success"
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
+    }
+
+    else {
+      returnError("invalid_session");
+    }
+}
+
 function tryToCreateUser() {
   global $enckey;
 

@@ -27,8 +27,7 @@ export default function Profile() {
         const urlParams = new URLSearchParams(window.location.search);
         var profile = urlParams.get('u');
     }
-
-    var logged = Cookies.get('username');
+    
     var validator = Cookies.get('validator');
 
     const axios = require('axios');

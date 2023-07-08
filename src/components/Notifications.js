@@ -2,12 +2,96 @@
 
 import React from 'react';
 import Notification from './Notification';
+import Cookies from 'js-cookie';
+import ButtonConfig from './ButtonConfig';
 import { useState } from "react";
 import { useEffect } from 'react';
-import Cookies from 'js-cookie';
 
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
-    var { notifications } = userData;
+    const [showNotifications, setShowNotifications] = useState(true);
+    const [notifications, setNotifications] = useState(userData.notifications);
+
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+  
+    const axios = require('axios');
+    const qs = require('qs');
+
+    var updateInterval = 3;
+  
+    const makeRequest = async (url, data) => {
+      try {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+      } 
+      
+      catch (error) {
+        throw new Error(`Request failed: ${error}`);
+      }
+    };
+  
+    const clearUserNotifications = async () => {
+      try {
+        const response = await makeRequest('http://localhost/resenha.app/api/', {
+          request: 'clearUserNotifications',
+          username: username,
+          validator: validator,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const seeUserNotifications = async () => {
+      try {
+        const response = await makeRequest('http://localhost/resenha.app/api/', {
+          request: 'seeUserNotifications',
+          username: username,
+          validator: validator,
+        });
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getUserData = async () => {
+        try {
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+            request: 'getUserData',
+            username: username,
+            validator: validator,
+            requested: 'notifications',
+          });
+          setNotifications(response.notifications);
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+    };
+  
+    useEffect(() => {
+      if (isOpen) {
+        seeUserNotifications();
+
+        const interval = setInterval(() => {
+            getUserData();
+            setShowNotifications(true);
+        }, 1000 * updateInterval);
+      
+        return () => {
+            clearInterval(interval);
+        };
+      }
+    }, [isOpen]);
+  
+  
+    const handleClearButton = async () => {
+      setShowNotifications(false);
+      await clearUserNotifications();
+    };
 
     return (
         <div className={`fixed top-0 right-0 w-full h-full bg-purpleT0 z-10 transition-transform duration-300 ease-in-out overflow-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
@@ -28,13 +112,19 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <p>Abaixo você pode conferir todas as suas notificações!</p>
                                 <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                    {notifications.map((notification) => (
-                                        <Notification
-                                            title={notification.title} 
-                                            content={notification.content}
-                                        />
-                                    ))}
-                                    <button className='w-full h-fit px-4 py-5 bg-purpleT2 text-whiteT1 rounded-xl'>Limpar notificações</button>
+                                    {showNotifications && notifications.length > 0 ? (
+                                        notifications.map((notification) => (
+                                            <Notification
+                                                title={notification.title} 
+                                                content={notification.content}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p>Voce não tem nenhuma notificação.</p>
+                                    )}
+                                    <button className='w-full h-fit px-4 py-5 bg-purpleT2 text-whiteT1 rounded-xl' onClick={handleClearButton}>
+                                        Limpar notificações
+                                    </button>
                                 </div>
                             </div>
                         </div>
