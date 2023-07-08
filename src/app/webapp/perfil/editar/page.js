@@ -9,6 +9,9 @@ import ModalButton from '@/src/components/ModalButton';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Tag from '@/src/components/Tag';
 import { interestsData } from '@/src/components/interestsData';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
+import { te } from 'date-fns/locale';
 
 export const metadata = {
     title: 'Resenha.app • Perfil',
@@ -16,108 +19,116 @@ export const metadata = {
 }
 
 export default function EditProfile() {
+    var u = Cookies.get('username');
+    var validator = Cookies.get('validator');
+
     const [checkerCallback, setCheckerCallback] = useState(null);
     const [newProfile, setNewProfile] = useState(null);
-    const CurrentProfile = 'https://resenha.app/publico/recursos/imagens/u/am9hb2Rhdmlzbg==.jpg'
+
     const [hasChange, setHasChange] = useState(false);
-    var isVerified = true;
+
     const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
-    const [userInterests, setUserInterests] = useState([1, 2, 4]);
-    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+
+    var [interests, setInterests] = useState([]);
+    var [tempInterests, setTempInterests] = useState(interests);
+
+    var [name, setName] = useState(name);
+    var [tempName, setTempName] = useState(name);
+
+    var [username, setUsername] = useState(username);
+    var [tempUsername, setTempUsername] = useState(username);
+    
+    var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+
+    var [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
+    var [about, setAbout] = useState('');
+    var [tempAbout, setTempAbout] = useState(about);
+
+    const [data, setData] = useState(null);
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: u,
+                validator: validator
+            });
+            setData(response);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     const [allInterests, setAllInterests] = useState(
         [...interestsData].map((interest) => {
-            const isSelected = userInterests.includes(interest.id);
+            const isSelected = interests.includes(interest.id);
             return { ...interest, selected: isSelected };
         }).sort((a, b) => b.selected - a.selected)
     );
 
-    useEffect(() => {
-        setTempUserInterests(userInterests);
-    }, [userInterests]);
-
-    useEffect(() => {
-        setAllInterests(
-            [...interestsData].map((interest) => {
-                const isSelected = tempUserInterests.includes(interest.id);
-                return { ...interest, selected: isSelected };
-            }).sort((a, b) => b.selected - a.selected)
-        );
-    }, [tempUserInterests]);
-
     const toggleEditInterestsPageOpen = () => {
         if (isEditInterestsPageOpen) {
-            setTempUserInterests(userInterests);
+            setTempInterests(interests);
         }
         setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
     };
 
     const handleInterestClick = (interestId) => {
-        setTempUserInterests(
-            tempUserInterests.includes(interestId)
-                ? tempUserInterests.filter(id => id !== interestId)
-                : [...tempUserInterests, interestId]
+        setTempInterests(
+            tempInterests.includes(interestId)
+            ? tempInterests.filter(id => id !== interestId)
+            : [...tempInterests, interestId]
         );
     };
 
     const saveInterests = () => {
-        setUserInterests(tempUserInterests);
+        setInterests(tempInterests);
         toggleEditInterestsPageOpen();
         setHasChange(true);
     };
 
-    const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
+    const validUserInterests = interests.filter(interestId => allInterests.some(interest => interest.id === interestId));
     const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
-
-    const [username, setUsername] = useState("João Davi");
-    const [tempUsername, setTempUsername] = useState(username);
-    const [handle, setHandle] = useState("joaodavisn");
-    const [tempHandle, setTempHandle] = useState(handle);
-
-    useEffect(() => {
-        setTempUsername(username);
-        setTempHandle(handle);
-    }, [username, handle]);
-
-    const [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+    
     const toggleEditUsernamePageOpen = () => {
         if (isEditUsernamePageOpen) {
+            setTempName(name);
             setTempUsername(username);
-            setTempHandle(handle);
         }
         setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
     };
 
     const handleUsernameChange = (event) => {
-        setTempUsername(event.target.value);
+        setTempName(event.target.value);
     };
 
     const handleHandleChange = (event) => {
-        setTempHandle(event.target.value);
+        setTempUsername(event.target.value);
     };
 
     const saveUsernameAndHandle = () => {
+        setName(tempName);
         setUsername(tempUsername);
-        setHandle(tempHandle);
         toggleEditUsernamePageOpen();
         setHasChange(true);
     };
-
-    const [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
-    var initialAbout = "Bisteca";
-    const [about, setAbout] = useState(initialAbout);
-    const [tempAbout, setTempAbout] = useState(about);
-
-    useEffect(() => {
-        setTempAbout(about);
-    }, [about]);
-
-    useEffect(() => {
-        if (!isEditAboutPageOpen) {
-            setTempAbout(about);
-        }
-    }, [isEditAboutPageOpen]);
 
     const toggleEditAboutPageOpen = () => {
         setIsEditAboutPageOpen(!isEditAboutPageOpen);
@@ -133,13 +144,60 @@ export default function EditProfile() {
         setHasChange(true);
     };
 
+    useEffect(() => {
+        setTempInterests(interests);
+    }, [interests]);
+
+    useEffect(() => {
+        setTempAbout(about);
+    }, [about]);
+
+    useEffect(() => {
+        if (!isEditAboutPageOpen) {
+            setTempAbout(about);
+        }
+    }, [isEditAboutPageOpen]);
+
+    useEffect(() => {
+        setTempName(name);
+        setTempUsername(username);
+    }, [name, username]);
+
+    useEffect(() => {
+        setAllInterests(
+            [...interestsData].map((interest) => {
+                const isSelected = tempInterests.includes(interest.id);
+                return { ...interest, selected: isSelected };
+            }).sort((a, b) => b.selected - a.selected)
+        );
+    }, [tempInterests]);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
+    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = data
+
+    var interests = JSON.parse(interests).interests;
+
+    interestsData.filter(interest => interests.includes(interest.id))
+
     return (
         <div>
             <div className='flex flex-col w-screen h-screen'>
                 <PageHeader
                     pageTitle={'Editar perfil'}
                     isBack={true}
-                    checker={() => { null }}
+                    checker={() => {null}}
+                    userData={data}
                 />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
@@ -175,14 +233,14 @@ export default function EditProfile() {
                                 <input
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='Nome de usuário'
-                                    value={tempUsername}
+                                    value={tempName}
                                     onChange={handleUsernameChange}
                                 />
                                 <label className='font-bold'>Nome de usuário:</label>
                                 <input
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='@'
-                                    value={tempHandle}
+                                    value={tempUsername}
                                     onChange={handleHandleChange}
                                 />
                             </div>
@@ -209,7 +267,7 @@ export default function EditProfile() {
                         </EditInfoPage>
                         <div className='w-full flex justify-center'>
                             <UserProfileEditor
-                                currentProfile={CurrentProfile}
+                                currentProfile={`https://media.resenha.app/u/${hash}.png`}
                                 newProfile={newProfile}
                                 onChange={newImage => {
                                     setNewProfile(newImage);
@@ -222,9 +280,9 @@ export default function EditProfile() {
                             <div onClick={toggleEditUsernamePageOpen} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
                                 <div className='flex flex-col items-center'>
                                     <div className='flex flex-row items-center justify-center content-center gap-1'>
-                                        <h1 className='font-bold text-2xl'>{username}</h1>{isVerified && <Vector vectorname={'verified02'} />}
+                                        <h1 className='font-bold text-2xl'>{name}</h1>{verified == true && <Vector vectorname={'verified02'} />}
                                     </div>
-                                    <h3 className='font-normal text-sm'>@{handle}</h3>
+                                    <h3 className='font-normal text-sm'>@{username}</h3>
                                 </div>
                                 <div className='right-0 top-0 rounded-full'>
                                     <Vector vectorname={'edit02'} />
@@ -241,18 +299,13 @@ export default function EditProfile() {
                             </div>
                         </div>
                         <div className='w-full'>
-                            <div onClick={(e) => {
-                                e.stopPropagation();
-                                toggleEditInterestsPageOpen();
-                            }}
-                                className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
-                            >
+                            <div onClick={(e) => { e.stopPropagation(); toggleEditInterestsPageOpen(); }} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
                                     <h1 className='font-bold text-lg'>Interesses</h1>
                                     <Vector vectorname={'edit02'} />
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {renderInterests.map((interest) => (
+                                    {interestsData.filter(interest => interests.includes(interest.id)).map(interest => (
                                         <Tag
                                             key={interest.id}
                                             tagname={interest.name}

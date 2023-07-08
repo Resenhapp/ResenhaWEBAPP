@@ -6,6 +6,7 @@ import PageHeader from '@/src/components/PageHeader';
 import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
+import Loading from "@/src/components/Loading";
 
 import { useState } from "react";
 import { useEffect } from 'react';
@@ -22,6 +23,7 @@ export default function HomePage() {
     const axios = require('axios');
     const qs = require('qs');
 
+    const [data, setData] = useState(null);
     const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
 
     const handleDisplayToggle = () => {
@@ -58,18 +60,36 @@ export default function HomePage() {
         fetchData();
     }, []);
 
-    const exampleNameMyEvent = "Resenha Divertida!";
-    const exampleDateMyEvent = "16/09/2023";
-    const exampleHourMyEvent = "20";
-    const exampleGuestsMyEvent = "10";
-    const exampleLimitMyEvent = "100";
-    const exampleImageMyEvent = "https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png";
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading />
+            </div>
+        );
+    }
 
-    const exampleNameMyInvite = "Resenha Super Divertida!";
-    const exampleDateMyInvite = "14/07/2023";
-    const exampleHourMyInvite = "19";
-    const exampleTokenMyInvite = "4253";
-    const exampleImageMyInvite = "https://resenha.app/publico/recursos/resenhas/QljskFiO.png";
+    var { partiesWent, partiesMade } = data
+
+    console.log(partiesMade)
+
+    if (partiesWent.length > 0) {
+        const userParty = partiesWent[0];
+        var eventNameToUser = userParty.name;
+        var eventDateToUser = userParty.date;
+        var eventTimeToUser = userParty.time;
+        var eventCodeToUser = userParty.code;
+        var eventHashToUser = userParty.hash;
+    }
+
+    if (partiesMade.length > 0) {
+        const userParty = partiesMade[0];
+        var eventNameFromUser = userParty.name;
+        var eventDateFromUser = userParty.date;
+        var eventTimeFromUser = userParty.time;
+        var eventConfirmedFromUser = userParty.confirmed;
+        var eventCapacityFromUser = userParty.capacity;
+        var eventHashFromUser = userParty.hash;
+    }
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -80,19 +100,19 @@ export default function HomePage() {
                 </div>
                 {isDisplayingEvents ?
                     <MyInvitesDisplay
-                        eventName={exampleNameMyInvite}
-                        eventDate={exampleDateMyInvite}
-                        eventHour={exampleHourMyInvite}
-                        token={exampleTokenMyInvite}
-                        eventImage={exampleImageMyInvite}
+                        eventName={eventNameToUser}
+                        eventDate={eventDateToUser}
+                        eventHour={eventTimeToUser}
+                        token={eventCodeToUser}
+                        eventImage={`https://media.resenha.app/r/${eventHashToUser}.png`}
                     /> :
                     <MyEventsDisplay
-                        eventName={exampleNameMyEvent}
-                        eventDate={exampleDateMyEvent}
-                        eventGuests={exampleGuestsMyEvent}
-                        eventHour={exampleHourMyEvent}
-                        eventMax={exampleLimitMyEvent}
-                        eventImage={exampleImageMyEvent}
+                        eventName={eventNameFromUser}
+                        eventDate={eventDateFromUser}
+                        eventGuests={eventConfirmedFromUser}
+                        eventHour={eventTimeFromUser}
+                        eventMax={eventCapacityFromUser}
+                        eventImage={`https://media.resenha.app/r/${eventHashFromUser}.png`}
                     />
                 }
             </div>

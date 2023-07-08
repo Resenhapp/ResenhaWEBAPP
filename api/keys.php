@@ -23,7 +23,8 @@ $requests = [
   "tryToCreateGuest",
   "tryToAuthenticate",
   "tryToCreateUser",
-  "tryToDecrypt"
+  "clearUserNotifications",
+  "seeUserNotifications"
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

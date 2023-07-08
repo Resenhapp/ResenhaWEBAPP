@@ -45,8 +45,7 @@ function encrypt($text, $pkey) {
     return base64_encode(openssl_encrypt($text, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $IV)."-[--IV-[-".$IV);
 }
 
-function convertMonth($month)
-{
+function convertMonth($month) {
     $months = array(
       '01' => 'Janeiro',
       '02' => 'Fevereiro',
@@ -276,21 +275,54 @@ function getFeedData() {
     // $username = $_POST['username'];
 
     $query = "SELECT * FROM parties";
-  
     $result = queryDBRows($query);
 
     $parties = [];
 
-    $query = "SELECT * FROM parties";
-  
-    $result = queryDBRows($query);
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
+            // 0 - Fecha em breve | 1 - Impulsionada | 2 - Bombando | 3 - Criada recentemente | 4 - Com desconto | 5 - Esgotando | 6 - Verificada
+            $headers = [];
+
             $code = $row["code"];
+            $capacity = $row["capacity"];
             $hash = hash256($code);
     
             $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
             $confirmed = queryDB($guests_query)['total_guests'];
+
+            $todayDate = date("d/m/Y");
+
+            $date = DateTime::createFromFormat("d/m/Y", $row["date"]);
+            $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
+            $differenceInDays = intval($diff->format("%a"));
+            
+            if ($differenceInDays <= 2) {
+                array_push($headers, 0);
+            }
+            
+            $date = DateTime::createFromFormat("d/m/Y", $row["creation"]);
+            $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
+            $differenceInDays = intval($diff->format("%a"));
+            
+            if ($differenceInDays <= 2) {
+                array_push($headers, 3);
+            }
+
+            if ($confirmed >= $capacity * 0.9) {
+                array_push($headers, 5);
+            }
+
+            $query = "SELECT host FROM parties WHERE code = '$code'";
+            $host = queryDB($query)[0];
+
+            $query = "SELECT verified FROM users WHERE id = '$host'";
+            $verified = queryDB($query)[0];
+
+            if ($differenceInDays <= 2) {
+                array_push($headers, 6);
+            }
+
     
             $data = [
                 'hash' => $hash,
@@ -298,8 +330,8 @@ function getFeedData() {
                 'code' => $code,
                 'time' => $row["time"],
                 'confirmed' => $confirmed,
-                'capacity' => $row["capacity"],
-                'tags' => $row["tags"],
+                'capacity' => $capacity,
+                'headers' => $headers,
                 'title' => $row["name"]
             ];
 
@@ -320,6 +352,10 @@ function getUserData() {
 
     $username = $_POST['username'];
     $validator = $_POST['validator'];
+
+    if (isset($_POST["requested"])) {
+        $requested = $_POST["requested"];
+    }
     
     if (strlen($username) >= 30) {
         $username = decrypt($_POST['username'], $enckey);
@@ -368,10 +404,75 @@ function getUserData() {
                 }
             }
 
+            $query = "SELECT * FROM guests WHERE user = '$id'";
+            $userParties = queryDBRows($query);
+            
+            $partiesWent = [];
+            
+            if (mysqli_num_rows($userParties) > 0) {
+                foreach ($userParties as $userParty) {
+                    $partyCode = $userParty["party"];
+                    $userCode = $userParty["code"];
+                    $codeUsed = $userParty["used"];
+                    
+                    $partyQuery = "SELECT name, date, time FROM parties WHERE code = '$partyCode'";
+                    $partyResult = queryDBRows($partyQuery);
+                    
+                    if (mysqli_num_rows($partyResult) > 0) {
+                        $userParty = mysqli_fetch_assoc($partyResult);
+                        
+                        $hash = hash256($partyCode);
+
+                        $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                        $confirmed = queryDB($guests_query)['total_guests'];
+            
+                        $temp = [
+                            "hash" => $hash,
+                            "name" => $userParty["name"],
+                            "date" => $userParty["date"],
+                            "time" => $userParty["time"], 
+                            "confirmed" => $confirmed,
+                            "used" => $codeUsed, 
+                            "code" => $userCode
+                        ];
+            
+                        array_push($partiesWent, $temp);
+                    }
+                }
+            }
+
+            $query = "SELECT * FROM parties WHERE host = '$id'";
+            $userParties = queryDBRows($query);
+
+            $partiesMade = [];
+
+            if (mysqli_num_rows($userParties) > 0) {
+                foreach ($userParties as $party) {
+                    $code = $party["code"];
+                    $hash = hash256($code);
+
+                    $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+                    $confirmed = queryDB($guests_query)['total_guests'];
+
+                    $temp = [
+                        "hash" => $hash,
+                        "name" => $party["name"],
+                        "date" => $party["date"],
+                        "time" => $party["time"],
+                        "capacity" => $party["capacity"],
+                        "confirmed" => $confirmed
+                    ];
+
+                    array_push($partiesMade, $temp);
+                }
+            }
+
             $query = "SELECT * FROM notifications WHERE user = '$id'";
             $userNotifications = queryDBRows($query);
 
             $notifications = [];
+
+            $notified = false;
 
             if (mysqli_num_rows($userNotifications) > 0) {
                 foreach ($userNotifications as $notification) {
@@ -384,6 +485,10 @@ function getUserData() {
                         ];
     
                         array_push($notifications, $temp);
+                    }
+
+                    if ($notification["seen"] == "0") {
+                        $notified = true;
                     }
                 }
             }
@@ -399,8 +504,14 @@ function getUserData() {
             
             if (mysqli_num_rows($userComments) > 0) {
                 foreach ($userComments as $comment) {
+                    $id = $comment["user"];
+
+                    $query = "SELECT username FROM users WHERE id = '$id'";
+                    $unm = queryDB($query)[0];
+
                     $temp = [
-                        "user" => $comment["user"],
+                        "user" => $id,
+                        "username" => $unm,
                         "name" => $comment["name"],
                         "content" => $comment["content"],
                         "rate" => $comment["rate"],
@@ -417,7 +528,7 @@ function getUserData() {
             $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
             $following = queryDB($query)[0];
 
-            $data = array(
+            $data = [
                 'hash' => $hash,
                 'username' => $username,
                 'name' => $row["name"],
@@ -428,15 +539,26 @@ function getUserData() {
                 'verified' => $row["verified"],
                 'events' => $events,
                 'comments' => $comments,
+                'partiesMade' => $partiesMade,
+                'partiesWent' => $partiesWent,
                 'mine' => false
-            );
+            ];
 
             if (check_session($username, $validator)) {
                 $data['cpf'] = $row["cpf"];
                 $data['balances'] = $balances;
                 $data['notifications'] = $notifications;
+                $data['notified'] = $notified;
                 $data['concierges'] = $concierges;
                 $data['mine'] = true;
+            }
+
+            if (isset($requested)) {
+                $var = $data[$requested];
+
+                $data = [
+                    $requested => $var
+                ];
             }
 
             header('Content-Type: application/json');
@@ -484,7 +606,7 @@ function getInviteData() {
           }
         }
 
-        $data = array(
+        $data = [
             'pricePerItem' => $row["price"],
             'day' => $day,
             'month' => $month,
@@ -498,7 +620,7 @@ function getInviteData() {
             'title' => $row["name"],
             'description' => $row["description"],
             'users' => $users
-        );
+        ];
 
         header('Content-Type: application/json');
         echo json_encode($data);
@@ -701,82 +823,157 @@ function tryToAuthenticate() {
         returnError("unexpected_error");
     }
 }
+
+function clearUserNotifications() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT * FROM users WHERE username = '$username'";
+    
+        $result = queryDBRows($query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            foreach ($result as $row) {
+                $id = $row["id"];
+
+                $query = "UPDATE notifications SET cleared = '1' WHERE user = '$id' AND cleared = '0'";
+                queryNR($query);
+
+                $data = array(
+                    'status' => "success"
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
+    }
+
+    else {
+      returnError("invalid_session");
+    }
+}
+
+function seeUserNotifications() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT * FROM users WHERE username = '$username'";
+    
+        $result = queryDBRows($query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            foreach ($result as $row) {
+                $id = $row["id"];
+
+                $query = "UPDATE notifications SET seen = '1' WHERE user = '$id' AND seen = '0'";
+                queryNR($query);
+
+                $data = array(
+                    'status' => "success"
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
+    }
+
+    else {
+      returnError("invalid_session");
+    }
+}
+
 function tryToCreateUser() {
   global $enckey;
 
-  $email = $_POST['email'];
-      $password = $_POST['password'];
-      $name = $_POST['name'];
-      $cpf = $_POST['cpf'];
-      $birth = $_POST['birth'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $name = $_POST['name'];
+    $cpf = $_POST['cpf'];
+    $birth = $_POST['birth'];
 
-      $error = check_email($email) or check_password($password) or check_cpf($cpf);
-      
-      if (!isset($error)) {
-          $token = "ec-".encrypt($email, $enckey);
+        $error = check_email($email) or check_password($password) or check_cpf($cpf);
+        
+        if (!isset($error)) {
+            $token = "ec-".encrypt($email, $enckey);
 
-          $api = random_code(24);
+            $api = random_code(24);
 
-          $date = date('d/m/Y H:i');
+            $date = date('d/m/Y H:i');
 
-          $registration = getIp();
+            $registration = getIp();
 
-          $last = getIp();
+            $last = getIp();
 
-          $pix = "NONE";
+            $pix = "NONE";
 
-          $tax = 10;
+            $tax = 10;
 
-          $password_hash = hash256($password);
+            $password_hash = hash256($password);
 
-          $confirmation_link = "https://resenha.app/api/?token=$token";
+            $confirmation_link = "https://resenha.app/api/?token=$token";
 
-          //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
+            //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
 
-          if (!$error) {
-              $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
-              queryNR($query);
-          
-              $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
-              $user = queryDB($query)[0];
-          
-              $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
-              queryNR($query);
-          
-              $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
-          
-              $embed = [
-                  'title' => 'Novo usuário criado!',
-                  'color' => hexdec('7d00ff'),
-                  'fields' => [
-                      [
-                          'name' => 'Nome',
-                          'value' => $name,
-                      ],
-                      [
-                          'name' => 'Email',
-                          'value' => $email,
-                      ],
-                      [
-                          'name' => 'IP',
-                          'value' => $registration,
-                      ]
-                  ]
-              ];
-          
-              send_message($embed, $webhook);
-          
-              register_log($user, "host", "user_registered");
+            if (!$error) {
+                $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
+                queryNR($query);
+            
+                $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
+                $user = queryDB($query)[0];
+            
+                $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
+                queryNR($query);
+            
+                $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
+            
+                $embed = [
+                    'title' => 'Novo usuário criado!',
+                    'color' => hexdec('7d00ff'),
+                    'fields' => [
+                        [
+                            'name' => 'Nome',
+                            'value' => $name,
+                        ],
+                        [
+                            'name' => 'Email',
+                            'value' => $email,
+                        ],
+                        [
+                            'name' => 'IP',
+                            'value' => $registration,
+                        ]
+                    ]
+                ];
+            
+                send_message($embed, $webhook);
+            
+                register_log($user, "host", "user_registered");
 
-              $data = array(
+                $data = array(
                 'user' => $user,  
                 'status' => "success"
-              );
-    
-              header('Content-Type: application/json');
-              echo json_encode($data);
-          }
-      }
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            }
+        }
 
     else {
         returnError($error);

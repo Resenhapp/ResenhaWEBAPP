@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -19,29 +19,6 @@ export default function NewEvent() {
     const [progress, setProgress] = useState(1);
     const maxProgress = 5;
 
-    const [inputValue, setInputValue] = useState('');
-    const [selectedAddress, setSelectedAddress] = useState(null);
-    const [isToggled, setIsToggled] = useState(true);
-    const [scrollDate, setScrollDate] = useState(null);
-    const [calendarDate, setCalendarDate] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [currentDate, setCurrentDate] = useState(null);
-    const [startTime, setStartTime] = useState(new Date());
-    const [endTime, setEndTime] = useState(new Date());
-    const [hasEnd, setHasEnd] = useState(true);
-
-    useEffect(() => {
-        if (progress === 2) {
-            console.log("scrollDate:", scrollDate);
-            console.log("calendarDate:", calendarDate);
-            console.log("isToggled:", isToggled);
-            console.log("selectedDate:", selectedDate);
-            console.log("startTime:", startTime);
-            console.log("endTime:", endTime);
-            console.log("hasEnd:", hasEnd);
-        }
-    }, [progress, inputValue, selectedAddress, isToggled, selectedDate, startTime, endTime, hasEnd, scrollDate, calendarDate]);
-
     const handleNextStep = () => {
         setProgress(progress + 1);
 
@@ -55,25 +32,9 @@ export default function NewEvent() {
             case 0:
                 return <Loading />;
             case 1:
-                return <Piece01
-                    onNameFieldChange={(value) => setInputValue(value)}
-                    onAddressFieldChange={(address) => setSelectedAddress(address)}
-                    onToggleChange={(state) => setIsToggled(state)}
-                />;
+                return <Piece01 />;
             case 2:
-                return <Piece02
-                    selectedDate={selectedDate}
-                    onDateChange={setSelectedDate}
-                    startTime={startTime}
-                    onStartTimeChange={setStartTime}
-                    endTime={endTime}
-                    onEndTimeChange={setEndTime}
-                    hasEnd={hasEnd}
-                    onHasEndChange={setHasEnd}
-                    onScrollDateChange={setScrollDate}
-                    onCalendarDateChange={setCalendarDate}
-                    onCurrentDateChange={setCurrentDate} // Adicione esta linha
-                />;
+                return <Piece02 />;
             case 3:
                 return <Piece03 />;
             case 4:
@@ -91,31 +52,30 @@ export default function NewEvent() {
             title = '';
             subtitle = '';
             window.location.href = '/webapp/resenhas/';
-            break;
         case 1:
             title = 'Vamos criar uma resenha?';
             subtitle = 'Primeiro, comece dando um nome para a sua resenha e defina o lugar onde ela vai acontecer:';
-            buttonText = 'Próximo';
+            buttonText = 'Próximo'
             break;
         case 2:
             title = 'E quando vai ser?';
             subtitle = 'Agora, defina a <b>data</b> e o <b>horário</b> em que ela vai ocorrer:';
-            buttonText = 'Próximo';
+            buttonText = 'Próximo'
             break;
         case 3:
             title = 'E quem entra?';
             subtitle = 'Agora, defina a <b>quanto é para entrar</b> e o <b>limite máximo</b> de convidados:';
-            buttonText = 'Próximo';
+            buttonText = 'Próximo'
             break;
         case 4:
             title = 'Algo a acrescentar?';
             subtitle = 'E por fim, adicione uma <b>descrição</b> (como regras, brincadeiras e tals) e <b>tags</b> para sua resenha:';
-            buttonText = 'Próximo';
+            buttonText = 'Próximo'
             break;
         case 5:
             title = 'E que tal uma foto?';
             subtitle = 'Pronto! Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
-            buttonText = 'Criar!';
+            buttonText = 'Criar!'
             break;
         default:
             title = '';
@@ -133,7 +93,7 @@ export default function NewEvent() {
                 </p>
             </div>
             <div className='flex flex-col h-full items-center justify-end px-4'>
-                <section className='flex h-full  content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
+                <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
                     {renderPiece()}
                     <div className='flex flex-row justify-between w-full'>
                         {progress > 0 && (

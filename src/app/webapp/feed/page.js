@@ -267,11 +267,10 @@ export default function Feed() {
                     onFilterClick={toggleEditFilterPageOpen} />
                   <div className='bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto'>
                     {data.map((party) => {
-                      const { hash, price, time, confirmed, capacity, tags, title, code } = party;
-                      var parsedTags = JSON.parse(tags).tags;
+                      var { hash, price, time, confirmed, capacity, title, code, headers } = party;
 
-                      if (parsedTags.length >= 2) {
-                        parsedTags = [parsedTags[0], parsedTags[1]]
+                      if (headers.length >= 2) {
+                        headers = [headers[0], headers[1]]
                       }
 
                       return (
@@ -285,7 +284,7 @@ export default function Feed() {
                           eventMax={capacity}
                           eventPrice={price}
                           eventSaved={exampleSavedEvent}
-                          eventTags={parsedTags}
+                          eventTags={headers}
                           eventCode={code}
                         />
                       );

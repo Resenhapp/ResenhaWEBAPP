@@ -25,16 +25,16 @@ export const metadata = {
 export default function Profile() {
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
-        username = urlParams.get('u');
+        var profile = urlParams.get('u');
     }
-
-    const validator = Cookies.get('validator');
+    
+    var validator = Cookies.get('validator');
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [activeTab, setActiveTab] = useState('Sobre');
-    const [data, setData] = useState(null);
+    const [profileData, setProfileData] = useState(null);
 
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
@@ -51,14 +51,14 @@ export default function Profile() {
         }
     };
 
-    const fetchData = async () => {
+    const fetchProfileData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
+                username: profile,
                 validator: validator
             });
-            setData(response);
+            setProfileData(response);
         } 
         
         catch (error) {
@@ -71,10 +71,10 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchProfileData();
     }, []);
 
-    if (!data) {
+    if (!profileData) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
                 <Loading />
@@ -82,7 +82,7 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine } = data
+    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = profileData
     
     var interests = JSON.parse(interests).interests;
 
@@ -90,7 +90,7 @@ export default function Profile() {
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <PageHeader pageTitle={'Perfil'} />
+            <PageHeader pageTitle={'Perfil'}/>
             <div className="flex flex-col justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex '>
@@ -156,45 +156,47 @@ export default function Profile() {
                                 )}
 
                                 {activeTab === 'Resenhas' && (
-                                    <div> {/* CONTEUDO DE RESENHAS */}
-                                        <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                    <div>
+                                        {/* CONTEUDO DE RESENHAS */}
+                                        <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                        {partiesWent.some((party) => party.used !== 1) && (
                                             <div className='text-purpleT5'>
-                                                Vou
+                                            Vou
                                             </div>
+                                        )}
+                                        {partiesWent.map((party) => (
+                                            party.used !== 1 ? (
                                             <ProfileEvent
-                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'}
-                                                partyGuests={'480'}
-                                                partyDate={'12/07'}
-                                                partyHour={'21:30'}
-                                                partyName={'Resenha no Terraço'}
+                                                key={party.hash}
+                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                                partyGuests={party.confirmed}
+                                                partyDate={party.date}
+                                                partyHour={party.time}
+                                                partyName={party.name}
                                             />
+                                            ) : null
+                                        ))}
+                                        {partiesWent.some((party) => party.used === 1) && (
                                             <div className='text-purpleT5'>
-                                                Fui
+                                            Fui
                                             </div>
+                                        )}
+                                        {partiesWent.map((party) => (
+                                            party.used === 1 ? (
                                             <ProfileEvent
-                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/QljskFiO.png'}
-                                                partyGuests={'480'}
-                                                partyDate={'17/03'}
-                                                partyHour={'20:00'}
-                                                partyName={'Show na CB'}
+                                                key={party.hash}
+                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                                partyGuests={party.confirmed}
+                                                partyDate={party.date}
+                                                partyHour={party.time}
+                                                partyName={party.name}
                                             />
-                                            <ProfileEvent
-                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/mjCvJEPv.jpg'}
-                                                partyGuests={'480'}
-                                                partyDate={'01/03'}
-                                                partyHour={'22:00'}
-                                                partyName={'Rolezin dos cria'}
-                                            />
-                                            <ProfileEvent
-                                                imageUrl={'https://resenha.app/publico/recursos/resenhas/lr_dEUsxUJp.png'}
-                                                partyGuests={'480'}
-                                                partyDate={'23/02'}
-                                                partyHour={'21:00'}
-                                                partyName={'Baderninha do Rik'}
-                                            />
+                                            ) : null
+                                        ))}
                                         </div>
                                     </div>
                                 )}
+
                                 {activeTab === 'Comentários' && (
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
                                         <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
@@ -206,7 +208,7 @@ export default function Profile() {
                                                 comment={comment.content}
                                                 day={parseInt(comment.date.split('/')[0])}
                                                 month={parseInt(comment.date.split('/')[1])}
-                                                userUrl="https://resenha.app/"
+                                                userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
                                             />
                                         ))}
                                         </div>

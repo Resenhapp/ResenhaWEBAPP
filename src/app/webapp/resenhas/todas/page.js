@@ -4,12 +4,66 @@ import Back from '@/src/components/Back';
 import PartyPortrait from '@/src/components/PartyPortrait';
 import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
+import Loading from "@/src/components/Loading";
+import Cookies from 'js-cookie';
+
+import { useState } from "react";
+import { useEffect } from 'react';
+
 export const metadata = {
     title: 'Resenha.app • Todas as Resenhas',
     description: 'Venha fazer suas resenhas!',
 }
 
 export default function MyParties() {
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+  
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+  
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
+            setData(response);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading />
+            </div>
+        );
+    }
+
+    var { partiesMade } = data
+
     return (
         <div className='flex flex-col w-screen h-screen'>
                <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
@@ -22,12 +76,16 @@ export default function MyParties() {
                             </div>
                             <div className='w-full h-full flex flex-col'>
                                 <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                    <PartyPortrait partyDate={'25/07'} partyGuests={'22'} 
-                                    partyHour={'20:00'} partyImage={DefaulEventImage} partyMaxGuests={'123'} 
-                                    partyName={'Resenha no Terraço'} />
-                                    <PartyPortrait partyDate={'25/07'} partyGuests={'22'} 
-                                    partyHour={'20:00'} partyImage={DefaulEventImage} partyMaxGuests={'123'} 
-                                    partyName={'Resenha no Terraço'} canBeDeleted={false} />
+                                    {partiesMade.map((party) => (
+                                        <PartyPortrait
+                                            partyDate={party.date} 
+                                            partyGuests={party.confirmed} 
+                                            partyHour={party.time} 
+                                            partyMaxGuests={party.capacity} 
+                                            partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
+                                            partyName={party.name} 
+                                        />
+                                    ))}
                                     
                                 </div>
                             </div>
