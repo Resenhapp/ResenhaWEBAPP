@@ -83,10 +83,8 @@ export default function Profile() {
     }
 
     var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = profileData
-    
-    var interests = JSON.parse(interests).interests;
 
-    interestsData.filter(interest => interests.includes(interest.id))
+    interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
     return (
         <div className='flex flex-col w-screen h-screen '>
@@ -136,18 +134,18 @@ export default function Profile() {
                                         <div className='w-full mt-4'>
                                             <h1 className='font-bold text-lg'>Interesses</h1>
                                             <div className='w-full flex flex-wrap gap-1'>
-                                                {interestsData.filter(interest => interests.includes(interest.id)).map(interest => (
-                                                    <Tag
-                                                        key={interest.id}
-                                                        tagname={interest.name}
-                                                        type={interest.type}
-                                                        colorName={interest.colorName}
-                                                        highlightColor={interest.highlightColor}
-                                                        isEditable={false}
-                                                        ringThickness={interest.ringThickness}
-                                                        ringColor={interest.ringColor}
-                                                        weight={interest.weight}
-                                                    />
+                                                {interestsData.filter(interest => interests.map(Number).includes(interest.id)).map(interest => (
+                                                        <Tag
+                                                            key={interest.id}
+                                                            tagname={interest.name}
+                                                            type={interest.type}
+                                                            colorName={interest.colorName}
+                                                            highlightColor={interest.highlightColor}
+                                                            isEditable={false}
+                                                            ringThickness={interest.ringThickness}
+                                                            ringColor={interest.ringColor}
+                                                            weight={interest.weight}
+                                                        />
                                                 ))}
                                             </div>
                                         </div>

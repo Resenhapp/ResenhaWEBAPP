@@ -36,6 +36,7 @@ export default function Map({ onLocationSelect }) {
         map.setView(center, zoom);
         return null;
     };
+
     const reverseGeocode = async (lat, lon) => {
         const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
         const addressDetails = res.data.address;
@@ -47,7 +48,6 @@ export default function Map({ onLocationSelect }) {
     
         return `${city} - ${state}, ${suburb}, ${postcode}`;
     }
-    
 
     const MapEvents = () => {
         useMapEvents({
