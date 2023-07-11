@@ -274,7 +274,75 @@ function check_session($username, $validator) {
 function getFeedData() {
     // $username = $_POST['username'];
 
-    $query = "SELECT * FROM parties";
+    $query = "SELECT * FROM parties WHERE 1";
+
+    if (isset($_POST['searchTerm'])) {
+        $searchTerm = $_POST['searchTerm'];
+        $query .= " AND name LIKE '%".$searchTerm."%'";
+    }
+
+    if (isset($_POST['filterParameters'])) {
+        $filterParameters = $_POST['filterParameters'];
+
+        if (isset($filterParameters["tags"]) && $filterParameters["radius"]) {
+            $userAddress = $filterParameters["address"];
+            $locationRadius = $filterParameters["radius"];
+
+            $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=" . urlencode($userAddress) . "&format=json";
+    
+            $httpOptions = [
+                "http" => [
+                    "method" => "GET",
+                    "header" => "User-Agent: Nominatim-Test"
+                ]
+            ];
+        
+            $streamContext = stream_context_create($httpOptions);
+        
+            $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+        
+            $addressDecoded = json_decode($json, true);
+
+            if (!empty($addressDecoded)) {
+                $userLatitude = $addressDecoded[0]["lat"];
+                $userLongitude = $addressDecoded[0]["lon"];
+        
+                $query .= " AND
+                    (6371 * 2 * 
+                        ASIN(
+                            SQRT(
+                                POWER(SIN((RADIANS(lat) - RADIANS($userLatitude)) / 2), 2) +
+                                COS(RADIANS($userLatitude)) *
+                                COS(RADIANS(lat)) *
+                                POWER(SIN((RADIANS(lon) - RADIANS($userLongitude)) / 2), 2)
+                            )
+                        )
+                ) <= $locationRadius";
+            }
+        }
+
+        if (isset($filterParameters["tags"])) {
+            $eventTags = $filterParameters["tags"];
+            
+            $eventTagsList = implode(",", $eventTags);
+        
+            $query .= " AND parties.code IN (
+                SELECT party FROM tags WHERE tag IN ($eventTagsList)
+            )";
+        }
+
+        if (isset($filterParameters["vibe"])) {
+            $eventVibe = $filterParameters["vibe"];
+            $eventVibeList = implode(",", array_map('intval', $eventVibe));
+                
+            $query .= " AND parties.code IN (
+                SELECT party FROM guests WHERE user IN (
+                    SELECT user FROM interests WHERE interest IN ($eventVibeList)
+                )
+            )";
+        }
+    }
+
     $result = queryDBRows($query);
 
     $parties = [];
@@ -322,7 +390,6 @@ function getFeedData() {
             if ($differenceInDays <= 2) {
                 array_push($headers, 6);
             }
-
     
             $data = [
                 'hash' => $hash,
@@ -345,6 +412,26 @@ function getFeedData() {
     else {
         returnError("no_data");
     }
+}
+
+function calculateDistance($lat1, $lon1, $lat2, $lon2)
+{
+    $earthRadius = 6371;
+
+    $lat1Rad = deg2rad($lat1);
+    $lon1Rad = deg2rad($lon1);
+    $lat2Rad = deg2rad($lat2);
+    $lon2Rad = deg2rad($lon2);
+
+    $deltaLat = $lat2Rad - $lat1Rad;
+    $deltaLon = $lon2Rad - $lon1Rad;
+
+    $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLon / 2) * sin($deltaLon / 2);
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+    $distance = $earthRadius * $c;
+
+    return $distance;
 }
 
 function getUserData() {
@@ -373,6 +460,17 @@ function getUserData() {
             $events = queryDB($query)[0];
 
             $hash = hash256($id);
+
+            $query = "SELECT * FROM interests WHERE user = '$id'";
+            $interestsResult = queryDBRows($query);
+            
+            $interests = [];
+            
+            if (mysqli_num_rows($interestsResult) > 0) {
+                foreach ($interestsResult as $iResult) {
+                    array_push($interests, $iResult["interest"]);
+                }
+            }
 
             $query = "SELECT * FROM balances WHERE user = '$id'";
             $info = queryDBRows($query);
@@ -527,13 +625,13 @@ function getUserData() {
             
             $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
             $following = queryDB($query)[0];
-
+            
             $data = [
                 'hash' => $hash,
                 'username' => $username,
                 'name' => $row["name"],
                 'about' => $row["about"],
-                'interests' => $row["interests"],
+                'interests' => $interests,
                 'followers' => $followers,
                 'following' => $following,
                 'verified' => $row["verified"],

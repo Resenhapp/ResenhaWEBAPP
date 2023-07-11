@@ -26,19 +26,24 @@ export default function Feed() {
   const axios = require('axios');
   const qs = require('qs');
 
-  const exampleDateEvent = "16/09/2023";
   const exampleSavedEvent = false;
   const exampleImagesEvent = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg']
 
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
   const [isEditFilterPageOpen, setIsEditFilterPageOpen] = useState(false);
+
   const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
   const [userInterests, setUserInterests] = useState([]);
+
   const [tempUserInterests, setTempUserInterests] = useState(userInterests);
   const [inputRadiusValue, setInputRadiusValue] = useState(15);
+
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
 
@@ -54,18 +59,68 @@ export default function Feed() {
   };
 
   const fetchData = async () => {
-      try {
-          const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getFeedData'});
-          setData(response);
-      }
+    setLoading(true);
 
-      catch (error) {
-          console.error(error);
-      }
+    try {
+        const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getFeedData'});
+        setData(response);
+    }
+
+    catch (error) {
+        console.error(error);
+    }
+
+    setLoading(false);
+  };
+
+  const filterFeedData = async () => {
+    toggleEditFilterPageOpen();
+
+    setLoading(true);
+
+    try {
+      var filterParameters = {
+        "address": inputValue,
+        "radius": inputRadiusValue,
+        "tags": tempEventTags,
+        "vibe": tempUserInterests,
+      };
+
+      const response = await makeRequest('http://localhost/resenha.app/api/', {
+        request: 'getFeedData',
+        filterParameters: filterParameters
+      });
+
+      setData(response);
+    }
+
+    catch (error) {
+      console.error(error);
+    }
+
+    setLoading(false);
   };
 
   const toggleEditFilterPageOpen = () => {
     setIsEditFilterPageOpen(!isEditFilterPageOpen);
+  };
+
+  const searchFeedData = async searchTerm => {
+    setLoading(true);
+
+    try {
+      const response = await makeRequest('http://localhost/resenha.app/api/', {
+        request: 'getFeedData',
+        searchTerm: searchTerm,
+      });
+      setData(response);
+    } 
+    
+    catch (error) {
+      console.error(error);
+    }
+
+    setLoading(false);
   };
 
   const handleDisplayToggle = () => {
@@ -183,7 +238,7 @@ export default function Feed() {
 
   return (
     <div className='flex flex-col w-screen h-screen'>
-      <EditInfoPage isOpen={isEditFilterPageOpen} pageTitle={'Filtros'} togglePage={toggleEditFilterPageOpen}>
+      <EditInfoPage isOpen={isEditFilterPageOpen} pageTitle={'Filtros'} togglePage={toggleEditFilterPageOpen} saveAction={filterFeedData}>
         <div className='w-full flex flex-col gap-2'>
           <p>Filtre a resenha ideal para você!</p>
           <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
@@ -261,34 +316,41 @@ export default function Feed() {
             <div className='w-full flex flex-col'>
               <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                 <div className="flex flex-col mb-4 gap-4 w-full">
-                  <SearchInput placeholder={"Busque por nome ou tag"} />
+                  <SearchInput placeholder="Busque por nome ou tag" onDelayedChange={searchFeedData} />
                   <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"}
                     onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}
                     onFilterClick={toggleEditFilterPageOpen} />
                   <div className='bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto'>
-                    {data.map((party) => {
-                      var { hash, price, time, confirmed, capacity, title, code, headers } = party;
+                    {loading ? (
+                        <div className="h-screen w-full flex justify-center content-center items-center">
+                          <Loading/>
+                        </div>
+                    ) : data.length > 0 ? (
+                      data.map((party) => {
+                        var { hash, price, time, confirmed, capacity, title, code, headers } = party;
 
-                      if (headers.length >= 2) {
-                        headers = [headers[0], headers[1]]
-                      }
+                        if (headers.length >= 2) {
+                          headers = [headers[0], headers[1]];
+                        }
 
-                      return (
-                        <PartyBanner
-                          imageUrl={exampleImagesEvent}
-                          eventName={title}
-                          eventImage={`https://media.resenha.app/r/${hash}.png`}
-                          eventDate={exampleDateEvent}
-                          eventHour={time}
-                          eventGuests={confirmed}
-                          eventMax={capacity}
-                          eventPrice={price}
-                          eventSaved={exampleSavedEvent}
-                          eventTags={headers}
-                          eventCode={code}
-                        />
-                      );
-                    })}
+                        return (
+                          <PartyBanner
+                            imageUrl={exampleImagesEvent}
+                            eventName={title}
+                            eventImage={`https://media.resenha.app/r/${hash}.png`}
+                            eventHour={time}
+                            eventGuests={confirmed}
+                            eventMax={capacity}
+                            eventPrice={price}
+                            eventSaved={exampleSavedEvent}
+                            eventTags={headers}
+                            eventCode={code}
+                          />
+                        );
+                      })
+                    ) : (
+                      <p>Nenhuma resenha encontrada com os seus termos 🤐</p>
+                    )}
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 
 const MagnifierIcon = () => (
   <svg className="absolute left-3 top-1/2 transform -translate-y-1/2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,17 +14,27 @@ const DeleteIcon = () => (
   </svg>
 );
 
-const SearchInput = ({ placeholder, onChange }) => {
-  const [inputValue, setInputValue] = useState("");
+const SearchInput = ({ placeholder, onDelayedChange }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [typingTimeout, setTypingTimeout] = useState(null);
 
   const handleInputChange = event => {
-    setInputValue(event.target.value);
-    onChange && onChange(event.target.value);
+    const value = event.target.value;
+    setInputValue(value);
+
+    clearTimeout(typingTimeout);
+
+    const timeout = setTimeout(() => {
+      onDelayedChange(value);
+    }, 600);
+
+    setTypingTimeout(timeout);
   };
 
   const handleClearInput = () => {
-    setInputValue("");
-    onChange && onChange("");
+    setInputValue('');
+    clearTimeout(typingTimeout);
+    onDelayedChange('');
   };
 
   return (
