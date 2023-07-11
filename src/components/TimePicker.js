@@ -1,12 +1,26 @@
 import TimeSelectList from "./TimeSelectList";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
 const TimePicker = ({ onTimeSelect }) => {
     const [selectedHour, setSelectedHour] = useState(0);
     const [selectedMinute, setSelectedMinute] = useState(0);
 
+    // Save previous state
+    const prevHourRef = useRef();
+    const prevMinuteRef = useRef();
+
     useEffect(() => {
+        prevHourRef.current = selectedHour;
+        prevMinuteRef.current = selectedMinute;
+    });
+
+    // Get previous state
+    const prevHour = prevHourRef.current;
+    const prevMinute = prevMinuteRef.current;
+
+    if (selectedHour !== prevHour || selectedMinute !== prevMinute) {
         onTimeSelect({ hour: selectedHour, minute: selectedMinute });
-    }, [selectedHour, selectedMinute, onTimeSelect]);
+    }
 
     return (
         <div className="flex flex-row items-center gap-1">

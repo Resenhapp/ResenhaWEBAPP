@@ -5,10 +5,7 @@ import Modal from '@/src/components/Modal';
 import { tagsData } from '@/src/components/tagsData';
 import EditInfoPage from '@/src/components/EditInfoPage';
 
-const Piece04 = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
+const Piece04 = ({descriptionContent, selectedTags}) => {
 
     const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);
     const toggleEditTagsPageOpen = () => {

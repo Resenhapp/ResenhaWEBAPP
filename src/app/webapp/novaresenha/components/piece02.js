@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import DateScroll from '@/src/components/DateScroll';
 import Vector from '@/src/components/Vector';
 import EventHour from '@/src/components/EventHourModule';
 import Toggle from '@/src/components/Toggle';
-import DatePicker, { registerLocale } from 'react-datepicker'; // <- You were missing this import
+import DatePicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from '@/src/components/Modal';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -11,7 +11,7 @@ import TimePicker from '@/src/components/TimePicker';
 registerLocale('pt', ptBR)
 
 
-const Piece02 = ({ }) => {
+const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, onEndHourSelect, onToggleChange }) => {
     const [hasEnd, setHasEnd] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -21,10 +21,35 @@ const Piece02 = ({ }) => {
     const [isStartTimeModalOpen, setIsStartTimeModalOpen] = useState(false);
     const [isEndTimeModalOpen, setIsEndTimeModalOpen] = useState(false);
 
+    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedMonth, setSelectedMonth] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(null);
 
-    const handleToggleChange = () => {
+    const [toggleValue, setToggleValue] = useState(true);
+
+    const handleDateSelect = (day, month, year) => {
+        setSelectedDay(day);
+        setSelectedMonth(month);
+        setSelectedYear(year);
+    };
+
+    const handleToggleChange = (isChecked) => {
+        setToggleValue(isChecked);
+        onToggleChange(isChecked);
         setHasEnd(!hasEnd);
     };
+
+    const handleCalendarDateChange = (datePicked) => {
+        setSelectedDate(datePicked);
+        onDateCalendarSelect(datePicked);
+    }
+    
+
+    useEffect(() => {
+        if (selectedDay && selectedMonth && selectedYear) {
+            onDateScrollSelect(selectedDay, selectedMonth, selectedYear);
+        }
+    }, [selectedDay, selectedMonth, selectedYear]);
 
     const currentTime = new Date().toLocaleTimeString([], {
         hour: '2-digit',
@@ -42,14 +67,30 @@ const Piece02 = ({ }) => {
     });
 
     const handleStartChange = (date) => {
-        setStartTime(date);
-        setIsStartTimeModalOpen(false);
+        setIsStartTimeModalOpen(true);
+        onStartHourSelect(date);
     }
 
     const handleEndChange = (date) => {
-        setEndTime(date);
-        setIsEndTimeModalOpen(false);
+        setIsEndTimeModalOpen(true);
+        onEndHourSelect(date);
     }
+
+
+const onStartTimeSelect = useCallback((time) => {
+    const newStartTime = new Date(startTime);
+    newStartTime.setHours(time.hour, time.minute);
+    setStartTime(newStartTime);
+    handleStartChange(newStartTime);
+}, [startTime, handleStartChange, setStartTime]);
+
+const onEndTimeSelect = useCallback((time) => {
+    const newEndTime = new Date(endTime);
+    newEndTime.setHours(time.hour, time.minute);
+    setEndTime(newEndTime);
+    handleEndChange(newEndTime);
+}, [endTime, handleEndChange, setEndTime]);
+
 
     return (
         <div className="w-full flex flex-col h-fit gap-6">
@@ -62,19 +103,19 @@ const Piece02 = ({ }) => {
                     <h1>Escolha uma data</h1>
                 </button>
                 <Modal show={isOpen} close={() => setIsOpen(false)}>
-                    <DatePicker
-                        selected={selectedDate}
-                        onChange={(date) => setSelectedDate(date)}
-                        inline
-                        locale="pt"
-                    />
+                <DatePicker
+    selected={selectedDate}
+    onChange={handleCalendarDateChange}
+    inline
+    locale="pt"
+/>
                     <div className='w-full flex-end'>
                         <button onClick={() => setIsOpen(false)} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Fechar</button>
                     </div>
                 </Modal>
 
             </div>
-            <DateScroll currentDate={'X'} daysToShow={'x'} selectedDate={'x'} />
+            <DateScroll onDateSelect={handleDateSelect} />
             <hr className='bg-purpleT4 h-[2px] border-none rounded-full' />
             <div className='flex flex-col gap-2'>
                 <EventHour
@@ -84,16 +125,11 @@ const Piece02 = ({ }) => {
                     onStartTimeClick={() => setIsStartTimeModalOpen(true)}
                     onEndTimeClick={() => setIsEndTimeModalOpen(true)}
                 />
-
                 {isStartTimeModalOpen &&
                     <Modal show={isStartTimeModalOpen} close={() => setIsStartTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
-                        <h1 className='text-center text-xl mb-4'>Escolha a hora de início da sua resenha</h1>
-                        <TimePicker onTimeSelect={(time) => {
-                            const newStartTime = new Date(startTime);
-                            newStartTime.setHours(time.hour, time.minute);
-                            setStartTime(newStartTime);
-                        }} />
+                            <h1 className='text-center text-xl mb-4'>Escolha a hora de início da sua resenha</h1>
+                            <TimePicker onTimeSelect={onStartTimeSelect} />
                         </div>
                     </Modal>
                 }
@@ -101,17 +137,11 @@ const Piece02 = ({ }) => {
                 {isEndTimeModalOpen &&
                     <Modal show={isEndTimeModalOpen} close={() => setIsEndTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
-                        <h1 className='text-center text-xl mb-4'>Escolha a hora de término da sua resenha</h1>
-                        <TimePicker onTimeSelect={(time) => {
-                            const newEndTime = new Date(endTime);
-                            newEndTime.setHours(time.hour, time.minute);
-                            setEndTime(newEndTime);
-                        }} />
+                            <h1 className='text-center text-xl mb-4'>Escolha a hora de término da sua resenha</h1>
+                            <TimePicker onTimeSelect={onEndTimeSelect} />
                         </div>
                     </Modal>
                 }
-
-
                 <Toggle
                     labelText={'Não tem hora pra acabar'}
                     questionAction={''}

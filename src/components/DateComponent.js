@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-const DateComponent = ({ number, day, month, selectedDate, onDateSelect }) => {
-  const isSelected = selectedDate === number;
+const DateComponent = ({ number, day, month, year, selectedDate, onDateSelect }) => {
+  const fullDate = new Date(year, new Date(`1 ${month} 2000`).getMonth(), number); // Generate the full date object
+  const isSelected = selectedDate?.getTime() === fullDate.getTime(); // Check if this date is selected
 
   const handleClick = () => {
-    onDateSelect(number);
+    onDateSelect(fullDate, number, month, year); // Pass the full date and its components to onDateSelect
   };
 
   return (
