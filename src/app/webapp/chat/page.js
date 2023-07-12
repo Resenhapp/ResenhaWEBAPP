@@ -10,7 +10,6 @@ export const metadata = {
 }
 
 export default function Chat() {
-
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };

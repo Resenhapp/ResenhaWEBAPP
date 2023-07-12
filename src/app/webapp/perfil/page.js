@@ -28,17 +28,21 @@ export default function Profile() {
         var profile = urlParams.get('u');
     }
     
+    var u = Cookies.get('username');
     var validator = Cookies.get('validator');
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [activeTab, setActiveTab] = useState('Sobre');
-    const [profileData, setProfileData] = useState(null);
+    const [data, setData] = useState(null);
+    const [isFollowing, setIsFollowing] = useState(false);
 
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
+
+    const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const makeRequest = async (url, data) => {
         try {
@@ -51,14 +55,17 @@ export default function Profile() {
         }
     };
 
-    const fetchProfileData = async () => {
+    const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
                 username: profile,
-                validator: validator
+                validator: validator,
+                comparison: u,
             });
-            setProfileData(response);
+            setData(response);
+            setIsFollowing(response.follower);
+            setFollowersCount(response.followers);
         } 
         
         catch (error) {
@@ -66,15 +73,29 @@ export default function Profile() {
         }
     };
 
-    const handleFollowButton = async () => {
-        console.log("teste")
+    const handleFollowButton = async (follower) => {
+        setIsFollowing(follower);
+        setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
+
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'switchFollowUser',
+                username: u,
+                validator: validator,
+                profile: profile,
+            });
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
-        fetchProfileData();
+        fetchData();
     }, []);
 
-    if (!profileData) {
+    if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
                 <Loading />
@@ -82,7 +103,7 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = profileData
+    var { name, username, about, followers, following, interests, comments, verified, hash, mine, partiesWent, follower } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
@@ -105,14 +126,14 @@ export default function Profile() {
                                 <div className='flex flex-row gap-4'>
                                     <NumberDisplay amount={following} label={'Seguindo'} />
                                     <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full' />
-                                    <NumberDisplay amount={followers} label={'Seguidores'} />
+                                    <NumberDisplay amount={followersCount} label={'Seguidores'} />
                                 </div>
                                 <div>
                                     {mine ? (
                                         <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
                                     ) : (
                                         <div className='flex flex-row gap-2'>
-                                            <FollowButton onClick={handleFollowButton}/>
+                                            <FollowButton onClick={handleFollowButton} isFollowing={isFollowing} />
                                             <SendMessageButton onClick={() => handleNavigation('/chat')}/>
                                         </div>
                                     )}
@@ -132,24 +153,29 @@ export default function Profile() {
                                             <p>{about}</p>
                                         </div>
                                         <div className='w-full mt-4'>
-                                            <h1 className='font-bold text-lg'>Interesses</h1>
-                                            <div className='w-full flex flex-wrap gap-1'>
-                                                {interestsData.filter(interest => interests.map(Number).includes(interest.id)).map(interest => (
-                                                        <Tag
-                                                            key={interest.id}
-                                                            tagname={interest.name}
-                                                            type={interest.type}
-                                                            colorName={interest.colorName}
-                                                            highlightColor={interest.highlightColor}
-                                                            isEditable={false}
-                                                            ringThickness={interest.ringThickness}
-                                                            ringColor={interest.ringColor}
-                                                            weight={interest.weight}
-                                                        />
-                                                ))}
-                                            </div>
+                                            {interests.length > 0 && (
+                                                <>
+                                                    <h1 className='font-bold text-lg'>Interesses</h1>
+                                                    <div className='w-full flex flex-wrap gap-1'>
+                                                        {interestsData
+                                                            .filter((interest) => interests.map(Number).includes(interest.id))
+                                                            .map((interest) => (
+                                                                <Tag
+                                                                    key={interest.id}
+                                                                    tagname={interest.name}
+                                                                    type={interest.type}
+                                                                    colorName={interest.colorName}
+                                                                    highlightColor={interest.highlightColor}
+                                                                    isEditable={false}
+                                                                    ringThickness={interest.ringThickness}
+                                                                    ringColor={interest.ringColor}
+                                                                    weight={interest.weight}
+                                                                />
+                                                            ))}
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
-
                                     </div>
                                 )}
 
