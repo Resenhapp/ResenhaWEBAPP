@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import Vector from './Vector';
 
-const FollowButton = ({ content, onClick }) => {
-    const [isFollowing, setIsFollowing] = useState(false);
-    
+const FollowButton = ({ content, onClick, isFollowing }) => {
     const handleOnClick = () => {
-        setIsFollowing(!isFollowing);
         onClick && onClick(!isFollowing);
     };
 

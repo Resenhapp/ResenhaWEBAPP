@@ -40,7 +40,8 @@ export default function MyParties() {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
                 username: username,
-                validator: validator
+                validator: validator,
+                requested: "partiesMade"
             });
             setData(response);
         } 
@@ -48,6 +49,24 @@ export default function MyParties() {
         catch (error) {
             console.error(error);
         }
+    };
+
+    const handleViewClick = async (party) => {
+        window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
+    };
+
+    const handleEditClick = async () => {
+        
+    };
+
+    const handleCopyClick = async (party) => {
+        const partyUrl = `https://resenha.app/r/${party.code}`;
+    
+        await navigator.clipboard.writeText(partyUrl);
+    };
+
+    const handleTrashClick = async () => {
+        
     };
 
     useEffect(() => {
@@ -66,27 +85,30 @@ export default function MyParties() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-               <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
+            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
-                    <div className=' h3 w-full flex'>
+                    <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
                             <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                                 <h2>Aqui estão todas as suas resenhas</h2>
                             </div>
                             <div className='w-full h-full flex flex-col'>
                                 <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                    {partiesMade.map((party) => (
-                                        <PartyPortrait
-                                            partyDate={party.date} 
-                                            partyGuests={party.confirmed} 
-                                            partyHour={party.time} 
-                                            partyMaxGuests={party.capacity} 
-                                            partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
-                                            partyName={party.name} 
-                                        />
-                                    ))}
-                                    
+                                {partiesMade.map((party) => (
+                                    <PartyPortrait
+                                        partyCode={party.code} 
+                                        partyDate={party.date} 
+                                        partyGuests={party.confirmed} 
+                                        partyHour={party.time} 
+                                        partyMaxGuests={party.capacity} 
+                                        partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
+                                        partyName={party.name}
+                                        viewOnClick={() => handleViewClick(party)}
+                                        copyOnClick={() => handleCopyClick(party)}
+                                        canBeDeleted={party.confirmed == 0}
+                                    />
+                                ))}
                                 </div>
                             </div>
                         </div>

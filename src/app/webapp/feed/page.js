@@ -123,8 +123,30 @@ export default function Feed() {
     setLoading(false);
   };
 
-  const handleDisplayToggle = () => {
-    setIsDisplayingEvents(!isDisplayingEvents);
+  const fetchHypedParties = async searchTerm => {
+    setLoading(true);
+
+    try {
+      const response = await makeRequest('http://localhost/resenha.app/api/', {
+        request: 'getFeedData',
+        hype: true
+      });
+      setData(response);
+    } 
+    
+    catch (error) {
+      console.error(error);
+    }
+
+    setLoading(false);
+  };
+
+  const handleAllParties = () => {
+    fetchData();
+  };
+
+  const handleHypedParties = () => {
+    fetchHypedParties();
   };
 
   const toggleModal = () => {
@@ -318,7 +340,7 @@ export default function Feed() {
                 <div className="flex flex-col mb-4 gap-4 w-full">
                   <SearchInput placeholder="Busque por nome ou tag" onDelayedChange={searchFeedData} />
                   <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"}
-                    onRightClick={handleDisplayToggle} onLeftClick={handleDisplayToggle}
+                    onRightClick={handleHypedParties} onLeftClick={handleAllParties}
                     onFilterClick={toggleEditFilterPageOpen} />
                   <div className='bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto'>
                     {loading ? (

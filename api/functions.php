@@ -272,9 +272,7 @@ function check_session($username, $validator) {
 }
 
 function getFeedData() {
-    // $username = $_POST['username'];
-
-    $query = "SELECT * FROM parties WHERE 1";
+    $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `time`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
 
     if (isset($_POST['searchTerm'])) {
         $searchTerm = $_POST['searchTerm'];
@@ -284,7 +282,7 @@ function getFeedData() {
     if (isset($_POST['filterParameters'])) {
         $filterParameters = $_POST['filterParameters'];
 
-        if (isset($filterParameters["tags"]) && $filterParameters["radius"]) {
+        if (isset($filterParameters["address"]) && $filterParameters["radius"]) {
             $userAddress = $filterParameters["address"];
             $locationRadius = $filterParameters["radius"];
 
@@ -402,7 +400,15 @@ function getFeedData() {
                 'title' => $row["name"]
             ];
 
-            array_push($parties, $data);
+            if (isset($_POST['hype'])) {
+                if (count($headers) > 0) {
+                    array_push($parties, $data);
+                }
+            }
+
+            else {
+                array_push($parties, $data);
+            }
         }
 
         header('Content-Type: application/json');
@@ -554,6 +560,7 @@ function getUserData() {
 
                     $temp = [
                         "hash" => $hash,
+                        "code" => $code,
                         "name" => $party["name"],
                         "date" => $party["date"],
                         "time" => $party["time"],
@@ -591,6 +598,12 @@ function getUserData() {
                 }
             }
 
+            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$id'";
+            $followers = queryDB($query)[0];
+
+            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
+            $following = queryDB($query)[0];
+
             $query = "SELECT c.*, u.name FROM comments AS c 
             INNER JOIN parties AS p ON c.party = p.code 
             INNER JOIN users AS u ON c.user = u.id 
@@ -602,13 +615,13 @@ function getUserData() {
             
             if (mysqli_num_rows($userComments) > 0) {
                 foreach ($userComments as $comment) {
-                    $id = $comment["user"];
+                    $userCommentId = $comment["user"];
 
-                    $query = "SELECT username FROM users WHERE id = '$id'";
+                    $query = "SELECT username FROM users WHERE id = '$userCommentId'";
                     $unm = queryDB($query)[0];
 
                     $temp = [
-                        "user" => $id,
+                        "user" => $userCommentId,
                         "username" => $unm,
                         "name" => $comment["name"],
                         "content" => $comment["content"],
@@ -619,12 +632,6 @@ function getUserData() {
                     array_push($comments, $temp);
                 }
             }
-
-            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$id'";
-            $followers = queryDB($query)[0];
-            
-            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
-            $following = queryDB($query)[0];
             
             $data = [
                 'hash' => $hash,
@@ -639,7 +646,7 @@ function getUserData() {
                 'comments' => $comments,
                 'partiesMade' => $partiesMade,
                 'partiesWent' => $partiesWent,
-                'mine' => false
+                'mine' => false,
             ];
 
             if (check_session($username, $validator)) {
@@ -649,6 +656,35 @@ function getUserData() {
                 $data['notified'] = $notified;
                 $data['concierges'] = $concierges;
                 $data['mine'] = true;
+            }
+
+            if (isset($_POST["comparison"])) {
+                $comparison = $_POST["comparison"];
+            
+                if (strlen($comparison) >= 30) {
+                    $comparison = decrypt($_POST['comparison'], $enckey);
+                }
+            
+                $query = "SELECT id FROM users WHERE username = '$username'";
+                $followedId = queryDB($query)[0];
+
+                if (!empty($followedId)) {
+                    $query = "SELECT id FROM users WHERE username = '$comparison'";
+                    $followingId = queryDB($query)[0];
+
+                    if (!empty($followingId)) {
+                        $query = "SELECT id FROM followers WHERE follower = '$followingId' AND followed = '$followedId'";
+                        $result = queryDB($query);
+            
+                        if (!empty($result)) {
+                            $data['follower'] = true;
+                        } 
+                        
+                        else {
+                            $data['follower'] = false;
+                        }
+                    } 
+                } 
             }
 
             if (isset($requested)) {
@@ -956,6 +992,70 @@ function clearUserNotifications() {
 
     else {
       returnError("invalid_session");
+    }
+}
+
+function switchFollowUser() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    $profile = $_POST['profile'];
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT id FROM users WHERE username = '$username'";
+        $followingId = queryDB($query)[0];
+        
+        if (!empty($followingId)) {
+            $currentDate = date('d/m/Y');
+        
+            $query = "SELECT id FROM users WHERE username = '$profile'";
+            $followedIdResult = queryDB($query);
+        
+            if (!empty($followedIdResult)) {
+                $followedId = $followedIdResult[0];
+                
+                $query = "SELECT id FROM followers WHERE follower = '$followingId' AND followed = '$followedId'";
+                $followIdResult = queryDB($query);
+        
+                if (!empty($followIdResult)) {
+                    $followId = $followIdResult[0];
+
+                    $deleteQuery = "DELETE FROM followers WHERE id = '$followId'";
+                    queryNR($deleteQuery);
+        
+                    $data = [
+                        'status' => "success",
+                        'action' => "unfollowed"
+                    ];
+                } 
+                
+                else {
+                    $insertQuery = "INSERT INTO followers (`id`, `follower`, `followed`, `date`) VALUES (NULL, '$followingId', '$followedId', '$currentDate')";
+                    queryNR($insertQuery);
+        
+                    $data = [
+                        'status' => "success",
+                        'action' => "followed"
+                    ];
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+            } 
+            
+            else {
+                returnError("invalid_profile");
+            }
+        } 
+        
+        else {
+            returnError("invalid_profile");
+        }
     }
 }
 
