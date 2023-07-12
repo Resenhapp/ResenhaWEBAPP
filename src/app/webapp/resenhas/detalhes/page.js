@@ -1,8 +1,14 @@
 'use client'
+
 import PageHeader from "@/src/components/PageHeader"
 import Vector from "@/src/components/Vector"
 
 export default function EventDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const partyCode = urlParams.get('r');
+    
+    console.log(partyCode);
+
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader

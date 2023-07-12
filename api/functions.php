@@ -400,7 +400,15 @@ function getFeedData() {
                 'title' => $row["name"]
             ];
 
-            array_push($parties, $data);
+            if (isset($_POST['hype'])) {
+                if (count($headers) > 0) {
+                    array_push($parties, $data);
+                }
+            }
+
+            else {
+                array_push($parties, $data);
+            }
         }
 
         header('Content-Type: application/json');
@@ -552,6 +560,7 @@ function getUserData() {
 
                     $temp = [
                         "hash" => $hash,
+                        "code" => $code,
                         "name" => $party["name"],
                         "date" => $party["date"],
                         "time" => $party["time"],
@@ -589,6 +598,12 @@ function getUserData() {
                 }
             }
 
+            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$id'";
+            $followers = queryDB($query)[0];
+
+            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
+            $following = queryDB($query)[0];
+
             $query = "SELECT c.*, u.name FROM comments AS c 
             INNER JOIN parties AS p ON c.party = p.code 
             INNER JOIN users AS u ON c.user = u.id 
@@ -600,13 +615,13 @@ function getUserData() {
             
             if (mysqli_num_rows($userComments) > 0) {
                 foreach ($userComments as $comment) {
-                    $id = $comment["user"];
+                    $userCommentId = $comment["user"];
 
-                    $query = "SELECT username FROM users WHERE id = '$id'";
+                    $query = "SELECT username FROM users WHERE id = '$userCommentId'";
                     $unm = queryDB($query)[0];
 
                     $temp = [
-                        "user" => $id,
+                        "user" => $userCommentId,
                         "username" => $unm,
                         "name" => $comment["name"],
                         "content" => $comment["content"],
@@ -617,12 +632,6 @@ function getUserData() {
                     array_push($comments, $temp);
                 }
             }
-
-            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$id'";
-            $followers = queryDB($query)[0];
-            
-            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$id'";
-            $following = queryDB($query)[0];
             
             $data = [
                 'hash' => $hash,
