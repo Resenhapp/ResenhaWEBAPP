@@ -62,7 +62,11 @@ export default function NewEvent() {
     console.log('selected guests: ', guests)
   }
   const handlePiece03PriceSelect = (price) => {
-    console.log('selected guests: ', price)
+    console.log('selected price: ', price)
+  }
+
+  const handlePiece04DescriptionChange = (content) => {
+    console.log('description content: ',content)
   }
 
 
@@ -97,7 +101,8 @@ export default function NewEvent() {
         guestsAmount={handlePiece03GuestsSelect}
         priceAmount={handlePiece03PriceSelect}/>);
       case 4:
-        return (<Piece04 />);
+        return (<Piece04 
+        descriptionContent={handlePiece04DescriptionChange}/>);
       case 5:
         return <Piece05 />;
       default:

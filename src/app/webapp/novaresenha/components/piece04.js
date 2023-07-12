@@ -12,6 +12,9 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
         setIsEditTagsPageOpen(!isEditTagsPageOpen);
     };
 
+    const [eventDescription, setEventDescription] = useState('');
+
+    
     const [eventTags, setEventTags] = useState([]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
 
@@ -59,7 +62,11 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
     const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
-
+    const handleEventDescriptionChange = (description) => {
+        const value = description.target.value;
+        setEventDescription(value)
+        descriptionContent(value);
+    }
 
     return (
         <div className="w-full flex flex-col h-fit gap-3">
@@ -69,6 +76,8 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
                     <textarea
                         className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
                         placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
+                        value={eventDescription}
+                        onChange={handleEventDescriptionChange}
                     />
                 </div>
             </div>
