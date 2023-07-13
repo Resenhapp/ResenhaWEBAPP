@@ -706,6 +706,8 @@ function getUserData() {
 }
 
 function getInviteData() {
+  global $enckey;
+
   $code = $_POST['code'];
 
   $query = "SELECT * FROM parties WHERE code = '$code'";
@@ -755,6 +757,43 @@ function getInviteData() {
             'description' => $row["description"],
             'users' => $users
         ];
+
+        if (isset($_POST['username'])&&isset($_POST['validator'])) {
+            $validator = $_POST['validator'];
+            $username = $_POST['username'];
+        
+            if (strlen($username) >= 30) {
+                $username = decrypt($_POST['username'], $enckey);
+            }
+
+            if (check_session($username, $validator)) {
+                // Retrieve the party price
+                $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
+                $party_price_result = queryDB($party_price_query);
+                $party_price = $party_price_result['price'];
+            
+                // Retrieve the payment information from guests table
+                $guests_query = "SELECT method, SUM(payment) AS total_payment FROM guests WHERE party = '$code' GROUP BY method";
+                $payment_results = queryDBRows($guests_query);
+            
+                // Initialize payment variables
+                $data['creditcard'] = 0;
+                $data['pix'] = 0;
+                $data['cash'] = 0;
+            
+                foreach ($payment_results as $payment_row) {
+                    $method = $payment_row['method'];
+                    $total_payment = $payment_row['total_payment'];
+            
+                    if ($method == 'pix') {
+                        $data['pix'] += $total_payment;
+                    } elseif ($method == 'creditcard' || $method == 'cash') {
+                        $data['creditcard'] += $total_payment;
+                        $data['cash'] += $total_payment;
+                    }
+                }
+            }
+          }
 
         header('Content-Type: application/json');
         echo json_encode($data);
