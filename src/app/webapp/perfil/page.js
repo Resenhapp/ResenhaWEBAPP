@@ -103,7 +103,7 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, followers, following, interests, comments, verified, hash, mine, partiesWent, follower } = data
+    var { name, username, about, following, interests, comments, verified, hash, mine, partiesWent, follower } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
@@ -119,21 +119,21 @@ export default function Profile() {
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl flex flex-row justify-center items-center gap-1'>
                                         {name}
-                                        {verified == true && <Vector vectorname={'verified02'} />}
+                                        {verified == true && <Vector vectorname={'verified02'}/>}
                                     </h1>
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
-                                    <NumberDisplay amount={following} label={'Seguindo'} />
-                                    <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full' />
-                                    <NumberDisplay amount={followersCount} label={'Seguidores'} />
+                                    <NumberDisplay amount={following} label={'Seguindo'}/>
+                                    <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full'/>
+                                    <NumberDisplay amount={followersCount} label={'Seguidores'}/>
                                 </div>
                                 <div>
                                     {mine ? (
-                                        <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')} />
+                                        <EditButton content="Editar perfil" onClick={() => handleNavigation('perfil/editar')}/>
                                     ) : (
                                         <div className='flex flex-row gap-2'>
-                                            <FollowButton onClick={handleFollowButton} isFollowing={isFollowing} />
+                                            <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
                                             <SendMessageButton onClick={() => handleNavigation('/chat')}/>
                                         </div>
                                     )}
