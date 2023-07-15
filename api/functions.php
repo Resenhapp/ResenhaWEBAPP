@@ -727,6 +727,7 @@ function getInviteData() {
         list($day, $month, $year) = explode('/', $dateString);
 
         $day = (int) $day;
+        $rawmonth = $month;
         $month = convertMonth($month);
         $year = (int) $year; 
 
@@ -742,21 +743,7 @@ function getInviteData() {
           }
         }
 
-        $data = [
-            'pricePerItem' => $row["price"],
-            'day' => $day,
-            'month' => $month,
-            'year' => $year,
-            'dayOfWeek' => $dayOfWeek,
-            'confirmed' => $confirmed,
-            'maxguests' => $row["capacity"],
-            'hour' => $row["time"],
-            'address' => $row["address"],
-            'host' => $host,
-            'title' => $row["name"],
-            'description' => $row["description"],
-            'users' => $users
-        ];
+        
 
         if (isset($_POST['username'])&&isset($_POST['validator'])) {
             $validator = $_POST['validator'];
@@ -767,33 +754,71 @@ function getInviteData() {
             }
 
             if (check_session($username, $validator)) {
-                // Retrieve the party price
                 $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
-                $party_price_result = queryDB($party_price_query);
-                $party_price = $party_price_result['price'];
+                $party_price = queryDB($party_price_query)[0];
             
-                // Retrieve the payment information from guests table
-                $guests_query = "SELECT method, SUM(payment) AS total_payment FROM guests WHERE party = '$code' GROUP BY method";
+                $guests_query = "SELECT method FROM guests WHERE party = '$code'";
                 $payment_results = queryDBRows($guests_query);
-            
-                // Initialize payment variables
-                $data['creditcard'] = 0;
-                $data['pix'] = 0;
-                $data['cash'] = 0;
+                
+                $income = [
+                    "card" => 0, 
+                    "cash" => 0,
+                    "pix" => 0, 
+                ];
             
                 foreach ($payment_results as $payment_row) {
                     $method = $payment_row['method'];
-                    $total_payment = $payment_row['total_payment'];
             
                     if ($method == 'pix') {
-                        $data['pix'] += $total_payment;
-                    } elseif ($method == 'creditcard' || $method == 'cash') {
-                        $data['creditcard'] += $total_payment;
-                        $data['cash'] += $total_payment;
+                        $income['pix'] += $party_price;
+                    } 
+                    elseif ($method == 'cartao') {
+                        $income['card'] += $party_price;
+                    }
+                    else {
+                        $income['cash'] += $party_price;
                     }
                 }
+
+                $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+
+                $sql_date = $date->format('Y-m-d H:i:s');
+
+                $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
+                $impressions_count = queryDB($impressions_query)[0];
+
+                $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
+                $views_count = queryDB($views_query)[0];
+
             }
           }
+
+          $data = [
+            'date' => [
+                'day' => $day,
+                'month' => $month,
+                'rawMonth' => $rawmonth,
+                'year' => $year,
+                'dayOfWeek' => $dayOfWeek,
+            ],
+            'impressions' => [
+                'views' => $impressions_count,
+                'clicks' => $views_count,
+                'purchases' => 0,
+            ],
+            'income' => $income,
+            'pricePerItem' => $row["price"],
+            'hour' => $row["time"],
+            'address' => $row["address"],
+            'host' => $host,
+            'title' => $row["name"],
+            'description' => $row["description"],
+            'users' => $users,
+            'guests' => [
+                'capacity' => $row["capacity"],
+                'confirmed' => $confirmed,
+            ],
+        ];
 
         header('Content-Type: application/json');
         echo json_encode($data);
