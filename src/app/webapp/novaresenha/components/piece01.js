@@ -1,16 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import InputField from '@/src/components/InputField';
 import AddressField from '@/src/components/AddressField';
 import Toggle from '@/src/components/Toggle';
 
-const Piece01 = ({}) => {
+const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange }) => {
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [toggleValue, setToggleValue] = useState(true);
+
+    const handleNameFieldChange = (event) => {
+        const value = event.target.value;
+        setName(value);
+        onNameFieldChange(value);
+    };
+
+    const handleAddressFieldChange = (event) => {
+        const value = event.target.value;
+        setAddress(value);
+        onAddressFieldChange(value);
+    };
+
+    const handleToggleChange = (isChecked) => {
+        setToggleValue(isChecked);
+        onToggleChange(isChecked);
+    };
+
     return (
         <div className='w-full flex flex-col h-fit gap-3'>
-            <InputField Icon={'thunder'} showIcon={true} placeholder={'Nome da resenha'} />
-            <AddressField initialAddress={''} onAddressSelect={''} placeholder={'Endereço'} />
-            <Toggle labelText={'Resenha para +18?'} questionAction={''} showLabel={true} showQuestion={false} startToggled={true} textColor={'white'} />
+            <InputField
+                action={handleNameFieldChange}
+                Icon='thunder'
+                showIcon={true}
+                placeholder='Nome da resenha'
+                value={name}
+            />
+            <InputField
+                action={handleAddressFieldChange}
+                Icon='pin'
+                showIcon={true}
+                placeholder='Endereço'
+                value={address}
+            />
+            <Toggle
+                onToggle={handleToggleChange}
+                labelText='Resenha para +18?'
+                showLabel={true}
+                showQuestion={false}
+                startToggled={toggleValue}
+                textColor='white'
+            />
         </div>
-    )
-}
+    );
+};
 
 export default Piece01;

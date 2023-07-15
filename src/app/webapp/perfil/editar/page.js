@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import UserProfileEditor from '@/src/components/UserProfileEditor';
 import Vector from '@/src/components/Vector';
-import Modal from '@/src/components/Modal';
-import Button from '@/src/components/Button';
-import ModalButton from '@/src/components/ModalButton';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Tag from '@/src/components/Tag';
 import { interestsData } from '@/src/components/interestsData';
@@ -22,28 +19,9 @@ export default function EditProfile() {
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');
 
-    const [checkerCallback, setCheckerCallback] = useState(null);
     const [newProfile, setNewProfile] = useState(null);
 
-    const [hasChange, setHasChange] = useState(false);
 
-    const [isUnsavedChangesModalOpen, setUnsavedChangesModalOpen] = useState(false);
-    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
-
-    var [interests, setInterests] = useState([]);
-    var [tempInterests, setTempInterests] = useState(interests);
-
-    var [name, setName] = useState(name);
-    var [tempName, setTempName] = useState(name);
-
-    var [username, setUsername] = useState(username);
-    var [tempUsername, setTempUsername] = useState(username);
-    
-    var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
-
-    var [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
-    var [about, setAbout] = useState('');
-    var [tempAbout, setTempAbout] = useState(about);
 
     const [data, setData] = useState(null);
 
@@ -61,6 +39,8 @@ export default function EditProfile() {
         }
     };
 
+
+
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
@@ -69,88 +49,121 @@ export default function EditProfile() {
                 validator: validator
             });
             setData(response);
-        } 
-        
-        catch (error) {
+            setNewTempName(response.name);
+            setTempName(response.name);
+            setNewTempUsername(response.username);
+            setTempUsername(response.username);
+            setAbout(response.about);
+            setNewTempAbout(response.about);
+            setTempAbout(response.about);
+            const interestsObject = JSON.parse(response.interests);
+            const formatinterests = interestsObject.interests.join(',');
+            setUserInterests(formatinterests.split(',').map(Number));
+        } catch (error) {
             console.error(error);
         }
     };
 
-    const [allInterests, setAllInterests] = useState(
-        [...interestsData].map((interest) => {
-            const isSelected = interests.includes(interest.id);
-            return { ...interest, selected: isSelected };
-        }).sort((a, b) => b.selected - a.selected)
-    );
 
-    const toggleEditInterestsPageOpen = () => {
-        if (isEditInterestsPageOpen) {
-            setTempInterests(interests);
-        }
-        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
-    };
+    var [name, setName] = useState(name);
+    var [username, setUsername] = useState(username);
+    var [tempName, setTempName] = useState('');
+    var [newTempName, setNewTempName] = useState('');
+    var [tempUsername, setTempUsername] = useState('');
+    var [newTempUsername, setNewTempUsername] = useState('');
+    var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
 
-    const handleInterestClick = (interestId) => {
-        setTempInterests(
-            tempInterests.includes(interestId)
-            ? tempInterests.filter(id => id !== interestId)
-            : [...tempInterests, interestId]
-        );
-    };
+    const fixNameData = () => {
+        setTempName(newTempName);
+    }
 
-    const saveInterests = () => {
-        setInterests(tempInterests);
-        toggleEditInterestsPageOpen();
-        setHasChange(true);
-    };
+    useEffect(() => {
+        setTempName(name);
+        setTempUsername(username);
+    }, [name, username]);
 
-    const validUserInterests = interests.filter(interestId => allInterests.some(interest => interest.id === interestId));
-    const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
-    
     const toggleEditUsernamePageOpen = () => {
-        if (isEditUsernamePageOpen) {
-            setTempName(name);
-            setTempUsername(username);
+        setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
+    };
+
+    const cancelNameUsernameChange = () => {
+        if (tempUsername !== newTempUsername || tempName !== newTempName) {
+            setNewTempName(tempName);
+            setNewTempUsername(tempUsername);
         }
         setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
     };
 
+    const handleNameChange = (event) => {
+        setNewTempName(event.target.value);
+    };
+
     const handleUsernameChange = (event) => {
-        setTempName(event.target.value);
+        setNewTempUsername(event.target.value);
     };
 
-    const handleHandleChange = (event) => {
-        setTempUsername(event.target.value);
-    };
+    const saveNameAndUsername = () => {
+        setName(prevName => {
+            if (prevName !== newTempName) {
+                setTempName(newTempName);
+                return newTempName;
+            }
+            return prevName;
+        });
 
-    const saveUsernameAndHandle = () => {
-        setName(tempName);
-        setUsername(tempUsername);
+        setUsername(prevUsername => {
+            if (prevUsername !== newTempUsername) {
+                setTempUsername(newTempUsername);
+                return newTempUsername;
+            }
+            return prevUsername;
+        });
+
         toggleEditUsernamePageOpen();
-        setHasChange(true);
     };
+
+    useEffect(() => {
+        setTempName(name);
+        setTempUsername(username);
+    }, [name, username]);
+
+
+
+    var [about, setAbout] = useState('');
+    var [tempAbout, setTempAbout] = useState('');
+    var [newTempAbout, setNewTempAbout] = useState('');
+    var [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
+
+    const fixAboutData = () => {
+        setTempAbout(newTempAbout);
+    }
+
+    const cancelAboutChange = () => {
+        if (tempAbout !== newTempAbout) {
+            setNewTempAbout(tempAbout);
+        }
+        setIsEditAboutPageOpen(!isEditAboutPageOpen);
+    }
 
     const toggleEditAboutPageOpen = () => {
+        fixAboutData();
         setIsEditAboutPageOpen(!isEditAboutPageOpen);
     };
 
     const handleAboutChange = (event) => {
-        setTempAbout(event.target.value);
+        setNewTempAbout(event.target.value);
     };
 
     const saveAbout = () => {
-        setAbout(tempAbout);
+        setAbout(prevAbout => {
+            if (prevAbout !== newTempAbout) {
+                setTempAbout(newTempAbout);
+                return newTempAbout;
+            }
+            return prevAbout;
+        });
         toggleEditAboutPageOpen();
-        setHasChange(true);
-    };
-
-    useEffect(() => {
-        setTempInterests(interests);
-    }, [interests]);
-
-    useEffect(() => {
-        setTempAbout(about);
-    }, [about]);
+    }
 
     useEffect(() => {
         if (!isEditAboutPageOpen) {
@@ -158,19 +171,54 @@ export default function EditProfile() {
         }
     }, [isEditAboutPageOpen]);
 
+
+    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
+    const [userInterests, setUserInterests] = useState([]);
+    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+
+    const [allInterests, setAllInterests] = useState(
+        [...interestsData].map((interest) => {
+            const isSelected = userInterests.includes(interest.id);
+            return { ...interest, selected: isSelected };
+        }).sort((a, b) => b.selected - a.selected)
+    );
+
     useEffect(() => {
-        setTempName(name);
-        setTempUsername(username);
-    }, [name, username]);
+        setTempUserInterests(userInterests);
+    }, [userInterests]);
 
     useEffect(() => {
         setAllInterests(
             [...interestsData].map((interest) => {
-                const isSelected = tempInterests.includes(interest.id);
+                const isSelected = tempUserInterests.includes(interest.id);
                 return { ...interest, selected: isSelected };
             }).sort((a, b) => b.selected - a.selected)
         );
-    }, [tempInterests]);
+    }, [tempUserInterests]);
+
+    const toggleEditInterestsPageOpen = () => {
+        if (isEditInterestsPageOpen) {
+            setTempUserInterests(userInterests);
+        }
+        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
+    };
+
+    const handleInterestClick = (interestId) => {
+        setTempUserInterests(
+            tempUserInterests.includes(interestId)
+                ? tempUserInterests.filter(id => id !== interestId)
+                : [...tempUserInterests, interestId]
+        );
+    };
+
+    const saveInterests = () => {
+        setUserInterests(tempUserInterests);
+        toggleEditInterestsPageOpen();
+    };
+
+    const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
+    const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
+
 
     useEffect(() => {
         fetchData();
@@ -179,16 +227,23 @@ export default function EditProfile() {
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }
 
     var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = data
+    var parsedInterests = [];
 
-    var interests = JSON.parse(interests).interests;
+try {
+  parsedInterests = JSON.parse(interests);
+} catch (error) {
+  console.error('Erro ao fazer o parsing dos interesses:', error);
+}
 
-    interestsData.filter(interest => interests.includes(interest.id))
+if (Array.isArray(parsedInterests)) {
+  setUserInterests(parsedInterests.map(interest => interest.id));
+}
 
     return (
         <div>
@@ -196,12 +251,12 @@ export default function EditProfile() {
                 <PageHeader
                     pageTitle={'Editar perfil'}
                     isBack={true}
-                    checker={() => {null}}
+                    checker={() => { null }}
                     userData={data}
                 />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
-                        <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
+                    <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
                             <div className='w-full'>
                                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
                                     {[...allInterests].sort((a, b) => b.selected - a.selected).map((interest) => (
@@ -227,34 +282,34 @@ export default function EditProfile() {
                                 </p>
                             </div>
                         </EditInfoPage>
-                        <EditInfoPage isOpen={isEditUsernamePageOpen} pageTitle={'Nome e @utilizador'} saveAction={saveUsernameAndHandle} togglePage={toggleEditUsernamePageOpen}>
+                        <EditInfoPage isOpen={isEditUsernamePageOpen} pageTitle={'Nome e @utilizador'} saveAction={saveNameAndUsername} togglePage={cancelNameUsernameChange}>
                             <div className='w-full'>
                                 <label className='font-bold'>Nome:</label>
                                 <input
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='Nome de usuário'
-                                    value={tempName}
-                                    onChange={handleUsernameChange}
+                                    value={newTempName}
+                                    onChange={handleNameChange}
                                 />
                                 <label className='font-bold'>Nome de usuário:</label>
                                 <input
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 '
                                     placeholder='@'
-                                    value={tempUsername}
-                                    onChange={handleHandleChange}
+                                    value={newTempUsername}
+                                    onChange={handleUsernameChange}
                                 />
                             </div>
                             <p className='text-sm'>
                                 Seu nome e nome de usuário são identificações importantes. O nome pode ser livremente escolhido e o nome de usuário é único, permitindo que outros usuários possam mencionar ou buscar você na plataforma. Escolha um que represente sua identidade.
                             </p>
                         </EditInfoPage>
-                        <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={toggleEditAboutPageOpen}>
+                        <EditInfoPage isOpen={isEditAboutPageOpen} saveAction={saveAbout} pageTitle={'Sobre você'} togglePage={cancelAboutChange}>
                             <div className='w-full'>
                                 <textarea
                                     rows="4"
                                     className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
                                     placeholder='Fale sobre você'
-                                    value={tempAbout}
+                                    value={newTempAbout}
                                     onChange={handleAboutChange}
                                 ></textarea>
                             </div>
@@ -271,18 +326,20 @@ export default function EditProfile() {
                                 newProfile={newProfile}
                                 onChange={newImage => {
                                     setNewProfile(newImage);
-                                    setHasChange(true);
                                     console.log("New image selected: ", newImage);
                                 }}
                             />
                         </div>
                         <div className='w-full flex flex-col items-center'>
-                            <div onClick={toggleEditUsernamePageOpen} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
+                            <div onClick={() => {
+                                fixNameData();
+                                toggleEditUsernamePageOpen();
+                            }} className='flex flex-row items-center gap-2 w-fit bg-purpleT ring-1 ring-inset ring-whiteT1 px-2 py-1 rounded-xl'>
                                 <div className='flex flex-col items-center'>
                                     <div className='flex flex-row items-center justify-center content-center gap-1'>
-                                        <h1 className='font-bold text-2xl'>{name}</h1>{verified == true && <Vector vectorname={'verified02'} />}
+                                        <h1 className='font-bold text-2xl'>{newTempName}</h1>{verified == true && <Vector vectorname={'verified02'} />}
                                     </div>
-                                    <h3 className='font-normal text-sm'>@{username}</h3>
+                                    <h3 className='font-normal text-sm'>@{newTempUsername}</h3>
                                 </div>
                                 <div className='right-0 top-0 rounded-full'>
                                     <Vector vectorname={'edit02'} />
@@ -290,22 +347,30 @@ export default function EditProfile() {
                             </div>
                         </div>
                         <div className='w-full h-fit'>
-                            <div onClick={toggleEditAboutPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                            <div onClick={() => {
+                                fixAboutData()
+                                toggleEditAboutPageOpen();
+                            }} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
                                     <h1 className='font-bold text-lg'>Sobre</h1>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p className="text-left h-fit" style={{ whiteSpace: "normal", overflowWrap: "break-word" }}>{about}</p>
+                                <p className="text-left h-fit" style={{ whiteSpace: "normal", overflowWrap: "break-word" }}>{newTempAbout}</p>
                             </div>
                         </div>
                         <div className='w-full'>
-                            <div onClick={(e) => { e.stopPropagation(); toggleEditInterestsPageOpen(); }} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl">
+                        <div onClick={(e) => {
+                                e.stopPropagation();
+                                toggleEditInterestsPageOpen();
+                            }}
+                                className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
+                            >
                                 <div className="flex flex-row gap-2 items-center">
                                     <h1 className='font-bold text-lg'>Interesses</h1>
                                     <Vector vectorname={'edit02'} />
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {interestsData.filter(interest => interests.includes(interest.id)).map(interest => (
+                                    {renderInterests.map((interest) => (
                                         <Tag
                                             key={interest.id}
                                             tagname={interest.name}

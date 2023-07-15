@@ -25,7 +25,9 @@ $requests = [
   "tryToCreateUser",
   "clearUserNotifications",
   "seeUserNotifications",
-  "switchFollowUser"
+  "switchFollowUser",
+  "sendMessage",
+  "getMessages",
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

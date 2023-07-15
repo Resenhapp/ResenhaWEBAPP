@@ -5,16 +5,16 @@ import Modal from '@/src/components/Modal';
 import { tagsData } from '@/src/components/tagsData';
 import EditInfoPage from '@/src/components/EditInfoPage';
 
-const Piece04 = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC    // TAGS LOGIC
+const Piece04 = ({descriptionContent, selectedTags}) => {
 
     const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);
     const toggleEditTagsPageOpen = () => {
         setIsEditTagsPageOpen(!isEditTagsPageOpen);
     };
 
+    const [eventDescription, setEventDescription] = useState('');
+
+    
     const [eventTags, setEventTags] = useState([]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
 
@@ -62,7 +62,11 @@ const Piece04 = () => {
     const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
-
+    const handleEventDescriptionChange = (description) => {
+        const value = description.target.value;
+        setEventDescription(value)
+        descriptionContent(value);
+    }
 
     return (
         <div className="w-full flex flex-col h-fit gap-3">
@@ -72,6 +76,8 @@ const Piece04 = () => {
                     <textarea
                         className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
                         placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
+                        value={eventDescription}
+                        onChange={handleEventDescriptionChange}
                     />
                 </div>
             </div>

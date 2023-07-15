@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import DateComponent from './DateComponent';
 
-const DateScroll = () => {
+const DateScroll = ({ onDateSelect }) => {
   const [selected, setSelected] = useState(null);
 
-  const handleDateSelect = (date) => {
+  const handleDateSelect = (date, day, month, year) => {
     setSelected(date);
+    onDateSelect(day, month, year);
   };
 
   const currentDate = new Date();
@@ -18,6 +19,7 @@ const DateScroll = () => {
     const dayName = date.toLocaleString('pt-BR', { weekday: 'short' });
     const monthName = date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
     const dayNumber = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
 
     dateComponents.push(
       <DateComponent
@@ -25,6 +27,7 @@ const DateScroll = () => {
         day={dayName}
         number={dayNumber}
         month={monthName}
+        year={year}
         selectedDate={selected}
         onDateSelect={handleDateSelect}
       />

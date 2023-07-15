@@ -706,6 +706,8 @@ function getUserData() {
 }
 
 function getInviteData() {
+  global $enckey;
+
   $code = $_POST['code'];
 
   $query = "SELECT * FROM parties WHERE code = '$code'";
@@ -725,6 +727,7 @@ function getInviteData() {
         list($day, $month, $year) = explode('/', $dateString);
 
         $day = (int) $day;
+        $rawmonth = $month;
         $month = convertMonth($month);
         $year = (int) $year; 
 
@@ -740,20 +743,81 @@ function getInviteData() {
           }
         }
 
-        $data = [
+        
+
+        if (isset($_POST['username'])&&isset($_POST['validator'])) {
+            $validator = $_POST['validator'];
+            $username = $_POST['username'];
+        
+            if (strlen($username) >= 30) {
+                $username = decrypt($_POST['username'], $enckey);
+            }
+
+            if (check_session($username, $validator)) {
+                $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
+                $party_price = queryDB($party_price_query)[0];
+            
+                $guests_query = "SELECT method FROM guests WHERE party = '$code'";
+                $payment_results = queryDBRows($guests_query);
+                
+                $income = [
+                    "card" => 0, 
+                    "cash" => 0,
+                    "pix" => 0, 
+                ];
+            
+                foreach ($payment_results as $payment_row) {
+                    $method = $payment_row['method'];
+            
+                    if ($method == 'pix') {
+                        $income['pix'] += $party_price;
+                    } 
+                    elseif ($method == 'cartao') {
+                        $income['card'] += $party_price;
+                    }
+                    else {
+                        $income['cash'] += $party_price;
+                    }
+                }
+
+                $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+
+                $sql_date = $date->format('Y-m-d H:i:s');
+
+                $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
+                $impressions_count = queryDB($impressions_query)[0];
+
+                $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
+                $views_count = queryDB($views_query)[0];
+
+            }
+          }
+
+          $data = [
+            'date' => [
+                'day' => $day,
+                'month' => $month,
+                'rawMonth' => $rawmonth,
+                'year' => $year,
+                'dayOfWeek' => $dayOfWeek,
+            ],
+            'impressions' => [
+                'views' => $impressions_count,
+                'clicks' => $views_count,
+                'purchases' => 0,
+            ],
+            'income' => $income,
             'pricePerItem' => $row["price"],
-            'day' => $day,
-            'month' => $month,
-            'year' => $year,
-            'dayOfWeek' => $dayOfWeek,
-            'confirmed' => $confirmed,
-            'maxguests' => $row["capacity"],
             'hour' => $row["time"],
             'address' => $row["address"],
             'host' => $host,
             'title' => $row["name"],
             'description' => $row["description"],
-            'users' => $users
+            'users' => $users,
+            'guests' => [
+                'capacity' => $row["capacity"],
+                'confirmed' => $confirmed,
+            ],
         ];
 
         header('Content-Type: application/json');

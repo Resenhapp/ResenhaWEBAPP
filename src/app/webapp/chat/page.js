@@ -21,6 +21,12 @@ export default function Chat() {
             timestamp: '10:12',
             sent: false
         },
+        {
+            imageUrl: 'https://resenha.app/publico/recursos/imagens/u/fe.jpg',
+            message: 'Mano, você já imaginou como seria viver em Marte?',
+            timestamp: '10:12',
+            sent: true
+        },
     ]);
 
     const sendMessage = (message) => {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Vector from './Vector';
-import Modal from './Modal';
 
 const EventHour = ({ hasEnd, placeHolderStart, placeHolderEnd, onStartTimeClick, onEndTimeClick }) => {
 
