@@ -1,4 +1,5 @@
 'use client'
+
 import Button from "@/src/components/Button"
 import Image from "next/image"
 import Vector from "@/src/components/Vector"
@@ -7,8 +8,25 @@ import React, { useState, useEffect } from 'react';
 import Tag from "@/src/components/Tag"
 import { tagsData } from "@/src/components/tagsData"
 import Toggle from "@/src/components/Toggle"
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
+import { setHours } from "date-fns"
 
 export default function EditEvent() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const partyCode = urlParams.get('r');
+    
+    var u = Cookies.get('username');
+    var validator = Cookies.get('validator');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
+
+    const handleNavigation = (pageToGo) => {
+        window.location.href = `/webapp/${pageToGo}`;
+    };
 
     const [isEditNamePageOpen, setIsEditNamePageOpen] = useState(false);
     const toggleEditNamePageOpen = () => {
@@ -49,16 +67,6 @@ export default function EditEvent() {
     const toggleEditPricePageOpen = () => {
         setIsEditPricePageOpen(!isEditPricePageOpen);
     };
-
-    var initialName = "Resenha de los Manos";
-    var initialDate = "20/03/2023";
-    var initialHour = "20:00";
-    var initialFinalHour = "20:00";
-    var initialLimit = "80";
-    var initialVipLimit = "0";
-    var initialAddress = "Rua ramiro barcelos, 1450";
-    var initialDescription = "Vai ter muitos amigos festejando e dançando pra valer venha curtir com a gente na resenha de los manos! realmente vamos botar para quebrar! contaremos com a ilustre presença de Estevan e Bisteca.";
-    var initialPrice = "R$ 20,00";
 
     const [eventTags, setEventTags] = useState([1, 2, 4]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
@@ -108,7 +116,7 @@ export default function EditEvent() {
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
 
-    const [description, setDescription] = useState(initialDescription);
+    const [description, setDescription] = useState('');
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
@@ -117,7 +125,7 @@ export default function EditEvent() {
         toggleEditDescriptionPageOpen();
     };
 
-    const [address, setAddress] = useState(initialAddress);
+    const [address, setAddress] = useState('');
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
     };
@@ -125,7 +133,7 @@ export default function EditEvent() {
         toggleEditAddressPageOpen();
     };
 
-    const [date, setDate] = useState(initialDate);
+    const [date, setDate] = useState('');
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -186,7 +194,7 @@ export default function EditEvent() {
         setIsEndTime(!isEndTime);
     };
 
-    const [startHour, setStartHour] = useState(initialHour);
+    const [startHour, setStartHour] = useState('');
     const handleStartHourChange = (event) => {
         let inputHour = event.target.value;
 
@@ -199,7 +207,7 @@ export default function EditEvent() {
         setStartHour(inputHour);
     };
 
-    const [endHour, setEndHour] = useState(initialFinalHour);
+    const [endHour, setEndHour] = useState('');
     const handleEndHourChange = (event) => {
         let inputHour = event.target.value;
 
@@ -221,9 +229,9 @@ export default function EditEvent() {
 
 
     // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC
-    const [limit, setLimit] = useState(initialLimit);
+    const [limit, setLimit] = useState('');
     const [isVip, setIsVip] = useState(false);
-    const [vipLimit, setVipLimit] = useState(initialVipLimit);
+    const [vipLimit, setVipLimit] = useState('');
     const [limitError, setLimitError] = useState('');
 
     useEffect(() => {
@@ -288,7 +296,7 @@ export default function EditEvent() {
 
     // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
 
-    const [name, setName] = useState(initialName);
+    const [name, setName] = useState('');
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -301,7 +309,7 @@ export default function EditEvent() {
 
     // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC
 
-    const [price, setPrice] = useState(initialPrice);
+    const [price, setPrice] = useState('');
 
     const handlePriceChange = (event) => {
         const onlyNumbers = event.target.value.replace(/\D/g, "");
@@ -318,6 +326,73 @@ export default function EditEvent() {
         console.log(price);
         toggleEditPricePageOpen();
     };
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getInviteData',
+                username: u,
+                validator: validator,
+                code: partyCode,
+            });
+            
+            setData(response);
+
+            setName(response.title);
+            setDate(response.date.day+"/"+response.date.rawMonth+"/"+response.date.year);
+            setStartHour(response.hour.start);
+            setEndHour(response.hour.end);
+            setLimit(response.guests.capacity);
+            setVipLimit('0');
+            setAddress(response.address);
+            setDescription(response.description);
+            setPrice(response.pricePerItem);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading />
+            </div>
+        );
+    }
+
+    if(data.error) {
+        return (
+            <div className="h-screen w-full flex flex-col justify-between content-center items-center">
+                <PageHeader
+                pageTitle={'Detalhes'}
+                isBack={true}
+                checker={() => { null }}
+            />
+                <h1 className="w-[90%] h-full flex justify-center items-center content-center text-3xl text-center">
+                    Desculpe, esta resenha não existe ou foi excluída. 🫤
+                </h1>
+            </div>
+        )
+    }
+
+    var { guests } = data
 
     return (
         <div className="bg-purpleT1 h-screen min-h-fit">

@@ -76,7 +76,7 @@ export default function HomePage() {
         const userParty = partiesWent[0];
         var eventNameToUser = userParty.name;
         var eventDateToUser = userParty.date;
-        var eventTimeToUser = userParty.time;
+        var eventTimeToUser = userParty.start;
         var eventCodeToUser = userParty.code;
         var eventHashToUser = userParty.hash;
     }
@@ -85,10 +85,11 @@ export default function HomePage() {
         const userParty = partiesMade[0];
         var eventNameFromUser = userParty.name;
         var eventDateFromUser = userParty.date;
-        var eventTimeFromUser = userParty.time;
+        var eventTimeFromUser = userParty.start;
         var eventConfirmedFromUser = userParty.confirmed;
         var eventCapacityFromUser = userParty.capacity;
         var eventHashFromUser = userParty.hash;
+        var eventCodeFromUser = userParty.code;
     }
 
     return (
@@ -112,6 +113,7 @@ export default function HomePage() {
                         eventGuests={eventConfirmedFromUser}
                         eventHour={eventTimeFromUser}
                         eventMax={eventCapacityFromUser}
+                        eventCode={eventCodeFromUser}
                         eventImage={`https://media.resenha.app/r/${eventHashFromUser}.png`}
                     />
                 }

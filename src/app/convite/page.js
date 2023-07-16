@@ -164,7 +164,6 @@ export default function Invite() {
             }
         }
     };
-
  
     return (
         <div className="flex flex-col justify-start min-h-screen h-fit relative bg-purpleT01">

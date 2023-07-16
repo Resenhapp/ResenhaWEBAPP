@@ -21,14 +21,15 @@ $requests = [
   "getHelpData",
   "getFeedData",
   "tryToCreateGuest",
+  "tryToWithdraw",
   "tryToAuthenticate",
   "tryToCreateUser",
   "clearUserNotifications",
   "seeUserNotifications",
   "switchFollowUser",
-  "sendChatMessage",
+  "sendMessage",
   "getMessages",
-  "editChatMessage",
+  "editUserData"
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

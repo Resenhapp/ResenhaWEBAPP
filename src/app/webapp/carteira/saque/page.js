@@ -27,8 +27,9 @@ export default function Withdraw() {
     const [errorContent, setErrorContent] = useState(null);
     const [withdrawalAmount, setWithdrawalAmount] = useState(0);
 
-    const handleWithdraw = () => {
+    const handleWithdraw = async () => {
         const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
+
         if (withdrawalAmount < 50) {
             setErrorContent(null);
             setTimeout(() => setErrorContent('O valor mínimo de saque é de R$ 50,00.'), 0);
@@ -41,7 +42,23 @@ export default function Withdraw() {
         
         else {
             setErrorContent(null);
-            alert(`Você está sacando: R$ ${withdrawalAmount}`);
+
+            try {
+                const response = await makeRequest('http://localhost/resenha.app/api/', { 
+                    request: 'tryToWithdraw', 
+                    username: username,
+                    validator: validator,
+                    amount: withdrawalAmount
+                });
+
+                if (!response.error) {
+                    window.location.href = `/webapp/carteira/saque/sucesso?a=${withdrawalAmount}`;
+                }
+            }
+    
+            catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -83,8 +100,6 @@ export default function Withdraw() {
 
     var avaliableCash = balances.available;
     
-    var bankName = 'Banco Inter';
-
     const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
 
     return (
@@ -98,7 +113,6 @@ export default function Withdraw() {
                                 <h1 className='font-bold text-2xl'>Dados bancários</h1>
                                 <h1 className=''><b>Conta: </b>{cpf}</h1>
                                 <h1 className=''><b>Nome: </b>{name}</h1>
-                                <h1 className=''><b>Banco: </b>{bankName}</h1>
                             </div>
                             <div className='w-full'>
                                 <div>
