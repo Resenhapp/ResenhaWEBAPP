@@ -2,10 +2,38 @@ import React from 'react';
 import RoundButton from './RoundButton';
 import Vector from './Vector';
 
-const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
+const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
+
+    const handleShare = () => {
+        const shareData = {
+            title: eventName,
+            text: `Confira essa incrível ${eventName}!`,
+            url: `https://resenha.app/u/${eventCode}!`,
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData)
+                .then(() => {
+                    console.log("Invite shared successfully");
+                })
+                .catch((error) => {
+                    console.error("Error sharing invite:", error);
+                });
+        } else {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                const shareUrl = `whatsapp://send?text=${encodeURIComponent(`${shareData.title}\n${shareData.text}\n${shareData.url}`)}`;
+                window.location.href = shareUrl;
+            } else {
+                alert("Web Share API not supported on this device");
+            }
+        }
+    };
+
     return (
         <div className='flex flex-col items-center'>
             <div className="relative z-1 flex flex-row items-end w-full justify-between h-[40vh] ring-1 ring-inset bg-gradient-to-t from-purpleT0 ring-whiteT1 rounded-2xl">
@@ -25,7 +53,7 @@ const MyEventsBanner = ({ eventName, eventDate, eventHour, eventGuests, eventMax
                     </div>
                 </div>
                 <div className='p-4 z-[1]'>
-                    <RoundButton icon={'share'} onClick={() => { console.log('Button Clicked!'); window.alert('Button clicked!')} } />
+                    <RoundButton icon={'share'} onClick={handleShare} />
                 </div>
             </div>
             <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px]

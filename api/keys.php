@@ -21,6 +21,7 @@ $requests = [
   "getHelpData",
   "getFeedData",
   "tryToCreateGuest",
+  "tryToWithdraw",
   "tryToAuthenticate",
   "tryToCreateUser",
   "clearUserNotifications",
@@ -28,6 +29,7 @@ $requests = [
   "switchFollowUser",
   "sendMessage",
   "getMessages",
+  "editUserData"
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

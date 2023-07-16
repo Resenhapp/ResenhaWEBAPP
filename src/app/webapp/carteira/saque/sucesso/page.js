@@ -14,7 +14,21 @@ export default function WithdrawSuccess() {
         window.location.href = '/webapp/carteira/';
     };
 
-    var withdrawValue = 123;
+    const urlParams = new URLSearchParams(window.location.search);
+    const withdrawValue = urlParams.get('a');
+    let formattedWithdrawValue = '';
+    
+    if (withdrawValue) {
+        formattedWithdrawValue = parseFloat(withdrawValue).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    } 
+    
+    else {
+        window.location.href = '/webapp/carteira/';
+    }
+
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Saque solicitado'} isBack={true} checker={() => { null }} />
@@ -27,7 +41,7 @@ export default function WithdrawSuccess() {
                             <hr className='bg-purpleT3 ring-0 w-full rounded-full' />
                             <div>
                                 <p className='text-center'>Valor solicitado:</p>
-                                <p className='text-3xl font-bold'>R$ 1.106,00</p>
+                                <p className='text-3xl font-bold'>{formattedWithdrawValue}</p>
                             </div>
                         </div>
                         <div>

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-const PageHeader = ({ pageTitle, isBack = false, checker, userData }) => {
+const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [data, setData] = useState(null);
@@ -88,14 +88,13 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData }) => {
 
     return (
         <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
-          {isBack ? <Back defaultEvent={async () => { await checker(); }}/> : <MenuButton toggleMenu={toggleMenu} />}
+          {isBack ? <Back defaultEvent={async () => { await checker(); }} destination={destination} /> : <MenuButton toggleMenu={toggleMenu} />}
           {data && <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} userData={data} />}
           <h1 className='text-xl text-center text-whiteT1 font-bold'>{pageTitle}</h1>
           <NotificationsButton toggleNotifications={toggleNotifications} dotVisible={notified} />
           {data && <Notifications isOpen={isNotificationsOpen} toggleNotifications={toggleNotifications} userData={data} />}
         </div>
     );
-      
 }
 
 export default PageHeader;
