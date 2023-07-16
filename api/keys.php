@@ -26,8 +26,9 @@ $requests = [
   "clearUserNotifications",
   "seeUserNotifications",
   "switchFollowUser",
-  "sendMessage",
+  "sendChatMessage",
   "getMessages",
+  "editChatMessage",
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

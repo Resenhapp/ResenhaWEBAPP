@@ -829,6 +829,12 @@ function getInviteData() {
   }
 }
 
+function sendChatMessage() {
+    $messageContent = $_POST['content'];
+
+}
+
+
 function tryToCreateGuest() {
   $party = $_POST['code'];
   $name = $_POST['name'];
@@ -979,6 +985,79 @@ function tryToCreateGuest() {
     echo json_encode($data);
   }
 }
+
+function getMessages() {
+    global $link;
+    $chatCode = $_POST['code'];
+    $type = $_POST['type'];
+    $chatId = '';
+
+    if ($type !== 'dm' && $type !== 'group') {
+        throw new Exception("Invalid chat type: " . $type);
+    }
+
+    if ($type === 'dm') {
+        $stmt = $link->prepare("SELECT id FROM users WHERE username = ?");
+    } else {
+        $stmt = $link->prepare("SELECT id FROM parties WHERE code = ?");
+    }
+    
+    if ($stmt === false) {
+        throw new Exception("Failed to prepare statement: " . $link->error);
+    }
+    
+    if (!$stmt->bind_param("s", $chatCode)) {
+        throw new Exception("Failed to bind parameters: " . $stmt->error);
+    }
+
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute statement: " . $stmt->error);
+    }
+    
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        throw new Exception("No chat found with code: " . $chatCode);
+    }
+
+    $chatId = $row['id'];
+
+    $query = "SELECT id, sender, date, destination, type, content FROM messages WHERE destination = ?";
+
+    $stmt = $link->prepare($query);
+    if ($stmt === false) {
+        throw new Exception("Failed to prepare statement: " . $link->error);
+    }
+    
+    if (!$stmt->bind_param("i", $chatId)) {
+        throw new Exception("Failed to bind parameters: " . $stmt->error);
+    }
+
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute statement: " . $stmt->error);
+    }
+
+    $query_result = $stmt->get_result();
+
+    $messages = array();
+
+    while ($row = $query_result->fetch_assoc()) {
+        $message = array(
+            'id' => $row['id'],
+            'sender' => $row['sender'],
+            'date' => $row['date'],
+            'destination' => $row['destination'],
+            'type' => $row['type'],
+            'content' => $row['content']
+        );
+
+        $messages[] = $message;
+    }
+
+    return $messages;
+}
+
 
 function tryToAuthenticate() {
     global $enckey;

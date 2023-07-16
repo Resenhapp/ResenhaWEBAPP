@@ -41,7 +41,7 @@ export default function EventDetails() {
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
-                request: 'getInviteData',
+                request: 'getChatMessages',
                 username: u,
                 validator: validator,
                 code: partyCode,

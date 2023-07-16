@@ -1,8 +1,11 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import ChatInput from '@/src/components/ChatInput';
 import ChatBubble from '@/src/components/ChatBubble';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 export const metadata = {
     title: 'Resenha.app • Chat',
@@ -10,24 +13,78 @@ export const metadata = {
 }
 
 export default function Chat() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const groupChat = urlParams.get('r');
+    const dualChat = urlParams.get('u');
+
+    let chatType = '';
+    if (groupChat != null) {
+        chatType = 'group';
+    } else {
+        chatType = 'dm';
+    }
+
+    let chatCode = '';
+    if (groupChat != null) {
+        chatCode = groupChat;
+    } else {
+        chatCode = dualChat;
+    }
+
+
+    var u = Cookies.get('username');
+    var validator = Cookies.get('validator');
+
+    const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const qs = require('qs');
+
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
 
-    const [messages, setMessages] = useState([
-        {
-            imageUrl: 'https://resenha.app/publico/recursos/imagens/u/fe.jpg',
-            message: 'Mano, você já imaginou como seria viver em Marte?',
-            timestamp: '10:12',
-            sent: false
-        },
-        {
-            imageUrl: 'https://resenha.app/publico/recursos/imagens/u/fe.jpg',
-            message: 'Mano, você já imaginou como seria viver em Marte?',
-            timestamp: '10:12',
-            sent: true
-        },
-    ]);
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getMessages',
+                username: u,
+                validator: validator,
+                code: chatCode,
+                type: chatType,
+            });
+    
+            if (Array.isArray(response)) {
+                setMessages(response);
+            } else {
+                console.error('Response is not an array:', response);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading />
+            </div>
+        );
+    }
 
     const sendMessage = (message) => {
         const now = new Date();
