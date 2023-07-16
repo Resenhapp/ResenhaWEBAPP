@@ -20,13 +20,27 @@ export default function EditProfile() {
     var validator = Cookies.get('validator');
 
     const [newProfile, setNewProfile] = useState(null);
-
-
-
     const [data, setData] = useState(null);
 
     const axios = require('axios');
     const qs = require('qs');
+    
+    var [about, setAbout] = useState('');
+    var [tempAbout, setTempAbout] = useState('');
+    var [newTempAbout, setNewTempAbout] = useState('');
+    var [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
+
+    var [name, setName] = useState(name);
+    var [username, setUsername] = useState(username);
+    var [tempName, setTempName] = useState('');
+    var [newTempName, setNewTempName] = useState('');
+    var [tempUsername, setTempUsername] = useState('');
+    var [newTempUsername, setNewTempUsername] = useState('');
+    var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+
+    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
+    const [userInterests, setUserInterests] = useState([]);
+    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
 
     const makeRequest = async (url, data) => {
         try {
@@ -39,8 +53,6 @@ export default function EditProfile() {
         }
     };
 
-
-
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
@@ -48,6 +60,7 @@ export default function EditProfile() {
                 username: u,
                 validator: validator
             });
+
             setData(response);
             setNewTempName(response.name);
             setTempName(response.name);
@@ -56,31 +69,79 @@ export default function EditProfile() {
             setAbout(response.about);
             setNewTempAbout(response.about);
             setTempAbout(response.about);
-            const interestsObject = JSON.parse(response.interests);
-            const formatinterests = interestsObject.interests.join(',');
-            setUserInterests(formatinterests.split(',').map(Number));
-        } catch (error) {
+
+            const interests = response.interests;
+            const interestsAsIntegers = [];
+
+            for (let i = 0; i < interests.length; i++) {
+                const interest = parseInt(interests[i], 10);
+                interestsAsIntegers.push(interest);
+            }
+
+            setUserInterests(interestsAsIntegers); 
+        } 
+        
+        catch (error) {
             console.error(error);
         }
     };
 
 
-    var [name, setName] = useState(name);
-    var [username, setUsername] = useState(username);
-    var [tempName, setTempName] = useState('');
-    var [newTempName, setNewTempName] = useState('');
-    var [tempUsername, setTempUsername] = useState('');
-    var [newTempUsername, setNewTempUsername] = useState('');
-    var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+    const sendEditRequest = async (data) => {
+        try {
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+            request: 'editUserData',
+            username: u,
+            validator: validator,
+            data: data
+          });
+      
+          return response;
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+    };
+
+    const toggleEditInterestsPageOpen = () => {
+        if (isEditInterestsPageOpen) {
+            setTempUserInterests(userInterests);
+        }
+        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
+    };
+
+    const handleInterestClick = (interestId) => {
+        setTempUserInterests(
+            tempUserInterests.includes(interestId)
+            ? tempUserInterests.filter(id => id !== interestId)
+            : [...tempUserInterests, interestId]
+        );
+    };
+
+    const saveInterests = async () => {
+        setUserInterests(tempUserInterests);
+      
+        const data = {
+            interests: tempUserInterests
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditInterestsPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     const fixNameData = () => {
         setTempName(newTempName);
     }
-
-    useEffect(() => {
-        setTempName(name);
-        setTempUsername(username);
-    }, [name, username]);
 
     const toggleEditUsernamePageOpen = () => {
         setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
@@ -102,37 +163,56 @@ export default function EditProfile() {
         setNewTempUsername(event.target.value);
     };
 
-    const saveNameAndUsername = () => {
+    const saveNameAndUsername = async () => {
         setName(prevName => {
-            if (prevName !== newTempName) {
-                setTempName(newTempName);
-                return newTempName;
-            }
-            return prevName;
+          if (prevName !== newTempName) {
+            setTempName(newTempName);
+            return newTempName;
+          }
+          return prevName;
         });
-
+      
         setUsername(prevUsername => {
-            if (prevUsername !== newTempUsername) {
-                setTempUsername(newTempUsername);
-                return newTempUsername;
-            }
-            return prevUsername;
+          if (prevUsername !== newTempUsername) {
+            setTempUsername(newTempUsername);
+            return newTempUsername;
+          }
+          return prevUsername;
         });
+      
+        if (newTempUsername !== tempUsername || newTempName !== tempName) {
+          const data = {};
+      
+          if (newTempUsername != tempUsername) {
+            data.username = newTempUsername;
+          }
+      
+          if (newTempName != tempName) {
+            data.name = newTempName;
+          }
+      
+          try {
+            const response = await sendEditRequest(data);
+      
+            if (response.username && response.validator) {
+              Cookies.set('username', response.username);
+              Cookies.set('validator', response.validator);
+            }
 
-        toggleEditUsernamePageOpen();
+            if (!response.error) {
+              toggleEditUsernamePageOpen();
+            }
+          } 
+          
+          catch (error) {
+            console.error(error);
+          }
+        }
+
+        else {
+            toggleEditUsernamePageOpen();
+        }
     };
-
-    useEffect(() => {
-        setTempName(name);
-        setTempUsername(username);
-    }, [name, username]);
-
-
-
-    var [about, setAbout] = useState('');
-    var [tempAbout, setTempAbout] = useState('');
-    var [newTempAbout, setNewTempAbout] = useState('');
-    var [isEditAboutPageOpen, setIsEditAboutPageOpen] = useState(false);
 
     const fixAboutData = () => {
         setTempAbout(newTempAbout);
@@ -154,27 +234,37 @@ export default function EditProfile() {
         setNewTempAbout(event.target.value);
     };
 
-    const saveAbout = () => {
+    const saveAbout = async () => {
         setAbout(prevAbout => {
-            if (prevAbout !== newTempAbout) {
-                setTempAbout(newTempAbout);
-                return newTempAbout;
-            }
-            return prevAbout;
+          if (prevAbout !== newTempAbout) {
+            setTempAbout(newTempAbout);
+            return newTempAbout;
+          }
+          return prevAbout;
         });
-        toggleEditAboutPageOpen();
-    }
-
-    useEffect(() => {
-        if (!isEditAboutPageOpen) {
-            setTempAbout(about);
+      
+        if (newTempAbout != tempAbout) {
+          const data = {
+            about: newTempAbout
+          };
+      
+          try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+              toggleEditAboutPageOpen();
+            }
+          } 
+          
+          catch (error) {
+            console.error(error);
+          }
         }
-    }, [isEditAboutPageOpen]);
 
-
-    const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
-    const [userInterests, setUserInterests] = useState([]);
-    const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+        else {
+            toggleEditAboutPageOpen();
+        }
+    };
 
     const [allInterests, setAllInterests] = useState(
         [...interestsData].map((interest) => {
@@ -182,6 +272,22 @@ export default function EditProfile() {
             return { ...interest, selected: isSelected };
         }).sort((a, b) => b.selected - a.selected)
     );
+
+    useEffect(() => {
+        if (!isEditAboutPageOpen) {
+            setTempAbout(about);
+        }
+    }, [isEditAboutPageOpen]);
+
+    useEffect(() => {
+        setTempName(name);
+        setTempUsername(username);
+    }, [name, username]);
+
+    useEffect(() => {
+        setTempName(name);
+        setTempUsername(username);
+    }, [name, username]);
 
     useEffect(() => {
         setTempUserInterests(userInterests);
@@ -196,33 +302,12 @@ export default function EditProfile() {
         );
     }, [tempUserInterests]);
 
-    const toggleEditInterestsPageOpen = () => {
-        if (isEditInterestsPageOpen) {
-            setTempUserInterests(userInterests);
-        }
-        setIsEditInterestsPageOpen(!isEditInterestsPageOpen);
-    };
-
-    const handleInterestClick = (interestId) => {
-        setTempUserInterests(
-            tempUserInterests.includes(interestId)
-                ? tempUserInterests.filter(id => id !== interestId)
-                : [...tempUserInterests, interestId]
-        );
-    };
-
-    const saveInterests = () => {
-        setUserInterests(tempUserInterests);
-        toggleEditInterestsPageOpen();
-    };
-
-    const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
-    const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
-
-
     useEffect(() => {
         fetchData();
     }, []);
+
+    const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
+    const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
 
     if (!data) {
         return (
@@ -232,18 +317,7 @@ export default function EditProfile() {
         );
     }
 
-    var { name, username, about, followers, following, events, interests, comments, verified, hash, mine, partiesWent } = data
-    var parsedInterests = [];
-
-try {
-  parsedInterests = JSON.parse(interests);
-} catch (error) {
-  console.error('Erro ao fazer o parsing dos interesses:', error);
-}
-
-if (Array.isArray(parsedInterests)) {
-  setUserInterests(parsedInterests.map(interest => interest.id));
-}
+    var { name, username, about, interests, verified, hash } = data
 
     return (
         <div>
@@ -251,6 +325,7 @@ if (Array.isArray(parsedInterests)) {
                 <PageHeader
                     pageTitle={'Editar perfil'}
                     isBack={true}
+                    destination={"/webapp/perfil?u="+newTempUsername}
                     checker={() => { null }}
                     userData={data}
                 />
@@ -326,7 +401,6 @@ if (Array.isArray(parsedInterests)) {
                                 newProfile={newProfile}
                                 onChange={newImage => {
                                     setNewProfile(newImage);
-                                    console.log("New image selected: ", newImage);
                                 }}
                             />
                         </div>

@@ -15,8 +15,6 @@ const Tag = ({ tagname, type = 'tag', colorName, highlightColor, isEditable = fa
       if (!isEditable) return;
       setSelected(!selected);
       onClick && onClick(!selected);
-      const action = selected ? 'deselected' : 'selected';
-      console.log(`${type} ${action}: ${tagname}`);
     };
   
     const baseClasses = `flex font-${weight} flex-row gap-1 items-center ring-inset w-fit px-3 py-1 rounded-full `;

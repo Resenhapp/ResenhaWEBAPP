@@ -55,8 +55,8 @@ export default function MyParties() {
         window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
     };
 
-    const handleEditClick = async () => {
-        
+    const handleEditClick = async (party) => {
+        window.location.href = `/webapp/resenhas/editar?r=${party.code}`;
     };
 
     const handleCopyClick = async (party) => {
@@ -105,6 +105,7 @@ export default function MyParties() {
                                         partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
                                         partyName={party.name}
                                         viewOnClick={() => handleViewClick(party)}
+                                        editOnClick={() => handleEditClick(party)}
                                         copyOnClick={() => handleCopyClick(party)}
                                         canBeDeleted={party.confirmed == 0}
                                     />

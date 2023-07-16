@@ -84,7 +84,6 @@ export default function EventDetails() {
 
     var { name, guests, date, hour, income, impressions } = data
 
-
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader

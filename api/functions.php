@@ -194,6 +194,8 @@ function returnError($error) {
 
   header('Content-Type: application/json');
   echo json_encode($data);
+
+  exit();
 }
 
 function checkRequest($request) {
@@ -440,6 +442,77 @@ function calculateDistance($lat1, $lon1, $lat2, $lon2)
     return $distance;
 }
 
+function editUserData() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    $data = $_POST['data'];
+
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $responseData = [
+            'status' => 'success',
+        ];
+
+        if (isset($data['username'])) {
+            $newUsername = $data['username'];
+        
+            $query = "SELECT id FROM users WHERE username = '$newUsername'";
+            $result = queryDB($query);
+        
+            $query = "SELECT password FROM users WHERE username = '$username'";
+            $passwordResult = queryDB($query);
+        
+            if ($result && count($result) > 0) {
+                returnError('used_username');
+            } 
+            
+            else {
+                $responseData['username'] = encrypt($newUsername, $enckey);
+        
+                if ($passwordResult && count($passwordResult) > 0) {
+                    $password = $passwordResult[0];
+                    $responseData['validator'] = hash256($newUsername . $password);
+                } 
+                
+                else {
+                    returnError('invalid_session');
+                }
+            }
+        }
+
+        $query = "SELECT id FROM users WHERE username = '$username'";
+        $id = queryDB($query)[0];
+
+        foreach ($data as $key => $value) {
+            if ($key == 'interests') {
+                $query = "DELETE FROM interests WHERE user = '$id'";
+                queryNR($query);
+                foreach ($value as $interest) {
+                    $query = "INSERT INTO interests (user, interest) VALUES ('$id', '$interest')";
+                    queryNR($query);
+                }
+            } 
+            
+            else {
+                $query = "UPDATE users SET `$key` = '$value' WHERE id = '$id'";
+                queryNR($query);
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($responseData);
+    } 
+    
+    else {
+        returnError('invalid_session');
+    }
+}
+
 function getUserData() {
     global $enckey;
 
@@ -519,7 +592,7 @@ function getUserData() {
                     $userCode = $userParty["code"];
                     $codeUsed = $userParty["used"];
                     
-                    $partyQuery = "SELECT name, date, time FROM parties WHERE code = '$partyCode'";
+                    $partyQuery = "SELECT name, date, start, end FROM parties WHERE code = '$partyCode'";
                     $partyResult = queryDBRows($partyQuery);
                     
                     if (mysqli_num_rows($partyResult) > 0) {
@@ -534,7 +607,8 @@ function getUserData() {
                             "hash" => $hash,
                             "name" => $userParty["name"],
                             "date" => $userParty["date"],
-                            "time" => $userParty["time"], 
+                            "start" => $userParty["start"], 
+                            "end" => $userParty["start"], 
                             "confirmed" => $confirmed,
                             "used" => $codeUsed, 
                             "code" => $userCode
@@ -563,7 +637,8 @@ function getUserData() {
                         "code" => $code,
                         "name" => $party["name"],
                         "date" => $party["date"],
-                        "time" => $party["time"],
+                        "start" => $party["start"],
+                        "end" => $party["end"],
                         "capacity" => $party["capacity"],
                         "confirmed" => $confirmed
                     ];
@@ -743,8 +818,6 @@ function getInviteData() {
           }
         }
 
-        
-
         if (isset($_POST['username'])&&isset($_POST['validator'])) {
             $validator = $_POST['validator'];
             $username = $_POST['username'];
@@ -808,7 +881,10 @@ function getInviteData() {
             ],
             'income' => $income,
             'pricePerItem' => $row["price"],
-            'hour' => $row["time"],
+            'hour' => [
+                'start' => $row["start"],
+                'end' => $row["end"]
+            ],
             'address' => $row["address"],
             'host' => $host,
             'title' => $row["name"],
@@ -1239,8 +1315,104 @@ function seeUserNotifications() {
     }
 }
 
+function tryToWithdraw() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    $amount = intval($_POST['amount']);
+    
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT * FROM users WHERE username = '$username'";
+        $r = queryDBRows($query);
+
+        if (mysqli_num_rows($r) > 0) {
+            foreach ($r as $in) {
+                $id = $in["id"];
+                $name = $in["name"];
+                $email = $in["email"];
+            }
+        }
+
+        $query = "SELECT * FROM balances WHERE user = '$id'";
+        $result = queryDBRows($query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            foreach ($result as $row) {
+                $available = $row["available"];
+                $requested = $row["requested"];
+                $retained = $row["retained"];
+                $processing = $row["processing"];
+            }
+        }
+
+        if ($amount <= $available && $amount >= 50.00) {
+            $newRequested = $requested + $amount;
+            $newAvailable = $available - $amount;
+
+            $query = "UPDATE balances SET requested = $newRequested, available = $newAvailable WHERE user = '$id'";
+            queryNR($query);
+
+            $embed = [
+                'title' => 'Novo saque solicitado!',
+                'color' => hexdec('7d00ff'),
+                'fields' => [
+                    [
+                        "name" => "ID do usuário",
+                        "value" => $id,
+                    ],
+                    [
+                        "name" => "Nome",
+                        "value" => $name,
+                    ],
+                    [
+                        "name" => "Email",
+                        "value" => $email,
+                    ],
+                    [
+                        "name" => "Saldo Atual",
+                        "value" => "R$ ".number_format($newAvailable, 2, ',', '.'),
+                    ],
+                    [
+                        "name" => "Saldo em Processamento",
+                        "value" => "R$ ".$processing,
+                    ],
+                    [
+                        "name" => "Saldo Retido",
+                        "value" => "R$ ".$retained,
+                    ],
+                    [
+                        "name" => "Saldo Solicitado",
+                        "value" => "R$ ".$newRequested,
+                    ],
+                    [
+                        "name" => "Valor da Solicitação",
+                        "value" => "R$ ".number_format($amount, 2, ',', '.'),
+                    ]
+                ]
+            ];
+        
+            $webhook = "https://discord.com/api/webhooks/1116575716646068254/xAmqlhC3WpinvTw-HI5hdbom6-FA94YuY1v5NEUONTSXwroXTwA3PgaqTazIxezTFGn7";
+        
+            send_message($embed, $webhook);
+        } 
+        
+        else {
+            returnError("insufficient_balance");
+        }
+    }
+
+    else {
+      returnError("invalid_session");
+    }
+}
+
 function tryToCreateUser() {
-  global $enckey;
+    global $enckey;
 
     $email = $_POST['email'];
     $password = $_POST['password'];
