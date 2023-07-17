@@ -1097,7 +1097,8 @@ function getMessages()
         $sent = $row['sender'] == $id;
         $content = $row['content'];
         $dateString = $row["date"];
-        list($day, $month, $year) = explode('/', $dateString);
+        list($datePart, $timePart) = explode(' ', $dateString);
+        list($day, $month, $year) = explode('/', $datePart);
         $day = (int) $day;
         $month = convertMonth($month);
         $year = (int) $year;
@@ -1109,7 +1110,8 @@ function getMessages()
             'date' => [
                 'day' => $day,
                 'month' => $month,
-                'year' => $year
+                'year' => $year,
+                'hour' => $timePart,
             ],
             'destination' => $destination,
         ];

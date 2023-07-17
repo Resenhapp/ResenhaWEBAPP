@@ -62,11 +62,11 @@ export default function Chat() {
                 code: chatCode,
                 type: chatType,
             });
-    
-            if (Array.isArray(response)) {
-                setMessages(response);
+
+            if (response && Array.isArray(response.messages)) {
+                setMessages(response.messages);
             } else {
-                console.error('Response is not an array:', response);
+                console.error('Response does not contain an array of messages:', response);
             }
             setIsLoading(false);
         } catch (error) {
@@ -74,6 +74,7 @@ export default function Chat() {
         }
         console.log(messages)
     };
+
 
     useEffect(() => {
         fetchData();
@@ -110,12 +111,13 @@ export default function Chat() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
-                                    {messages.map((message, index) => (
+                                    {[...messages].reverse().map((message, index) => (
                                         <ChatBubble
                                             key={index}
+                                            showImage={false}
                                             imageUrl={message.imageUrl}
-                                            message={message.message}
-                                            timestamp={message.timestamp}
+                                            message={message.content}
+                                            timestamp={message.date.hour}
                                             sent={message.sent}
                                         />
                                     ))}
