@@ -72,6 +72,7 @@ export default function Chat() {
         } catch (error) {
             console.error(error);
         }
+        console.log(messages)
     };
 
     useEffect(() => {

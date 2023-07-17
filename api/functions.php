@@ -1062,76 +1062,66 @@ function tryToCreateGuest() {
   }
 }
 
-function getMessages() {
-    global $link;
-    $chatCode = $_POST['code'];
+function getMessages()
+{
+    global $enckey;
+
+    $code = $_POST['code'];
     $type = $_POST['type'];
-    $chatId = '';
+    $username = $_POST['username'];
 
-    if ($type !== 'dm' && $type !== 'group') {
-        throw new Exception("Invalid chat type: " . $type);
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
     }
 
-    if ($type === 'dm') {
-        $stmt = $link->prepare("SELECT id FROM users WHERE username = ?");
-    } else {
-        $stmt = $link->prepare("SELECT id FROM parties WHERE code = ?");
-    }
-    
-    if ($stmt === false) {
-        throw new Exception("Failed to prepare statement: " . $link->error);
-    }
-    
-    if (!$stmt->bind_param("s", $chatCode)) {
-        throw new Exception("Failed to bind parameters: " . $stmt->error);
+    $queryUsernameId = "SELECT id FROM users WHERE username = '$username'";
+    $id = queryDB($queryUsernameId)[0];
+
+    if ($type == 'dm') {
+        $query = "SELECT id FROM users WHERE username = '$code'";
     }
 
-    if (!$stmt->execute()) {
-        throw new Exception("Failed to execute statement: " . $stmt->error);
-    }
-    
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-
-    if (!$row) {
-        throw new Exception("No chat found with code: " . $chatCode);
+    else {
+        $query = "SELECT id FROM parties WHERE code = '$code'";
     }
 
-    $chatId = $row['id'];
+    $chatId = queryDB($query)[0];
 
-    $query = "SELECT id, sender, date, destination, type, content FROM messages WHERE destination = ?";
+    $messagesArray = [];
 
-    $stmt = $link->prepare($query);
-    if ($stmt === false) {
-        throw new Exception("Failed to prepare statement: " . $link->error);
-    }
-    
-    if (!$stmt->bind_param("i", $chatId)) {
-        throw new Exception("Failed to bind parameters: " . $stmt->error);
-    }
+    $query = "SELECT * FROM messages WHERE chatType ='dm' AND (sender = '$id' OR sender ='$chatId') ORDER BY `date` DESC";
+    $messages = queryDBRows($query);
 
-    if (!$stmt->execute()) {
-        throw new Exception("Failed to execute statement: " . $stmt->error);
-    }
+    foreach ($messages as $row) {
+        $sent = $row['sender'] == $id;
+        $content = $row['content'];
+        $dateString = $row["date"];
+        list($day, $month, $year) = explode('/', $dateString);
+        $day = (int) $day;
+        $month = convertMonth($month);
+        $year = (int) $year;
+        $destination = $row['destination'];
 
-    $query_result = $stmt->get_result();
+        $temp = [
+            'sent' => $sent,
+            'content' => $content,
+            'date' => [
+                'day' => $day,
+                'month' => $month,
+                'year' => $year
+            ],
+            'destination' => $destination,
+        ];
 
-    $messages = array();
-
-    while ($row = $query_result->fetch_assoc()) {
-        $message = array(
-            'id' => $row['id'],
-            'sender' => $row['sender'],
-            'date' => $row['date'],
-            'destination' => $row['destination'],
-            'type' => $row['type'],
-            'content' => $row['content']
-        );
-
-        $messages[] = $message;
+        array_push($messagesArray, $temp);
     }
 
-    return $messages;
+    $data = [
+        'messages' => $messagesArray,
+    ];
+
+    header('Content-Type: application/json');
+    echo json_encode($data);
 }
 
 
