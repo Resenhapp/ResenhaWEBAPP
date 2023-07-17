@@ -1331,6 +1331,70 @@ function tryToDeleteEvent()
     }
 }
 
+function getMessages()
+{
+    global $enckey;
+
+    $code = $_POST['code'];
+    $type = $_POST['type'];
+    $username = $_POST['username'];
+
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    $queryUsernameId = "SELECT id FROM users WHERE username = '$username'";
+    $id = queryDB($queryUsernameId)[0];
+
+    if ($type == 'dm') {
+        $query = "SELECT id FROM users WHERE username = '$code'";
+    }
+
+    else {
+        $query = "SELECT id FROM parties WHERE code = '$code'";
+    }
+
+    $chatId = queryDB($query)[0];
+
+    $messagesArray = [];
+
+    $query = "SELECT * FROM messages WHERE chatType ='dm' AND (sender = '$id' OR sender ='$chatId') ORDER BY `date` DESC";
+    $messages = queryDBRows($query);
+
+    foreach ($messages as $row) {
+        $sent = $row['sender'] == $id;
+        $content = $row['content'];
+        $dateString = $row["date"];
+        list($datePart, $timePart) = explode(' ', $dateString);
+        list($day, $month, $year) = explode('/', $datePart);
+        $day = (int) $day;
+        $month = convertMonth($month);
+        $year = (int) $year;
+        $destination = $row['destination'];
+
+        $temp = [
+            'sent' => $sent,
+            'content' => $content,
+            'date' => [
+                'day' => $day,
+                'month' => $month,
+                'year' => $year,
+                'hour' => $timePart,
+            ],
+            'destination' => $destination,
+        ];
+
+        array_push($messagesArray, $temp);
+    }
+
+    $data = [
+        'messages' => $messagesArray,
+    ];
+
+    header('Content-Type: application/json');
+    echo json_encode($data);
+}
+
 function tryToCreateEvent()
 {
     global $enckey;

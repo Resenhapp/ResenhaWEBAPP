@@ -4,13 +4,17 @@ const DualButton = ({leftButtonText, rightButtonText, onLeftClick, onRightClick}
     const [isLeftActive, setIsLeftActive] = useState(true);
 
     const handleLeftClick = () => {
-        setIsLeftActive(true);
-        onLeftClick();
+        if(!isLeftActive) {
+            setIsLeftActive(true);
+            onLeftClick();
+        }
     };
 
     const handleRightClick = () => {
-        setIsLeftActive(false);
-        onRightClick();
+        if(isLeftActive) {
+            setIsLeftActive(false);
+            onRightClick();
+        }
     };
 
     return (
