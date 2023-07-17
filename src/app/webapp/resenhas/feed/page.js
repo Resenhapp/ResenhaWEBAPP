@@ -81,7 +81,6 @@ export default function Map() {
             click: (e) => {
                 const newMarker = e.latlng;
                 setMarkers([...markers, newMarker]);
-                console.log("Coordinates: ", newMarker);
             },
         });
 

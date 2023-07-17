@@ -121,7 +121,6 @@ export default function EditEvent() {
         setDescription(event.target.value);
     };
     const saveDescription = () => {
-        console.log(description);
         toggleEditDescriptionPageOpen();
     };
 
@@ -160,7 +159,6 @@ export default function EditEvent() {
             setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
         } else {
             setDateError('');
-            console.log(date);
             toggleEditDatePageOpen();
         }
     };
@@ -221,8 +219,6 @@ export default function EditEvent() {
     };
 
     const saveHour = () => {
-        console.log(startHour);
-        console.log(endHour);
         toggleEditHourPageOpen();
     };
 
@@ -266,8 +262,6 @@ export default function EditEvent() {
         }
         
         setLimitError('');
-        console.log(limit);
-        console.log(vipLimit);
         toggleEditMaxGuestsPageOpen();
     };
 
@@ -303,7 +297,6 @@ export default function EditEvent() {
     };
 
     const saveName = () => {
-        console.log(name);
         toggleEditNamePageOpen();
     };
 
@@ -323,7 +316,6 @@ export default function EditEvent() {
     };
 
     const savePrice = () => {
-        console.log(price);
         toggleEditPricePageOpen();
     };
 

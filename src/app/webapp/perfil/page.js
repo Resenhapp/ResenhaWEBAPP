@@ -223,7 +223,7 @@ export default function Profile() {
 
                                 {activeTab === 'Comentários' && (
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
-                                        <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                        <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
                                             <Comment
                                                 userName={comment.name}

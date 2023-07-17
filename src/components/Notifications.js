@@ -99,7 +99,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
                 <h1 className='text-2xl px-4 text-purpleT5 font-light'>Notificações</h1>
                 <button onClick={toggleNotifications} className="p-4">
                     <svg width="15" height="15" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1L6 6M6 6L1 11M6 6L11 11M6 6L11 1" stroke="#F1F1F1" stroke-width="2" stroke-linecap="round" />
+                        <path d="M1 1L6 6M6 6L1 11M6 6L11 11M6 6L11 1" stroke="#F1F1F1" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                 </button>
             </div>
@@ -111,7 +111,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
                         <div className='w-full flex flex-col'>
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <p>Abaixo você pode conferir todas as suas notificações!</p>
-                                <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                     {showNotifications && notifications.length > 0 ? (
                                         notifications.map((notification) => (
                                             <Notification

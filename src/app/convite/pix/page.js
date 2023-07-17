@@ -46,7 +46,6 @@ export default function Pix() {
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
-            console.log(response);
             setData(response);
         }
 

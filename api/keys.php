@@ -20,16 +20,18 @@ $requests = [
   "getUserData",
   "getHelpData",
   "getFeedData",
+  "getMessages",
   "tryToCreateGuest",
   "tryToWithdraw",
   "tryToAuthenticate",
   "tryToCreateUser",
+  "tryToCreateEvent",
+  "tryToDeleteEvent",
+  "editUserData",
   "clearUserNotifications",
   "seeUserNotifications",
   "switchFollowUser",
-  "sendMessage",
-  "getMessages",
-  "editUserData"
+  "sendMessage"
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

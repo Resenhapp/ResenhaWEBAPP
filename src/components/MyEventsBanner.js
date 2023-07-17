@@ -17,10 +17,8 @@ const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuest
         if (navigator.share) {
             navigator.share(shareData)
                 .then(() => {
-                    console.log("Invite shared successfully");
                 })
                 .catch((error) => {
-                    console.error("Error sharing invite:", error);
                 });
         } else {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

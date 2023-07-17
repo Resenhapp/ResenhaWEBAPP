@@ -40,10 +40,6 @@ export default function Login() {
 
         window.location.href = 'webapp/resenhas/';
       }
-
-      else {
-        console.log(response);
-      } 
     }
     
     catch (error) {
