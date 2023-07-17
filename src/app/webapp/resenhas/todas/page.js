@@ -65,8 +65,19 @@ export default function MyParties() {
         await navigator.clipboard.writeText(partyUrl);
     };
 
-    const handleTrashClick = async () => {
+    const handleTrashClick = async (party) => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'tryToDeleteEvent',
+                username: username,
+                validator: validator,
+                code: party.code
+            });
+        } 
         
+        catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -94,7 +105,7 @@ export default function MyParties() {
                                 <h2>Aqui estão todas as suas resenhas</h2>
                             </div>
                             <div className='w-full h-full flex flex-col'>
-                                <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {partiesMade.map((party) => (
                                     <PartyPortrait
                                         partyCode={party.code} 
@@ -107,6 +118,7 @@ export default function MyParties() {
                                         viewOnClick={() => handleViewClick(party)}
                                         editOnClick={() => handleEditClick(party)}
                                         copyOnClick={() => handleCopyClick(party)}
+                                        trashOnClick={() => handleTrashClick(party)}
                                         canBeDeleted={party.confirmed == 0}
                                     />
                                 ))}

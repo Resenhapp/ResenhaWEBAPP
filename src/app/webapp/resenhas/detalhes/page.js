@@ -13,8 +13,6 @@ export default function EventDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const partyCode = urlParams.get('r');
     
-    console.log(partyCode);
-
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');
 

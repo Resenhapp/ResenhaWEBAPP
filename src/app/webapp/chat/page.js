@@ -109,7 +109,7 @@ export default function Chat() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <div class="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
+                                <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
                                     {messages.map((message, index) => (
                                         <ChatBubble
                                             key={index}

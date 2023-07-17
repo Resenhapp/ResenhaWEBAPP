@@ -70,8 +70,6 @@ export default function HomePage() {
 
     var { partiesWent, partiesMade } = data
 
-    console.log(partiesMade)
-
     if (partiesWent.length > 0) {
         const userParty = partiesWent[0];
         var eventNameToUser = userParty.name;

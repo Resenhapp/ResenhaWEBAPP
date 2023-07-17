@@ -43,7 +43,6 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         setSelectedDate(datePicked);
         onDateCalendarSelect(datePicked);
     }
-    
 
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {

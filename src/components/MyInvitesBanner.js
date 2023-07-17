@@ -27,7 +27,7 @@ const MyInvitesBanner = ({ eventName, eventDate, eventHour, token, eventImage })
                     </div>
                 </div>
                 <div className='p-4 z-[1]'>
-                    <RoundButton icon="chat" onClick={() => { console.log('Button Clicked!'); window.alert('Button clicked!') }} />
+                    <RoundButton icon="chat" onClick={() => { }} />
                 </div>
             </div>
             <div className="z-0 bottom-4 flex flex-row items-end justify-between h-3 border-b-[1px] border-r-[1px] border-l-[1px] border-purpleT4 w-[90%]

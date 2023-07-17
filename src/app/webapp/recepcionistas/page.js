@@ -89,7 +89,7 @@ export default function Concierges() {
                 <section className="flex flex-col w-full max-w-md p-4 ">
                     <div className='h3 w-full flex '>
                         <div className='w-full flex flex-col '>
-                            <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                            <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                 {concierges.map((concierge) => (
                                     <ConciergePortrait
                                         imgUrl={defaultProfileImage}

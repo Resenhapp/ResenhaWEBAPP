@@ -349,7 +349,7 @@ export default function Feed() {
                         </div>
                     ) : data.length > 0 ? (
                       data.map((party) => {
-                        var { hash, price, time, confirmed, capacity, title, code, headers } = party;
+                        var { hash, price, start, confirmed, capacity, title, code, headers } = party;
 
                         if (headers.length >= 2) {
                           headers = [headers[0], headers[1]];
@@ -360,7 +360,7 @@ export default function Feed() {
                             imageUrl={exampleImagesEvent}
                             eventName={title}
                             eventImage={`https://media.resenha.app/r/${hash}.png`}
-                            eventHour={time}
+                            eventHour={start}
                             eventGuests={confirmed}
                             eventMax={capacity}
                             eventPrice={price}

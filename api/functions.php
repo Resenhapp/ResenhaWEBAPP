@@ -274,7 +274,7 @@ function check_session($username, $validator) {
 }
 
 function getFeedData() {
-    $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `time`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
+    $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `start`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
 
     if (isset($_POST['searchTerm'])) {
         $searchTerm = $_POST['searchTerm'];
@@ -395,7 +395,8 @@ function getFeedData() {
                 'hash' => $hash,
                 'price' => $row["price"],
                 'code' => $code,
-                'time' => $row["time"],
+                'start' => $row["start"],
+                'end' => $row["end"],
                 'confirmed' => $confirmed,
                 'capacity' => $capacity,
                 'headers' => $headers,
@@ -1398,6 +1399,139 @@ function tryToWithdraw() {
 
     else {
       returnError("invalid_session");
+    }
+}
+
+function tryToDeleteEvent() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    $code = $_POST['code'];
+
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "DELETE FROM parties WHERE code = '$code'";
+        queryNR($query);
+    }
+}
+
+function tryToCreateEvent() {
+    global $enckey;
+
+    $username = $_POST['username'];
+    $validator = $_POST['validator'];
+    $details = $_POST['details'];
+
+    if (strlen($username) >= 30) {
+        $username = decrypt($_POST['username'], $enckey);
+    }
+
+    if (check_session($username, $validator)) {
+        $query = "SELECT id FROM users WHERE username = '$username'";
+        $host = queryDB($query)[0];
+
+        $requiredFields = ['name', 'address', 'isForAdults', 'start', 'hasTimeToEnd', 'end', 'dateSelected', 'selectedGuests', 'selectedPrice', 'descriptionContent'];
+
+        foreach ($requiredFields as $field) {
+            if (!isset($details[$field])) {
+                returnError("invalid_request");
+            }
+        }
+
+        $name = $details['name'];
+        $address = $details['address'];
+        $maiority = $details['isForAdults'] ? 1 : 0;
+        $capacity = $details['selectedGuests'];
+        $price = $details['selectedPrice'];
+        $capacity = $details['selectedGuests'];
+        $description = $details['descriptionContent'];
+
+        $price = intval(str_replace(',', '.', $details['selectedPrice']));
+        $start = date('H:i', strtotime($details['start']));
+        $date = date('d/m/Y', strtotime($details['dateSelected']));
+        $code = random_code(8);
+
+        $timezone = new DateTimeZone('America/Sao_Paulo');
+        $now = new DateTime('now', $timezone);
+        $creation = $now->format('d/m/Y');
+
+        $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=" . urlencode($address) . "&format=json";
+
+        $httpOptions = [
+            "http" => [
+                "method" => "GET",
+                "header" => "User-Agent: Nominatim-Test"
+            ]
+        ];
+        
+        $streamContext = stream_context_create($httpOptions);
+        
+        $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+        
+        $addressDecoded = json_decode($json, true);
+
+        $lat = "NONE";
+        $lon = "NONE";
+        $end = "NONE";
+        
+        if (!empty($addressDecoded)) {
+            $lat = $addressDecoded[0]["lat"];
+            $lon = $addressDecoded[0]["lon"];
+        } 
+        
+        if ($details['hasTimeToEnd'] == '1') {
+            $end = date('H:i', strtotime($details['end']));
+        } 
+
+        $query = "INSERT INTO parties (host, name, address, maiority, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
+        queryNR($query);
+
+        $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
+        
+        $embed = [
+            'title' => 'Nova resenha criada!',
+            'color' => hexdec('7d00ff'),
+            'fields' => [
+                [
+                    'name' => 'Nome',
+                    'value' => $name,
+                ],
+                [
+                    'name' => 'Hospedeiro',
+                    'value' => $host,
+                ],
+                [
+                    'name' => 'Endereço',
+                    'value' => $address,
+                ],
+                [
+                    'name' => 'Data',
+                    'value' => $date,
+                ],
+                [
+                    'name' => 'Horário',
+                    'value' => $start,
+                ],
+                [
+                    'name' => 'Descrição',
+                    'value' => $description,
+                ],
+                [
+                    'name' => 'Código',
+                    'value' => $code,
+                ]
+            ]
+        ];
+
+        send_message($embed, $webhook);
+    }
+
+    else {
+        returnError("invalid_session");
     }
 }
 
