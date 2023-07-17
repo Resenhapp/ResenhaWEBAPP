@@ -13,11 +13,15 @@ import Loading from "@/src/components/Loading";
 import { setHours } from "date-fns"
 
 export default function EditEvent() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const partyCode = urlParams.get('r');
-    
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');
+
+    if (!u || !validator) {
+        window.location.href = '/login';
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const partyCode = urlParams.get('r');
 
     const axios = require('axios');
     const qs = require('qs');

@@ -23,13 +23,17 @@ export const metadata = {
 }
 
 export default function Profile() {
+    var u = Cookies.get('username');
+    var validator = Cookies.get('validator');
+
+    if (!u || !validator) {
+        window.location.href = '/login';
+    }
+
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         var profile = urlParams.get('u');
     }
-    
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
 
     const axios = require('axios');
     const qs = require('qs');

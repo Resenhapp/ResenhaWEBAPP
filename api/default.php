@@ -7,19 +7,13 @@ header('Access-Control-Allow-Headers: Content-Type');
 include "functions.php";
 
 if (isset($_POST['request'])) {
-  $request = sanitize($_POST['request']);
+    $request = sanitize($_POST['request']);
 
-  if (checkRequest(($request))) {
-    $request();
-  }
-  
-  else {
-    returnError("invalid_request");
-  }
+    if (checkRequest(($request))) {
+        $request();
+    } else {
+        returnError("invalid_request");
+    }
+} else {
+    returnError("no_request");
 }
-
-else {
-  returnError("no_request");
-}
-
-?>

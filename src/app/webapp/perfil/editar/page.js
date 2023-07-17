@@ -19,6 +19,10 @@ export default function EditProfile() {
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');
 
+    if (!u || !validator) {
+        window.location.href = '/login';
+    }
+
     const [newProfile, setNewProfile] = useState(null);
     const [data, setData] = useState(null);
 
