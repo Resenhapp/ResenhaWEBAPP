@@ -19,6 +19,10 @@ export default function Withdraw() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');
 
+    if (!username || !validator) {
+        window.location.href = '/login';
+    }
+
     const [data, setData] = useState(null);
     const axios = require('axios');
     const qs = require('qs');

@@ -8,14 +8,18 @@ import { useState } from "react";
 import { useEffect } from 'react';
 
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
-    const [showNotifications, setShowNotifications] = useState(true);
-    const [notifications, setNotifications] = useState(userData.notifications);
-
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');
-  
+
+    if (!username || !validator) {
+      window.location.href = '/login';
+    }
+
     const axios = require('axios');
     const qs = require('qs');
+
+    const [showNotifications, setShowNotifications] = useState(true);
+    const [notifications, setNotifications] = useState(userData.notifications);
 
     var updateInterval = 150;
   
