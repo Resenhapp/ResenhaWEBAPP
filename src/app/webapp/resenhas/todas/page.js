@@ -16,10 +16,9 @@ export const metadata = {
 }
 
 export default function MyParties() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
 
-    if (!username || !validator) {
+    if (!token) {
         window.location.href = '/login';
     }
 
@@ -43,9 +42,7 @@ export default function MyParties() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator,
-                requested: "partiesMade"
+                token: token,
             });
             setData(response);
         } 
@@ -73,8 +70,7 @@ export default function MyParties() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'tryToDeleteEvent',
-                username: username,
-                validator: validator,
+                token: token,
                 code: party.code
             });
         } 
@@ -100,7 +96,7 @@ export default function MyParties() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
+            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}} userData={data}/>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
                     <div className='h3 w-full flex'>

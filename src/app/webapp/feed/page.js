@@ -23,11 +23,12 @@ export const metadata = {
 }
 
 export default function Feed() {
+  var token = Cookies.get('token');
+
   const axios = require('axios');
   const qs = require('qs');
 
   const exampleSavedEvent = false;
-  const exampleImagesEvent = ['https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg', 'https://resenha.app/publico/recursos/imagens/u/fe.jpg']
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,6 +48,10 @@ export default function Feed() {
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
 
+  const handleSaveButton = () => {
+
+  };
+
   const makeRequest = async (url, data) => {
       try {
           const response = await axios.post(url, qs.stringify(data));
@@ -62,7 +67,11 @@ export default function Feed() {
     setLoading(true);
 
     try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getFeedData'});
+        const response = await makeRequest('http://localhost/resenha.app/api/', { 
+          request: 'getFeedData',
+          token: token,
+        });
+
         setData(response);
     }
 
@@ -88,6 +97,7 @@ export default function Feed() {
 
       const response = await makeRequest('http://localhost/resenha.app/api/', {
         request: 'getFeedData',
+        token: token,
         filterParameters: filterParameters
       });
 
@@ -111,7 +121,8 @@ export default function Feed() {
     try {
       const response = await makeRequest('http://localhost/resenha.app/api/', {
         request: 'getFeedData',
-        searchTerm: searchTerm,
+        token: token,
+        searchTerm: searchTerm
       });
       setData(response);
     } 
@@ -129,6 +140,7 @@ export default function Feed() {
     try {
       const response = await makeRequest('http://localhost/resenha.app/api/', {
         request: 'getFeedData',
+        token: token,
         hype: true
       });
       setData(response);
@@ -349,7 +361,13 @@ export default function Feed() {
                         </div>
                     ) : data.length > 0 ? (
                       data.map((party) => {
-                        var { hash, price, start, confirmed, capacity, title, code, headers } = party;
+                        var { hash, price, start, confirmed, capacity, title, code, headers, guests, saved } = party;
+
+                        const guestsImages = [];
+
+                        guests.forEach((guest) => {
+                          guestsImages.push(`https://media.resenha.app/u/${guest.hash}.png`);
+                        });
 
                         if (headers.length >= 2) {
                           headers = [headers[0], headers[1]];
@@ -357,16 +375,17 @@ export default function Feed() {
 
                         return (
                           <PartyBanner
-                            imageUrl={exampleImagesEvent}
+                            imageUrl={guestsImages}
                             eventName={title}
                             eventImage={`https://media.resenha.app/r/${hash}.png`}
                             eventHour={start}
                             eventGuests={confirmed}
                             eventMax={capacity}
                             eventPrice={price}
-                            eventSaved={exampleSavedEvent}
+                            eventSaved={saved}
                             eventTags={headers}
                             eventCode={code}
+                            handleSaveButton={handleSaveButton}
                           />
                         );
                       })

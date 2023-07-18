@@ -1,7 +1,10 @@
 'use client'
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 export const metadata = {
     title: 'Resenha.app • Histórico de atividades',
@@ -9,6 +12,59 @@ export const metadata = {
 };
 
 export default function AccountHistory() {
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+    
+    if (!username || !validator) {
+      window.location.href = '/login';
+    }
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator,
+                requested: "activity"
+            });
+
+            setData(response);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
+    var { activity } = data;
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -18,20 +74,15 @@ export default function AccountHistory() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <NotificationBase
-                                    imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'}
-                                    title={'Resenha criada!'}
-                                    description={'A resenha Resenha no Terraço foi criada com sucesso.'}
-                                    date={'Hoje'}
-                                    hour={'17:00'}
-                                />
-                                <NotificationBase
-                                    imageUrl={'https://resenha.app/publico/recursos/resenhas/dEUsxUJp.png'}
-                                    title={'Presença confirmada!'}
-                                    description={'Sua presença no MATUÊ - Porto Alegre  foi confirmada! Seu código é 6478.'}
-                                    date={'09 de junho'}
-                                    hour={'14:28'}
-                                />
+                                {activity.map((item, index) => 
+                                    <NotificationBase
+                                        key={index}
+                                        imageUrl={item.hash ? `https://media.resenha.app/r/${item.hash}.png` : undefined}
+                                        title={item.title}
+                                        description={item.description}
+                                        date={item.date}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

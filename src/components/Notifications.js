@@ -8,10 +8,9 @@ import { useState } from "react";
 import { useEffect } from 'react';
 
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
 
-    if (!username || !validator) {
+    if (!token) {
       window.location.href = '/login';
     }
 
@@ -38,10 +37,11 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', {
           request: 'clearUserNotifications',
-          username: username,
-          validator: validator,
+          token: token
         });
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     };
@@ -50,8 +50,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', {
           request: 'seeUserNotifications',
-          username: username,
-          validator: validator,
+          token: token
         });
       } 
       
@@ -64,10 +63,10 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
         try {
           const response = await makeRequest('http://localhost/resenha.app/api/', {
             request: 'getUserData',
-            username: username,
-            validator: validator,
-            requested: 'notifications',
+            token: token,
+            requested: 'notifications'
           });
+          
           setNotifications(response.notifications);
         } 
         
