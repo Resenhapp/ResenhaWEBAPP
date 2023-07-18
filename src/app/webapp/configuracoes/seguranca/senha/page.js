@@ -4,6 +4,8 @@ import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 export const metadata = {
     title: 'Resenha.app • Configurações de senha',
@@ -11,8 +13,17 @@ export const metadata = {
 };
 
 export default function PasswordConfig() {
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+    
+    if (!username || !validator) {
+      window.location.href = '/login';
+    }
 
-    const options = ['Desabilitado', 'Telefone', 'E-mail']
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const options = ['Desabilitado']
     var initialPassword = '•••••••'
     
     const [method, setMethod] = useState('');
@@ -23,17 +34,68 @@ export default function PasswordConfig() {
     const handleSelectChange = (event) => {
         setMethod(event.target.value);
     };
+    
     const handlePasswordChange = (event) => {
-        setTempPassword(event.target.value); // Atualiza o valor temporário da senha
-    };
-    const toggleEditPasswordPageOpen = () => {
-        setIsEditPasswordPageOpen(!isEditPasswordPageOpen);
-        setTempPassword(password); // Armazena o valor atual da senha
+        setTempPassword(event.target.value);
     };
 
-    const savePassword = () => {
-        setPassword(tempPassword); // Salva o valor temporário como o novo nome de usuário
-        toggleEditPasswordPageOpen();
+    const toggleEditPasswordPageOpen = () => {
+        setIsEditPasswordPageOpen(!isEditPasswordPageOpen);
+        setTempPassword(password);
+    };
+
+    const savePassword = async () => {
+        setPassword(tempPassword);
+
+        const data = {
+            password: tempPassword
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (response.username && response.validator) {
+                Cookies.set('username', response.username);
+                Cookies.set('validator', response.validator);
+            }
+    
+            if (!response.error) {
+                toggleEditPasswordPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    const [data, setData] = useState(null);
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const sendEditRequest = async (data) => {
+        try {
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+            request: 'editUserData',
+            username: username,
+            validator: validator,
+            data: data
+          });
+      
+          return response;
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
     };
 
     return (
@@ -71,7 +133,7 @@ export default function PasswordConfig() {
                                 <p className="text-whiteT1 text-sm font-semibold">Autenticação de dois fatores (2FA)</p>
                                 <ConfigDropDown 
                                     options={options}
-                                    defaultOption={options[2]}  //Também possível colocar apenas a string da array options
+                                    defaultOption={options[0]}
                                     action={handleSelectChange}
                                 />
                             </div>

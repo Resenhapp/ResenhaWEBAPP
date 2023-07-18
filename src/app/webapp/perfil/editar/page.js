@@ -90,7 +90,6 @@ export default function EditProfile() {
         }
     };
 
-
     const sendEditRequest = async (data) => {
         try {
           const response = await makeRequest('http://localhost/resenha.app/api/', {

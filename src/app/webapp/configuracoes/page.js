@@ -1,8 +1,10 @@
 'use client'
+
 import PageHeader from '@/src/components/PageHeader';
 import ButtonConfig from '@/src/components/ButtonConfig';
 import SearchInput from '@/src/components/SearchInput';
 import React from 'react';
+import Cookies from 'js-cookie';
 
 export const metadata = {
     title: 'Resenha.app • Configurações',
@@ -16,9 +18,12 @@ export default function Settings() {
     };
 
     const handleLogOut = () => {
-
-    }
-
+        Cookies.remove('username');
+        Cookies.remove('validator');
+      
+        window.location.href = '/login';
+    };
+      
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Configurações'} /> 

@@ -1,8 +1,11 @@
 'use client'
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 export const metadata = {
     title: 'Resenha.app • Detalhes da conta',
@@ -10,55 +13,160 @@ export const metadata = {
 };
 
 export default function AccountDetails() {
-    const initialName = '@dabilas';
-    const initialEmail = 'joao*****n@gmail.com';
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+    
+    if (!username || !validator) {
+      window.location.href = '/login';
+    }
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
 
     const [isEditNamePageOpen, setIsEditNamePageOpen] = useState(false);
     const [isEditEmailPageOpen, setIsEditEmailPageOpen] = useState(false);
 
+    const [name, setName] = useState('');
+    const [tempName, setTempName] = useState('');
+
+    const [email, setEmail] = useState('');
+    const [tempEmail, setTempEmail] = useState('');
+
     const toggleEditNamePageOpen = () => {
         setIsEditNamePageOpen(!isEditNamePageOpen);
-        setTempName(name); // Armazena o valor atual do nome de usuário
+        setTempName(name);
     };
     const toggleEditEmailPageOpen = () => {
         setIsEditEmailPageOpen(!isEditEmailPageOpen);
-        setTempEmail(email); // Armazena o valor atual do nome de usuário
+        setTempEmail(email);
     };
-
-    const [name, setName] = useState(initialName);
-    const [tempName, setTempName] = useState(initialName); // Novo estado para armazenar temporariamente o nome de usuário
-
-    const [email, setEmail] = useState(initialEmail);
-    const [tempEmail, setTempEmail] = useState(initialEmail);
 
     const handleNameChange = (event) => {
-        setTempName(event.target.value); // Atualiza o valor temporário do nome de usuário
+        setTempName(event.target.value);
     };
+
     const handleEmailChange = (event) => {
         setTempEmail(event.target.value);
     }
 
-    const saveName = () => {
-        setName(tempName); // Salva o valor temporário como o novo nome de usuário
-        toggleEditNamePageOpen();
+    const saveName = async () => {
+        setName(tempName);
+
+        const data = {
+            username: tempName
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (response.username && response.validator) {
+                Cookies.set('username', response.username);
+                Cookies.set('validator', response.validator);
+            }
+    
+            if (!response.error) {
+                toggleEditNamePageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
-    const saveEmail = () => {
-        setEmail(tempEmail); // Salva o valor temporário como o novo nome de usuário
-        toggleEditEmailPageOpen();
+
+    const saveEmail = async () => {
+        setEmail(tempEmail);
+
+        const data = {
+            email: tempEmail
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditEmailPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
     const cancelEditName = () => {
-        setTempName(name); // Restaura o valor original do nome de usuário
+        setTempName(name);
         toggleEditNamePageOpen();
     };
     const cancelEditEmail = () => {
-        setTempEmail(email); // Restaura o valor original do nome de usuário
+        setTempEmail(email);
         toggleEditEmailPageOpen();
     };
 
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const sendEditRequest = async (data) => {
+        try {
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+            request: 'editUserData',
+            username: username,
+            validator: validator,
+            data: data
+          });
+      
+          return response;
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
+
+            setData(response);
+
+            setName(response.username);
+            setEmail(response.email);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Detalhes da conta" />
+            <PageHeader isBack={true} checker={() => { null }} pageTitle="Detalhes da conta" userData={data}/>
             <EditInfoPage
                 isOpen={isEditNamePageOpen}
                 pageTitle={'Nome de usuário'}

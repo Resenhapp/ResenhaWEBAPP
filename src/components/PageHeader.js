@@ -11,13 +11,12 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination }) => {
+    const token = Cookies.get('token');
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [data, setData] = useState(null);
     const [notified, setNotified] = useState(false);
-  
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
   
     const axios = require('axios');
     const qs = require('qs');
@@ -28,7 +27,9 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       try {
         const response = await axios.post(url, qs.stringify(data));
         return response.data;
-      } catch (error) {
+      } 
+      
+      catch (error) {
         throw new Error(`Request failed: ${error}`);
       }
     };
@@ -37,11 +38,13 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', {
           request: 'getUserData',
-          username: username,
-          validator: validator,
+          token: token
         });
+
         setData(response);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     };
@@ -50,12 +53,14 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', {
           request: 'getUserData',
-          username: username,
-          validator: validator,
-          requested: 'notified',
+          token: token,
+          requested: 'notified'
         });
+
         setNotified(response.notified);
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error(error);
       }
     };
@@ -69,10 +74,14 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     };
   
     useEffect(() => {
-      if (data === null) {
+      if (userData == null) {
         fetchData();
       }
-    }, [data]);
+
+      else {
+        setData(userData);
+      }
+    }, [userData]);
   
     useEffect(() => {
       if (data !== null) {
