@@ -77,6 +77,7 @@ export default function NewEvent() {
     
     else {
       setProgress(progress + 1);
+      setIsFilled(!isFilled)
     }
   };
 
@@ -91,6 +92,8 @@ export default function NewEvent() {
   const [selectedPrice, setSelectedPrice] = useState('');
   const [descriptionContent, setDescriptionContent] = useState('');
   const [tagsContent, setTagsContent] = useState([]);
+
+  const [isFilled, setIsFilled] = useState(false);
 
   const handlePiece01NameChange = (value) => {
     setName(value);
@@ -142,11 +145,13 @@ export default function NewEvent() {
         return <Loading />;
       case 1:
         return (
-          <Piece01
+            <Piece01
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
+            filled={setIsFilled}
           />
+          
         );
       case 2:
         return (
@@ -156,12 +161,15 @@ export default function NewEvent() {
           onEndHourSelect={handlePiece02EndHourSelect}
           onDateCalendarSelect={handlePiece02CalendarSelect}
           onDateScrollSelect={(day, month, year) => {setDateSelected(day+"/"+month+"/"+year)}}
+          filled={setIsFilled}
         />
         );
       case 3:
         return (<Piece03 
-        guestsAmount={handlePiece03GuestsSelect}
-        priceAmount={handlePiece03PriceSelect}/>);
+          guestsAmount={handlePiece03GuestsSelect}
+          priceAmount={handlePiece03PriceSelect}
+          onFillingComplete={setIsFilled}
+        />);
       case 4:
         return (<Piece04 
         descriptionContent={handlePiece04DescriptionChange}
@@ -236,6 +244,7 @@ export default function NewEvent() {
               height={1}
               width={3}
               textAlign='center'
+              active={isFilled}
             />
           </div>
         </section>

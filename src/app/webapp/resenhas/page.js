@@ -39,12 +39,12 @@ export default function HomePage() {
             const response = await axios.post(url, qs.stringify(data));
             return response.data;
         }
-  
+
         catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
     };
-  
+
     const fetchData = async () => {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
@@ -53,8 +53,8 @@ export default function HomePage() {
                 validator: validator
             });
             setData(response);
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }

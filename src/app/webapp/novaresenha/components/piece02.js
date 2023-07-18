@@ -11,8 +11,8 @@ import TimePicker from '@/src/components/TimePicker';
 registerLocale('pt', ptBR)
 
 
-const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, onEndHourSelect, onToggleChange }) => {
-    const [hasEnd, setHasEnd] = useState(true);
+const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
+    const [hasEnd, setHasEnd] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
 
@@ -27,21 +27,45 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
 
     const [toggleValue, setToggleValue] = useState(true);
 
+    const [isDateSelected, setIsDateSelected] = useState(false);
+    const [isHourSelected, setIsHourSelected] = useState(false);
+
+  
+    const [startHourSelected, setStartHourSelected] = useState(false);
+    const [endHourSelected, setEndHourSelected] = useState(false);
+
+    
+      
+
+    useEffect(() => {
+        if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
+          filled(true);
+        } else {
+          filled(false);
+        }
+      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd])
+
     const handleDateSelect = (day, month, year) => {
         setSelectedDay(day);
         setSelectedMonth(month);
         setSelectedYear(year);
+        setIsDateSelected(true);
     };
 
     const handleToggleChange = (isChecked) => {
         setToggleValue(isChecked);
         onToggleChange(isChecked);
-        setHasEnd(!hasEnd);
-    };
+        setHasEnd(!isChecked);
+        if(!isChecked) {
+          setEndHourSelected(false);
+        }
+      };
+    
 
     const handleCalendarDateChange = (datePicked) => {
         setSelectedDate(datePicked);
         onDateCalendarSelect(datePicked);
+        setIsDateSelected(true);
     }
 
     useEffect(() => {
@@ -66,30 +90,28 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
     });
 
     const handleStartChange = (date) => {
-        setIsStartTimeModalOpen(true);
+        setStartHourSelected(true);
         onStartHourSelect(date);
-    }
-
-    const handleEndChange = (date) => {
-        setIsEndTimeModalOpen(true);
+      }
+    
+      const handleEndChange = (date) => {
+        setEndHourSelected(true);
         onEndHourSelect(date);
-    }
+      }
 
+    const onStartTimeSelect = useCallback((time) => {
+        const newStartTime = new Date(startTime);
+        newStartTime.setHours(time.hour, time.minute);
+        setStartTime(newStartTime);
+        handleStartChange(newStartTime);
+    }, [startTime, handleStartChange, setStartTime]);
 
-const onStartTimeSelect = useCallback((time) => {
-    const newStartTime = new Date(startTime);
-    newStartTime.setHours(time.hour, time.minute);
-    setStartTime(newStartTime);
-    handleStartChange(newStartTime);
-}, [startTime, handleStartChange, setStartTime]);
-
-const onEndTimeSelect = useCallback((time) => {
-    const newEndTime = new Date(endTime);
-    newEndTime.setHours(time.hour, time.minute);
-    setEndTime(newEndTime);
-    handleEndChange(newEndTime);
-}, [endTime, handleEndChange, setEndTime]);
-
+    const onEndTimeSelect = useCallback((time) => {
+        const newEndTime = new Date(endTime);
+        newEndTime.setHours(time.hour, time.minute);
+        setEndTime(newEndTime);
+        handleEndChange(newEndTime);
+    }, [endTime, handleEndChange, setEndTime]);
 
     return (
         <div className="w-full flex flex-col h-fit gap-6">
@@ -102,12 +124,12 @@ const onEndTimeSelect = useCallback((time) => {
                     <h1>Escolha uma data</h1>
                 </button>
                 <Modal show={isOpen} close={() => setIsOpen(false)}>
-                <DatePicker
-    selected={selectedDate}
-    onChange={handleCalendarDateChange}
-    inline
-    locale="pt"
-/>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={handleCalendarDateChange}
+                        inline
+                        locale="pt"
+                    />
                     <div className='w-full flex-end'>
                         <button onClick={() => setIsOpen(false)} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Fechar</button>
                     </div>
