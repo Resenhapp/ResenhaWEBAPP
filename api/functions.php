@@ -819,7 +819,7 @@ function getUserData()
             $data['saved'] = $saved;
             $data['notified'] = $notified;
             $data['concierges'] = $concierges;
-            $data['activity'] = $activity;
+            $data['activity'] = $activities;
             $data['mine'] = true;
         }
 
