@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
@@ -7,8 +8,8 @@ import Piece03 from './components/piece03';
 import Piece04 from './components/piece04';
 import Piece05 from './components/piece05';
 import Loading from '@/src/components/Loading';
-
 import Button from '@/src/components/Button';
+import Cookies from 'js-cookie';
 
 export const metadata = {
   title: 'Resenha.app • Nova resenha',
@@ -16,59 +17,124 @@ export const metadata = {
 };
 
 export default function NewEvent() {
+  const username = Cookies.get('username');
+  const validator = Cookies.get('validator');
+
+  if (!username || !validator) {
+    window.location.href = '/login';
+  }
+
+  const axios = require('axios');
+  const qs = require('qs');
+
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const makeRequest = async (url, data) => {
+    try {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+    }
 
-  const handleNextStep = () => {
-    setProgress(progress + 1);
-
-    if (progress + 1 > maxProgress) {
-      window.location.href = '/webapp/resenhas/';
+    catch (error) {
+        throw new Error(`Request failed: ${error}`);
     }
   };
 
-  const handlePiece01NameChange = (value) => {
-    console.log('Valor do campo Nome do Piece01:', value);
+  const handleNextStep = async () => {
+    if (progress + 1 > maxProgress) {  
+      const details = {
+        name,
+        address,
+        isForAdults,
+        hasTimeToEnd,
+        start,
+        end,
+        dateSelected,
+        selectedGuests,
+        selectedPrice,
+        descriptionContent,
+        tagsContent
+      };
+
+      try {
+        const response = await makeRequest('http://localhost/resenha.app/api/', { 
+          request: 'tryToCreateEvent',
+          username: username,
+          validator: validator,
+          details: details
+        });
+
+        if (!response.error) {
+          window.location.href = '/webapp/resenhas/';
+        }
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
+    } 
+    
+    else {
+      setProgress(progress + 1);
+    }
   };
 
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [isForAdults, setIsForAdults] = useState(false);
+  const [hasTimeToEnd, setHasTimeToEnd] = useState(false);
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [dateSelected, setDateSelected] = useState(null);
+  const [selectedGuests, setSelectedGuests] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState('');
+  const [descriptionContent, setDescriptionContent] = useState('');
+  const [tagsContent, setTagsContent] = useState([]);
 
+  const handlePiece01NameChange = (value) => {
+    setName(value);
+  };
 
   const handlePiece01AddressChange = (value) => {
-    console.log('Valor do campo Endereço do Piece01:', value);
+    setAddress(value);
   };
 
   const handlePiece01ToggleChange = (isChecked) => {
-    console.log('Valor do toggle do Piece01:', isChecked);
+    setIsForAdults(isChecked);
   };
 
   const handlePiece02ToggleChange = (isChecked) => {
-    console.log('valor do toggle do piece02:', isChecked);
-  }
+    setHasTimeToEnd(!isChecked);
+  };
 
   const handlePiece02StartHourSelect = (startHour) => {
-    console.log('Valor da hora de inicio:', startHour);
-  }
+    setStart(startHour);
+  };
 
   const handlePiece02EndHourSelect = (endHour) => {
-    console.log('Valor da hora de fim:', endHour);
-  }
+    setEnd(endHour);
+  };
 
   const handlePiece02CalendarSelect = (dateSelected) => {
-    console.log('selected date calendar:',dateSelected)
-  }
+    setDateSelected(dateSelected);
+  };
 
   const handlePiece03GuestsSelect = (guests) => {
-    console.log('selected guests: ', guests)
-  }
+    setSelectedGuests(guests);
+  };
+
   const handlePiece03PriceSelect = (price) => {
-    console.log('selected price: ', price)
-  }
+    setSelectedPrice(price);
+  };
 
   const handlePiece04DescriptionChange = (content) => {
-    console.log('description content: ',content)
-  }
+    setDescriptionContent(content);
+  };
 
+  const handlePiece04TagsChange = (content) => {
+    setTagsContent(content);
+  };
 
   const renderPiece = () => {
     switch (progress) {
@@ -89,11 +155,7 @@ export default function NewEvent() {
           onStartHourSelect={handlePiece02StartHourSelect}
           onEndHourSelect={handlePiece02EndHourSelect}
           onDateCalendarSelect={handlePiece02CalendarSelect}
-          onDateScrollSelect={(day, month, year) => {
-              console.log("Selected Day: PAGE ", day);
-              console.log("Selected Month: PAGE ", month);
-              console.log("Selected Year: PAGE ", year);
-          }}
+          onDateScrollSelect={(day, month, year) => {setDateSelected(day+"/"+month+"/"+year)}}
         />
         );
       case 3:
@@ -102,9 +164,10 @@ export default function NewEvent() {
         priceAmount={handlePiece03PriceSelect}/>);
       case 4:
         return (<Piece04 
-        descriptionContent={handlePiece04DescriptionChange}/>);
+        descriptionContent={handlePiece04DescriptionChange}
+        selectedTags={handlePiece04TagsChange}/>);
       case 5:
-        return <Piece05 />;
+        return <Piece05/>;
       default:
         return null;
     }

@@ -62,17 +62,19 @@ export default function Chat() {
                 code: chatCode,
                 type: chatType,
             });
-    
-            if (Array.isArray(response)) {
-                setMessages(response);
+
+            if (response && Array.isArray(response.messages)) {
+                setMessages(response.messages);
             } else {
-                console.error('Response is not an array:', response);
+                console.error('Response does not contain an array of messages:', response);
             }
             setIsLoading(false);
         } catch (error) {
             console.error(error);
         }
+        console.log(messages)
     };
+
 
     useEffect(() => {
         fetchData();
@@ -108,13 +110,14 @@ export default function Chat() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <div class="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
-                                    {messages.map((message, index) => (
+                                <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
+                                    {[...messages].reverse().map((message, index) => (
                                         <ChatBubble
                                             key={index}
+                                            showImage={false}
                                             imageUrl={message.imageUrl}
-                                            message={message.message}
-                                            timestamp={message.timestamp}
+                                            message={message.content}
+                                            timestamp={message.date.hour}
                                             sent={message.sent}
                                         />
                                     ))}

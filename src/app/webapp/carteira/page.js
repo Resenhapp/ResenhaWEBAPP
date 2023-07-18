@@ -15,17 +15,16 @@ export const metadata = {
 }
 
 export default function Wallet() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
+    
+    if (!token) {
+      window.location.href = '/login';
+    }
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [data, setData] = useState(null);
-
-    const handleNavigation = () => {
-        window.location.href = `/webapp/carteira/saque`;
-    };
 
     const makeRequest = async (url, data) => {
         try {
@@ -42,9 +41,9 @@ export default function Wallet() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator
+                token: token
             });
+
             setData(response);
         } 
         
@@ -56,6 +55,10 @@ export default function Wallet() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleNavigation = () => {
+        window.location.href = `/webapp/carteira/saque`;
+    };
 
     if (!data) {
         return (
@@ -69,7 +72,7 @@ export default function Wallet() {
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <PageHeader pageTitle={'Carteira'} />
+            <PageHeader pageTitle={'Carteira'} userData={data} />
             <div className="flex flex-col  justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>

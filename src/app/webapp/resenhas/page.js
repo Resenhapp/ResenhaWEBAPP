@@ -17,8 +17,11 @@ export const metadata = {
 }
 
 export default function HomePage() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
+
+    if (!token) {
+        window.location.href = '/login';
+    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -45,9 +48,9 @@ export default function HomePage() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator
+                token: token
             });
+
             setData(response);
         } 
         
@@ -69,8 +72,6 @@ export default function HomePage() {
     }
 
     var { partiesWent, partiesMade } = data
-
-    console.log(partiesMade)
 
     if (partiesWent.length > 0) {
         const userParty = partiesWent[0];
@@ -94,7 +95,7 @@ export default function HomePage() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Resenhas'} />
+            <PageHeader pageTitle={'Resenhas'} userData={data} />
             <div className="flex flex-col items-center justify-center h-fit px-4">
                 <div className='w-[90%] align-center mt-12 justify-between items-center flex flex-row'>
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />

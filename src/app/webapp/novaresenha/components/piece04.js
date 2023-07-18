@@ -6,15 +6,13 @@ import { tagsData } from '@/src/components/tagsData';
 import EditInfoPage from '@/src/components/EditInfoPage';
 
 const Piece04 = ({descriptionContent, selectedTags}) => {
-
     const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);
+
     const toggleEditTagsPageOpen = () => {
         setIsEditTagsPageOpen(!isEditTagsPageOpen);
     };
 
     const [eventDescription, setEventDescription] = useState('');
-
-    
     const [eventTags, setEventTags] = useState([]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
 

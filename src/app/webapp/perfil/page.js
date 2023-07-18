@@ -23,13 +23,14 @@ export const metadata = {
 }
 
 export default function Profile() {
-    if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        var profile = urlParams.get('u');
+    var token = Cookies.get('token');
+
+    if (!token) {
+        window.location.href = '/login';
     }
-    
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    var profile = urlParams.get('u');
 
     const axios = require('axios');
     const qs = require('qs');
@@ -37,12 +38,11 @@ export default function Profile() {
     const [activeTab, setActiveTab] = useState('Sobre');
     const [data, setData] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/${pageToGo}`;
     };
-
-    const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const makeRequest = async (url, data) => {
         try {
@@ -59,10 +59,10 @@ export default function Profile() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: profile,
-                validator: validator,
-                comparison: u,
+                token: token,
+                profile: profile
             });
+
             setData(response);
             setIsFollowing(response.follower);
             setFollowersCount(response.followers);
@@ -80,9 +80,8 @@ export default function Profile() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'switchFollowUser',
-                username: u,
-                validator: validator,
-                profile: profile,
+                token: token,
+                profile: profile
             });
         } 
         
@@ -103,13 +102,13 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, following, interests, comments, verified, hash, mine, partiesWent, follower } = data
+    var { name, username, about, following, interests, comments, verified, hash, mine, partiesWent } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <PageHeader pageTitle={'Perfil'}/>
+            <PageHeader pageTitle={'Perfil'} userData={mine ? data : undefined}/>
             <div className="flex flex-col justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex '>
@@ -223,11 +222,11 @@ export default function Profile() {
 
                                 {activeTab === 'Comentários' && (
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
-                                        <div class="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                        <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
                                             <Comment
                                                 userName={comment.name}
-                                                imageUrl={`https://media.resenha.app/u/${SHA256(comment.user)}.png`}
+                                                imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
                                                 rate={parseInt(comment.rate)}
                                                 comment={comment.content}
                                                 day={parseInt(comment.date.split('/')[0])}

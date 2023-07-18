@@ -16,16 +16,19 @@ export const metadata = {
 }
 
 export default function Withdraw() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
 
-    const [data, setData] = useState(null);
+    if (!token) {
+        window.location.href = '/login';
+    }
+
     const axios = require('axios');
     const qs = require('qs');
 
-    const inputRef = useRef(null);
+    const [data, setData] = useState(null);
     const [errorContent, setErrorContent] = useState(null);
     const [withdrawalAmount, setWithdrawalAmount] = useState(0);
+    const inputRef = useRef(null);
 
     const handleWithdraw = async () => {
         const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
@@ -46,8 +49,7 @@ export default function Withdraw() {
             try {
                 const response = await makeRequest('http://localhost/resenha.app/api/', { 
                     request: 'tryToWithdraw', 
-                    username: username,
-                    validator: validator,
+                    token: token,
                     amount: withdrawalAmount
                 });
 
@@ -75,7 +77,11 @@ export default function Withdraw() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', username: username, validator: validator });
+            const response = await makeRequest('http://localhost/resenha.app/api/', { 
+                request: 'getUserData', 
+                token: token
+            });
+            
             setData(response);
         }
 

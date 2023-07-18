@@ -1,8 +1,11 @@
 'use client'
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Cookies from 'js-cookie';
+import Loading from "@/src/components/Loading";
 
 export const metadata = {
     title: 'Resenha.app • Informações pessoais',
@@ -10,11 +13,15 @@ export const metadata = {
 };
 
 export default function AccountInfo() {
-    const initialName = 'João Davi S. N.';
-    const initialBirthday = 'joao*****n@gmail.com';
-    const initialPhone = '(51) 9 9535-3595';
-    const initialAddress = 'Rua Ramiro Barcelos, 1450';
-    const initialCpf = '513.169.860-04';
+    const username = Cookies.get('username');
+    const validator = Cookies.get('validator');
+    
+    if (!username || !validator) {
+      window.location.href = '/login';
+    }
+
+    const axios = require('axios');
+    const qs = require('qs');
 
     const [isEditNamePageOpen, setIsEditNamePageOpen] = useState(false);
     const [isEditBirthdayPageOpen, setIsEditBirthdayPageOpen] = useState(false);
@@ -22,9 +29,21 @@ export default function AccountInfo() {
     const [isEditAddressPageOpen, setIsEditAddressPageOpen] = useState(false);
     const [isEditCpfPageOpen, setIsEditCpfPageOpen] = useState(false);
 
+    const [name, setName] = useState('');
+    const [tempName, setTempName] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [tempBirthday, setTempBirthday] = useState('');
+    const [phone, setPhone] = useState('');
+    const [tempPhone, setTempPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [tempAddress, setTempAddress] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [tempCpf, setTempCpf] = useState('');
+    const [data, setData] = useState(null);
+
     const toggleEditNamePageOpen = () => {
-        setIsEditNamePageOpen(!isEditNamePageOpen);
         setTempName(name);
+        setIsEditNamePageOpen(!isEditNamePageOpen);
     };
 
     const toggleEditBirthdayPageOpen = () => {
@@ -47,21 +66,6 @@ export default function AccountInfo() {
         setTempCpf(cpf);
     };
 
-    const [name, setName] = useState(initialName);
-    const [tempName, setTempName] = useState(initialName);
-
-    const [birthday, setBirthday] = useState(initialBirthday);
-    const [tempBirthday, setTempBirthday] = useState(initialBirthday);
-
-    const [phone, setPhone] = useState(initialPhone);
-    const [tempPhone, setTempPhone] = useState(initialPhone);
-
-    const [address, setAddress] = useState(initialAddress);
-    const [tempAddress, setTempAddress] = useState(initialAddress);
-
-    const [cpf, setCpf] = useState(initialCpf);
-    const [tempCpf, setTempCpf] = useState(initialCpf);
-
     const handleNameChange = (event) => {
         setTempName(event.target.value);
     };
@@ -82,29 +86,105 @@ export default function AccountInfo() {
         setTempCpf(event.target.value);
     };
 
-    const saveName = () => {
+    const saveName = async () => {
         setName(tempName);
-        toggleEditNamePageOpen();
+
+        const data = {
+            name: tempName
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditNamePageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    const saveBirthday = () => {
+    const saveBirthday = async () => {
         setBirthday(tempBirthday);
-        toggleEditBirthdayPageOpen();
+
+        const data = {
+            birth: tempBirthday
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditBirthdayPageOpen();
+
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    const savePhone = () => {
+    const savePhone = async () => {
         setPhone(tempPhone);
-        toggleEditPhonePageOpen();
+
+        const data = {
+            phone: tempPhone
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditPhonePageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    const saveAddress = () => {
+    const saveAddress = async () => {
         setAddress(tempAddress);
-        toggleEditAddressPageOpen();
+
+        const data = {
+            address: tempAddress
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditAddressPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    const saveCpf = () => {
+    const saveCpf = async () => {
         setCpf(tempCpf);
-        toggleEditCpfPageOpen();
+
+        const data = {
+            address: tempAddress
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+    
+            if (!response.error) {
+                toggleEditCpfPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
     const cancelEditName = () => {
@@ -131,13 +211,75 @@ export default function AccountInfo() {
         setTempCpf(cpf);
         toggleEditCpfPageOpen();
     };
+    
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const sendEditRequest = async (data) => {
+        try {
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+            request: 'editUserData',
+            username: username,
+            validator: validator,
+            data: data
+          });
+      
+          return response;
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'getUserData',
+                username: username,
+                validator: validator
+            });
+
+            setData(response);
+
+            setName(response.name);
+            setAddress(response.address);
+            setBirthday(response.birth);
+            setPhone(response.phone);
+            setCpf(response.cpf);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col w-screen h-screen">
             <PageHeader isBack={true} checker={() => { null }} pageTitle="Informações pessoais" />
             <EditInfoPage
                 isOpen={isEditNamePageOpen}
-                pageTitle={'Nome de usuário'}
+                pageTitle={'Nome'}
                 togglePage={toggleEditNamePageOpen}
                 saveAction={saveName}
                 cancelAction={cancelEditName}
@@ -145,14 +287,14 @@ export default function AccountInfo() {
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Nome de usuário'
+                        placeholder='Nome'
                         value={tempName}
                         onChange={handleNameChange}
                     />
                 </div>
                 <div>
                     <p className='text-sm'>
-                        O nome de usuário é o que as pessoas verão quando entrarem no seu perfil.
+                        O seu nome é o que as pessoas verão quando entrarem no seu perfil.
                     </p>
                 </div>
             </EditInfoPage>
@@ -246,7 +388,7 @@ export default function AccountInfo() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div onClick={toggleEditNamePageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">Nome de usuário</p>
+                                    <p className="text-whiteT1 text-sm font-semibold">Nome</p>
                                     <InputFieldPurple value={name} readOnly={true} />
                                 </div>
                                 <hr className="border-purpleT4" />

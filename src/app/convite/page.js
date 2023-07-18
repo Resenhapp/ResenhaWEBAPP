@@ -14,15 +14,15 @@ import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
 
 export default function Invite() {
-    let code = '';
-
-    if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        code = urlParams.get('code');
-    }
+    const axios = require('axios');
+    const qs = require('qs');
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [data, setData] = useState(null);
+    const [renderedTags, setRenderedTags] = useState([]);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let code = urlParams.get('code');
 
     const handleNextClick = () => {
         Cookies.set('code', code);
@@ -33,13 +33,6 @@ export default function Invite() {
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
     };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
 
     const makeRequest = async (url, data) => {
         try {
@@ -54,25 +47,38 @@ export default function Invite() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
-            setData(response);
-        }
+            const response = await makeRequest('http://localhost/resenha.app/api/', { 
+                request: 'getInviteData', 
+                code: code 
+            });
 
+            setData(response);
+      
+            return response.tags;
+        } 
+        
         catch (error) {
-            console.error(error);
+          console.error(error);
         }
     };
-
-    const [eventTags, setEventTags] = useState([1, 2, 4]);
-    const [allTags, setAllTags] = useState(
-        [...tagsData].map((tag) => {
+      
+    
+    useEffect(() => {
+        const getRenderedTags = async () => {
+            const tags = await fetchData();
+            const eventTags = tags.map((tag) => parseInt(tag, 10));
+            const allTags = [...tagsData].map((tag) => {
             const isSelected = eventTags.includes(tag.id);
             return { ...tag, selected: isSelected };
-        }).sort((a, b) => b.selected - a.selected)
-    );
-    const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
-    const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
-    
+            }).sort((a, b) => b.selected - a.selected);
+            const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
+            const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
+        
+            setRenderedTags(renderTags);
+        };
+        
+        getRenderedTags();
+    }, []);
 
     if (!data) {
         return (
@@ -82,7 +88,7 @@ export default function Invite() {
         );
     }
 
-    const { pricePerItem, month, year, day, confirmed, maxguests, hour, address, host, title, description, dayOfWeek, users } = data;
+    const { ticket, date, guests, hour, address, host, title, description, users, tags } = data;
 
     const renderDescription = () => {
         if (isExpanded) {
@@ -148,10 +154,8 @@ export default function Invite() {
         if (navigator.share) {
             navigator.share(shareData)
                 .then(() => {
-                    console.log("Invite shared successfully");
                 })
                 .catch((error) => {
-                    console.error("Error sharing invite:", error);
                 });
         } else {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -194,7 +198,7 @@ export default function Invite() {
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
                             <h1 className="text-purpleT2 text-center font-bold">
-                                <span className="mr-1">R$</span>{pricePerItem}
+                                <span className="mr-1">R$</span>{ticket}
                             </h1>
                         </div>
                     </div>
@@ -202,9 +206,9 @@ export default function Invite() {
                         <div className="flex flex-row justify-start gap-2 w-full h-fit">
                             <div className="flex-column justify-left text-whiteT1 items-center">
                                 <h1 className="font-bold">
-                                    {dayOfWeek}
+                                    {date.dayString}
                                 </h1>
-                                <h1> {day} {'de ' + month} </h1>
+                                <h1> {date.day} {'de ' + date.monthString} </h1>
                             </div>
                             <div className="w-[1px] bg-purpleT5 mx-1" />
                             <div className="flex-column justify-left text-whiteT1 items-center">
@@ -212,7 +216,7 @@ export default function Invite() {
                                     Horário
                                 </h1>
                                 <h1>
-                                    {'às ' + hour}
+                                    {'às ' + hour.start}
                                 </h1>
                             </div>
                             <div className="w-[1px] bg-purpleT5 mx-1" />
@@ -221,7 +225,7 @@ export default function Invite() {
                                     Confirmados
                                 </h1>
                                 <h1>
-                                    {confirmed}/{maxguests}
+                                    {guests.confirmed}/{guests.capacity}
                                 </h1>
                             </div>
                         </div>
@@ -253,7 +257,7 @@ export default function Invite() {
                                         Tags:
                                     </h1>
                                 <div className="flex flex-wrap gap-2">
-                                    {renderTags.map((tag) => (
+                                    {renderedTags.map((tag) => (
                                         <Tag
                                             key={tag.id}
                                             tagname={tag.name}
@@ -290,7 +294,7 @@ export default function Invite() {
                                 </h1>
                                 <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
                                     {users.map((user) => (
-                                        <UserPortrait isBlurried={false} key={user.id} imageUrl={'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png'} name={user.name} />
+                                        <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
                                     ))}
                                 </div>
                             </div>
@@ -302,7 +306,7 @@ export default function Invite() {
                         </div>
                     </div>
                 </div>
-            </section >
+            </section>
         </div >
     );
 }

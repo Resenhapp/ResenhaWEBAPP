@@ -33,7 +33,6 @@ export default function NewConcierge() {
 
     const handleInputChange = (e) => {
         setIsFilled(e.target.value !== '');
-        console.log(e.target.value)
     };
 
 

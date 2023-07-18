@@ -18,8 +18,11 @@ export const metadata = {
 }
 
 export default function MyInvites() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
+
+    if (!token) {
+      window.location.href = '/login';
+    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -39,16 +42,16 @@ export default function MyInvites() {
   
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
-                request: 'getUserData',
-                username: username,
-                validator: validator
-            });
-            setData(response);
+          const response = await makeRequest('http://localhost/resenha.app/api/', {
+              request: 'getUserData',
+              token: token
+          });
+          
+          setData(response);
         } 
         
         catch (error) {
-            console.error(error);
+          console.error(error);
         }
     };
 
@@ -68,7 +71,7 @@ export default function MyInvites() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-          <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} />
+          <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
           <div className="flex flex-col items-center justify-center h-screen px-4">
             <section className="flex flex-start items-center w-full max-w-md p-4">
               <div className='h3 w-full flex'>

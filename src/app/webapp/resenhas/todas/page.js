@@ -16,8 +16,11 @@ export const metadata = {
 }
 
 export default function MyParties() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
+
+    if (!token) {
+        window.location.href = '/login';
+    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -39,9 +42,7 @@ export default function MyParties() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator,
-                requested: "partiesMade"
+                token: token,
             });
             setData(response);
         } 
@@ -65,8 +66,18 @@ export default function MyParties() {
         await navigator.clipboard.writeText(partyUrl);
     };
 
-    const handleTrashClick = async () => {
+    const handleTrashClick = async (party) => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'tryToDeleteEvent',
+                token: token,
+                code: party.code
+            });
+        } 
         
+        catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -85,7 +96,7 @@ export default function MyParties() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}}/>
+            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}} userData={data}/>
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
@@ -94,7 +105,7 @@ export default function MyParties() {
                                 <h2>Aqui estão todas as suas resenhas</h2>
                             </div>
                             <div className='w-full h-full flex flex-col'>
-                                <div class="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {partiesMade.map((party) => (
                                     <PartyPortrait
                                         partyCode={party.code} 
@@ -107,6 +118,7 @@ export default function MyParties() {
                                         viewOnClick={() => handleViewClick(party)}
                                         editOnClick={() => handleEditClick(party)}
                                         copyOnClick={() => handleCopyClick(party)}
+                                        trashOnClick={() => handleTrashClick(party)}
                                         canBeDeleted={party.confirmed == 0}
                                     />
                                 ))}
