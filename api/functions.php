@@ -1,6 +1,7 @@
 <?php
 
 include "keys.php";
+
 function queryDB($query)
 {
     global $link;
@@ -288,13 +289,10 @@ function check_session($token)
 
     if (mysqli_num_rows($userData) > 0) {
         return $userData;
-    } 
-    
-    else {
+    } else {
         return null;
     }
 }
-
 
 function createNotification($user, $title, $content, $date)
 {
@@ -622,7 +620,7 @@ function getUserData()
                     "available" => number_format($balance["available"], 2, ',', '.'),
                     "processing" => number_format($balance["processing"], 2, ',', '.'),
                     "retained" => number_format($balance["retained"], 2, ',', '.'),
-                    "requested" => number_format($balance["requested"], 2, ',', '.')
+                    "requested" => number_format($balance["requested"], 2, ',', '.'),
                 ];
             }
         }
@@ -636,7 +634,7 @@ function getUserData()
             foreach ($conciergesResults as $concierge) {
                 $temp = [
                     "name" => $concierge["name"],
-                    "token" => $concierge["token"]
+                    "token" => $concierge["token"],
                 ];
 
                 array_push($concierges, $temp);
@@ -691,7 +689,7 @@ function getUserData()
             foreach ($partiesResults as $party) {
                 $partyId = $party["id"];
                 $partyCode = $party["code"];
-                
+
                 $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                 $partyConfirmed = queryDB($query)['total_guests'];
 
@@ -821,9 +819,7 @@ function getUserData()
             $data['concierges'] = $concierges;
             $data['activity'] = $activities;
             $data['mine'] = true;
-        }
-
-        else {
+        } else {
             $userData = check_session($_POST['token']);
 
             foreach ($userData as $column) {
@@ -832,12 +828,10 @@ function getUserData()
 
             $query = "SELECT id FROM followers WHERE follower = '$profileId' AND followed = '$userId'";
             $result = queryDB($query);
-    
+
             if (!empty($result)) {
                 $data['follower'] = true;
-            } 
-            
-            else {
+            } else {
                 $data['follower'] = false;
             }
         }
@@ -1164,14 +1158,12 @@ function tryToAuthenticate()
         $response = encrypt($token[0], $enckey);
 
         $data = [
-            'token' => $response
+            'token' => $response,
         ];
 
         header('Content-Type: application/json');
         echo json_encode($data);
-    } 
-    
-    else {
+    } else {
         returnError("invalid_credentials");
     }
 }
@@ -1193,7 +1185,7 @@ function clearUserNotifications()
 
         header('Content-Type: application/json');
         echo json_encode($data);
-    } 
+    }
 }
 
 function switchFollowUser()
@@ -1230,9 +1222,7 @@ function switchFollowUser()
                         'status' => "success",
                         'action' => "unfollowed",
                     ];
-                } 
-                
-                else {
+                } else {
                     $insertQuery = "INSERT INTO followers (`id`, `follower`, `followed`, `date`) VALUES (NULL, '$followingId', '$followedId', '$currentDate')";
                     queryNR($insertQuery);
 
@@ -1294,14 +1284,14 @@ function tryToWithdraw()
 
         if (mysqli_num_rows($result) > 0) {
             foreach ($result as $row) {
-                $available = $row["available"];
-                $requested = $row["requested"];
-                $retained = $row["retained"];
-                $processing = $row["processing"];
+                $available = floatval($row["available"]);
+                $requested = floatval($row["requested"]);
+                $retained = floatval($row["retained"]);
+                $processing = floatval($row["processing"]);
             }
         }
 
-        if ($amount <= $available && $amount >= 50.00) {
+        if ($amount <= $available && $amount >= 50) {
             $newRequested = $requested + $amount;
             $newAvailable = $available - $amount;
 

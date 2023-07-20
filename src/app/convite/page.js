@@ -107,7 +107,7 @@ export default function Invite() {
                 </>
             );
         }
-
+        let text = ''
         let shortDescription = description;
 
         if (description.length > 80) {

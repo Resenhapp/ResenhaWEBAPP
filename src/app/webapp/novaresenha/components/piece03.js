@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Vector from '@/src/components/Vector';
 import PlusValue from '@/src/components/PlusValue';
 
-const Piece03 = ({ guestsAmount, priceAmount }) => {
+const Piece03 = ({ guestsAmount, priceAmount, onFillingComplete }) => {
   const [value, setValue] = useState('2,00');
   const [guestsValue, setGuestsValue] = useState(1);
+
+  useEffect(() => {
+    onFillingComplete(true);
+  }, []); 
 
   useEffect(() => {
     guestsAmount(guestsValue);

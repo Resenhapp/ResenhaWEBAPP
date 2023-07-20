@@ -18,8 +18,7 @@ export default function Settings() {
     };
 
     const handleLogOut = () => {
-        Cookies.remove('username');
-        Cookies.remove('validator');
+        Cookies.remove('token');
       
         window.location.href = '/login';
     };
@@ -32,9 +31,9 @@ export default function Settings() {
                     <div className='h3 w-full flex'>
                         <div className='w-full flex flex-col'>
                             <div className='h-fit w-full gap-2 flex flex-col pt-4'>
-                                <div className='pb-4'>
+                                {/* <div className='pb-4'>
                                 <SearchInput placeholder={"Busque uma configuração"} />
-                                </div>
+                                </div> */}
                                 <ButtonConfig
                                     label="Conta"
                                     action={() => handleNavigation('/conta')}
@@ -49,13 +48,13 @@ export default function Settings() {
                                     leftIcon={'shield02'}
                                     textAlign="left"
                                 />
-                                <ButtonConfig
+                                {/* <ButtonConfig
                                     label="Privacidade"
                                     action={() => handleNavigation('/privacidade')}
                                     rightIcon={'arrowRight06'}
                                     leftIcon={'lock03'}
                                     textAlign="left"
-                                />
+                                /> */}
                                 <ButtonConfig
                                     label="Pagamentos"
                                     action={() => handleNavigation('/pagamentos')}

@@ -27,12 +27,12 @@ export default function Security() {
                                     rightIcon={'arrowRight06'}
                                     textAlign="left"
                                 />
-                                <ButtonConfig
+                                {/* <ButtonConfig
                                     label="Histórico de sessões"
                                     action={() => handleNavigation('/historico')}
                                     rightIcon={'arrowRight06'}
                                     textAlign="left"
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>

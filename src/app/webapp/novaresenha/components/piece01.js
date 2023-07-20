@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import AddressField from '@/src/components/AddressField';
 import Toggle from '@/src/components/Toggle';
 
-const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange }) => {
+const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [toggleValue, setToggleValue] = useState(true);
+
+    useEffect(() => {
+        if (name && address) {
+            filled(true);
+        } else {
+            filled(false);
+        }
+    }, [name, address]);
 
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
@@ -33,6 +41,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange }) =>
                 showIcon={true}
                 placeholder='Nome da resenha'
                 value={name}
+                Required={true}
             />
             <InputField
                 action={handleAddressFieldChange}
@@ -40,6 +49,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange }) =>
                 showIcon={true}
                 placeholder='Endereço'
                 value={address}
+                Required={true}
             />
             <Toggle
                 onToggle={handleToggleChange}
