@@ -3,11 +3,6 @@ import Button from '@/src/components/Button';
 import Image from 'next/image';
 import defaultImage from "@/assets/images/default.jpg";
 
-export const metadata = {
-    title: 'Resenha.app • Pronto!',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Confirmation() {
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">

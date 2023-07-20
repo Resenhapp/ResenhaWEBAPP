@@ -12,11 +12,6 @@ import Cookies from 'js-cookie';
 import React, { useEffect } from 'react';
 import Loading from '@/src/components/Loading';
 
-export const metadata = {
-    title: 'Resenha.app • Dados',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Info() {
     const code = Cookies.get('code');
 
