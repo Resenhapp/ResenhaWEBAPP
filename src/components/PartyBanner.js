@@ -25,7 +25,9 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                 <div className='w-full absolute h-fit top-0 p-2 flex justify-between flex-row'>
                     <div className='flex flex-row w-full gap-1'>
                         {eventTags.map((index) => (
-                            <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname} />
+                            <div key={index.id}>
+                                <PartyTag bgColor={partyData[index].bgColor} icon={partyData[index].icon} special={partyData[index].special} tagname={partyData[index].tagname} />
+                            </div>
                         ))
                         }
                     </div>
@@ -40,14 +42,16 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                     <div className='flex flex-row gap-2 items-center'>
                         <div className='flex flex-row'>
                             {imageUrl.map((url, index) => (
-                                <Image
-                                    key={index}
-                                    src={url}
-                                    alt=""
-                                    width={110}
-                                    height={30}
-                                    className={`rounded-full ${index < imageUrl.length - 1 ? "mr-[-10px]" : ""} ring-2 ring-purpleT1 object-cover h-5 w-5`}
-                                />
+                                <div key={index.id}>
+                                    <Image
+                                        key={index}
+                                        src={url}
+                                        alt=""
+                                        width={110}
+                                        height={30}
+                                        className={`rounded-full ${index < imageUrl.length - 1 ? "mr-[-10px]" : ""} ring-2 ring-purpleT1 object-cover h-5 w-5`}
+                                    />
+                                </div>
                             ))}
                         </div>
                         <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
