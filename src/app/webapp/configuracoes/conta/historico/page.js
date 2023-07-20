@@ -6,11 +6,6 @@ import NotificationBase from '@/src/components/NotificationBase';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Histórico de atividades',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function AccountHistory() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');

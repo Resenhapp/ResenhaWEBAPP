@@ -11,11 +11,6 @@ import Loading from '@/src/components/Loading';
 import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
 
-export const metadata = {
-  title: 'Resenha.app • Nova resenha',
-  description: 'Venha fazer suas resenhas!',
-};
-
 export default function NewEvent() {
   const username = Cookies.get('username');
   const validator = Cookies.get('validator');

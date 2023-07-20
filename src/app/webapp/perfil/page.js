@@ -17,11 +17,6 @@ import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
 import SHA256 from 'crypto-js/sha256';
 
-export const metadata = {
-    title: 'Resenha.app • Perfil',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Profile() {
     var token = Cookies.get('token');
 

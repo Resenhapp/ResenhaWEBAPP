@@ -3,11 +3,6 @@ import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
-export const metadata = {
-    title: 'Resenha.app • Conta',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function Account() {
     const handleNavigation = (pageToGo) => {
         window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;

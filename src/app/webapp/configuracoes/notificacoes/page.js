@@ -3,11 +3,6 @@ import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Toggle from '@/src/components/Toggle';
 
-export const metadata = {
-    title: 'Resenha.app • Notificações',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function NotificationConfig() {
     const [notificationEnabled, setNotificationEnabled] = useState(false);
     const [emailEnabled, setEmailEnabled] = useState(false);

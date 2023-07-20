@@ -6,11 +6,6 @@ import SearchInput from '@/src/components/SearchInput';
 import React from 'react';
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Configurações',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Settings() {
 
     const handleNavigation = (pageToGo) => {

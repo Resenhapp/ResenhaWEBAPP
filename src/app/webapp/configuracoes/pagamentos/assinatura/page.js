@@ -3,11 +3,6 @@ import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import SignatureSelection from '@/src/components/SignatureSelection';
 
-export const metadata = {
-    title: 'Resenha.app • Assinaturas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Signature() {
 
     const handleNavigation = (pageToGo) => {

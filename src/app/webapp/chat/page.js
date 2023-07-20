@@ -7,11 +7,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Chat',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Chat() {
     const urlParams = new URLSearchParams(window.location.search);
     const groupChat = urlParams.get('r');

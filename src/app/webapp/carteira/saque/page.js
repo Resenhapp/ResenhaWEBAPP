@@ -9,12 +9,6 @@ import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 
-
-export const metadata = {
-    title: 'Resenha.app • Saque',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Withdraw() {
     const token = Cookies.get('token');
 

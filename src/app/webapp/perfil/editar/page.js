@@ -10,11 +10,6 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import { te } from 'date-fns/locale';
 
-export const metadata = {
-    title: 'Resenha.app • Perfil',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function EditProfile() {
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');

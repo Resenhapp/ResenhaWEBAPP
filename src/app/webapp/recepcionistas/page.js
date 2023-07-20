@@ -8,11 +8,6 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
-
-export const metadata = {
-    title: 'Resenha.app • Recepcionistas',
-    description: 'Venha fazer suas resenhas!',
-}
 export default function Concierges() {
     function RemoveConcierge() {
 

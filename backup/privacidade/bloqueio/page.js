@@ -4,11 +4,6 @@ import PageHeader from '@/src/components/PageHeader';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import BlockedUserNotification from '@/src/components/BlockedUserNotification';
 
-export const metadata = {
-    title: 'Resenha.app • Configurações de bloqueio',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function BlockConfig() {
 
     const blockedUserCan = ['Nada', 'Comprar convites']

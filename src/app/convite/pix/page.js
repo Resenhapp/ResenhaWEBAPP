@@ -9,11 +9,6 @@ import React, { useEffect } from 'react';
 import { useState } from "react";
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Pix',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Pix() {
     const [data, setData] = useState(null);
 

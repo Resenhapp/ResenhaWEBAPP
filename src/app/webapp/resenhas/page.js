@@ -11,11 +11,6 @@ import Loading from "@/src/components/Loading";
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Resenhas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function HomePage() {
     const token = Cookies.get('token');
 
