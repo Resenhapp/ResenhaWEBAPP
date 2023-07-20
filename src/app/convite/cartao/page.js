@@ -8,11 +8,6 @@ import Back from '@/src/components/Back';
 import { useState } from 'react';
 import axios from 'axios';
 
-export const metadata = {
-    title: 'Resenha.app • Cartão',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Credit() {
     const [owner, setOwner] = useState('');
     const [number, setNumber] = useState('');

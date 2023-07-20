@@ -1,56 +1,30 @@
-'use client';
+'use client'
 
 import InputField from '@/src/components/InputField';
 import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import GoogleButton from '@/src/components/GoogleButton';
-import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
-import Back from '@/src/components/Back';
-import Cookies from 'js-cookie';
 import React, { useState } from 'react';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 
-export default function Personal() {
-  const axios = require('axios');
-  const qs = require('qs');
+const RegisterPageComponent = ({}) => {
+    const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const email = Cookies.get('email');
-  const password = Cookies.get('password');
-
-  const [name, setName] = useState('');
-  const [cpf, setCPF] = useState('');
-  const [birth, setBirth] = useState('');
-
-  const handleNameChange = (event) => {
-    setName(event.target.value);
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
   };
 
-  const handleCPFChange = (event) => {
-    setCPF(event.target.value);
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
-  const handleBirthChange = (event) => {
-    setBirth(event.target.value);
-  };
-
-  const handleClick = async () => {
-    try {
-      const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
-  };
-
-  const makeRequest = async (url, data) => {
-    try {
-      const response = await axios.post(url, qs.stringify(data));
-      return response.data;
-    } catch (error) {
-      throw new Error(`Request failed: ${error}`);
-    }
+  const handleNextClick = () => {
+    Cookies.set('email', email);
+    Cookies.set('password', password);
+  
+    window.location.href = 'cadastro/pessoal/';
   };
 
   return (
@@ -71,23 +45,17 @@ export default function Personal() {
             <path d="M249.641 43V9.74667H255.665V12.6133H256.54C257.09 11.6896 257.948 10.8774 259.114 10.1767C260.28 9.44407 261.948 9.07778 264.118 9.07778C266.061 9.07778 267.859 9.55556 269.51 10.5111C271.162 11.4348 272.49 12.8044 273.494 14.62C274.498 16.4356 275 18.6333 275 21.2133V21.9778C275 24.5578 274.498 26.7556 273.494 28.5711C272.49 30.3867 271.162 31.7722 269.51 32.7278C267.859 33.6515 266.061 34.1133 264.118 34.1133C262.661 34.1133 261.43 33.9382 260.426 33.5878C259.454 33.2693 258.661 32.8552 258.046 32.3456C257.463 31.8041 256.993 31.2626 256.637 30.7211H255.762V43H249.641ZM262.272 28.8578C264.183 28.8578 265.754 28.2685 266.984 27.09C268.247 25.8796 268.879 24.1278 268.879 21.8344V21.3567C268.879 19.0633 268.247 17.3274 266.984 16.1489C265.721 14.9385 264.15 14.3333 262.272 14.3333C260.394 14.3333 258.823 14.9385 257.56 16.1489C256.297 17.3274 255.665 19.0633 255.665 21.3567V21.8344C255.665 24.1278 256.297 25.8796 257.56 27.09C258.823 28.2685 260.394 28.8578 262.272 28.8578Z" fill="#F1F1F1" />
           </svg>
         </div>
-        <div className='w-full flex items-start'>
-          <Back />
-        </div>
         <div className="flex flex-col mb-0 w-full">
-          <h2 className="text-2xl text-whiteT1 font-bold mb-2">Dados pessoais</h2>
-          <div className="flex flex-col mb-8 gap-4 w-full">
-            <InputField placeholder="Seu nome" showIcon={true} Icon="person" value={name} action={handleNameChange} />
-            <InputField placeholder="CPF" showIcon={true} Icon="id" value={cpf} action={handleCPFChange} />
-            <InputField placeholder="Data de nacimento" showIcon={true} Icon="calendar" value={birth} action={handleBirthChange} />
-            <div className="flex-col items-center justify-center">
-              <p className="mr-1 text-center text-[10px]">utilizamos estes dados para que você possa receber os pagamentos pelas suas resenhas. para saber mais <Link href="/login" className="font-bold">toque aqui</Link>.</p>
-            </div>
-          </div>
+          <h2 className="text-2xl text-whiteT1 font-bold mb-2">Criar conta</h2>
+        <div className="flex flex-col mb-8 gap-4 w-full">
+          <InputField placeholder="Email" showIcon={true} Icon="mail" value={email} action={handleEmailChange}/>
+          <PasswordField placeholder="Senha" showIcon={true} value={password} action={handlePasswordChange}/>
+          <PasswordField placeholder="Senha" showIcon={true} />
+        </div>
         </div>
 
         <div className="flex flex-col mb-4 w-full">
-          <Button action={handleClick} label="Criar conta!" icon="arrow" />
+          <Button action={handleNextClick} label="Próximo" icon="arrow"/>
         </div>
         <div className="flex flex-col mb-2 mt-10 w-full">
           <h1 className="text-center text-sm font-regular mb-0">Ou</h1>
@@ -104,3 +72,5 @@ export default function Personal() {
     </div>
   );
 }
+
+export default RegisterPageComponent;
