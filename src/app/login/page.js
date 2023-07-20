@@ -11,11 +11,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
 
-export const metadata = {
-  title: 'Resenha.app • Login',
-  description: 'Venha fazer suas resenhas!',
-}
-
 export default function Login() {
   const axios = require('axios');
   const qs = require('qs');

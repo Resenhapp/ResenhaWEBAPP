@@ -4,11 +4,6 @@ import Button from '@/src/components/Button';
 import Vector from '@/src/components/Vector';
 import PageHeader from '@/src/components/PageHeader';
 
-export const metadata = {
-    title: 'Resenha.app • Sucesso',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function WithdrawSuccess() {
     const handleNavigation = () => {
         window.location.href = '/webapp/carteira/';

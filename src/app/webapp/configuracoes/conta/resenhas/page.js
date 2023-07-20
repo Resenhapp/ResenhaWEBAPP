@@ -6,11 +6,6 @@ import PartyBanner from '@/src/components/PartyBanner';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Resenhas salvas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function AccountPartySaved() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');

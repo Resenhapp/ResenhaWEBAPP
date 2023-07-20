@@ -9,11 +9,6 @@ import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Carteira',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Wallet() {
     const token = Cookies.get('token');
     

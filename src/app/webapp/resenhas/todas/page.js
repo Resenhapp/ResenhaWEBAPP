@@ -10,11 +10,6 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Todas as Resenhas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function MyParties() {
     const token = Cookies.get('token');
 

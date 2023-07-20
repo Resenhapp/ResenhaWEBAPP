@@ -9,11 +9,6 @@ import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Ajuda',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Help() {
     const copyVector = () => {
         return (

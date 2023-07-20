@@ -12,11 +12,6 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Meus convites',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function MyInvites() {
     const token = Cookies.get('token');
 

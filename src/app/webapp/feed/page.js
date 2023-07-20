@@ -17,11 +17,6 @@ import { useEffect } from 'react';
 import { tagsData } from "@/src/components/tagsData"
 import { interestsData } from '@/src/components/interestsData';
 
-export const metadata = {
-  title: 'Resenha.app • Feed',
-  description: 'Venha fazer suas resenhas!',
-}
-
 export default function Feed() {
   var token = Cookies.get('token');
 
