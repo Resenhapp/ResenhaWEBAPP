@@ -36,4 +36,6 @@ const MoneyInput = forwardRef((props, ref) => {
   );
 });
 
+MoneyInput.displayName = 'MoneyInput';
+
 export default MoneyInput;
