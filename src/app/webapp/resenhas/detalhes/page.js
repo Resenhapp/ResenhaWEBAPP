@@ -59,7 +59,7 @@ export default function EventDetails() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

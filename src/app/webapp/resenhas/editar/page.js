@@ -4,12 +4,14 @@ import Button from "@/src/components/Button"
 import Image from "next/image"
 import Vector from "@/src/components/Vector"
 import EditInfoPage from "@/src/components/EditInfoPage"
+import PageHeader from "@/src/components/PageHeader"
 import React, { useState, useEffect } from 'react';
 import Tag from "@/src/components/Tag"
 import { tagsData } from "@/src/components/tagsData"
 import Toggle from "@/src/components/Toggle"
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
+import PageHeader from "@/src/components/PageHeader"
 import { setHours } from "date-fns"
 
 export default function EditEvent() {
@@ -363,7 +365,7 @@ export default function EditEvent() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

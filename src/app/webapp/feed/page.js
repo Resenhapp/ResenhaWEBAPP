@@ -249,7 +249,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
   const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
@@ -369,19 +369,21 @@ export default function Feed() {
                         }
 
                         return (
-                          <PartyBanner
-                            imageUrl={guestsImages}
-                            eventName={title}
-                            eventImage={`https://media.resenha.app/r/${hash}.png`}
-                            eventHour={start}
-                            eventGuests={confirmed}
-                            eventMax={capacity}
-                            eventPrice={price}
-                            eventSaved={saved}
-                            eventTags={headers}
-                            eventCode={code}
-                            handleSaveButton={handleSaveButton}
-                          />
+                          <div key={hash}>
+                            <PartyBanner
+                              imageUrl={guestsImages}
+                              eventName={title}
+                              eventImage={`https://media.resenha.app/r/${hash}.png`}
+                              eventHour={start}
+                              eventGuests={confirmed}
+                              eventMax={capacity}
+                              eventPrice={price}
+                              eventSaved={saved}
+                              eventTags={headers}
+                              eventCode={code}
+                              handleSaveButton={handleSaveButton}
+                            />
+                          </div>
                         );
                       })
                     ) : (

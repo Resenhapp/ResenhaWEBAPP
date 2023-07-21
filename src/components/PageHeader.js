@@ -81,7 +81,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       else {
         setData(userData);
       }
-    }, [userData]);
+    }, [userData, fetchData]);
   
     useEffect(() => {
       if (data !== null) {
@@ -93,7 +93,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
           clearInterval(interval);
         };
       }
-    }, [data]);
+    }, [data, checkIfUserNotified, updateInterval]);
 
     return (
         <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">

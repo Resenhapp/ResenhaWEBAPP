@@ -78,7 +78,7 @@ export default function Invite() {
         };
         
         getRenderedTags();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -258,17 +258,19 @@ export default function Invite() {
                                     </h1>
                                 <div className="flex flex-wrap gap-2">
                                     {renderedTags.map((tag) => (
-                                        <Tag
-                                            key={tag.id}
-                                            tagname={tag.name}
-                                            type={tag.type}
-                                            colorName={tag.colorName}
-                                            highlightColor={tag.highlightColor}
-                                            isEditable={false}
-                                            ringThickness={tag.ringThickness}
-                                            ringColor={tag.ringColor}
-                                            weight={tag.weight}
-                                        />
+                                        <div key={tag.id}>
+                                            <Tag
+                                                key={tag.id}
+                                                tagname={tag.name}
+                                                type={tag.type}
+                                                colorName={tag.colorName}
+                                                highlightColor={tag.highlightColor}
+                                                isEditable={false}
+                                                ringThickness={tag.ringThickness}
+                                                ringColor={tag.ringColor}
+                                                weight={tag.weight}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             </div>
@@ -294,7 +296,9 @@ export default function Invite() {
                                 </h1>
                                 <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
                                     {users.map((user) => (
-                                        <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
+                                        <div key={user.id}>
+                                            <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
+                                        </div>
                                     ))}
                                 </div>
                             </div>

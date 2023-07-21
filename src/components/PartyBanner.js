@@ -36,7 +36,7 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                     items-center content-center backdrop-blur-xl bg-[#0000004D]'>
                         <Vector vectorname={vectorSaved} /></button>
                 </div>
-                <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' />
+                <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>
                     <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]">{eventName}</h1>
                     <div className='flex flex-row gap-2 items-center'>

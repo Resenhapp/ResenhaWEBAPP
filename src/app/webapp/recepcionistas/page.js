@@ -23,9 +23,20 @@ export default function Concierges() {
 
     const [data, setData] = useState(null);
 
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            setData(response);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -46,16 +57,6 @@ export default function Concierges() {
         setShow(true);
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return (
@@ -86,14 +87,16 @@ export default function Concierges() {
                         <div className='w-full flex flex-col '>
                             <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                 {concierges.map((concierge) => (
-                                    <ConciergePortrait
-                                        imgUrl={defaultProfileImage}
-                                        conciergeName={concierge.name}
-                                        conciergeToken={concierge.token}
-                                        relativeEvent={'Resenha de Los Manos'}
-                                        deleteAction={showPopUp}
-                                        editAction={() => handleNavigation('recepcionistas/editar')}
-                                    />
+                                    <div key={concierge.id}>
+                                        <ConciergePortrait
+                                            imgUrl={defaultProfileImage}
+                                            conciergeName={concierge.name}
+                                            conciergeToken={concierge.token}
+                                            relativeEvent={'Resenha de Los Manos'}
+                                            deleteAction={showPopUp}
+                                            editAction={() => handleNavigation('recepcionistas/editar')}
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         </div>

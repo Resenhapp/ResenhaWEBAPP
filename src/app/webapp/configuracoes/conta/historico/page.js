@@ -49,7 +49,7 @@ export default function AccountHistory() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

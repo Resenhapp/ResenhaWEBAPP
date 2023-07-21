@@ -57,10 +57,20 @@ export default function Info() {
         const isChecked = event.target.checked;
         setMinor(isChecked);
     };
+    
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -76,16 +86,6 @@ export default function Info() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return (

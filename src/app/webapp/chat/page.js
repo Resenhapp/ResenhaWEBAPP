@@ -73,7 +73,7 @@ export default function Chat() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (isLoading) {
         return (
