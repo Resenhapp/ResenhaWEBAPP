@@ -308,6 +308,7 @@ function getParties($result, $userId)
         foreach ($result as $row) {
             $headers = [];
 
+            $partyIdHash = hash256($row["id"]);
             $code = $row["code"];
             $capacity = $row["capacity"];
 
@@ -316,11 +317,11 @@ function getParties($result, $userId)
 
             if ($savedQ) {
                 $saved = true;
-            } else {
+            } 
+            
+            else {
                 $saved = false;
             }
-
-            $hash = hash256($code);
 
             $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
             $confirmed = queryDB($guests_query)['total_guests'];
@@ -379,7 +380,7 @@ function getParties($result, $userId)
             }
 
             $data = [
-                'hash' => $hash,
+                'hash' => $partyIdHash,
                 'saved' => $saved,
                 'price' => $row["price"],
                 'code' => $code,
