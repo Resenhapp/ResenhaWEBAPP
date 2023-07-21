@@ -224,13 +224,15 @@ function returnError($error)
     exit();
 }
 
-function checkRequest($request)
+function checkPublicRequest($request)
 {
-    global $requests;
+    global $public;
 
-    if (in_array($request, $requests)) {
+    if (in_array($request, $public)) {
         return true;
-    } else {
+    } 
+    
+    else {
         return false;
     }
 }
@@ -280,11 +282,9 @@ function getHelpData()
 
 function check_session($token)
 {
-    global $enckey;
-
     $token = sanitize($token);
 
-    $api = decrypt($token, $enckey);
+    $api = decrypt($token, GLOBAL_ENCKEY);
 
     $userQuery = "SELECT * FROM users WHERE api = '$api'";
     $userData = queryDBRows($userQuery);
@@ -296,9 +296,11 @@ function check_session($token)
     }
 }
 
-function createNotification($user, $title, $content, $date)
+function createNotification($user, $title, $content)
 {
-    $query = "INSERT INTO notifications (user, title, content, date, seen, cleared) VALUES ('$user', '$title', '$content', '$date', '0', '0')";
+    $dateTime = date('d/m/Y H:i');
+
+    $query = "INSERT INTO notifications (user, title, content, date, seen, cleared) VALUES ('$user', '$title', '$content', '$dateTime', '0', '0')";
     queryNR($query);
 }
 
@@ -423,9 +425,9 @@ function getFeedData()
         }
 
         if (isset($_POST['filterParameters'])) {
-            $filterParameters = sanitize($_POST['filterParameters']);
+            $filterParameters = $_POST['filterParameters'];
 
-            if (isset($filterParameters["address"]) && $filterParameters["radius"]) {
+            if (isset($filterParameters["address"]) && isset($filterParameters["radius"])) {
                 $userAddress = $filterParameters["address"];
                 $locationRadius = $filterParameters["radius"];
 
@@ -444,9 +446,11 @@ function getFeedData()
 
                 $addressDecoded = json_decode($json, true);
 
+
                 if (!empty($addressDecoded)) {
                     $userLatitude = $addressDecoded[0]["lat"];
                     $userLongitude = $addressDecoded[0]["lon"];
+
 
                     $query .= " AND
                         (6371 * 2 *
@@ -515,8 +519,6 @@ function calculateDistance($lat1, $lon1, $lat2, $lon2)
 
 function editUserData()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
     $data = sanitize($_POST['data']);
@@ -549,7 +551,7 @@ function editUserData()
             $newPassword = $data['password'];
 
             $data['password'] = hash256($newPassword);
-            $responseData['token'] = encrypt($newToken, $enckey);
+            $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
         }
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
@@ -576,8 +578,6 @@ function editUserData()
 
 function getUserData()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
     if ($userData) {
@@ -834,7 +834,7 @@ function getUserData()
             'mine' => false,
         ];
 
-        if ($column["api"] == decrypt(sanitize($_POST["token"]), $enckey)) {
+        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
             $data["birth"] = $column["birth"];
             $data["address"] = $column["address"];
             $data["phone"] = $column["phone"];
@@ -886,8 +886,6 @@ function getUserData()
 
 function getInviteData()
 {
-    global $enckey;
-
     $code = sanitize($_POST['code']);
 
     $query = "SELECT * FROM parties WHERE code = '$code'";
@@ -1177,8 +1175,6 @@ function tryToCreateGuest()
 
 function tryToAuthenticate()
 {
-    global $enckey;
-
     $email = sanitize($_POST['email']);
     $password = hash256(sanitize($_POST['password']));
 
@@ -1186,7 +1182,7 @@ function tryToAuthenticate()
     $token = queryDB($query);
 
     if ($token) {
-        $response = encrypt($token[0], $enckey);
+        $response = encrypt($token[0], GLOBAL_ENCKEY);
 
         $data = [
             'token' => $response,
@@ -1316,7 +1312,7 @@ function seeUserNotifications()
     $userData = check_session($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
+        $userName = $column["username"];
 
         $query = "SELECT * FROM users WHERE username = '$userName'";
 
@@ -1369,6 +1365,12 @@ function tryToWithdraw()
 
             $query = "UPDATE balances SET requested = $newRequested, available = $newAvailable WHERE user = '$id'";
             queryNR($query);
+
+            createNotification(
+                $id,
+                "Saque solicitado!",
+                "Seu saque de R$ ".number_format($amount, 2, ',', '.')." foi solicitado e cairá na sua conta em até 1 dia útil.",
+            );
 
             $embed = [
                 'title' => 'Novo saque solicitado!',
@@ -1434,14 +1436,12 @@ function tryToDeleteEvent()
 
 function getMessages()
 {
-    global $enckey;
-
     $code = sanitize($_POST['code']);
     $type = sanitize($_POST['type']);
     $username = sanitize($_POST['username']);
 
     if (strlen($username) >= 30) {
-        $username = decrypt($_POST['username'], $enckey);
+        $username = decrypt($_POST['username'], GLOBAL_ENCKEY);
     }
 
     $queryUsernameId = "SELECT id FROM users WHERE username = '$username'";
@@ -1496,8 +1496,6 @@ function getMessages()
 
 function tryToCreateEvent()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
     foreach ($userData as $column) {
@@ -1607,8 +1605,6 @@ function tryToCreateEvent()
 
 function tryToCreateUser()
 {
-    global $enckey;
-
     $email = sanitize($_POST['email']);
     $password = sanitize($_POST['password']);
     $name = sanitize($_POST['name']);
@@ -1618,7 +1614,7 @@ function tryToCreateUser()
     $error = check_email($email) or check_password($password) or check_cpf($cpf);
 
     if (!isset($error)) {
-        $token = "ec-" . encrypt($email, $enckey);
+        $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
 
         $api = random_code(24);
 
@@ -1681,7 +1677,11 @@ function tryToCreateUser()
             header('Content-Type: application/json');
             echo json_encode($data);
         }
-    } else {
+    } 
+    
+    else {
         returnError($error);
     }
 }
+
+?>

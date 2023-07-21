@@ -9,11 +9,17 @@ include "functions.php";
 if (isset($_POST['request'])) {
     $request = sanitize($_POST['request']);
 
-    if (checkRequest(($request))) {
+    if (checkPublicRequest(($request))) {
         $request();
-    } else {
+    } 
+    
+    else {
         returnError("invalid_request");
     }
-} else {
+} 
+
+else {
     returnError("no_request");
 }
+
+?>

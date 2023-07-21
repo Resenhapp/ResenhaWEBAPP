@@ -105,7 +105,7 @@ export default function Withdraw() {
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <PageHeader pageTitle={'Saque'} />
+            <PageHeader pageTitle={'Saque'} userData={data} />
             <div className="flex flex-col  justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
