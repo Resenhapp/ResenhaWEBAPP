@@ -14,7 +14,9 @@ export default function Concierges() {
     }
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const defaultProfileImage = "https://resenha.app/publico/recursos/imagens/concierge_default.png";

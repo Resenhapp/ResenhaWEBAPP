@@ -25,8 +25,16 @@ export default function EditConcierge() {
     };
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
+
+    const handleButtonBack = () => {
+        if (typeof window !== 'undefined') {
+            window.history.back()
+        }
+    }
 
     const handleInputChange = (e) => {
         setConciergeNewName(e.target.value); // update new name as the user types
@@ -68,7 +76,7 @@ export default function EditConcierge() {
                         </div>
                     </div>
                     <div className='mt-10 w-full flex flex-row justify-between'>
-                        <button className='px-5 py-4' onClick={() => window.history.back()}>Cancelar</button>
+                        <button className='px-5 py-4' onClick={handleButtonBack}>Cancelar</button>
                         <Button
                             label={'Salvar'}
                             active={isFilled}

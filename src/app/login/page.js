@@ -52,7 +52,9 @@ export default function Login() {
 
         Cookies.set('token', response.token, { expires: expirationDate });
 
-        window.location.href = '/webapp/feed/';
+        if (typeof window !== 'undefined') {
+          window.location.href = '/webapp/feed/';
+        }
       }
     }
     

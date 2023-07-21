@@ -22,7 +22,6 @@ export default function Map({ onLocationSelect }) {
                 const newPosition = [position.coords.latitude, position.coords.longitude];
                 setUserPosition(newPosition);
             }, (error) => {
-                window.alert("Geolocation is not enabled. Using default position.");
             });
         }
     }

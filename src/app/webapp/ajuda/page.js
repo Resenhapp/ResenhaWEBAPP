@@ -53,6 +53,11 @@ export default function Help() {
         }
     };
 
+    const handleHelpButton = () => {
+      if (typeof window !== 'undefined') {
+        window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+eu+preciso+de+ajuda+com+o+Resenha.app", "_blank")
+      }
+    }
 
     if (!data) {
         return (
@@ -96,7 +101,7 @@ export default function Help() {
               <Button
                 label={'Entrar em contato'}
                 icon={'arrow'}
-                action={() => window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+eu+preciso+de+ajuda+com+o+Resenha.app", "_blank")}
+                action={handleHelpButton}
                 iconSide='right'
                 height={1}
                 width={1}

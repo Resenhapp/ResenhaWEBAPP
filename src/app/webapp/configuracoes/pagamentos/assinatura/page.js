@@ -6,7 +6,9 @@ import SignatureSelection from '@/src/components/SignatureSelection';
 export default function Signature() {
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const [selectedCard, setSelectedCard] = useState(0);

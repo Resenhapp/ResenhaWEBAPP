@@ -4,7 +4,9 @@ import Button from './Button';
 import MyInvitesBanner from './MyInvitesBanner';
 const MyInvitesDisplay = ({eventName, eventDate, eventHour, token, eventImage}) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
     return (
         <section className="flex content-center justify-center flex-col items-center w-full h-fit max-w-md p-4">

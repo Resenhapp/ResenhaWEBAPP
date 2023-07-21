@@ -6,6 +6,7 @@ import CreditCardSelection from '@/src/components/CreditCardSelection';
 export default function CreditCards() {
 
     const handleNavigation = (pageToGo) => {
+        
         window.location.href = `/webapp/${pageToGo}`;
     };
 

@@ -5,7 +5,9 @@ import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Security() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/seguranca/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/configuracoes/seguranca/${pageToGo}`;
+        }
     };
 
     return (

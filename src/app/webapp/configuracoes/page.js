@@ -9,13 +9,16 @@ import Cookies from 'js-cookie';
 export default function Settings() {
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        }
     };
 
     const handleLogOut = () => {
         Cookies.remove('token');
-      
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     };
       
     return (
