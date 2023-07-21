@@ -3,11 +3,6 @@ import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import SessionNotification from '@/src/components/SessionNotification';
 
-export const metadata = {
-    title: 'Resenha.app • Histórico de sessões',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function SecurityHistory() {
     return (
         <div className='flex flex-col w-screen h-screen'>

@@ -81,7 +81,8 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       else {
         setData(userData);
       }
-    }, [userData]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData, fetchData]);
   
     useEffect(() => {
       if (data !== null) {
@@ -93,7 +94,8 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
           clearInterval(interval);
         };
       }
-    }, [data]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, checkIfUserNotified, updateInterval]);
 
     return (
         <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">

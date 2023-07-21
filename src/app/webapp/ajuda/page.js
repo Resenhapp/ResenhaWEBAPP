@@ -9,11 +9,6 @@ import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Ajuda',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Help() {
     const copyVector = () => {
         return (
@@ -28,10 +23,21 @@ export default function Help() {
     const id = Cookies.get('user');
 
     const [data, setData] = useState(null);
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -47,16 +53,6 @@ export default function Help() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return (

@@ -6,18 +6,19 @@ import NotificationBase from '@/src/components/NotificationBase';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Histórico de atividades',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function AccountHistory() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');
-    
-    if (!username || !validator) {
-      window.location.href = '/login';
-    }
+
+    // Use the useEffect hook to handle side-effects.
+    // This ensures that your redirect logic will only run on the client side.
+    useEffect(() => {
+        if (!username || !validator) {
+            if (typeof window !== 'undefined') { 
+                window.location.href = '/login';
+            }
+        }
+    }, [username, validator]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -54,6 +55,7 @@ export default function AccountHistory() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) {

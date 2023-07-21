@@ -17,19 +17,16 @@ import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
 import SHA256 from 'crypto-js/sha256';
 
-export const metadata = {
-    title: 'Resenha.app • Perfil',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Profile() {
     var token = Cookies.get('token');
-
-    if (!token) {
+    let urlParams = new URLSearchParams();
+    
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
-
-    const urlParams = new URLSearchParams(window.location.search);
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+    }
     var profile = urlParams.get('u');
 
     const axios = require('axios');
@@ -41,7 +38,9 @@ export default function Profile() {
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const makeRequest = async (url, data) => {
@@ -92,7 +91,8 @@ export default function Profile() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -114,7 +114,7 @@ export default function Profile() {
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
                             <div className='flex flex-col items-center gap-4 w-full'>
-                                <img src={`https://media.resenha.app/u/${hash}.png`} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
+                                <img src={`https://media.resenha.app/u/${hash}.png`} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' alt='user image' />
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl flex flex-row justify-center items-center gap-1'>
                                         {name}
@@ -224,15 +224,17 @@ export default function Profile() {
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
                                         <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
-                                            <Comment
-                                                userName={comment.name}
-                                                imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
-                                                rate={parseInt(comment.rate)}
-                                                comment={comment.content}
-                                                day={parseInt(comment.date.split('/')[0])}
-                                                month={parseInt(comment.date.split('/')[1])}
-                                                userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
-                                            />
+                                            <div key={comment.id}>
+                                                <Comment
+                                                    userName={comment.name}
+                                                    imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
+                                                    rate={parseInt(comment.rate)}
+                                                    comment={comment.content}
+                                                    day={parseInt(comment.date.split('/')[0])}
+                                                    month={parseInt(comment.date.split('/')[1])}
+                                                    userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
+                                                />
+                                            </div>
                                         ))}
                                         </div>
                                     </div>

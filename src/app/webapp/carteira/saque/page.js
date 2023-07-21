@@ -9,18 +9,12 @@ import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 
-
-export const metadata = {
-    title: 'Resenha.app • Saque',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Withdraw() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
-    }
+      }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -53,7 +47,7 @@ export default function Withdraw() {
                     amount: withdrawalAmount
                 });
 
-                if (!response.error) {
+                if (!response.error && typeof window !== 'undefined') {
                     window.location.href = `/webapp/carteira/saque/sucesso?a=${withdrawalAmount}`;
                 }
             }
@@ -92,7 +86,8 @@ export default function Withdraw() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (

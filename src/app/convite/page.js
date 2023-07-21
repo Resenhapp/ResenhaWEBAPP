@@ -21,13 +21,19 @@ export default function Invite() {
     const [data, setData] = useState(null);
     const [renderedTags, setRenderedTags] = useState([]);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    let code = urlParams.get('code');
+    let code = '';
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        code = urlParams.get('code');
+    }
 
     const handleNextClick = () => {
         Cookies.set('code', code);
 
-        window.location.href = 'convite/dados/';
+        if (typeof window !== 'undefined') {
+            window.location.href = 'convite/dados/';
+        }
     };
 
     const handleToggleDescription = () => {
@@ -78,7 +84,9 @@ export default function Invite() {
         };
         
         getRenderedTags();
-    }, []);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -162,7 +170,9 @@ export default function Invite() {
 
             if (isMobile) {
                 const shareUrl = `whatsapp://send?text=${encodeURIComponent(`${shareData.title}\n${shareData.text}\n${shareData.url}`)}`;
-                window.location.href = shareUrl;
+                if (typeof window !== 'undefined') {
+                    window.location.href = shareUrl;
+                }
             } else {
                 alert("Web Share API not supported on this device");
             }
@@ -258,17 +268,19 @@ export default function Invite() {
                                     </h1>
                                 <div className="flex flex-wrap gap-2">
                                     {renderedTags.map((tag) => (
-                                        <Tag
-                                            key={tag.id}
-                                            tagname={tag.name}
-                                            type={tag.type}
-                                            colorName={tag.colorName}
-                                            highlightColor={tag.highlightColor}
-                                            isEditable={false}
-                                            ringThickness={tag.ringThickness}
-                                            ringColor={tag.ringColor}
-                                            weight={tag.weight}
-                                        />
+                                        <div key={tag.id}>
+                                            <Tag
+                                                key={tag.id}
+                                                tagname={tag.name}
+                                                type={tag.type}
+                                                colorName={tag.colorName}
+                                                highlightColor={tag.highlightColor}
+                                                isEditable={false}
+                                                ringThickness={tag.ringThickness}
+                                                ringColor={tag.ringColor}
+                                                weight={tag.weight}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             </div>
@@ -294,7 +306,9 @@ export default function Invite() {
                                 </h1>
                                 <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
                                     {users.map((user) => (
-                                        <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
+                                        <div key={user.id}>
+                                            <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
+                                        </div>
                                     ))}
                                 </div>
                             </div>

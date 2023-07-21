@@ -14,7 +14,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
         } else {
             filled(false);
         }
-    }, [name, address]);
+    }, [name, address, filled]);
 
     const handleNameFieldChange = (event) => {
         const value = event.target.value;

@@ -11,15 +11,10 @@ import Loading from "@/src/components/Loading";
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Resenhas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function HomePage() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
 
@@ -61,6 +56,7 @@ export default function HomePage() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) {

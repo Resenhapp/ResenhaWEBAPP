@@ -7,11 +7,6 @@ import Dropdown from '@/src/components/Dropdown';
 import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
 
-export const metadata = {
-    title: 'Resenha.app • Novo recepcionista',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function NewConcierge() {
 
     const [selectedOption, setSelectedOption] = useState('');

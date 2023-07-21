@@ -3,11 +3,6 @@ import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
 
-export const metadata = {
-    title: 'Resenha.app • Histórico de Compras',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function BuyHistory() {
 
     return (

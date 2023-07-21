@@ -7,17 +7,14 @@ import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Configurações de senha',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function PasswordConfig() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');
     
     if (!username || !validator) {
-      window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');

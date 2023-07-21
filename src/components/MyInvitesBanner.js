@@ -14,7 +14,7 @@ const MyInvitesBanner = ({ eventName, eventDate, eventHour, token, eventImage })
                         className='w-fit h-fit py-1 gap-2 font-thin px-3 rounded-full ring-1 ring-inset ring-whiteT1 flex flex-row justify-center items-center 
                     content-center backdrop-blur-xl bg-[#0000004D]'>Ver todos <Vector vectorname={'arrowRight05'} /></button>
                 </div>
-                <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' />
+                <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='invite banner' />
                 <div className='p-4'>
                     <h1 className="font-bold text-xl text-white">{eventName}</h1>
                     <div className='flex flex-row gap-2 items-center'>

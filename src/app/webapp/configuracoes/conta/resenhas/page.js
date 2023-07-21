@@ -6,17 +6,14 @@ import PartyBanner from '@/src/components/PartyBanner';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
-export const metadata = {
-    title: 'Resenha.app • Resenhas salvas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function AccountPartySaved() {
     const username = Cookies.get('username');
     const validator = Cookies.get('validator');
     
     if (!username || !validator) {
-      window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -58,7 +55,8 @@ export default function AccountPartySaved() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -93,6 +91,7 @@ export default function AccountPartySaved() {
 
                                     return (
                                     <PartyBanner
+                                        key={guest.id}
                                         imageUrl={guestsImages}
                                         eventName={title}
                                         eventImage={`https://media.resenha.app/r/${hash}.png`}

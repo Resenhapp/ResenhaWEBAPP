@@ -12,15 +12,10 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Meus convites',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function MyInvites() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
 
@@ -57,7 +52,8 @@ export default function MyInvites() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -82,14 +78,16 @@ export default function MyInvites() {
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                       {partiesWent.map((party) => (
-                        <MyParty
-                          imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                          partyCode={party.code}
-                          partyGuests={party.confirmed}
-                          partyDate={party.date}
-                          partyHour={party.time}
-                          partyName={party.name}
-                        />
+                        <div key={party.id}>
+                          <MyParty
+                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                            partyCode={party.code}
+                            partyGuests={party.confirmed}
+                            partyDate={party.date}
+                            partyHour={party.time}
+                            partyName={party.name}
+                          />
+                        </div>
                       ))}
                     </div>
                   </div>

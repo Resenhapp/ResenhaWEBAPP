@@ -1,26 +1,36 @@
 'use client'
 import DateScroll from '@/src/components/DateScroll';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import Vector from '@/src/components/Vector';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://raw.githubusercontent.com/Leaflet/Leaflet/main/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://raw.githubusercontent.com/Leaflet/Leaflet/main/dist/images/marker-icon-2x.png',
-    shadowUrl: 'https://raw.githubusercontent.com/Leaflet/Leaflet/main/dist/images/marker-shadow.png',
-});
-
+let L, MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap;
+if (typeof window !== 'undefined') {
+  L = require('leaflet');
+  const leafletReact = require('react-leaflet');
+  MapContainer = leafletReact.MapContainer;
+  TileLayer = leafletReact.TileLayer;
+  Marker = leafletReact.Marker;
+  Popup = leafletReact.Popup;
+  useMapEvents = leafletReact.useMapEvents;
+  useMap = leafletReact.useMap;
+}
 
 export default function Map() {
     const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
     const [userPositionToAddress, setUserPositionToAddress] = useState('');
     const [markers, setMarkers] = useState([]);
     const [search, setSearch] = useState('');
+    const [didMount, setDidMount] = useState(false);
+    const [clientSide, setClientSide] = useState(false);
+
+    useEffect(() => {
+        setDidMount(true);
+        if (typeof window !== 'undefined') {
+            setClientSide(true);
+        }
+        return () => setDidMount(false);
+    }, []);
 
     const reverseGeocode = async (latitude, longitude) => {
         const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
@@ -47,28 +57,28 @@ export default function Map() {
         }
     }
 
-    const handleInputChange = (event) => {
-        setSearch(event.target.value);
-    }
-
-    
-
     const getMyPosition = () => {
-        if (navigator.geolocation) {
+        if (typeof window !== 'undefined' && 'geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const newPosition = [position.coords.latitude, position.coords.longitude];
                 setUserPosition(newPosition);
                 const address = await reverseGeocode(newPosition[0], newPosition[1]);
                 setUserPositionToAddress(address);
             }, (error) => {
-                window.alert("Geolocation is not enabled. Using default position.");
             });
         }
     }
 
     useEffect(() => {
-        getMyPosition();
-    }, []);
+        if (didMount) {
+            getMyPosition();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getMyPosition, didMount]);
+
+    const handleInputChange = (event) => {
+        setSearch(event.target.value);
+    }
 
     const ChangeView = ({ center, zoom }) => {
         const map = useMap();
@@ -106,19 +116,21 @@ export default function Map() {
                 <Vector vectorname={'magnifier01'} />
             </button>
         </div>
-            <MapContainer center={userPosition} zoom={13} className='rounded-xl' style={{ height: "75vh", width: "100%" }}>
-                <ChangeView center={userPosition} zoom={13} />
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={userPosition}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> {userPosition}
-                    </Popup>
-                </Marker>
-                <Markers />
-            </MapContainer>
+            {clientSide && MapContainer && (
+              <MapContainer center={userPosition} zoom={13} className='rounded-xl' style={{ height: "75vh", width: "100%" }}>
+                  <ChangeView center={userPosition} zoom={13} />
+                  <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <Marker position={userPosition}>
+                      <Popup>
+                          A pretty CSS3 popup. <br /> {userPosition}
+                      </Popup>
+                  </Marker>
+                  <Markers />
+              </MapContainer>
+            )}
             <button onClick={getMyPosition} className='w-fit h-fit py-1 px-4 rounded-full ring-1 ring-inset ring-whiteT1 flex flex-row justify-center items-center gap-1 backdrop-blur-xl bg-[#F1F1F14D]'>Me encontre</button>
             <h1>Voce esta em {userPositionToAddress}</h1>
         </div>

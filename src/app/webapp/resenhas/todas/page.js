@@ -10,15 +10,10 @@ import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
 
-export const metadata = {
-    title: 'Resenha.app • Todas as Resenhas',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function MyParties() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
 
@@ -53,11 +48,15 @@ export default function MyParties() {
     };
 
     const handleViewClick = async (party) => {
-        window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
+        }
     };
 
     const handleEditClick = async (party) => {
-        window.location.href = `/webapp/resenhas/editar?r=${party.code}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/resenhas/editar?r=${party.code}`;
+        }
     };
 
     const handleCopyClick = async (party) => {
@@ -82,7 +81,8 @@ export default function MyParties() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -107,20 +107,22 @@ export default function MyParties() {
                             <div className='w-full h-full flex flex-col'>
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {partiesMade.map((party) => (
-                                    <PartyPortrait
-                                        partyCode={party.code} 
-                                        partyDate={party.date} 
-                                        partyGuests={party.confirmed} 
-                                        partyHour={party.time} 
-                                        partyMaxGuests={party.capacity} 
-                                        partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
-                                        partyName={party.name}
-                                        viewOnClick={() => handleViewClick(party)}
-                                        editOnClick={() => handleEditClick(party)}
-                                        copyOnClick={() => handleCopyClick(party)}
-                                        trashOnClick={() => handleTrashClick(party)}
-                                        canBeDeleted={party.confirmed == 0}
-                                    />
+                                    <div key={party.id}>
+                                        <PartyPortrait
+                                            partyCode={party.code} 
+                                            partyDate={party.date} 
+                                            partyGuests={party.confirmed} 
+                                            partyHour={party.time} 
+                                            partyMaxGuests={party.capacity} 
+                                            partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
+                                            partyName={party.name}
+                                            viewOnClick={() => handleViewClick(party)}
+                                            editOnClick={() => handleEditClick(party)}
+                                            copyOnClick={() => handleCopyClick(party)}
+                                            trashOnClick={() => handleTrashClick(party)}
+                                            canBeDeleted={party.confirmed == 0}
+                                        />
+                                    </div>
                                 ))}
                                 </div>
                             </div>

@@ -3,11 +3,6 @@ import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import CreditCardSelection from '@/src/components/CreditCardSelection';
 
-export const metadata = {
-    title: 'Resenha.app • Cartões salvos',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function CreditCards() {
 
     const handleNavigation = (pageToGo) => {

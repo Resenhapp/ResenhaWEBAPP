@@ -12,11 +12,6 @@ import Cookies from 'js-cookie';
 import React, { useEffect } from 'react';
 import Loading from '@/src/components/Loading';
 
-export const metadata = {
-    title: 'Resenha.app • Dados',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Info() {
     const code = Cookies.get('code');
 
@@ -62,10 +57,21 @@ export default function Info() {
         const isChecked = event.target.checked;
         setMinor(isChecked);
     };
+    
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -81,16 +87,6 @@ export default function Info() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return (

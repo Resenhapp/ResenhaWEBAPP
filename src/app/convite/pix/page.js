@@ -9,11 +9,6 @@ import React, { useEffect } from 'react';
 import { useState } from "react";
 import Cookies from 'js-cookie';
 
-export const metadata = {
-    title: 'Resenha.app • Pix',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Pix() {
     const [data, setData] = useState(null);
 
@@ -21,13 +16,26 @@ export default function Pix() {
     const name = Cookies.get('name');
     const email = Cookies.get('email');
     const minor = Cookies.get('minor');
-    const method = Cookies.get('method').toLowerCase();
+    const method = Cookies.get('method')
 
     const amount = Cookies.get('amount');
+    
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method.toLowerCase(), code: code, name: name, birth: minor, email: email});
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
     useEffect(() => {
         fetchData();
-    }, []);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -43,16 +51,6 @@ export default function Pix() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return <p>Gerando PIX...</p>;

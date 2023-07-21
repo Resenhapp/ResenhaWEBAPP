@@ -88,7 +88,8 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             clearInterval(interval);
         };
       }
-    }, [isOpen]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, getUserData, seeUserNotifications, updateInterval]);
   
   
     const handleClearButton = async () => {
@@ -117,10 +118,12 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
                                 <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                     {showNotifications && notifications.length > 0 ? (
                                         notifications.map((notification) => (
-                                            <Notification
-                                                title={notification.title} 
-                                                content={notification.content}
-                                            />
+                                          <div key={notification.id}>
+                                              <Notification
+                                                  title={notification.title} 
+                                                  content={notification.content}
+                                              />
+                                          </div>
                                         ))
                                     ) : (
                                         <p>Voce não tem nenhuma notificação.</p>

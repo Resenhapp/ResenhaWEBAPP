@@ -17,11 +17,6 @@ import { useEffect } from 'react';
 import { tagsData } from "@/src/components/tagsData"
 import { interestsData } from '@/src/components/interestsData';
 
-export const metadata = {
-  title: 'Resenha.app • Feed',
-  description: 'Venha fazer suas resenhas!',
-}
-
 export default function Feed() {
   var token = Cookies.get('token');
 
@@ -254,7 +249,8 @@ export default function Feed() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchData]);
 
   const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
   const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
@@ -374,19 +370,21 @@ export default function Feed() {
                         }
 
                         return (
-                          <PartyBanner
-                            imageUrl={guestsImages}
-                            eventName={title}
-                            eventImage={`https://media.resenha.app/r/${hash}.png`}
-                            eventHour={start}
-                            eventGuests={confirmed}
-                            eventMax={capacity}
-                            eventPrice={price}
-                            eventSaved={saved}
-                            eventTags={headers}
-                            eventCode={code}
-                            handleSaveButton={handleSaveButton}
-                          />
+                          <div key={hash}>
+                            <PartyBanner
+                              imageUrl={guestsImages}
+                              eventName={title}
+                              eventImage={`https://media.resenha.app/r/${hash}.png`}
+                              eventHour={start}
+                              eventGuests={confirmed}
+                              eventMax={capacity}
+                              eventPrice={price}
+                              eventSaved={saved}
+                              eventTags={headers}
+                              eventCode={code}
+                              handleSaveButton={handleSaveButton}
+                            />
+                          </div>
                         );
                       })
                     ) : (

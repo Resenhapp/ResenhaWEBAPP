@@ -3,11 +3,6 @@ import React, { useState } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 
-export const metadata = {
-    title: 'Resenha.app • Gerenciamento de dados',
-    description: 'Detalhes da conta, informações pessoais, histórico de atividades e resenhas salvas.',
-};
-
 export default function PrivacyData() {
 
     const allData = ['Todos', 'Nenhum']

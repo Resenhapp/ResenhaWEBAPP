@@ -43,7 +43,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         } else {
           filled(false);
         }
-      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd])
+      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
     const handleDateSelect = (day, month, year) => {
         setSelectedDay(day);
@@ -72,7 +72,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         if (selectedDay && selectedMonth && selectedYear) {
             onDateScrollSelect(selectedDay, selectedMonth, selectedYear);
         }
-    }, [selectedDay, selectedMonth, selectedYear]);
+    }, [selectedDay, selectedMonth, selectedYear, onDateScrollSelect]);
 
     const currentTime = new Date().toLocaleTimeString([], {
         hour: '2-digit',
@@ -104,6 +104,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newStartTime.setHours(time.hour, time.minute);
         setStartTime(newStartTime);
         handleStartChange(newStartTime);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startTime, handleStartChange, setStartTime]);
 
     const onEndTimeSelect = useCallback((time) => {
@@ -111,6 +112,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newEndTime.setHours(time.hour, time.minute);
         setEndTime(newEndTime);
         handleEndChange(newEndTime);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [endTime, handleEndChange, setEndTime]);
 
     return (
