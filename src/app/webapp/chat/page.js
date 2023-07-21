@@ -8,9 +8,15 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function Chat() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const groupChat = urlParams.get('r');
-    const dualChat = urlParams.get('u');
+    let urlParams = null;
+    let groupChat = '';
+    let dualChat = '';
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const groupChat = urlParams.get('r');
+        const dualChat = urlParams.get('u');
+    }
 
     let chatType = '';
     if (groupChat != null) {
@@ -36,7 +42,9 @@ export default function Chat() {
     const qs = require('qs');
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const makeRequest = async (url, data) => {
@@ -73,6 +81,7 @@ export default function Chat() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     if (isLoading) {

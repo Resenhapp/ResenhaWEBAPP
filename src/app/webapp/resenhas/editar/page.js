@@ -16,12 +16,16 @@ import { setHours } from "date-fns"
 export default function EditEvent() {
     var u = Cookies.get('username');
     var validator = Cookies.get('validator');
+    let urlParams = new URLSearchParams();
 
-    if (!u || !validator) {
-        window.location.href = '/login';
+    if (typeof window !== 'undefined') {
+        if (!u || !validator) {
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
+        }
+        const urlParams = new URLSearchParams(window.location.search);
     }
-
-    const urlParams = new URLSearchParams(window.location.search);
     const partyCode = urlParams.get('r');
 
     const axios = require('axios');
@@ -30,7 +34,9 @@ export default function EditEvent() {
     const [data, setData] = useState(null);
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const [isEditNamePageOpen, setIsEditNamePageOpen] = useState(false);
@@ -364,6 +370,7 @@ export default function EditEvent() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     if (!data) {

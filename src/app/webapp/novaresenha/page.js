@@ -16,7 +16,9 @@ export default function NewEvent() {
   const validator = Cookies.get('validator');
 
   if (!username || !validator) {
-    window.location.href = '/login';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   }
 
   const axios = require('axios');
@@ -60,7 +62,7 @@ export default function NewEvent() {
           details: details
         });
 
-        if (!response.error) {
+        if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/webapp/resenhas/';
         }
       } 

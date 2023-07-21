@@ -104,6 +104,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newStartTime.setHours(time.hour, time.minute);
         setStartTime(newStartTime);
         handleStartChange(newStartTime);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startTime, handleStartChange, setStartTime]);
 
     const onEndTimeSelect = useCallback((time) => {
@@ -111,6 +112,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newEndTime.setHours(time.hour, time.minute);
         setEndTime(newEndTime);
         handleEndChange(newEndTime);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [endTime, handleEndChange, setEndTime]);
 
     return (

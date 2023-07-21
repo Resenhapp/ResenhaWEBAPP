@@ -15,7 +15,9 @@ export default function EditProfile() {
     var validator = Cookies.get('validator');
 
     if (!u || !validator) {
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const [newProfile, setNewProfile] = useState(null);
@@ -275,20 +277,24 @@ export default function EditProfile() {
         if (!isEditAboutPageOpen) {
             setTempAbout(about);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditAboutPageOpen]);
 
     useEffect(() => {
         setTempName(name);
         setTempUsername(username);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, username]);
 
     useEffect(() => {
         setTempName(name);
         setTempUsername(username);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, username]);
 
     useEffect(() => {
         setTempUserInterests(userInterests);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userInterests]);
 
     useEffect(() => {
@@ -298,10 +304,12 @@ export default function EditProfile() {
                 return { ...interest, selected: isSelected };
             }).sort((a, b) => b.selected - a.selected)
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tempUserInterests]);
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));

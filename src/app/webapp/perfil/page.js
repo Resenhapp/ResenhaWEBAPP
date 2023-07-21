@@ -19,12 +19,14 @@ import SHA256 from 'crypto-js/sha256';
 
 export default function Profile() {
     var token = Cookies.get('token');
-
-    if (!token) {
+    let urlParams = new URLSearchParams();
+    
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
-
-    const urlParams = new URLSearchParams(window.location.search);
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+    }
     var profile = urlParams.get('u');
 
     const axios = require('axios');
@@ -36,7 +38,9 @@ export default function Profile() {
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const makeRequest = async (url, data) => {
@@ -87,6 +91,7 @@ export default function Profile() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     if (!data) {

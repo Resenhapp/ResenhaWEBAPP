@@ -88,6 +88,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             clearInterval(interval);
         };
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, getUserData, seeUserNotifications, updateInterval]);
   
   

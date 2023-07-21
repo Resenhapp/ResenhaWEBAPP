@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 export default function Wallet() {
     const token = Cookies.get('token');
     
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
 
@@ -49,10 +49,13 @@ export default function Wallet() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     const handleNavigation = () => {
-        window.location.href = `/webapp/carteira/saque`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/carteira/saque`;
+        }
     };
 
     if (!data) {

@@ -11,7 +11,9 @@ export default function AccountPartySaved() {
     const validator = Cookies.get('validator');
     
     if (!username || !validator) {
-      window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -53,6 +55,7 @@ export default function AccountPartySaved() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     if (!data) {
@@ -88,6 +91,7 @@ export default function AccountPartySaved() {
 
                                     return (
                                     <PartyBanner
+                                        key={guest.id}
                                         imageUrl={guestsImages}
                                         eventName={title}
                                         eventImage={`https://media.resenha.app/r/${hash}.png`}

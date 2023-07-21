@@ -70,6 +70,7 @@ export default function Info() {
     };
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     const axios = require('axios');

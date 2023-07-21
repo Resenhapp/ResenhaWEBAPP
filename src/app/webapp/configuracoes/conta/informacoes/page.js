@@ -12,7 +12,9 @@ export default function AccountInfo() {
     const validator = Cookies.get('validator');
     
     if (!username || !validator) {
-      window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -259,6 +261,7 @@ export default function AccountInfo() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData]);
 
     if (!data) {

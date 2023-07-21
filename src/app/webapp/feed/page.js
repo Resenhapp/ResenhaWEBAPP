@@ -249,6 +249,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchData]);
 
   const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
