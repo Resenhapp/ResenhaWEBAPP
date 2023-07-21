@@ -3,7 +3,6 @@
 import React from 'react';
 import Notification from './Notification';
 import Cookies from 'js-cookie';
-import ButtonConfig from './ButtonConfig';
 import { useState } from "react";
 import { useEffect } from 'react';
 

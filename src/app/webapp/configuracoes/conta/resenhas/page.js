@@ -7,10 +7,9 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function AccountPartySaved() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
     
-    if (!username || !validator) {
+    if (!token) {
         if (typeof window !== 'undefined') {
             window.location.href = '/login';
         }
@@ -40,8 +39,7 @@ export default function AccountPartySaved() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator,
+                token: token,
                 requested: "saved"
             });
 
@@ -56,7 +54,7 @@ export default function AccountPartySaved() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     if (!data) {
         return (

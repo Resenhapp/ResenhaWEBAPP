@@ -82,7 +82,7 @@ export default function Chat() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     if (isLoading) {
         return (

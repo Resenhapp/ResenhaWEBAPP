@@ -50,7 +50,7 @@ export default function Wallet() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     const handleNavigation = () => {
         if (typeof window !== 'undefined') {

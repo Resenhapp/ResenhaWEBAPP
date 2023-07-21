@@ -57,13 +57,13 @@ export default function Settings() {
                                     leftIcon={'money02'}
                                     textAlign="left"
                                 />
-                                <ButtonConfig
+                                {/* <ButtonConfig
                                     label="Notificações"
                                     action={() => handleNavigation('/notificacoes')}
                                     rightIcon={'arrowRight06'}
                                     leftIcon={'bell03'}
                                     textAlign="left"
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>

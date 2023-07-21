@@ -1,24 +1,24 @@
 'use client'
+
+import React, { useState, useEffect } from 'react';
 import EditButton from '@/src/components/EditButton';
-import React from 'react';
 import NumberDisplay from '@/src/components/NumberDisplay';
 import Tag from '@/src/components/Tag';
 import PageHeader from '@/src/components/PageHeader';
-import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import FollowButton from '@/src/components/FollowButton';
-import { interestsData } from '@/src/components/interestsData';
 import Vector from '@/src/components/Vector';
 import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
-import SHA256 from 'crypto-js/sha256';
+
+import { interestsData } from '@/src/components/interestsData';
+
 
 export default function Profile() {
     var token = Cookies.get('token');
+
     let urlParams = new URLSearchParams();
     
     if (!token && typeof window !== 'undefined') {
@@ -26,8 +26,8 @@ export default function Profile() {
     }
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
+        var profile = urlParams.get('u');
     }
-    var profile = urlParams.get('u');
 
     const axios = require('axios');
     const qs = require('qs');
@@ -92,7 +92,7 @@ export default function Profile() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     if (!data) {
         return (

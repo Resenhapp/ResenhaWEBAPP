@@ -32,8 +32,8 @@ export default function Signature() {
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <SignatureSelection signatureType={1}
                                     startSelected={selectedCard === 0} onCheck={handleCheck(0)} />
-                                <SignatureSelection signatureType={2}
-                                    startSelected={selectedCard === 1} onCheck={handleCheck(1)} />
+                                {/* <SignatureSelection signatureType={2}
+                                    startSelected={selectedCard === 1} onCheck={handleCheck(1)} /> */}
                             </div>
                         </div>
                     </div>

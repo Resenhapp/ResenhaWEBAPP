@@ -12,10 +12,9 @@ import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
 
 export default function NewEvent() {
-  const username = Cookies.get('username');
-  const validator = Cookies.get('validator');
+  const token = Cookies.get('token');
 
-  if (!username || !validator) {
+  if (!token) {
     if (typeof window !== 'undefined') {
       window.location.href = '/login';
     }
@@ -57,8 +56,7 @@ export default function NewEvent() {
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', { 
           request: 'tryToCreateEvent',
-          username: username,
-          validator: validator,
+          token: token,
           details: details
         });
 

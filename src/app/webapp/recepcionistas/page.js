@@ -37,7 +37,7 @@ export default function Concierges() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     const axios = require('axios');
     const qs = require('qs');

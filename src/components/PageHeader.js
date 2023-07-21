@@ -82,7 +82,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
         setData(userData);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userData, fetchData]);
+    }, [userData]);
   
     useEffect(() => {
       if (data !== null) {

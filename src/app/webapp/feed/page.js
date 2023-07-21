@@ -23,8 +23,6 @@ export default function Feed() {
   const axios = require('axios');
   const qs = require('qs');
 
-  const exampleSavedEvent = false;
-
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -43,19 +41,29 @@ export default function Feed() {
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
 
-  const handleSaveButton = () => {
+  const handleSaveButton = async (party) => {
+    try {
+      const response = await makeRequest('http://localhost/resenha.app/api/', { 
+        request: 'switchSaveEvent',
+        party: party.code,
+        token: token,
+      });
+    }
 
+    catch (error) {
+        console.error(error);
+    }
   };
 
   const makeRequest = async (url, data) => {
-      try {
-          const response = await axios.post(url, qs.stringify(data));
-          return response.data;
-      }
+    try {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+    }
 
-      catch (error) {
-          throw new Error(`Request failed: ${error}`);
-      }
+    catch (error) {
+        throw new Error(`Request failed: ${error}`);
+    }
   };
 
   const fetchData = async () => {
@@ -250,7 +258,7 @@ export default function Feed() {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchData]);
+  }, []);
 
   const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
   const renderInterests = validUserInterests.map(interestId => allInterests.find(interest => interest.id === interestId));
@@ -382,7 +390,7 @@ export default function Feed() {
                               eventSaved={saved}
                               eventTags={headers}
                               eventCode={code}
-                              handleSaveButton={handleSaveButton}
+                              handleSaveButton={() => handleSaveButton(party)}
                             />
                           </div>
                         );

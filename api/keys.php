@@ -31,6 +31,7 @@ $requests = [
     "clearUserNotifications",
     "seeUserNotifications",
     "switchFollowUser",
+    "switchSaveEvent",
     "sendMessage",
 ];
 

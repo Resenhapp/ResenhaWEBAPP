@@ -87,7 +87,7 @@ export default function Withdraw() {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData]);
+    }, []);
 
     if (!data) {
         return (
