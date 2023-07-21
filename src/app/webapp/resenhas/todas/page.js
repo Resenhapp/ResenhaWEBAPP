@@ -77,7 +77,7 @@ export default function MyParties() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -102,20 +102,22 @@ export default function MyParties() {
                             <div className='w-full h-full flex flex-col'>
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {partiesMade.map((party) => (
-                                    <PartyPortrait
-                                        partyCode={party.code} 
-                                        partyDate={party.date} 
-                                        partyGuests={party.confirmed} 
-                                        partyHour={party.time} 
-                                        partyMaxGuests={party.capacity} 
-                                        partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
-                                        partyName={party.name}
-                                        viewOnClick={() => handleViewClick(party)}
-                                        editOnClick={() => handleEditClick(party)}
-                                        copyOnClick={() => handleCopyClick(party)}
-                                        trashOnClick={() => handleTrashClick(party)}
-                                        canBeDeleted={party.confirmed == 0}
-                                    />
+                                    <div key={party.id}>
+                                        <PartyPortrait
+                                            partyCode={party.code} 
+                                            partyDate={party.date} 
+                                            partyGuests={party.confirmed} 
+                                            partyHour={party.time} 
+                                            partyMaxGuests={party.capacity} 
+                                            partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
+                                            partyName={party.name}
+                                            viewOnClick={() => handleViewClick(party)}
+                                            editOnClick={() => handleEditClick(party)}
+                                            copyOnClick={() => handleCopyClick(party)}
+                                            trashOnClick={() => handleTrashClick(party)}
+                                            canBeDeleted={party.confirmed == 0}
+                                        />
+                                    </div>
                                 ))}
                                 </div>
                             </div>

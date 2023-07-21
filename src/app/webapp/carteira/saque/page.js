@@ -86,7 +86,7 @@ export default function Withdraw() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

@@ -23,10 +23,20 @@ export default function Help() {
     const id = Cookies.get('user');
 
     const [data, setData] = useState(null);
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -42,16 +52,6 @@ export default function Help() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return (

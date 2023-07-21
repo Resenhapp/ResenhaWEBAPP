@@ -43,7 +43,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         } else {
           filled(false);
         }
-      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd])
+      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
     const handleDateSelect = (day, month, year) => {
         setSelectedDay(day);
@@ -72,7 +72,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         if (selectedDay && selectedMonth && selectedYear) {
             onDateScrollSelect(selectedDay, selectedMonth, selectedYear);
         }
-    }, [selectedDay, selectedMonth, selectedYear]);
+    }, [selectedDay, selectedMonth, selectedYear, onDateScrollSelect]);
 
     const currentTime = new Date().toLocaleTimeString([], {
         hour: '2-digit',

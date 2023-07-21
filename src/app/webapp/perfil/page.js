@@ -87,7 +87,7 @@ export default function Profile() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -109,7 +109,7 @@ export default function Profile() {
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
                             <div className='flex flex-col items-center gap-4 w-full'>
-                                <img src={`https://media.resenha.app/u/${hash}.png`} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' />
+                                <img src={`https://media.resenha.app/u/${hash}.png`} className='w-40 h-40 object-cover ring-1 ring-purpleT3 rounded-full' alt='user image' />
                                 <div className='flex flex-col items-center'>
                                     <h1 className='font-bold text-2xl flex flex-row justify-center items-center gap-1'>
                                         {name}
@@ -219,15 +219,17 @@ export default function Profile() {
                                     <div> {/* CONTEUDO DE COMENTÁRIOS */}
                                         <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
-                                            <Comment
-                                                userName={comment.name}
-                                                imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
-                                                rate={parseInt(comment.rate)}
-                                                comment={comment.content}
-                                                day={parseInt(comment.date.split('/')[0])}
-                                                month={parseInt(comment.date.split('/')[1])}
-                                                userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
-                                            />
+                                            <div key={comment.id}>
+                                                <Comment
+                                                    userName={comment.name}
+                                                    imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
+                                                    rate={parseInt(comment.rate)}
+                                                    comment={comment.content}
+                                                    day={parseInt(comment.date.split('/')[0])}
+                                                    month={parseInt(comment.date.split('/')[1])}
+                                                    userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
+                                                />
+                                            </div>
                                         ))}
                                         </div>
                                     </div>

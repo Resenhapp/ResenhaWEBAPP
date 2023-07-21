@@ -49,7 +49,7 @@ export default function Wallet() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const handleNavigation = () => {
         window.location.href = `/webapp/carteira/saque`;

@@ -68,7 +68,7 @@ export default function Map() {
 
     useEffect(() => {
         getMyPosition();
-    }, []);
+    }, [getMyPosition]);
 
     const ChangeView = ({ center, zoom }) => {
         const map = useMap();

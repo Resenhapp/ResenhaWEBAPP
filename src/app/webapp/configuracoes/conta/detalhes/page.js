@@ -149,7 +149,7 @@ export default function AccountDetails() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

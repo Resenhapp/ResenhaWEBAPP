@@ -259,7 +259,7 @@ export default function AccountInfo() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

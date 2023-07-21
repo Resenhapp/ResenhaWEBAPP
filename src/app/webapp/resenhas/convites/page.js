@@ -52,7 +52,7 @@ export default function MyInvites() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (
@@ -77,14 +77,16 @@ export default function MyInvites() {
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                       {partiesWent.map((party) => (
-                        <MyParty
-                          imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                          partyCode={party.code}
-                          partyGuests={party.confirmed}
-                          partyDate={party.date}
-                          partyHour={party.time}
-                          partyName={party.name}
-                        />
+                        <div key={party.id}>
+                          <MyParty
+                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                            partyCode={party.code}
+                            partyGuests={party.confirmed}
+                            partyDate={party.date}
+                            partyHour={party.time}
+                            partyName={party.name}
+                          />
+                        </div>
                       ))}
                     </div>
                   </div>

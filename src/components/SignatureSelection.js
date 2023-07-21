@@ -50,6 +50,7 @@ const SignatureSelection = ({ signatureType, startSelected = false, onCheck }) =
             <img 
                 className={`rounded-lg ring-2 ring-whiteT1`} 
                 src={`https://resenha.app/publico/recursos/imagens/ui/subscription/${signatureImage}.png`} 
+                alt='selection'
             />
             <div>
                 <p className='text-md font-bold'>

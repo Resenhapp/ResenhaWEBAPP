@@ -53,7 +53,7 @@ export default function AccountPartySaved() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     if (!data) {
         return (

@@ -8,7 +8,7 @@ const Piece03 = ({ guestsAmount, priceAmount, onFillingComplete }) => {
 
   useEffect(() => {
     onFillingComplete(true);
-  }, []); 
+  }, [onFillingComplete]); 
 
   useEffect(() => {
     guestsAmount(guestsValue);

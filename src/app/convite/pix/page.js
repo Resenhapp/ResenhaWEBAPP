@@ -19,10 +19,21 @@ export default function Pix() {
     const method = Cookies.get('method').toLowerCase();
 
     const amount = Cookies.get('amount');
+    
+    const fetchData = async () => {
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
+            setData(response);
+        }
 
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -38,16 +49,6 @@ export default function Pix() {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
-    };
 
     if (!data) {
         return <p>Gerando PIX...</p>;
