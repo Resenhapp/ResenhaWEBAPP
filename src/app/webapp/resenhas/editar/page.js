@@ -4,7 +4,6 @@ import Button from "@/src/components/Button"
 import Image from "next/image"
 import Vector from "@/src/components/Vector"
 import EditInfoPage from "@/src/components/EditInfoPage"
-import PageHeader from "@/src/components/PageHeader"
 import React, { useState, useEffect } from 'react';
 import Tag from "@/src/components/Tag"
 import { tagsData } from "@/src/components/tagsData"
