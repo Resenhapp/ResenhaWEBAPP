@@ -166,7 +166,7 @@ function register_log($user, $type, $action, $description = "none")
     date_default_timezone_set('America/Sao_Paulo');
     $date = date('d/m/Y H:i');
 
-    $query = "INSERT INTO logs (user, type, action, description, date) VALUES ('$user', '$type', '$action', '$description', '$date')";
+    $query = "INSERT INTO activities (user, type, action, description, date) VALUES ('$user', '$type', '$action', '$description', '$date')";
     queryNR($query);
 }
 
@@ -873,13 +873,13 @@ function getUserData()
             }
         }
 
-        $query = "SELECT * FROM logs WHERE type = 'user' AND user = '$userId'";
-        $activityResults = queryDBRows($query);
+        $query = "SELECT * FROM activities WHERE type = 'user' AND user = '$userId'";
+        $activitiesResults = queryDBRows($query);
 
         $activities = [];
 
-        if (mysqli_num_rows($activityResults) > 0) {
-            foreach ($activityResults as $activity) {
+        if (mysqli_num_rows($activitiesResults) > 0) {
+            foreach ($activitiesResults as $activity) {
                 $temp = [
                     "title" => $activity["title"],
                     "description" => $activity["description"],
@@ -1381,7 +1381,11 @@ function tryToCreateGuest()
         $notificationText =  "$name acaba de comprar um ingresso para a sua resenha chamada: $partyName";
     }
 
-    createNotification($host, "Novo convidado!", $notificationText);
+    createNotification(
+        $host, 
+        "Novo convidado!", 
+        $notificationText
+    );
 
     if ($method == "pix") {
         $data = [
@@ -1446,7 +1450,12 @@ function switchSaveEvent()
     foreach ($userData as $column) {
         $userId = $column["id"];
 
-        $dateTime = date('d/m/Y H:i');
+        $timestamp = time();
+
+        $dateTime = new DateTime("@" . $timestamp);
+        $dateTime->setTimezone(new DateTimeZone("America/Sao_Paulo"));
+        
+        $dateTimeF = $dateTime->format('d/m/Y H:i');
 
         $query = "SELECT id FROM saved WHERE user = '$userId' AND party = '$partyCode'";
         $savedResults = queryDB($query);
@@ -1464,7 +1473,7 @@ function switchSaveEvent()
         }
 
         else {
-            $insertQuery = "INSERT INTO saved (`id`, `user`, `party`, `date`) VALUES (NULL, '$userId', '$partyCode', '$dateTime')";
+            $insertQuery = "INSERT INTO saved (`id`, `user`, `party`, `date`) VALUES (NULL, '$userId', '$partyCode', '$dateTimeF')";
             queryNR($insertQuery);
 
             $data = [
@@ -1902,6 +1911,12 @@ function tryToCreateEvent()
                 ],
             ],
         ];
+
+        createNotification(
+            $host, 
+            "Resenha criada!", 
+            "A $name foi criada com sucesso."
+        );
 
         send_message($embed, $webhook);
     }
