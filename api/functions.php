@@ -1528,9 +1528,9 @@ function tryToSendMessage()
 
         $dateTime = new DateTime("@" . $timestamp);
         $dateTime->setTimezone(new DateTimeZone("America/Sao_Paulo"));
-
-        $formattedDateTime = $dateTime->format('d/m/Y H:i');
-
+        
+        $formattedDateTime = $dateTime->format('d/m/Y H:i:s');
+        
         if ($type == 'dm') {
             $query = "SELECT id FROM users WHERE username = '$destination'";
         } 
@@ -1578,10 +1578,10 @@ function getMessages()
         $chatId = queryDB($query)[0];
 
         if ($type == 'dm') {
-            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
         } else {
-            $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
         }
 
@@ -1614,17 +1614,17 @@ function getMessages()
         }
 
         usort($messagesArray, function ($a, $b) {
-            $dateA = $a['date']['year'] . $a['date']['month'] . $a['date']['day'] . $a['date']['hour'];
-            $dateB = $b['date']['year'] . $b['date']['month'] . $b['date']['day'] . $b['date']['hour'];
+            $dateA = $a['date']['year'] . $a['date']['month'] . $a['date']['day'] . $a['date']['hour'] . $a['date']['minute'] . $a['date']['second'];
+            $dateB = $b['date']['year'] . $b['date']['month'] . $b['date']['day'] . $b['date']['hour'] . $b['date']['minute'] . $b['date']['second'];
             return strcmp($dateB, $dateA);
         });
-    
+
         $messagesArray = array_reverse($messagesArray);
-    
+
         $data = [
             'messages' => $messagesArray,
         ];
-        
+
         header('Content-Type: application/json');
         echo json_encode($data);
     }

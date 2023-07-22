@@ -91,8 +91,6 @@ export default function Chat() {
                 type: chatType,
                 content: message
             });
-
-            console.log(response);
         } 
         
         catch (error) {
