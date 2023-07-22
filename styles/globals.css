@@ -57,6 +57,13 @@ opacity: 0.4;
 filter: blur(50px);
 }
 
+
+.moreffect_w {
+  background: conic-gradient(from 180deg at 50% 50%, #5e5e5e 0deg, #454545 0.04deg, #474747 15deg, #434343 61.87deg, #6e6e6e 360deg);
+opacity: 0.4;
+filter: blur(50px);
+}
+
 .outerGlow {
   box-shadow: 0px 0px 25px #ffffff;
 }
