@@ -1523,7 +1523,13 @@ function tryToSendMessage()
 
     foreach ($userData as $column) {
         $id = $column["id"];
-        $date = date('d/m/Y H:i');
+
+        $timestamp = time();
+
+        $dateTime = new DateTime("@" . $timestamp);
+        $dateTime->setTimezone(new DateTimeZone("America/Sao_Paulo"));
+
+        $formattedDateTime = $dateTime->format('d/m/Y H:i');
 
         if ($type == 'dm') {
             $query = "SELECT id FROM users WHERE username = '$destination'";
@@ -1535,7 +1541,7 @@ function tryToSendMessage()
 
         $destination = queryDB($query)[0];
 
-        $query = "INSERT INTO messages (sender, date, destination, type, content) VALUES ('$id', '$date', '$destination', '$type', '$content')";
+        $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
         queryNR($query);
 
         $data = [
@@ -1565,21 +1571,17 @@ function getMessages()
 
         if ($type == 'dm') {
             $query = "SELECT id FROM users WHERE username = '$code'";
-        } 
-        
-        else {
+        } else {
             $query = "SELECT id FROM parties WHERE code = '$code'";
         }
 
         $chatId = queryDB($query)[0];
 
         if ($type == 'dm') {
-            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY `date` DESC";
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
             $messages = queryDBRows($query);
-        } 
-        
-        else {
-            $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY `date` DESC";
+        } else {
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
             $messages = queryDBRows($query);
         }
 
@@ -1611,6 +1613,14 @@ function getMessages()
             array_push($messagesArray, $temp);
         }
 
+        usort($messagesArray, function ($a, $b) {
+            $dateA = $a['date']['year'] . $a['date']['month'] . $a['date']['day'] . $a['date']['hour'];
+            $dateB = $b['date']['year'] . $b['date']['month'] . $b['date']['day'] . $b['date']['hour'];
+            return strcmp($dateB, $dateA);
+        });
+    
+        $messagesArray = array_reverse($messagesArray);
+    
         $data = [
             'messages' => $messagesArray,
         ];

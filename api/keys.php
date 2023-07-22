@@ -30,8 +30,7 @@ $public = [
     "clearUserNotifications",
     "seeUserNotifications",
     "switchFollowUser",
-    "switchSaveEvent",
-    "sendMessage"
+    "switchSaveEvent"
 ];
 
 $private = [

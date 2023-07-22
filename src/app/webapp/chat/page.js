@@ -68,8 +68,6 @@ export default function Chat() {
         catch (error) {
             console.error(error);
         }
-
-        console.log(messages)
     };
 
     const sendMessage = async (message) => {
@@ -104,7 +102,12 @@ export default function Chat() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        const fetchInterval = 3000;
+        const intervalId = setInterval(fetchData, fetchInterval);
+
+        return () => clearInterval(intervalId);
+
     }, []);
 
     if (isLoading) {
@@ -124,7 +127,7 @@ export default function Chat() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
-                                    {[...messages].reverse().map((message, index) => (
+                                    {[...messages].map((message, index) => (
                                         <ChatBubble
                                             key={index}
                                             showImage={false}
