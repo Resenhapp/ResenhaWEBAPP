@@ -7,7 +7,7 @@ const BookmarkButton = ({ initialSavedState }) => {
   
   const [isSaved, setIsSaved] = useState(initialSavedState);
 
-  const handleSaveButton = () => {
+  const handleSaveButton = (event) => {
     setIsSaved(!isSaved);
     event.stopPropagation();
   };
