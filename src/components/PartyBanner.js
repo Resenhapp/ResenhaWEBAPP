@@ -24,7 +24,7 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                         ))
                         }
                     </div>
-                    <BookmarkButton initialSavedState={handleSaveButton}/>
+                    <BookmarkButton initialSavedState={handleSaveButton} className="p-8"/>
                 </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>
