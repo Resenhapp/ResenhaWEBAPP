@@ -95,6 +95,7 @@ function check_email($email)
 {
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = queryDBRows($query);
+
     $num_rows = mysqli_num_rows($result);
 
     if ($num_rows > 0) {
@@ -381,7 +382,26 @@ function getParties($result, $userId)
             $headers = [];
 
             $partyIdHash = hash256($row["id"]);
+
+            $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
+
+            $imageHeaders = @get_headers($imageUrl);
+
+            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                $partyIdHash = hash256("default");
+            }
+
             $code = $row["code"];
+            $timestamp = time();
+
+            $dateTime = new DateTime("@" . $timestamp);
+            $dateTime->setTimezone(new DateTimeZone("America/Sao_Paulo"));
+            
+            $dateTimeF = $dateTime->format('d/m/Y H:i');
+
+            $query = "INSERT INTO impressions (user, party, clicked, date) VALUES ('$userId', '$code', '0', '$dateTimeF')";
+            queryNR($query);
+
             $capacity = $row["capacity"];
 
             $savedQuery = "SELECT id FROM saved WHERE party = '$code' AND user = '$userId'";
@@ -439,7 +459,17 @@ function getParties($result, $userId)
             if (mysqli_num_rows($dba) > 0) {
                 foreach ($dba as $dsa) {
                     if ($dsa['user'] != "none") {
-                        $user['hash'] = hash256($dsa['user']);
+                        $userHash = hash256($dsa['user']);
+
+                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
+            
+                        $imageHeaders = @get_headers($imageUrl);
+            
+                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                            $userHash = hash256("default");
+                        }
+
+                        $user['hash'] = $userHash;
                         $guests[] = $user;
 
                         $counter++;
@@ -589,7 +619,7 @@ function editUserData()
 {
     $userData = check_session($_POST['token']);
 
-    $data = sanitize($_POST['data']);
+    $data = $_POST['data'];
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -599,7 +629,7 @@ function editUserData()
         ];
 
         if (isset($data['username'])) {
-            $newToken = random_code(24);
+            $newToken = random_key();
 
             $newUsername = $data['username'];
 
@@ -611,8 +641,22 @@ function editUserData()
             } 
         }
 
-        if (isset($data['password'])) {
-            $newToken = random_code(24);
+        if (isset($data['email'])) {
+            $emailError = check_email($data['email']);
+
+            if (isset($emailError)) {
+                returnError($emailError);
+            }
+        }
+
+        if (isset($data['password']) ) {
+            $passwordError = check_password($data['password']);
+
+            if (isset($passwordError)) {
+                returnError($passwordError);
+            }
+
+            $newToken = random_key();
 
             $data['api'] = $newToken;
 
@@ -629,11 +673,17 @@ function editUserData()
             if ($key == 'interests') {
                 $query = "DELETE FROM interests WHERE user = '$id'";
                 queryNR($query);
+
                 foreach ($value as $interest) {
                     $query = "INSERT INTO interests (user, interest) VALUES ('$id', '$interest')";
                     queryNR($query);
                 }
-            } else {
+            } 
+            
+            else {
+                $key = sanitize($key);
+                $value = sanitize($value);
+                
                 $query = "UPDATE users SET `$key` = '$value' WHERE id = '$id'";
                 queryNR($query);
             }
@@ -661,6 +711,14 @@ function getUserData()
         $userId = $column["id"];
 
         $userHash = hash256($userId);
+
+        $imageUrl = "https://media.resenha.app/u/$userHash.png";
+
+        $imageHeaders = @get_headers($imageUrl);
+
+        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+            $userHash = hash256("default");
+        }
 
         $query = "SELECT * FROM interests WHERE user = '$userId'";
         $interestsResults = queryDBRows($query);
@@ -719,21 +777,31 @@ function getUserData()
 
                 if (mysqli_num_rows($partiesResults) > 0) {
                     foreach ($partiesResults as $party) {
-
                         $partyId = $party["id"];
+
+                        $partyIdHash = hash256($partyId);
+
+                        $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
+
+                        $imageHeaders = @get_headers($imageUrl);
+            
+                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                            $partyIdHash = hash256("default");
+                        }
 
                         $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                         $partyConfirmed = queryDB($query)[0];
 
                         $temp = [
-                            "hash" => hash256($partyId),
+                            "hash" => $partyIdHash,
                             "name" => $party["name"],
                             "date" => $party["date"],
                             "start" => $party["start"],
                             "end" => $party["end"],
                             "confirmed" => $partyConfirmed,
                             "used" => $codeUsed,
-                            "code" => $userCode,
+                            "token" => $userCode,
+                            "code" => $partyCode
                         ];
 
                         array_push($partiesWent, $temp);
@@ -752,11 +820,21 @@ function getUserData()
                 $partyId = $party["id"];
                 $partyCode = $party["code"];
 
+                $partyIdHashUser = hash256($partyId);
+
+                $imageUrl = "https://media.resenha.app/r/$partyIdHashUser.png";
+
+                $imageHeaders = @get_headers($imageUrl);
+    
+                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                    $partyIdHashUser = hash256("default");
+                }
+
                 $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                 $partyConfirmed = queryDB($query)['total_guests'];
 
                 $temp = [
-                    "hash" => hash256($partyId),
+                    "hash" => $partyIdHashUser,
                     "code" => $partyCode,
                     "name" => $party["name"],
                     "date" => $party["date"],
@@ -812,7 +890,7 @@ function getUserData()
                     $temp["hash"] = $activity["hash"];
                 }
 
-                array_push($activity, $temp);
+                array_push($activities, $temp);
             }
         }
 
@@ -838,8 +916,18 @@ function getUserData()
                     }
                 }
 
+                $partyIdHashId = hash256($purchasePartyId);
+
+                $imageUrl = "https://media.resenha.app/r/$partyIdHashId.png";
+
+                $imageHeaders = @get_headers($imageUrl);
+    
+                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                    $partyIdHashId = hash256("default");
+                }
+
                 $temp = [
-                    "hash" => hash256($purchasePartyId),
+                    "hash" => $partyIdHashId,
                     "name" => $purchasePartyName,
                     "code" => $purchaseGuestCode,
                     "price" => $purchasePartyPrice,
@@ -873,8 +961,18 @@ function getUserData()
                 $query = "SELECT username FROM users WHERE id = '$commentId'";
                 $commentUsername = queryDB($query)[0];
 
+                $commentHash = hash256($commentId);
+
+                $imageUrl = "https://media.resenha.app/u/$commentHash.png";
+        
+                $imageHeaders = @get_headers($imageUrl);
+        
+                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                    $commentHash = hash256("default");
+                }
+
                 $temp = [
-                    "hash" => hash256($commentId),
+                    "hash" => $commentHash,
                     "user" => $commentId,
                     "username" => $commentUsername,
                     "name" => $comment["name"],
@@ -913,7 +1011,7 @@ function getUserData()
             $data['saved'] = $saved;
             $data['notified'] = $notified;
             $data['concierges'] = $concierges;
-            $data['activity'] = $activities;
+            $data['activities'] = $activities;
             $data['purchases'] = $purchases;
             $data['mine'] = true;
         } 
@@ -962,6 +1060,17 @@ function getInviteData()
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
             $host = $row["host"];
+            $id = $row["id"];
+
+            $partyHash = hash256($id);
+
+            $imageUrl = "https://media.resenha.app/r/$partyHash.png";
+
+            $imageHeaders = @get_headers($imageUrl);
+
+            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                $partyHash = hash256("default");
+            }
 
             $query = "SELECT name FROM users WHERE id = '$host'";
             $host = queryDB($query)[0];
@@ -992,7 +1101,18 @@ function getInviteData()
                         $uname = queryDB($query)[0];
 
                         $user['id'] = $id;
-                        $user['hash'] = hash256($dsa['user']);
+
+                        $userHash = hash256($dsa['user']);
+
+                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
+                
+                        $imageHeaders = @get_headers($imageUrl);
+                
+                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
+                            $userHash = hash256("default");
+                        }
+
+                        $user['hash'] = $userHash;
                         $user['username'] = $uname;
                     }
 
@@ -1012,6 +1132,7 @@ function getInviteData()
             }
 
             $data = [
+                'hash' => $partyHash,
                 'ticket' => $row["price"],
                 'address' => $row["address"],
                 'host' => $host,
@@ -1088,7 +1209,9 @@ function getInviteData()
             header('Content-Type: application/json');
             echo json_encode($data);
         }
-    } else {
+    } 
+    
+    else {
         returnError("no_data");
     }
 }
@@ -1100,6 +1223,18 @@ function tryToCreateGuest()
     $birth = sanitize($_POST['birth']);
     $email = sanitize($_POST['email']);
     $method = sanitize($_POST['method']);
+
+    if (isset($_POST['token'])) {
+        $userData = check_session($_POST['token']);
+    
+        foreach ($userData as $column) {
+            $user = $column["id"];
+        }
+    }
+
+    else {
+        $user = "none";
+    }
 
     $date = date("d/m/Y H:i");
 
@@ -1113,13 +1248,8 @@ function tryToCreateGuest()
     } while (mysqli_num_rows($result) > 0);
 
     $paid = "0";
-
-    if ($method == "cartao") {
-        $paid = "1";
-        $charge = "none";
-    } 
     
-    else if ($method == "pix") {
+    if ($method == "pix") {
         $req = [
             "items" => [
                 [
@@ -1164,6 +1294,11 @@ function tryToCreateGuest()
 
         $charge = $array["charges"][0]["id"];
     } 
+
+    // else if ($method == "cartao") {
+    //     $paid = "1";
+    //     $charge = "none";
+    // }
     
     else {
         $paid = "0";
@@ -1177,11 +1312,17 @@ function tryToCreateGuest()
     $used = "0";
     $deleted = "0";
 
-    $query = "INSERT INTO guests (party, name, birth, email, method, date, code, charge, paid, used, deleted) VALUES ('$party', '$name', '$birth', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
+    $query = "INSERT INTO guests (user, party, name, birth, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$birth', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
     queryNR($query);
 
     $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
     $guest = queryDB($query)[0];
+
+    $query = "SELECT host FROM parties WHERE code = '$party'";
+    $host = queryDB($query)[0];
+
+    $query = "SELECT name FROM parties WHERE code = '$party'";
+    $partyName = queryDB($query)[0];
 
     $query = "SELECT price FROM parties WHERE code = '$party'";
     $price = queryDB($query)[0];
@@ -1228,6 +1369,19 @@ function tryToCreateGuest()
     ];
 
     send_message($embed, $webhook);
+
+    if ($user != "none") {
+        $query = "SELECT username FROM users WHERE id = '$user'";
+        $guestUsername = queryDB($query)[0];
+
+        $notificationText =  "O usuário @$guestUsername acaba de comprar um ingresso para a sua resenha chamada: $partyName";
+    }
+
+    else {
+        $notificationText =  "$name acaba de comprar um ingresso para a sua resenha chamada: $partyName";
+    }
+
+    createNotification($host, "Novo convidado!", $notificationText);
 
     if ($method == "pix") {
         $data = [
@@ -1641,9 +1795,9 @@ function tryToCreateEvent()
     $userData = check_session($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
+        $userName = $column["username"];
 
-        $details = sanitize($_POST['details']);
+        $details = $_POST['details'];
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
         $host = queryDB($query)[0];
@@ -1663,10 +1817,13 @@ function tryToCreateEvent()
         $price = $details['selectedPrice'];
         $capacity = $details['selectedGuests'];
         $description = $details['descriptionContent'];
+        $tags = $details['tagsContent'];
 
         $price = intval(str_replace(',', '.', $details['selectedPrice']));
         $start = date('H:i', strtotime($details['start']));
+
         $date = date('d/m/Y', strtotime($details['dateSelected']));
+
         $code = random_code(8);
 
         $timezone = new DateTimeZone('America/Sao_Paulo');
@@ -1703,6 +1860,11 @@ function tryToCreateEvent()
 
         $query = "INSERT INTO parties (host, name, address, maiority, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
         queryNR($query);
+
+        foreach ($tags as $tag) {
+            $query = "INSERT INTO tags (tag, party) VALUES ('$tag', '$code')";
+            queryNR($query);
+        }
 
         $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
 
@@ -1757,19 +1919,13 @@ function tryToCreateUser()
 
     if (!isset($error)) {
         $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
-
-        $api = random_code(24);
-
+        $api = random_key();
         $date = date('d/m/Y H:i');
-
         $registration = getIp();
-
         $last = getIp();
-
         $pix = "none";
-
         $tax = 10;
-
+        
         $password_hash = hash256($password);
 
         $confirmation_link = "https://resenha.app/api/?token=$token";

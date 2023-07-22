@@ -128,6 +128,7 @@ export default function NewEvent() {
 
   const handlePiece04DescriptionChange = (content) => {
     setDescriptionContent(content);
+    setIsFilled(true)
   };
 
   const handlePiece04TagsChange = (content) => {
@@ -170,7 +171,9 @@ export default function NewEvent() {
         descriptionContent={handlePiece04DescriptionChange}
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
-        return <Piece05/>;
+        return (<Piece05
+        filled={setIsFilled}
+        />);
       default:
         return null;
     }

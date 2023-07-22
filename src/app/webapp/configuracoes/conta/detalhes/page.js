@@ -95,6 +95,7 @@ export default function AccountDetails() {
         setTempName(name);
         toggleEditNamePageOpen();
     };
+
     const cancelEditEmail = () => {
         setTempEmail(email);
         toggleEditEmailPageOpen();
