@@ -1,31 +1,33 @@
 'use client'
+
+import React, { useState, useEffect } from 'react';
 import EditButton from '@/src/components/EditButton';
-import React from 'react';
 import NumberDisplay from '@/src/components/NumberDisplay';
 import Tag from '@/src/components/Tag';
 import PageHeader from '@/src/components/PageHeader';
-import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import FollowButton from '@/src/components/FollowButton';
-import { interestsData } from '@/src/components/interestsData';
 import Vector from '@/src/components/Vector';
 import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
-import SHA256 from 'crypto-js/sha256';
+
+import { interestsData } from '@/src/components/interestsData';
+
 
 export default function Profile() {
     var token = Cookies.get('token');
 
-    if (!token) {
+    let urlParams = new URLSearchParams();
+    
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    var profile = urlParams.get('u');
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        var profile = urlParams.get('u');
+    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -36,7 +38,9 @@ export default function Profile() {
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const makeRequest = async (url, data) => {
@@ -87,7 +91,8 @@ export default function Profile() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (

@@ -21,13 +21,19 @@ export default function Invite() {
     const [data, setData] = useState(null);
     const [renderedTags, setRenderedTags] = useState([]);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    let code = urlParams.get('code');
+    let code = '';
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        code = urlParams.get('code');
+    }
 
     const handleNextClick = () => {
         Cookies.set('code', code);
 
-        window.location.href = 'convite/dados/';
+        if (typeof window !== 'undefined') {
+            window.location.href = 'convite/dados/';
+        }
     };
 
     const handleToggleDescription = () => {
@@ -78,7 +84,9 @@ export default function Invite() {
         };
         
         getRenderedTags();
-    }, [fetchData]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (
@@ -162,7 +170,9 @@ export default function Invite() {
 
             if (isMobile) {
                 const shareUrl = `whatsapp://send?text=${encodeURIComponent(`${shareData.title}\n${shareData.text}\n${shareData.url}`)}`;
-                window.location.href = shareUrl;
+                if (typeof window !== 'undefined') {
+                    window.location.href = shareUrl;
+                }
             } else {
                 alert("Web Share API not supported on this device");
             }

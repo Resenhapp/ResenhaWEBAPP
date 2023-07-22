@@ -5,7 +5,9 @@ import Button from '@/src/components/Button';
 
 const Menu = ({ isOpen, toggleMenu, userData }) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     var { username } = userData;

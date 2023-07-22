@@ -7,11 +7,12 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function AccountPartySaved() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
     
-    if (!username || !validator) {
-      window.location.href = '/login';
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -38,8 +39,7 @@ export default function AccountPartySaved() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator,
+                token: token,
                 requested: "saved"
             });
 
@@ -53,7 +53,8 @@ export default function AccountPartySaved() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (
@@ -88,6 +89,7 @@ export default function AccountPartySaved() {
 
                                     return (
                                     <PartyBanner
+                                        key={guest.id}
                                         imageUrl={guestsImages}
                                         eventName={title}
                                         eventImage={`https://media.resenha.app/r/${hash}.png`}

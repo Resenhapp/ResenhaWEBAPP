@@ -81,7 +81,8 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
       else {
         setData(userData);
       }
-    }, [userData, fetchData]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData]);
   
     useEffect(() => {
       if (data !== null) {
@@ -93,6 +94,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
           clearInterval(interval);
         };
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, checkIfUserNotified, updateInterval]);
 
     return (

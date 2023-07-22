@@ -5,24 +5,31 @@ import Vector from '@/src/components/Vector';
 import PageHeader from '@/src/components/PageHeader';
 
 export default function WithdrawSuccess() {
-    const handleNavigation = () => {
-        window.location.href = '/webapp/carteira/';
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const withdrawValue = urlParams.get('a');
+    let urlParams = null;
+    let withdrawValue = '';
     let formattedWithdrawValue = '';
-    
+
+    if (typeof window !== 'undefined') {
+        urlParams = new URLSearchParams(window.location.search);
+        withdrawValue = urlParams.get('a');
+    }
+
     if (withdrawValue) {
         formattedWithdrawValue = parseFloat(withdrawValue).toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         });
-    } 
-    
-    else {
-        window.location.href = '/webapp/carteira/';
+    } else {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/webapp/carteira/';
+        }
     }
+
+    const handleNavigation = () => {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/webapp/carteira/';
+        }
+    };
 
     return (
         <div className='flex flex-col w-screen h-screen '>

@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 export default function MyParties() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
 
@@ -48,11 +48,15 @@ export default function MyParties() {
     };
 
     const handleViewClick = async (party) => {
-        window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/resenhas/detalhes?r=${party.code}`;
+        }
     };
 
     const handleEditClick = async (party) => {
-        window.location.href = `/webapp/resenhas/editar?r=${party.code}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/resenhas/editar?r=${party.code}`;
+        }
     };
 
     const handleCopyClick = async (party) => {
@@ -77,7 +81,8 @@ export default function MyParties() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (

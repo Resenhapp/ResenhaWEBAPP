@@ -1,11 +1,14 @@
 'use client'
+
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Account() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/configuracoes/conta/${pageToGo}`;
+        }
     };
 
     return (

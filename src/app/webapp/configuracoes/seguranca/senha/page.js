@@ -5,14 +5,14 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
-import Loading from "@/src/components/Loading";
 
 export default function PasswordConfig() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
     
-    if (!username || !validator) {
-      window.location.href = '/login';
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -49,9 +49,8 @@ export default function PasswordConfig() {
         try {
             const response = await sendEditRequest(data);
       
-            if (response.username && response.validator) {
-                Cookies.set('username', response.username);
-                Cookies.set('validator', response.validator);
+            if (response.token) {
+                Cookies.set('token', response.token);
             }
     
             if (!response.error) {
@@ -80,8 +79,7 @@ export default function PasswordConfig() {
         try {
           const response = await makeRequest('http://localhost/resenha.app/api/', {
             request: 'editUserData',
-            username: username,
-            validator: validator,
+            token: token,
             data: data
           });
       

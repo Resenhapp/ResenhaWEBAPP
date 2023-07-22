@@ -12,11 +12,12 @@ import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
 
 export default function NewEvent() {
-  const username = Cookies.get('username');
-  const validator = Cookies.get('validator');
+  const token = Cookies.get('token');
 
-  if (!username || !validator) {
-    window.location.href = '/login';
+  if (!token) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   }
 
   const axios = require('axios');
@@ -55,12 +56,11 @@ export default function NewEvent() {
       try {
         const response = await makeRequest('http://localhost/resenha.app/api/', { 
           request: 'tryToCreateEvent',
-          username: username,
-          validator: validator,
+          token: token,
           details: details
         });
 
-        if (!response.error) {
+        if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/webapp/resenhas/';
         }
       } 
@@ -181,7 +181,9 @@ export default function NewEvent() {
     case 0:
       title = '';
       subtitle = '';
-      window.location.href = '/webapp/resenhas/';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/webapp/resenhas/';
+      }
     case 1:
       title = 'Vamos criar uma resenha?';
       subtitle = 'Primeiro, comece dando um nome para a sua resenha e defina o lugar onde ela vai acontecer:';

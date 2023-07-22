@@ -6,7 +6,9 @@ import SignatureSelection from '@/src/components/SignatureSelection';
 export default function Signature() {
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const [selectedCard, setSelectedCard] = useState(0);
@@ -32,8 +34,8 @@ export default function Signature() {
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <SignatureSelection signatureType={1}
                                     startSelected={selectedCard === 0} onCheck={handleCheck(0)} />
-                                <SignatureSelection signatureType={2}
-                                    startSelected={selectedCard === 1} onCheck={handleCheck(1)} />
+                                {/* <SignatureSelection signatureType={2}
+                                    startSelected={selectedCard === 1} onCheck={handleCheck(1)} /> */}
                             </div>
                         </div>
                     </div>

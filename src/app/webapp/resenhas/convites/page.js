@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 export default function MyInvites() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
 
@@ -52,7 +52,8 @@ export default function MyInvites() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (

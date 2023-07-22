@@ -12,9 +12,9 @@ import Loading from "@/src/components/Loading";
 export default function Withdraw() {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
-    }
+      }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -47,7 +47,7 @@ export default function Withdraw() {
                     amount: withdrawalAmount
                 });
 
-                if (!response.error) {
+                if (!response.error && typeof window !== 'undefined') {
                     window.location.href = `/webapp/carteira/saque/sucesso?a=${withdrawalAmount}`;
                 }
             }
@@ -86,7 +86,8 @@ export default function Withdraw() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (
@@ -104,7 +105,7 @@ export default function Withdraw() {
 
     return (
         <div className='flex flex-col w-screen h-screen '>
-            <PageHeader pageTitle={'Saque'} />
+            <PageHeader pageTitle={'Saque'} userData={data} />
             <div className="flex flex-col  justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>

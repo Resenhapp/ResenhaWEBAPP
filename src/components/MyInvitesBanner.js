@@ -4,7 +4,9 @@ import Vector from './Vector';
 
 const MyInvitesBanner = ({ eventName, eventDate, eventHour, token, eventImage }) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
     return (
         <div className='flex flex-col items-center'>

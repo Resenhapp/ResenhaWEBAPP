@@ -224,13 +224,15 @@ function returnError($error)
     exit();
 }
 
-function checkRequest($request)
+function checkPublicRequest($request)
 {
-    global $requests;
+    global $public;
 
-    if (in_array($request, $requests)) {
+    if (in_array($request, $public)) {
         return true;
-    } else {
+    } 
+    
+    else {
         return false;
     }
 }
@@ -280,9 +282,9 @@ function getHelpData()
 
 function check_session($token)
 {
-    global $enckey;
+    $token = sanitize($token);
 
-    $api = decrypt($token, $enckey);
+    $api = decrypt($token, GLOBAL_ENCKEY);
 
     $userQuery = "SELECT * FROM users WHERE api = '$api'";
     $userData = queryDBRows($userQuery);
@@ -294,9 +296,11 @@ function check_session($token)
     }
 }
 
-function createNotification($user, $title, $content, $date)
+function createNotification($user, $title, $content)
 {
-    $query = "INSERT INTO notifications (user, title, content, date, seen, cleared) VALUES ('$user', '$title', '$content', '$date', '0', '0')";
+    $dateTime = date('d/m/Y H:i');
+
+    $query = "INSERT INTO notifications (user, title, content, date, seen, cleared) VALUES ('$user', '$title', '$content', '$dateTime', '0', '0')";
     queryNR($query);
 }
 
@@ -308,6 +312,7 @@ function getParties($result, $userId)
         foreach ($result as $row) {
             $headers = [];
 
+            $partyIdHash = hash256($row["id"]);
             $code = $row["code"];
             $capacity = $row["capacity"];
 
@@ -316,11 +321,11 @@ function getParties($result, $userId)
 
             if ($savedQ) {
                 $saved = true;
-            } else {
+            } 
+            
+            else {
                 $saved = false;
             }
-
-            $hash = hash256($code);
 
             $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
             $confirmed = queryDB($guests_query)['total_guests'];
@@ -379,7 +384,7 @@ function getParties($result, $userId)
             }
 
             $data = [
-                'hash' => $hash,
+                'hash' => $partyIdHash,
                 'saved' => $saved,
                 'price' => $row["price"],
                 'code' => $code,
@@ -415,14 +420,14 @@ function getFeedData()
         $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `start`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
 
         if (isset($_POST['searchTerm'])) {
-            $searchTerm = $_POST['searchTerm'];
+            $searchTerm = sanitize($_POST['searchTerm']);
             $query .= " AND name LIKE '%" . $searchTerm . "%'";
         }
 
         if (isset($_POST['filterParameters'])) {
             $filterParameters = $_POST['filterParameters'];
 
-            if (isset($filterParameters["address"]) && $filterParameters["radius"]) {
+            if (isset($filterParameters["address"]) && isset($filterParameters["radius"])) {
                 $userAddress = $filterParameters["address"];
                 $locationRadius = $filterParameters["radius"];
 
@@ -441,9 +446,11 @@ function getFeedData()
 
                 $addressDecoded = json_decode($json, true);
 
+
                 if (!empty($addressDecoded)) {
                     $userLatitude = $addressDecoded[0]["lat"];
                     $userLongitude = $addressDecoded[0]["lon"];
+
 
                     $query .= " AND
                         (6371 * 2 *
@@ -512,14 +519,11 @@ function calculateDistance($lat1, $lon1, $lat2, $lon2)
 
 function editUserData()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
-    $data = $_POST['data'];
+    $data = sanitize($_POST['data']);
 
     foreach ($userData as $column) {
-        $userId = $column["id"];
         $userName = $column["username"];
 
         $responseData = [
@@ -527,35 +531,27 @@ function editUserData()
         ];
 
         if (isset($data['username'])) {
+            $newToken = random_code(24);
+
             $newUsername = $data['username'];
 
             $query = "SELECT id FROM users WHERE username = '$newUsername'";
             $result = queryDB($query);
 
-            $query = "SELECT password FROM users WHERE username = '$userName'";
-            $passwordResult = queryDB($query);
-
             if ($result && count($result) > 0) {
                 returnError('used_username');
-            } else {
-                $responseData['username'] = encrypt($newUsername, $enckey);
-
-                if ($passwordResult && count($passwordResult) > 0) {
-                    $password = $passwordResult[0];
-                    $responseData['validator'] = hash256($newUsername . $password);
-                } else {
-                    returnError('invalid_session');
-                }
-            }
+            } 
         }
 
         if (isset($data['password'])) {
+            $newToken = random_code(24);
+
+            $data['api'] = $newToken;
+
             $newPassword = $data['password'];
 
             $data['password'] = hash256($newPassword);
-
-            $responseData['username'] = encrypt($userName, $enckey);
-            $responseData['validator'] = hash256($userName . $data['password']);
+            $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
         }
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
@@ -582,13 +578,11 @@ function editUserData()
 
 function getUserData()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
     if ($userData) {
         if (isset($_POST["profile"])) {
-            $profile = $_POST["profile"];
+            $profile = sanitize($_POST["profile"]);
 
             $query = "SELECT * FROM users WHERE username = '$profile'";
             $userData = queryDBRows($query);
@@ -754,6 +748,40 @@ function getUserData()
             }
         }
 
+        $query = "SELECT * FROM guests WHERE user = '$userId'";
+        $purchasesResults = queryDBRows($query);
+
+        $purchases = [];
+
+        if (mysqli_num_rows($purchasesResults) > 0) {
+            foreach ($purchasesResults as $purchase) {
+                $purchaseGuestCode = $purchase["code"];
+                $purchasePartyCode = $purchase["party"];
+                $purchasePartyDate = $purchase["date"];
+
+                $query = "SELECT * FROM parties WHERE code = '$purchasePartyCode'";
+                $purchasePartyResults = queryDBRows($query);
+
+                if (mysqli_num_rows($purchasePartyResults) > 0) {
+                    foreach ($purchasePartyResults as $purchaseParty) {
+                        $purchasePartyId = $purchaseParty["id"];
+                        $purchasePartyName = $purchaseParty["name"];
+                        $purchasePartyPrice = number_format($purchaseParty["price"], 2, ',', '.');
+                    }
+                }
+
+                $temp = [
+                    "hash" => hash256($purchasePartyId),
+                    "name" => $purchasePartyName,
+                    "code" => $purchaseGuestCode,
+                    "price" => $purchasePartyPrice,
+                    "date" => $purchasePartyDate
+                ];
+
+                array_push($purchases, $temp);
+            }
+        }
+
         $query = "SELECT * FROM saved INNER JOIN parties ON saved.party = parties.code WHERE saved.user = '$userId'";
         $savedResults = queryDBRows($query);
 
@@ -806,7 +834,7 @@ function getUserData()
             'mine' => false,
         ];
 
-        if ($column["api"] == decrypt($_POST["token"], $enckey)) {
+        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
             $data["birth"] = $column["birth"];
             $data["address"] = $column["address"];
             $data["phone"] = $column["phone"];
@@ -818,8 +846,11 @@ function getUserData()
             $data['notified'] = $notified;
             $data['concierges'] = $concierges;
             $data['activity'] = $activities;
+            $data['purchases'] = $purchases;
             $data['mine'] = true;
-        } else {
+        } 
+        
+        else {
             $userData = check_session($_POST['token']);
 
             foreach ($userData as $column) {
@@ -837,10 +868,10 @@ function getUserData()
         }
 
         if (isset($_POST["requested"])) {
-            $var = $data[$_POST["requested"]];
+            $var = $data[sanitize($_POST["requested"])];
 
             $data = [
-                $_POST["requested"] => $var,
+                sanitize($_POST["requested"]) => $var,
             ];
         }
 
@@ -855,9 +886,7 @@ function getUserData()
 
 function getInviteData()
 {
-    global $enckey;
-
-    $code = $_POST['code'];
+    $code = sanitize($_POST['code']);
 
     $query = "SELECT * FROM parties WHERE code = '$code'";
 
@@ -998,11 +1027,11 @@ function getInviteData()
 
 function tryToCreateGuest()
 {
-    $party = $_POST['code'];
-    $name = $_POST['name'];
-    $birth = $_POST['birth'];
-    $email = $_POST['email'];
-    $method = $_POST['method'];
+    $party = sanitize($_POST['code']);
+    $name = sanitize($_POST['name']);
+    $birth = sanitize($_POST['birth']);
+    $email = sanitize($_POST['email']);
+    $method = sanitize($_POST['method']);
 
     $date = date("d/m/Y H:i");
 
@@ -1146,8 +1175,6 @@ function tryToCreateGuest()
 
 function tryToAuthenticate()
 {
-    global $enckey;
-
     $email = sanitize($_POST['email']);
     $password = hash256(sanitize($_POST['password']));
 
@@ -1155,7 +1182,7 @@ function tryToAuthenticate()
     $token = queryDB($query);
 
     if ($token) {
-        $response = encrypt($token[0], $enckey);
+        $response = encrypt($token[0], GLOBAL_ENCKEY);
 
         $data = [
             'token' => $response,
@@ -1188,6 +1215,47 @@ function clearUserNotifications()
     }
 }
 
+function switchSaveEvent()
+{
+    $partyCode = sanitize($_POST['party']);
+
+    $userData = check_session($_POST['token']);
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $dateTime = date('d/m/Y H:i');
+
+        $query = "SELECT id FROM saved WHERE user = '$userId' AND party = '$partyCode'";
+        $savedResults = queryDB($query);
+
+        if ($savedResults) {
+            $savedId = $savedResults[0];
+
+            $deleteQuery = "DELETE FROM saved WHERE id = '$savedId'";
+            queryNR($deleteQuery);
+
+            $data = [
+                'status' => "success",
+                'action' => "unsaved"
+            ];
+        }
+
+        else {
+            $insertQuery = "INSERT INTO saved (`id`, `user`, `party`, `date`) VALUES (NULL, '$userId', '$partyCode', '$dateTime')";
+            queryNR($insertQuery);
+
+            $data = [
+                'status' => "success",
+                'action' => "saved"
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
+}
+
 function switchFollowUser()
 {
     $userData = check_session($_POST['token']);
@@ -1195,7 +1263,7 @@ function switchFollowUser()
     foreach ($userData as $column) {
         $userName = $column["username"];
 
-        $profile = $_POST['profile'];
+        $profile = sanitize($_POST['profile']);
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
         $followingId = queryDB($query)[0];
@@ -1244,7 +1312,7 @@ function seeUserNotifications()
     $userData = check_session($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
+        $userName = $column["username"];
 
         $query = "SELECT * FROM users WHERE username = '$userName'";
 
@@ -1277,7 +1345,7 @@ function tryToWithdraw()
         $name = $column["name"];
         $email = $column["email"];
 
-        $amount = floatval($_POST['amount']);
+        $amount = floatval(sanitize($_POST['amount']));
 
         $query = "SELECT * FROM balances WHERE user = '$id'";
         $result = queryDBRows($query);
@@ -1297,6 +1365,12 @@ function tryToWithdraw()
 
             $query = "UPDATE balances SET requested = $newRequested, available = $newAvailable WHERE user = '$id'";
             queryNR($query);
+
+            createNotification(
+                $id,
+                "Saque solicitado!",
+                "Seu saque de R$ ".number_format($amount, 2, ',', '.')." foi solicitado e cairá na sua conta em até 1 dia útil.",
+            );
 
             $embed = [
                 'title' => 'Novo saque solicitado!',
@@ -1353,7 +1427,7 @@ function tryToDeleteEvent()
     foreach ($userData as $column) {
         $userName = $column["userName"];
 
-        $code = $_POST['code'];
+        $code = sanitize($_POST['code']);
 
         $query = "DELETE FROM parties WHERE code = '$code'";
         queryNR($query);
@@ -1362,14 +1436,12 @@ function tryToDeleteEvent()
 
 function getMessages()
 {
-    global $enckey;
-
-    $code = $_POST['code'];
-    $type = $_POST['type'];
-    $username = $_POST['username'];
+    $code = sanitize($_POST['code']);
+    $type = sanitize($_POST['type']);
+    $username = sanitize($_POST['username']);
 
     if (strlen($username) >= 30) {
-        $username = decrypt($_POST['username'], $enckey);
+        $username = decrypt($_POST['username'], GLOBAL_ENCKEY);
     }
 
     $queryUsernameId = "SELECT id FROM users WHERE username = '$username'";
@@ -1424,14 +1496,12 @@ function getMessages()
 
 function tryToCreateEvent()
 {
-    global $enckey;
-
     $userData = check_session($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["userName"];
 
-        $details = $_POST['details'];
+        $details = sanitize($_POST['details']);
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
         $host = queryDB($query)[0];
@@ -1535,18 +1605,16 @@ function tryToCreateEvent()
 
 function tryToCreateUser()
 {
-    global $enckey;
-
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $name = $_POST['name'];
-    $cpf = $_POST['cpf'];
-    $birth = $_POST['birth'];
+    $email = sanitize($_POST['email']);
+    $password = sanitize($_POST['password']);
+    $name = sanitize($_POST['name']);
+    $cpf = sanitize($_POST['cpf']);
+    $birth = sanitize($_POST['birth']);
 
     $error = check_email($email) or check_password($password) or check_cpf($cpf);
 
     if (!isset($error)) {
-        $token = "ec-" . encrypt($email, $enckey);
+        $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
 
         $api = random_code(24);
 
@@ -1609,7 +1677,11 @@ function tryToCreateUser()
             header('Content-Type: application/json');
             echo json_encode($data);
         }
-    } else {
+    } 
+    
+    else {
         returnError($error);
     }
 }
+
+?>

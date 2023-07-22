@@ -23,8 +23,9 @@ const RegisterPageComponent = ({}) => {
   const handleNextClick = () => {
     Cookies.set('email', email);
     Cookies.set('password', password);
-  
-    window.location.href = 'cadastro/pessoal/';
+    if (typeof window !== 'undefined') {
+      window.location.href = 'cadastro/pessoal/';
+    }
   };
 
   return (

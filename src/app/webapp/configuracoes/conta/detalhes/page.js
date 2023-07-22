@@ -8,11 +8,12 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function AccountDetails() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
+    const token = Cookies.get('token');
     
-    if (!username || !validator) {
-      window.location.href = '/login';
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     }
 
     const axios = require('axios');
@@ -56,9 +57,8 @@ export default function AccountDetails() {
         try {
             const response = await sendEditRequest(data);
       
-            if (response.username && response.validator) {
-                Cookies.set('username', response.username);
-                Cookies.set('validator', response.validator);
+            if (response.token) {
+                Cookies.set('token', response.token);
             }
     
             if (!response.error) {
@@ -115,8 +115,7 @@ export default function AccountDetails() {
         try {
           const response = await makeRequest('http://localhost/resenha.app/api/', {
             request: 'editUserData',
-            username: username,
-            validator: validator,
+            token: token,
             data: data
           });
       
@@ -132,8 +131,7 @@ export default function AccountDetails() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator
+                token: token
             });
 
             setData(response);
@@ -149,7 +147,8 @@ export default function AccountDetails() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (

@@ -3,14 +3,13 @@
 import React from 'react';
 import Notification from './Notification';
 import Cookies from 'js-cookie';
-import ButtonConfig from './ButtonConfig';
 import { useState } from "react";
 import { useEffect } from 'react';
 
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
 
@@ -88,6 +87,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             clearInterval(interval);
         };
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, getUserData, seeUserNotifications, updateInterval]);
   
   

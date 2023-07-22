@@ -34,7 +34,9 @@ export default function Info() {
         Cookies.set('method', method);
         Cookies.set('minor', minor);
         
-        window.location.href = formatted;
+        if (typeof window !== 'undefined') {
+            window.location.href = formatted;
+        }
     };
 
     const handleNameChange = (event) => {
@@ -70,7 +72,8 @@ export default function Info() {
     };
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const axios = require('axios');
     const qs = require('qs');

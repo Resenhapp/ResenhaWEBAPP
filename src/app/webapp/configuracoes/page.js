@@ -9,13 +9,16 @@ import Cookies from 'js-cookie';
 export default function Settings() {
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/configuracoes/${pageToGo}`;
+        }
     };
 
     const handleLogOut = () => {
         Cookies.remove('token');
-      
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
     };
       
     return (
@@ -57,13 +60,13 @@ export default function Settings() {
                                     leftIcon={'money02'}
                                     textAlign="left"
                                 />
-                                <ButtonConfig
+                                {/* <ButtonConfig
                                     label="Notificações"
                                     action={() => handleNavigation('/notificacoes')}
                                     rightIcon={'arrowRight06'}
                                     leftIcon={'bell03'}
                                     textAlign="left"
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>

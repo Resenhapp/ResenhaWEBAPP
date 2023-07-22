@@ -4,7 +4,9 @@ import Vector from './Vector';
 
 const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const handleShare = () => {
@@ -25,7 +27,9 @@ const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuest
 
             if (isMobile) {
                 const shareUrl = `whatsapp://send?text=${encodeURIComponent(`${shareData.title}\n${shareData.text}\n${shareData.url}`)}`;
-                window.location.href = shareUrl;
+                if (typeof window !== 'undefined') {
+                    window.location.href = shareUrl;
+                }
             } else {
                 alert("Web Share API not supported on this device");
             }

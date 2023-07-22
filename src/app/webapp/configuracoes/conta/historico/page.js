@@ -7,12 +7,17 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function AccountHistory() {
-    const username = Cookies.get('username');
-    const validator = Cookies.get('validator');
-    
-    if (!username || !validator) {
-      window.location.href = '/login';
-    }
+    const token = Cookies.get('token');
+
+    // Use the useEffect hook to handle side-effects.
+    // This ensures that your redirect logic will only run on the client side.
+    useEffect(() => {
+        if (!token) {
+            if (typeof window !== 'undefined') { 
+                window.location.href = '/login';
+            }
+        }
+    }, [token]);
 
     const axios = require('axios');
     const qs = require('qs');
@@ -34,8 +39,7 @@ export default function AccountHistory() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: username,
-                validator: validator,
+                token: token,
                 requested: "activity"
             });
 
@@ -49,7 +53,8 @@ export default function AccountHistory() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (
