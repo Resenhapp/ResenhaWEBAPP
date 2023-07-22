@@ -8,33 +8,24 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
 export default function Chat() {
-    let urlParams = null;
-    let groupChat = '';
-    let dualChat = '';
+    var token = Cookies.get('token');
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
+    
         const groupChat = urlParams.get('r');
         const dualChat = urlParams.get('u');
+    
+        if (dualChat !== null) {
+            var chatCode = dualChat;
+            var chatType = 'dm';
+        } 
+        
+        else if (groupChat !== null) {
+            var chatCode = groupChat;
+            var chatType = 'group';
+        }
     }
-
-    let chatType = '';
-    if (groupChat != null) {
-        chatType = 'group';
-    } else {
-        chatType = 'dm';
-    }
-
-    let chatCode = '';
-    if (groupChat != null) {
-        chatCode = groupChat;
-    } else {
-        chatCode = dualChat;
-    }
-
-
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
 
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +42,9 @@ export default function Chat() {
         try {
             const response = await axios.post(url, qs.stringify(data));
             return response.data;
-        } catch (error) {
+        } 
+        
+        catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
     };
@@ -60,24 +53,54 @@ export default function Chat() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getMessages',
-                username: u,
-                validator: validator,
+                token: token,
                 code: chatCode,
-                type: chatType,
+                type: chatType
             });
 
             if (response && Array.isArray(response.messages)) {
                 setMessages(response.messages);
-            } else {
-                console.error('Response does not contain an array of messages:', response);
-            }
+            } 
+
             setIsLoading(false);
-        } catch (error) {
+        } 
+        
+        catch (error) {
             console.error(error);
         }
+
         console.log(messages)
     };
 
+    const sendMessage = async (message) => {
+        const now = new Date();
+        const timestamp = now.getHours() + ':' + now.getMinutes();
+    
+        const newMessage = {
+            imageUrl: '',
+            content: message,
+            date: now,
+            sent: true
+        };
+
+        setMessages((oldMessages) => [...oldMessages, newMessage]);
+
+        try {
+            const response = await makeRequest('http://localhost/resenha.app/api/', {
+                request: 'tryToSendMessage',
+                token: token,
+                destination: chatCode,
+                type: chatType,
+                content: message
+            });
+
+            console.log(response);
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         fetchData();
@@ -91,20 +114,6 @@ export default function Chat() {
             </div>
         );
     }
-
-    const sendMessage = (message) => {
-        const now = new Date();
-        const timestamp = now.getHours() + ':' + now.getMinutes();
-
-        const newMessage = {
-            imageUrl: '',
-            message,
-            timestamp,
-            sent: true
-        };
-
-        setMessages((oldMessages) => [...oldMessages, newMessage]);
-    };
 
     return (
         <div className="flex flex-col w-screen h-screen">

@@ -133,7 +133,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
-                                            <SendMessageButton onClick={() => handleNavigation('/chat')}/>
+                                            <SendMessageButton onClick={() => handleNavigation('/chat?u='+profile)}/>
                                         </div>
                                     )}
                                 </div>
@@ -184,7 +184,7 @@ export default function Profile() {
                                         <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                         {partiesWent.some((party) => party.used !== 1) && (
                                             <div className='text-purpleT5'>
-                                            Vou
+                                                Vou
                                             </div>
                                         )}
                                         {partiesWent.map((party) => (
@@ -201,7 +201,7 @@ export default function Profile() {
                                         ))}
                                         {partiesWent.some((party) => party.used === 1) && (
                                             <div className='text-purpleT5'>
-                                            Fui
+                                                Fui
                                             </div>
                                         )}
                                         {partiesWent.map((party) => (
