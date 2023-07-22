@@ -11,8 +11,16 @@ if (isset($_POST['request'])) {
 
     if (checkPublicRequest(($request))) {
         $request();
-    } 
-    
+    }
+
+    elseif (checkPrivateRequest($request)) {
+        $privateKey = sanitize($_POST["key"]);
+
+        if ($privateKey == GLOBAL_APIKEY) {
+            $request();
+        }
+    }
+
     else {
         returnError("invalid_request");
     }

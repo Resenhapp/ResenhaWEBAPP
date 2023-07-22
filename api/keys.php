@@ -1,13 +1,12 @@
 <?php
 
-define("GLOBAL_API_KEY", "LN8z62TNVsZdb4oBXIc8mdT4");
+define("GLOBAL_APIKEY", "LN8z62TNVsZdb4oBXIc8mdT4");
+define("GLOBAL_ENCKEY", "lifeisaparty");
 
 define("DB_SERVER", "31.170.160.154");
 define("DB_NAME", "u878630845_resenhadb");
 define("DB_USERNAME", "u878630845_resenhadb");
 define("DB_PASSWORD", "kXiHdsMv7g$0");
-
-define("GLOBAL_ENCKEY", "lifeisaparty");
 
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $iv = chr(0x1) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
@@ -21,6 +20,7 @@ $public = [
     "getFeedData",
     "getMessages",
     "tryToCreateGuest",
+    "tryToSendMessage",
     "tryToWithdraw",
     "tryToAuthenticate",
     "tryToCreateUser",
@@ -30,8 +30,11 @@ $public = [
     "clearUserNotifications",
     "seeUserNotifications",
     "switchFollowUser",
-    "switchSaveEvent",
-    "sendMessage"
+    "switchSaveEvent"
+];
+
+$private = [
+    "tryToEditWithdraw",
 ];
 
 if ($root_directory == "C:/xampp/htdocs") {

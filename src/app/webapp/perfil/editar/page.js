@@ -1,20 +1,18 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { interestsData } from '@/src/components/interestsData';
 import PageHeader from '@/src/components/PageHeader';
 import UserProfileEditor from '@/src/components/UserProfileEditor';
 import Vector from '@/src/components/Vector';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Tag from '@/src/components/Tag';
-import { interestsData } from '@/src/components/interestsData';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-import { te } from 'date-fns/locale';
 
 export default function EditProfile() {
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
+    var token = Cookies.get('token');
 
-    if (!u || !validator) {
+    if (!token) {
         if (typeof window !== 'undefined') {
             window.location.href = '/login';
         }
@@ -58,11 +56,11 @@ export default function EditProfile() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                username: u,
-                validator: validator
+                token: token
             });
 
             setData(response);
+
             setNewTempName(response.name);
             setTempName(response.name);
             setNewTempUsername(response.username);
@@ -91,8 +89,7 @@ export default function EditProfile() {
         try {
           const response = await makeRequest('http://localhost/resenha.app/api/', {
             request: 'editUserData',
-            username: u,
-            validator: validator,
+            token: token,
             data: data
           });
       
@@ -195,8 +192,7 @@ export default function EditProfile() {
             const response = await sendEditRequest(data);
       
             if (response.username && response.validator) {
-              Cookies.set('username', response.username);
-              Cookies.set('validator', response.validator);
+              Cookies.set('token', response.token);
             }
 
             if (!response.error) {
@@ -323,18 +319,12 @@ export default function EditProfile() {
         );
     }
 
-    var { name, username, about, interests, verified, hash } = data
+    var { name, username, about, verified, hash } = data
 
     return (
         <div>
             <div className='flex flex-col w-screen h-screen'>
-                <PageHeader
-                    pageTitle={'Editar perfil'}
-                    isBack={true}
-                    destination={"/webapp/perfil?u="+newTempUsername}
-                    checker={() => { null }}
-                    userData={data}
-                />
+                <PageHeader pageTitle={'Editar perfil'} isBack={true} destination={"/webapp/perfil?u="+newTempUsername} checker={() => { null }} userData={data} />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
                     <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>

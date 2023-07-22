@@ -154,7 +154,7 @@ function random_key()
     return $key;
 }
 
-function register_log($user, $type, $action, $description = "NONE")
+function register_log($user, $type, $action, $description = "none")
 {
     $variables = [ &$user, &$type, &$action, &$description];
 
@@ -237,6 +237,61 @@ function checkPublicRequest($request)
     }
 }
 
+function checkPrivateRequest($request)
+{
+    global $private;
+
+    if (in_array($request, $private)) {
+        return true;
+    } 
+    
+    else {
+        return false;
+    }
+}
+
+function tryToEditWithdraw()
+{
+    $id = sanitize($_POST["id"]);
+
+    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
+    $isAlreadyApproved = queryDB($id)[0];
+
+    if ($isAlreadyApproved == "0") {
+        $moderator = sanitize($_POST["moderator"]);
+        $reason = sanitize($_POST["reason"]);
+        $approved = sanitize($_POST["approved"]);
+    
+        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
+        $user = queryDB($id)[0];
+    
+        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
+        $amount = queryDB($id)[0];
+
+        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
+        queryNR($query);
+    
+        if ($approved == "0") {
+            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
+            queryNR($query);
+        }
+    
+        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
+        queryNR($query);
+
+        $responseData = [
+            'status' => 'success'
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($responseData);
+    }
+
+    else {
+        returnError("already_approved");
+    }
+}
+
 function getHelpData()
 {
     $response = [];
@@ -302,6 +357,19 @@ function createNotification($user, $title, $content)
 
     $query = "INSERT INTO notifications (user, title, content, date, seen, cleared) VALUES ('$user', '$title', '$content', '$dateTime', '0', '0')";
     queryNR($query);
+}
+
+function createWithdraw($user, $amount)
+{
+    $dateTime = date('d/m/Y H:i');
+
+    $query = "INSERT INTO withdrawals (user, moderator, amount, reason, approved, date) VALUES ('$user', 'none', '$amount', 'none', '0', '$dateTime')";
+    queryNR($query);
+
+    $query = "SELECT id FROM withdrawals WHERE user = '$user' AND amount = '$amount' AND date = '$dateTime'";
+    $id = queryDB($query)[0];
+
+    return $id;
 }
 
 function getParties($result, $userId)
@@ -370,7 +438,7 @@ function getParties($result, $userId)
             $counter = 0;
             if (mysqli_num_rows($dba) > 0) {
                 foreach ($dba as $dsa) {
-                    if ($dsa['user'] != "NONE") {
+                    if ($dsa['user'] != "none") {
                         $user['hash'] = hash256($dsa['user']);
                         $guests[] = $user;
 
@@ -740,7 +808,7 @@ function getUserData()
                     "date" => $activity["date"],
                 ];
 
-                if ($activity["hash"] != "NONE") {
+                if ($activity["hash"] != "none") {
                     $temp["hash"] = $activity["hash"];
                 }
 
@@ -1048,9 +1116,10 @@ function tryToCreateGuest()
 
     if ($method == "cartao") {
         $paid = "1";
-
         $charge = "none";
-    } else if ($method == "pix") {
+    } 
+    
+    else if ($method == "pix") {
         $req = [
             "items" => [
                 [
@@ -1094,9 +1163,10 @@ function tryToCreateGuest()
         $qrcodeurl = $array["charges"][0]["last_transaction"]["qr_code_url"];
 
         $charge = $array["charges"][0]["id"];
-    } else {
+    } 
+    
+    else {
         $paid = "0";
-
         $charge = "none";
     }
 
@@ -1158,8 +1228,6 @@ function tryToCreateGuest()
     ];
 
     send_message($embed, $webhook);
-
-    register_log($guest, "guest", "guest_created", "ID: " . $guest);
 
     if ($method == "pix") {
         $data = [
@@ -1366,6 +1434,11 @@ function tryToWithdraw()
             $query = "UPDATE balances SET requested = $newRequested, available = $newAvailable WHERE user = '$id'";
             queryNR($query);
 
+            $withdrawId = createWithdraw(
+                $id,
+                $amount
+            );
+
             createNotification(
                 $id,
                 "Saque solicitado!",
@@ -1376,6 +1449,10 @@ function tryToWithdraw()
                 'title' => 'Novo saque solicitado!',
                 'color' => hexdec('7d00ff'),
                 'fields' => [
+                    [
+                        "name" => "ID do saque",
+                        "value" => $withdrawId,
+                    ],
                     [
                         "name" => "ID do usuário",
                         "value" => $id,
@@ -1414,7 +1491,9 @@ function tryToWithdraw()
             $webhook = "https://discord.com/api/webhooks/1116575716646068254/xAmqlhC3WpinvTw-HI5hdbom6-FA94YuY1v5NEUONTSXwroXTwA3PgaqTazIxezTFGn7";
 
             send_message($embed, $webhook);
-        } else {
+        } 
+        
+        else {
             returnError("insufficient_balance");
         }
     }
@@ -1434,64 +1513,121 @@ function tryToDeleteEvent()
     }
 }
 
+function tryToSendMessage()
+{
+    $userData = check_session($_POST['token']);
+
+    $destination = sanitize($_POST['destination']);
+    $type = sanitize($_POST['type']);
+    $content = sanitize($_POST['content']);
+
+    foreach ($userData as $column) {
+        $id = $column["id"];
+
+        $timestamp = time();
+
+        $dateTime = new DateTime("@" . $timestamp);
+        $dateTime->setTimezone(new DateTimeZone("America/Sao_Paulo"));
+
+        $formattedDateTime = $dateTime->format('d/m/Y H:i');
+
+        if ($type == 'dm') {
+            $query = "SELECT id FROM users WHERE username = '$destination'";
+        } 
+        
+        else {
+            $query = "SELECT id FROM parties WHERE code = '$destination'";
+        }
+
+        $destination = queryDB($query)[0];
+
+        $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
+        queryNR($query);
+
+        $data = [
+            'status' => "success",
+            'action' => "message_sent"
+        ];
+        
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
+}
+
 function getMessages()
 {
+    $userData = check_session($_POST['token']);
+
     $code = sanitize($_POST['code']);
     $type = sanitize($_POST['type']);
-    $username = sanitize($_POST['username']);
 
-    if (strlen($username) >= 30) {
-        $username = decrypt($_POST['username'], GLOBAL_ENCKEY);
-    }
+    foreach ($userData as $column) {
+        $id = $column["id"];
+        $username = $column["username"];
 
-    $queryUsernameId = "SELECT id FROM users WHERE username = '$username'";
-    $id = queryDB($queryUsernameId)[0];
+        if ($username == $code) {
+            returnError("chatting_yourself");
+        }
 
-    if ($type == 'dm') {
-        $query = "SELECT id FROM users WHERE username = '$code'";
-    } else {
-        $query = "SELECT id FROM parties WHERE code = '$code'";
-    }
+        if ($type == 'dm') {
+            $query = "SELECT id FROM users WHERE username = '$code'";
+        } else {
+            $query = "SELECT id FROM parties WHERE code = '$code'";
+        }
 
-    $chatId = queryDB($query)[0];
+        $chatId = queryDB($query)[0];
 
-    $messagesArray = [];
+        if ($type == 'dm') {
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
+            $messages = queryDBRows($query);
+        } else {
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i') DESC";
+            $messages = queryDBRows($query);
+        }
 
-    $query = "SELECT * FROM messages WHERE chatType ='dm' AND (sender = '$id' OR sender ='$chatId') ORDER BY `date` DESC";
-    $messages = queryDBRows($query);
+        $messagesArray = [];
 
-    foreach ($messages as $row) {
-        $sent = $row['sender'] == $id;
-        $content = $row['content'];
-        $dateString = $row["date"];
-        list($datePart, $timePart) = explode(' ', $dateString);
-        list($day, $month, $year) = explode('/', $datePart);
-        $day = (int) $day;
-        $month = convertMonth($month);
-        $year = (int) $year;
-        $destination = $row['destination'];
+        foreach ($messages as $row) {
+            $sent = $row['sender'] == $id;
+            $content = $row['content'];
+            $dateString = $row["date"];
+            list($datePart, $timePart) = explode(' ', $dateString);
+            list($day, $month, $year) = explode('/', $datePart);
+            $day = (int) $day;
+            $month = convertMonth($month);
+            $year = (int) $year;
+            $destination = $row['destination'];
 
-        $temp = [
-            'sent' => $sent,
-            'content' => $content,
-            'date' => [
-                'day' => $day,
-                'month' => $month,
-                'year' => $year,
-                'hour' => $timePart,
-            ],
-            'destination' => $destination,
+            $temp = [
+                'sent' => $sent,
+                'content' => $content,
+                'date' => [
+                    'day' => $day,
+                    'month' => $month,
+                    'year' => $year,
+                    'hour' => $timePart,
+                ],
+                'destination' => $destination,
+            ];
+
+            array_push($messagesArray, $temp);
+        }
+
+        usort($messagesArray, function ($a, $b) {
+            $dateA = $a['date']['year'] . $a['date']['month'] . $a['date']['day'] . $a['date']['hour'];
+            $dateB = $b['date']['year'] . $b['date']['month'] . $b['date']['day'] . $b['date']['hour'];
+            return strcmp($dateB, $dateA);
+        });
+    
+        $messagesArray = array_reverse($messagesArray);
+    
+        $data = [
+            'messages' => $messagesArray,
         ];
-
-        array_push($messagesArray, $temp);
+        
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
-
-    $data = [
-        'messages' => $messagesArray,
-    ];
-
-    header('Content-Type: application/json');
-    echo json_encode($data);
 }
 
 function tryToCreateEvent()
@@ -1546,9 +1682,9 @@ function tryToCreateEvent()
 
         $addressDecoded = json_decode($json, true);
 
-        $lat = "NONE";
-        $lon = "NONE";
-        $end = "NONE";
+        $lat = "none";
+        $lon = "none";
+        $end = "none";
 
         if (!empty($addressDecoded)) {
             $lat = $addressDecoded[0]["lat"];
@@ -1624,7 +1760,7 @@ function tryToCreateUser()
 
         $last = getIp();
 
-        $pix = "NONE";
+        $pix = "none";
 
         $tax = 10;
 
@@ -1666,8 +1802,6 @@ function tryToCreateUser()
             ];
 
             send_message($embed, $webhook);
-
-            register_log($user, "host", "user_registered");
 
             $data = [
                 'user' => $user,
