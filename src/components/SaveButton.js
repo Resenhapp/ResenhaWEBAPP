@@ -9,6 +9,7 @@ const BookmarkButton = ({ initialSavedState }) => {
 
   const handleSaveButton = () => {
     setIsSaved(!isSaved);
+    event.stopPropagation();
   };
 
   return (
