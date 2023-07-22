@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const token = Cookies.get('token');
 
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
 

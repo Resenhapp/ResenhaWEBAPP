@@ -16,7 +16,7 @@ const Timer = ({ timeInMinutes = 10, text = "O seu tempo para pagar acaba em:" }
     }, []);
 
     useEffect(() => {
-        if (remainingTime === 0) {
+        if (remainingTime === 0 && typeof window !== 'undefined') {
             window.location.href = 'https://resenha.app/DGPcBwzI';
         }
     }, [remainingTime]);

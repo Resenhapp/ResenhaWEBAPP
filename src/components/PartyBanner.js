@@ -3,20 +3,15 @@ import Vector from './Vector';
 import PartyTag from './PartyTag';
 import Image from 'next/image';
 import { partyData } from '@/src/components/PartyData';
+import BookmarkButton from './SaveButton';
 
 const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton}) => {
-    var vectorSaved = 'bookmarkOutlined01';
-
-    if (eventSaved === 'delete') {
-        vectorSaved = 'bookmarkRemove01';
-    } 
     
-    else if (eventSaved) {
-        vectorSaved = 'bookmarkFill01';
-    }
 
     var handleClick = (pageToGo) => {
-        window.location.href = `/convite/?code=${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/convite/?code=${pageToGo}`;
+        }
     };
 
     return (
@@ -31,10 +26,7 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                         ))
                         }
                     </div>
-                    <button onClick={handleSaveButton}
-                        className='w-9 h-8 gap-2 font-thin rounded-full ring-1 ring-inset ring-whiteT1 flex justify-center 
-                    items-center content-center backdrop-blur-xl bg-[#0000004D]'>
-                        <Vector vectorname={vectorSaved} /></button>
+                    <BookmarkButton initialSavedState={handleSaveButton} />
                 </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>

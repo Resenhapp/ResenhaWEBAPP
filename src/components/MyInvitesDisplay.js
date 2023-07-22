@@ -4,7 +4,9 @@ import Button from './Button';
 import MyInvitesBanner from './MyInvitesBanner';
 const MyInvitesDisplay = ({eventName, eventDate, eventHour, token, eventImage, eventCode}) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
     
     return (

@@ -3,7 +3,9 @@ import React from 'react';
 const UserPortrait = ({ isBlurried, imageUrl, userId, userName }) => {
 
   const handlePortraitClick = () => {
-    window.location.href = `/webapp/perfil?u=${userName}`;
+    if (typeof window !== 'undefined') {
+      window.location.href = `/webapp/perfil?u=${userName}`;
+    }
   };
 
   return (

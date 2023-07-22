@@ -34,7 +34,9 @@ export default function Info() {
         Cookies.set('method', method);
         Cookies.set('minor', minor);
         
-        window.location.href = formatted;
+        if (typeof window !== 'undefined') {
+            window.location.href = formatted;
+        }
     };
 
     const handleNameChange = (event) => {

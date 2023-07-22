@@ -184,7 +184,9 @@ export default function NewEvent() {
     case 0:
       title = '';
       subtitle = '';
-      window.location.href = '/webapp/resenhas/';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/webapp/resenhas/';
+      }
     case 1:
       title = 'Vamos criar uma resenha?';
       subtitle = 'Primeiro, comece dando um nome para a sua resenha e defina o lugar onde ela vai acontecer:';
