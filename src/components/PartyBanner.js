@@ -16,7 +16,9 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
     }
 
     var handleClick = (pageToGo) => {
-        window.location.href = `/convite/?code=${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/convite/?code=${pageToGo}`;
+        }
     };
 
     return (

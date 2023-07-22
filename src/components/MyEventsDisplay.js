@@ -5,7 +5,9 @@ import MyEventsBanner from './MyEventsBanner';
 
 const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax, eventImage, eventCode}) => {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
     return (
         <section className="flex content-center justify-center flex-col items-center w-full h-fit max-w-md p-4">

@@ -16,10 +16,12 @@ const Back = ({ defaultEvent, destination }) => {
     };
 
     const navigateToDestination = () => {
-        if (destination) {
-            window.location.href = destination;
-        } else {
-            window.history.back();
+        if (typeof window !== 'undefined') {
+            if (destination) {
+                window.location.href = destination;
+            } else {
+                window.history.back();
+            }
         }
     };
 

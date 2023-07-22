@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-delete L.Icon.Default.prototype._getIconUrl;
+let L, MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap;
+if (typeof window !== 'undefined') {
+  L = require('leaflet');
+  const leafletReact = require('react-leaflet');
+  MapContainer = leafletReact.MapContainer;
+  TileLayer = leafletReact.TileLayer;
+  Marker = leafletReact.Marker;
+  Popup = leafletReact.Popup;
+  useMapEvents = leafletReact.useMapEvents;
+  useMap = leafletReact.useMap;
 
-L.Icon.Default.mergeOptions({
+  delete L.Icon.Default.prototype._getIconUrl;
+
+  L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://resenha.app/publico/recursos/imagens/ui/pin001.png',
     iconUrl: 'https://resenha.app/publico/recursos/imagens/ui/pin002.png',
     shadowUrl: 'https://resenha.app/publico/recursos/imagens/ui/shadow001.png',
-});
+  });
+}
 
 export default function Map({ onLocationSelect }) {
     const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
     const [marker, setMarker] = useState(null);
+    const [clientSide, setClientSide] = useState(false);
 
     const getMyPosition = () => {
         if (navigator.geolocation) {
@@ -22,12 +33,12 @@ export default function Map({ onLocationSelect }) {
                 const newPosition = [position.coords.latitude, position.coords.longitude];
                 setUserPosition(newPosition);
             }, (error) => {
-                window.alert("Geolocation is not enabled. Using default position.");
             });
         }
     }
 
     useEffect(() => {
+        setClientSide(true);
         getMyPosition();
     }, []);
 
@@ -59,6 +70,10 @@ export default function Map({ onLocationSelect }) {
         });
         return null;
     };
+
+    if (!clientSide) {
+        return null;
+    }
 
     return (
         <div>

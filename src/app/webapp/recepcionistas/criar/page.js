@@ -23,7 +23,9 @@ export default function NewConcierge() {
     };
 
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
     };
 
     const handleInputChange = (e) => {

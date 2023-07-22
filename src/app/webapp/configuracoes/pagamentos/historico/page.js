@@ -74,6 +74,7 @@ export default function BuyHistory() {
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 {purchases.map((purchase) => 
                                     <NotificationBase
+                                        key={purchase.id}
                                         imageUrl={purchase.hash ? `https://media.resenha.app/r/${purchase.hash}.png` : undefined}
                                         title={'Compra de entrada'}
                                         description={`Você pagou R$ ${purchase.price} pela entrada da ${purchase.name}. Seu código é ${purchase.code}`}

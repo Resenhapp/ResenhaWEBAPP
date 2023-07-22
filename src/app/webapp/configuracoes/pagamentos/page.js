@@ -6,7 +6,9 @@ import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Payments() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/pagamentos/${pageToGo}`;
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/configuracoes/pagamentos/${pageToGo}`;
+        }
     };
 
     return (
