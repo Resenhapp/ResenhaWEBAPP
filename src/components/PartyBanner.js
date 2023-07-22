@@ -8,7 +8,7 @@ import BookmarkButton from './SaveButton';
 const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton}) => {
     var handleClick = (pageToGo) => {
         if (typeof window !== 'undefined') {
-            window.location.href = `/convite/?code=${pageToGo}`;
+            window.location.href = `/convite/?c=${pageToGo}`;
         }
     };
 
