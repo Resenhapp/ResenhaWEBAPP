@@ -131,7 +131,7 @@ export default function Chat() {
                                             showImage={false}
                                             imageUrl={message.imageUrl}
                                             message={message.content}
-                                            timestamp={message.date.hour}
+                                            timestamp={message.date.hour+":"+message.date.minute}
                                             sent={message.sent}
                                         />
                                     ))}

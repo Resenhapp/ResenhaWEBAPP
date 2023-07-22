@@ -1593,10 +1593,14 @@ function getMessages()
             $dateString = $row["date"];
             list($datePart, $timePart) = explode(' ', $dateString);
             list($day, $month, $year) = explode('/', $datePart);
+            list($hour, $minute, $second) = explode(':', $timePart);
+
             $day = (int) $day;
             $month = convertMonth($month);
             $year = (int) $year;
-            $destination = $row['destination'];
+            $hour = (int) $hour;
+            $minute = (int) $minute;
+            $second = (int) $second;
 
             $temp = [
                 'sent' => $sent,
@@ -1605,9 +1609,11 @@ function getMessages()
                     'day' => $day,
                     'month' => $month,
                     'year' => $year,
-                    'hour' => $timePart,
+                    'hour' => sprintf('%02d', $hour),
+                    'minute' => sprintf('%02d', $minute),
+                    'second' => sprintf('%02d', $second),
                 ],
-                'destination' => $destination,
+                'destination' => $row['destination'],
             ];
 
             array_push($messagesArray, $temp);
