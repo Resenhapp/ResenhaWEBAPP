@@ -58,6 +58,10 @@ export default function Chat() {
                 type: chatType
             });
 
+            if (response.error) {
+                handleNavigation("feed");
+            }
+
             if (response && Array.isArray(response.messages)) {
                 setMessages(response.messages);
             } 
