@@ -112,7 +112,7 @@ export default function MyParties() {
                                             partyCode={party.code} 
                                             partyDate={party.date} 
                                             partyGuests={party.confirmed} 
-                                            partyHour={party.time} 
+                                            partyHour={party.start} 
                                             partyMaxGuests={party.capacity} 
                                             partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
                                             partyName={party.name}

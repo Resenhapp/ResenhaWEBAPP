@@ -81,7 +81,7 @@ export default function MyInvites() {
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                            partyCode={party.code}
+                            partyCode={party.token}
                             partyGuests={party.confirmed}
                             partyDate={party.date}
                             partyHour={party.time}

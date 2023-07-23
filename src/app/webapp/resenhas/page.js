@@ -98,23 +98,30 @@ export default function HomePage() {
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ?
-                    <MyInvitesDisplay
-                        eventName={eventNameToUser}
-                        eventDate={eventDateToUser}
-                        eventHour={eventTimeToUser}
-                        eventCode={eventCode}
-                        token={eventCodeToUser}
-                        eventImage={`https://media.resenha.app/r/${eventHashToUser}.png`}
-                    /> :
-                    <MyEventsDisplay
-                        eventName={eventNameFromUser}
-                        eventDate={eventDateFromUser}
-                        eventGuests={eventConfirmedFromUser}
-                        eventHour={eventTimeFromUser}
-                        eventMax={eventCapacityFromUser}
-                        eventCode={eventCodeFromUser}
-                        eventImage={`https://media.resenha.app/r/${eventHashFromUser}.png`}
-                    />
+                    (data.partiesWent.length > 0 ?
+                        <MyInvitesDisplay
+                            eventName={data.partiesWent[0].name}
+                            eventDate={data.partiesWent[0].date}
+                            eventHour={data.partiesWent[0].start}
+                            eventCode={data.partiesWent[0].code}
+                            token={data.partiesWent[0].token}
+                            eventImage={`https://media.resenha.app/r/${data.partiesWent[0].hash}.png`}
+                        />
+                        :
+                        <p>SEM RESENHAS</p>)
+                    :
+                    (data.partiesMade.length > 0 ?
+                        <MyEventsDisplay
+                            eventName={data.partiesMade[0].name}
+                            eventDate={data.partiesMade[0].date}
+                            eventGuests={data.partiesMade[0].confirmed}
+                            eventHour={data.partiesMade[0].start}
+                            eventMax={data.partiesMade[0].capacity}
+                            eventCode={data.partiesMade[0].code}
+                            eventImage={`https://media.resenha.app/r/${data.partiesMade[0].hash}.png`}
+                        />
+                        :
+                        <p>SEM RESENHAS</p>)
                 }
             </div>
         </div>

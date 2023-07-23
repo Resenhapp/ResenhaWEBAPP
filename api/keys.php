@@ -24,6 +24,7 @@ $public = [
     "tryToWithdraw",
     "tryToAuthenticate",
     "tryToCreateUser",
+    "tryToClickOnEvent",
     "tryToCreateEvent",
     "tryToDeleteEvent",
     "editUserData",

@@ -7,6 +7,7 @@ function queryDB($query)
     global $link;
     $result = $link->query($query);
     $row = mysqli_fetch_array($result);
+
     return $row;
 }
 
@@ -14,6 +15,7 @@ function queryNR($query)
 {
     global $link;
     mysqli_query($link, $query);
+
 }
 
 function queryDBRows($query)
@@ -338,8 +340,6 @@ function getHelpData()
 
 function check_session($token)
 {
-    $token = sanitize($token);
-
     $api = decrypt($token, GLOBAL_ENCKEY);
 
     $userQuery = "SELECT * FROM users WHERE api = '$api'";
@@ -347,7 +347,9 @@ function check_session($token)
 
     if (mysqli_num_rows($userData) > 0) {
         return $userData;
-    } else {
+    } 
+    
+    else {
         return null;
     }
 }
@@ -381,15 +383,7 @@ function getParties($result, $userId)
         foreach ($result as $row) {
             $headers = [];
 
-            $partyIdHash = hash256($row["id"]);
-
-            $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
-
-            $imageHeaders = @get_headers($imageUrl);
-
-            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                $partyIdHash = hash256("default");
-            }
+            $partyIdHash = getHash($row["id"], "event");
 
             $code = $row["code"];
             $timestamp = time();
@@ -399,8 +393,13 @@ function getParties($result, $userId)
             
             $dateTimeF = $dateTime->format('d/m/Y H:i');
 
-            $query = "INSERT INTO impressions (user, party, clicked, date) VALUES ('$userId', '$code', '0', '$dateTimeF')";
-            queryNR($query);
+            $query = "SELECT id FROM impressions WHERE user = '$userId' AND party = '$code'";
+            $userHasSeen = queryDB($query);
+
+            if (!$userHasSeen) {
+                $query = "INSERT INTO impressions (user, party, clicked, date) VALUES ('$userId', '$code', '0', '$dateTimeF')";
+                queryNR($query);
+            }
 
             $capacity = $row["capacity"];
 
@@ -424,7 +423,7 @@ function getParties($result, $userId)
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
-            if ($differenceInDays <= 2) {
+            if ($differenceInDays <= 1) {
                 array_push($headers, 0);
             }
 
@@ -432,7 +431,7 @@ function getParties($result, $userId)
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
-            if ($differenceInDays <= 2) {
+            if ($differenceInDays <= 1) {
                 array_push($headers, 3);
             }
 
@@ -460,14 +459,6 @@ function getParties($result, $userId)
                 foreach ($dba as $dsa) {
                     if ($dsa['user'] != "none") {
                         $userHash = hash256($dsa['user']);
-
-                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-            
-                        $imageHeaders = @get_headers($imageUrl);
-            
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $userHash = hash256("default");
-                        }
 
                         $user['hash'] = $userHash;
                         $guests[] = $user;
@@ -694,6 +685,23 @@ function editUserData()
     }
 }
 
+function getHash($userHash, $urlType) {
+    // $imageUrl = "https://media.resenha.app/u/$userHash.png";
+
+    // $headers = @get_headers($imageUrl, 1);
+
+    // if ($headers && isset($headers[0])) {
+    //     $statusCode = explode(' ', $headers[0])[1];
+    //     $statusCode = intval($statusCode);
+
+    //     if ($statusCode === 200) {
+    //         return $imageUrl;
+    //     }
+    // }
+
+    return hash256("default");
+}
+
 function getUserData()
 {
     $userData = check_session($_POST['token']);
@@ -710,15 +718,7 @@ function getUserData()
     foreach ($userData as $column) {
         $userId = $column["id"];
 
-        $userHash = hash256($userId);
-
-        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-
-        $imageHeaders = @get_headers($imageUrl);
-
-        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-            $userHash = hash256("default");
-        }
+        $userHash = getHash($userId, "user");
 
         $query = "SELECT * FROM interests WHERE user = '$userId'";
         $interestsResults = queryDBRows($query);
@@ -779,15 +779,7 @@ function getUserData()
                     foreach ($partiesResults as $party) {
                         $partyId = $party["id"];
 
-                        $partyIdHash = hash256($partyId);
-
-                        $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
-
-                        $imageHeaders = @get_headers($imageUrl);
-            
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $partyIdHash = hash256("default");
-                        }
+                        $partyIdHash = getHash($partyId, "party");
 
                         $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                         $partyConfirmed = queryDB($query)[0];
@@ -820,15 +812,7 @@ function getUserData()
                 $partyId = $party["id"];
                 $partyCode = $party["code"];
 
-                $partyIdHashUser = hash256($partyId);
-
-                $imageUrl = "https://media.resenha.app/r/$partyIdHashUser.png";
-
-                $imageHeaders = @get_headers($imageUrl);
-    
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $partyIdHashUser = hash256("default");
-                }
+                $partyIdHashUser = getHash($partyId, "event");
 
                 $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                 $partyConfirmed = queryDB($query)['total_guests'];
@@ -916,15 +900,7 @@ function getUserData()
                     }
                 }
 
-                $partyIdHashId = hash256($purchasePartyId);
-
-                $imageUrl = "https://media.resenha.app/r/$partyIdHashId.png";
-
-                $imageHeaders = @get_headers($imageUrl);
-    
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $partyIdHashId = hash256("default");
-                }
+                $partyIdHashId = getHash($purchasePartyId, "event");
 
                 $temp = [
                     "hash" => $partyIdHashId,
@@ -961,15 +937,7 @@ function getUserData()
                 $query = "SELECT username FROM users WHERE id = '$commentId'";
                 $commentUsername = queryDB($query)[0];
 
-                $commentHash = hash256($commentId);
-
-                $imageUrl = "https://media.resenha.app/u/$commentHash.png";
-        
-                $imageHeaders = @get_headers($imageUrl);
-        
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $commentHash = hash256("default");
-                }
+                $commentHash = getHash($commentId, "user");
 
                 $temp = [
                     "hash" => $commentHash,
@@ -1062,15 +1030,7 @@ function getInviteData()
             $host = $row["host"];
             $id = $row["id"];
 
-            $partyHash = hash256($id);
-
-            $imageUrl = "https://media.resenha.app/r/$partyHash.png";
-
-            $imageHeaders = @get_headers($imageUrl);
-
-            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                $partyHash = hash256("default");
-            }
+            $partyHash = getHash($id, "event");
 
             $query = "SELECT name FROM users WHERE id = '$host'";
             $host = queryDB($query)[0];
@@ -1102,15 +1062,7 @@ function getInviteData()
 
                         $user['id'] = $id;
 
-                        $userHash = hash256($dsa['user']);
-
-                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-                
-                        $imageHeaders = @get_headers($imageUrl);
-                
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $userHash = hash256("default");
-                        }
+                        $userHash = getHash($dsa['user'], "user");
 
                         $user['hash'] = $userHash;
                         $user['username'] = $uname;
@@ -1686,6 +1638,43 @@ function tryToSendMessage()
 
     foreach ($userData as $column) {
         $id = $column["id"];
+        $username = $column["username"];
+
+        if ($destination == $username) {
+            returnError("chatting_yourself");
+        }
+
+        else {
+            if ($type == "dm") {
+                $query = "SELECT id FROM users WHERE username = '$destination'";
+                $destinationId = queryDB($query)[0];
+                
+                $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
+                $result = queryDB($query);
+                
+                if (!empty($result)) {
+                    $query = "SELECT id FROM followers WHERE follower = '$destinationId' AND followed = '$id'";
+                    $result = queryDB($query);
+                
+                    if (empty($result)) {
+                        returnError("not_mutual");
+                    } 
+                } 
+    
+                else {
+                    returnError("not_mutual");
+                }
+            }
+
+            else {
+                $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$destination'";
+                $isUserAGuest = queryDB($query);
+
+                if (empty($isUserAGuest)) {
+                    returnError("not_guest");
+                }
+            }
+        }
 
         $timestamp = time();
 
@@ -1733,22 +1722,35 @@ function getMessages()
         }
 
         else {
-            $query = "SELECT id FROM users WHERE username = '$code'";
-            $destinationId = queryDB($query)[0];
-
-            $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
-            $result = queryDB($query);
-
-            if (!empty($result)) {
-                $query = "SELECT id FROM followers WHERE followed = '$id' AND follower = '$destinationId'";
+            if ($type == "dm") {
+                $query = "SELECT id FROM users WHERE username = '$code'";
+                $destinationId = queryDB($query)[0];
+                
+                $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
                 $result = queryDB($query);
-
-                if (empty($result)) {
+                
+                if (!empty($result)) {
+                    $query = "SELECT id FROM followers WHERE follower = '$destinationId' AND followed = '$id'";
+                    $result = queryDB($query);
+                
+                    if (empty($result)) {
+                        returnError("not_mutual");
+                    } 
+                } 
+    
+                else {
                     returnError("not_mutual");
                 }
             }
-            
-            returnError("not_mutual");
+
+            else {
+                $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$code'";
+                $isUserAGuest = queryDB($query);
+
+                if (empty($isUserAGuest)) {
+                    returnError("not_guest");
+                }
+            }
         }
 
         if ($type == 'dm') {
@@ -1764,7 +1766,9 @@ function getMessages()
         if ($type == 'dm') {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
-        } else {
+        } 
+        
+        else {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
         }
@@ -1940,6 +1944,20 @@ function tryToCreateEvent()
         );
 
         send_message($embed, $webhook);
+    }
+}
+
+function tryToClickOnEvent() 
+{
+    $code = sanitize($_POST['party']);
+
+    $userData = check_session($_POST['token']);
+
+    foreach ($userData as $column) {
+        $id = $column["id"];
+
+        $query = "UPDATE impressions SET clicked = '1' WHERE user = '$id' AND party = '$code'";
+        queryNR($query);
     }
 }
 

@@ -55,6 +55,20 @@ export default function Feed() {
     }
   };
 
+  const setImpressionCount = async (party) => {
+    try {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'tryToClickOnEvent',
+        party: party.code,
+        token: token
+      });
+    }
+
+    catch (error) {
+      console.error(error);
+    }
+  };
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -380,18 +394,19 @@ export default function Feed() {
                         return (
                           <div key={hash}>
                             <PartyBanner
-                              imageUrl={guestsImages}
-                              eventName={title}
-                              eventImage={`https://media.resenha.app/r/${hash}.png`}
-                              eventHour={start}
-                              eventGuests={confirmed}
-                              eventMax={capacity}
-                              eventPrice={price}
-                              eventSaved={saved}
-                              eventTags={headers}
-                              eventCode={code}
-                              handleSaveButton={() => handleSaveButton(party)}
-                            />
+                                imageUrl={guestsImages}
+                                eventName={title}
+                                eventImage={`https://media.resenha.app/r/${hash}.png`}
+                                eventHour={start}
+                                eventGuests={confirmed}
+                                eventMax={capacity}
+                                eventPrice={price}
+                                eventSaved={saved}
+                                eventTags={headers}
+                                eventCode={code}
+                                handleSaveButton={() => handleSaveButton(party)}
+                                setImpressionCount={() => setImpressionCount(party)}
+                              />
                           </div>
                         );
                       })

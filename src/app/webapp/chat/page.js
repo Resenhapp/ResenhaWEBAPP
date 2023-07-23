@@ -59,7 +59,7 @@ export default function Chat() {
             });
 
             if (response.error) {
-                handleNavigation("feed");
+                window.history.back();
             }
 
             if (response && Array.isArray(response.messages)) {
@@ -84,8 +84,6 @@ export default function Chat() {
             date: now,
             sent: true
         };
-
-        
 
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
@@ -136,14 +134,14 @@ export default function Chat() {
                                         <p>Ninguém enviou mensagens nesse chat ainda 😒. Seja o primeiro!</p>
                                     ) : (
                                         [...messages].map((message, index) => (
-                                        <ChatBubble
-                                            key={index}
-                                            showImage={false}
-                                            imageUrl={message.imageUrl}
-                                            message={message.content}
-                                            timestamp={message.date.hour + ":" + message.date.minute}
-                                            sent={message.sent}
-                                        />
+                                            <ChatBubble
+                                                key={index}
+                                                showImage={false}
+                                                imageUrl={message.imageUrl}
+                                                message={message.content}
+                                                timestamp={message.date.hour + ":" + message.date.minute}
+                                                sent={message.sent}
+                                            />
                                         ))
                                     )
                                 }

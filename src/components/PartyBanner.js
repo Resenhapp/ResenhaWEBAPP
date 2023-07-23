@@ -5,8 +5,13 @@ import Image from 'next/image';
 import { partyData } from '@/src/components/PartyData';
 import BookmarkButton from './SaveButton';
 
-const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton}) => {
+const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eventImage, eventPrice, eventSaved, eventTags, handleSaveButton,  setImpressionCount}) => {
     var handleClick = (pageToGo) => {
+
+        if (setImpressionCount) {
+            setImpressionCount();
+        }
+        
         if (typeof window !== 'undefined') {
             window.location.href = `/convite/?c=${pageToGo}`;
         }
@@ -24,7 +29,7 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                         ))
                         }
                     </div>
-                    <BookmarkButton initialSavedState={handleSaveButton} className="p-8"/>
+                    <BookmarkButton handleSaveButtonI={handleSaveButton} initialSavedState={eventSaved} className="p-8"/>
                 </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>
