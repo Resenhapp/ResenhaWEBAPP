@@ -6,8 +6,6 @@ import ChatBubble from '@/src/components/ChatBubble';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Chat() {
     var token = Cookies.get('token');
@@ -53,7 +51,7 @@ export default function Chat() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest({apiUrl}, {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getMessages',
                 token: token,
                 code: chatCode,
@@ -92,7 +90,7 @@ export default function Chat() {
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
         try {
-            const response = await makeRequest({apiUrl}, {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'tryToSendMessage',
                 token: token,
                 destination: chatCode,

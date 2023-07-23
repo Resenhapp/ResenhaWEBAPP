@@ -11,8 +11,6 @@ import Map from '@/src/components/Map';
 import Modal from '@/src/components/Modal';
 import Tag from '@/src/components/Tag';
 import Cookies from 'js-cookie';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 import { useState } from "react";
 import { useEffect } from 'react';
@@ -45,7 +43,7 @@ export default function Feed() {
 
   const handleSaveButton = async (party) => {
     try {
-      const response = await makeRequest({apiUrl}, { 
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
         request: 'switchSaveEvent',
         party: party.code,
         token: token,
@@ -72,7 +70,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-        const response = await makeRequest({apiUrl}, { 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
           request: 'getFeedData',
           token: token,
         });
@@ -100,7 +98,7 @@ export default function Feed() {
         "vibe": tempUserInterests,
       };
 
-      const response = await makeRequest({apiUrl}, {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
         request: 'getFeedData',
         token: token,
         filterParameters: filterParameters
@@ -124,7 +122,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-      const response = await makeRequest({apiUrl}, {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
         request: 'getFeedData',
         token: token,
         searchTerm: searchTerm
@@ -143,7 +141,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-      const response = await makeRequest({apiUrl}, {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
         request: 'getFeedData',
         token: token,
         hype: true

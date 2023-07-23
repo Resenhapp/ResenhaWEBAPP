@@ -7,8 +7,6 @@ import Timer from '@/src/components/Timer';
 import Back from '@/src/components/Back';
 import { useState } from 'react';
 import axios from 'axios';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Credit() {
     const [owner, setOwner] = useState('');
@@ -28,7 +26,7 @@ export default function Credit() {
             const minor = Cookies.get('minor');
             const method = Cookies.get('method').toLowerCase();
 
-            const response = await makeRequest({apiUrl}, { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
         } 
         
         catch (error) {

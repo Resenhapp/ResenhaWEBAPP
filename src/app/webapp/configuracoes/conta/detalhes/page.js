@@ -6,8 +6,6 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function AccountDetails() {
     const token = Cookies.get('token');
@@ -116,7 +114,7 @@ export default function AccountDetails() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest({apiUrl}, {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'editUserData',
             token: token,
             data: data
@@ -132,7 +130,7 @@ export default function AccountDetails() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest({apiUrl}, {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token
             });

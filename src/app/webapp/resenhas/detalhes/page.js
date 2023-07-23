@@ -8,8 +8,6 @@ import Loading from "@/src/components/Loading";
 import React from 'react';
 import { useState } from "react";
 import { useEffect } from 'react';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function EventDetails() {
     var u = Cookies.get('username');
@@ -50,7 +48,7 @@ export default function EventDetails() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest({apiUrl}, {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getChatMessages',
                 username: u,
                 validator: validator,

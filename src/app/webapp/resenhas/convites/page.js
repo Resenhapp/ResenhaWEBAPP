@@ -8,8 +8,6 @@ import PageHeader from '@/src/components/PageHeader';
 import MyParty from '@/src/components/MyParty';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 import { useState } from "react";
 import { useEffect } from 'react';
@@ -39,7 +37,7 @@ export default function MyInvites() {
   
     const fetchData = async () => {
         try {
-          const response = await makeRequest({apiUrl}, {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
               request: 'getUserData',
               token: token
           });

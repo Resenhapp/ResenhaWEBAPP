@@ -3,15 +3,11 @@
 import InputField from '@/src/components/InputField';
 import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
-import GoogleButton from '@/src/components/GoogleButton';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Login() {
   const axios = require('axios');
@@ -35,7 +31,7 @@ export default function Login() {
 
   const handleClick = async () => {
     try {
-      const response = await makeRequest({apiUrl}, {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
         request: 'tryToAuthenticate', 
         email: email, 
         password: password 

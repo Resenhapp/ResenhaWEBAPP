@@ -11,8 +11,6 @@ import { useState } from 'react';
 import Cookies from 'js-cookie';
 import React, { useEffect } from 'react';
 import Loading from '@/src/components/Loading';
-import {apiUrl} from '@/src/components/globalVariables';
-import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Info() {
     const code = Cookies.get('code');
@@ -64,7 +62,7 @@ export default function Info() {
     
     const fetchData = async () => {
         try {
-            const response = await makeRequest({apiUrl}, { request: 'getInviteData', code: code });
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'getInviteData', code: code });
             setData(response);
         }
 
