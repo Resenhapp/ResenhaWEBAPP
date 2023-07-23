@@ -31,10 +31,32 @@ export default function EditEvent() {
     }
 
 
+    const logthecontent = () => {
+        console.log(name);
+        console.log(hour);
+    }
+
+
     const axios = require('axios');
     const qs = require('qs');
+    var currentImage = 'https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png';
 
     const [data, setData] = useState(null);
+
+    const [startHour, setStartHour] = useState('');
+    const [limit, setLimit] = useState('');
+    const [isVip, setIsVip] = useState(false);
+    const [vipLimit, setVipLimit] = useState('');
+    const [limitError, setLimitError] = useState('');
+    const [address, setAddress] = useState('');
+    const [isEndTime, setIsEndTime] = useState(false);
+    const [image, setImage] = useState(currentImage);
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [endHour, setEndHour] = useState('');
+    const [dateError, setDateError] = useState('');
+    const [date, setDate] = useState('');
+    const [description, setDescription] = useState('');
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -130,7 +152,6 @@ export default function EditEvent() {
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
 
-    const [description, setDescription] = useState('');
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
@@ -139,7 +160,6 @@ export default function EditEvent() {
         toggleEditDescriptionPageOpen();
     };
 
-    const [address, setAddress] = useState('');
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
     };
@@ -147,7 +167,7 @@ export default function EditEvent() {
         toggleEditAddressPageOpen();
     };
 
-    const [date, setDate] = useState('');
+    
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -187,7 +207,7 @@ export default function EditEvent() {
         return { day, month };
     }
 
-    const [dateError, setDateError] = useState('');
+
     const { day, month } = formatDate(date);
 
     const getDayOfWeek = (dateString) => {
@@ -201,13 +221,11 @@ export default function EditEvent() {
 
     const dayOfWeek = getDayOfWeek(date);
 
-    const [isEndTime, setIsEndTime] = useState(false);
-
     const handleToggle = () => {
         setIsEndTime(!isEndTime);
     };
 
-    const [startHour, setStartHour] = useState('');
+   
     const handleStartHourChange = (event) => {
         let inputHour = event.target.value;
 
@@ -220,7 +238,6 @@ export default function EditEvent() {
         setStartHour(inputHour);
     };
 
-    const [endHour, setEndHour] = useState('');
     const handleEndHourChange = (event) => {
         let inputHour = event.target.value;
 
@@ -237,20 +254,11 @@ export default function EditEvent() {
         toggleEditHourPageOpen();
     };
 
-
-
-    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC 
-    const [limit, setLimit] = useState('');
-    const [isVip, setIsVip] = useState(false);
-    const [vipLimit, setVipLimit] = useState('');
-    const [limitError, setLimitError] = useState('');
-
     useEffect(() => {
         if (!isVip) {
           setVipLimit(0);
         }
       }, [isVip]);
-
 
     const handleToggleVip = () => {
         setIsVip(!isVip);
@@ -281,10 +289,6 @@ export default function EditEvent() {
     };
 
 
-    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC    // IMAGE LOGIC
-    var currentImage = 'https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png';
-    const [image, setImage] = useState(currentImage);
-
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -303,10 +307,6 @@ export default function EditEvent() {
     };
 
 
-    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC    // NAME LOGIC
-
-    const [name, setName] = useState('');
-
     const handleNameChange = (event) => {
         setName(event.target.value);
     };
@@ -315,9 +315,7 @@ export default function EditEvent() {
         toggleEditNamePageOpen();
     };
 
-    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC    // PRICE LOGIC
 
-    const [price, setPrice] = useState('');
 
     const handlePriceChange = (event) => {
         const onlyNumbers = event.target.value.replace(/\D/g, "");
@@ -755,7 +753,7 @@ export default function EditEvent() {
                         </div>
                         <div className="flex flex-row justify-around w-full">
                             <button className="py-4 w-2/3 px-8">Voltar</button>
-                            <Button label={'Salvar'} icon={'check'} action={() => handleNavigation('perfil')} iconSide='right' height={1} width={1} textAlign='center' />
+                            <Button label={'Salvar'} icon={'check'} action={() => logthecontent()} iconSide='right' height={1} width={1} textAlign='center' />
                         </div>
                     </div>
                 </section>
