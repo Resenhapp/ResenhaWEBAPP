@@ -31,12 +31,6 @@ export default function EditEvent() {
     }
 
 
-    const logthecontent = () => {
-        console.log(name);
-        console.log(hour);
-    }
-
-
     const axios = require('axios');
     const qs = require('qs');
     var currentImage = 'https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png';
@@ -57,6 +51,9 @@ export default function EditEvent() {
     const [dateError, setDateError] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
+    const [acceptsPix, setAcceptsPix] = useState(true);
+    const [acceptsCard, setAcceptsCard] = useState(true);
+    const [acceptsCash, setAcceptsCash] = useState(true);
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -143,31 +140,20 @@ export default function EditEvent() {
         }
     };
 
-    const saveTags = () => {
-        setEventTags(tempEventTags);
-        toggleEditTagsPageOpen();
-    };
+    
 
     const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
-
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
-    };
-    
-    const saveDescription = () => {
-        toggleEditDescriptionPageOpen();
     };
 
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
     };
-    const saveAddress = () => {
-        toggleEditAddressPageOpen();
-    };
 
-    
+
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -176,28 +162,7 @@ export default function EditEvent() {
         setDate(input);
     };
 
-    const saveDate = () => {
-        const [day, month, year] = date.split('/').map(Number);
-        const currentYear = new Date().getFullYear();
-
-        let maxDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-        if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
-            maxDaysInMonth[1] = 29;
-        }
-
-        if (year < currentYear) {
-            setDateError('O ano inserido é inválido. Por favor, insira um ano atual ou futuro.');
-        } else if (month < 1 || month > 12) {
-            setDateError('O mês inserido é inválido. Por favor, insira um mês entre 01 e 12.');
-        } else if (day < 1 || day > maxDaysInMonth[month - 1]) {
-            setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
-        } else {
-            setDateError('');
-            toggleEditDatePageOpen();
-        }
-    };
-
+    
     const formatDate = (dateString) => {
         const months = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
         const parts = dateString.split("/");
@@ -206,7 +171,6 @@ export default function EditEvent() {
 
         return { day, month };
     }
-
 
     const { day, month } = formatDate(date);
 
@@ -225,7 +189,7 @@ export default function EditEvent() {
         setIsEndTime(!isEndTime);
     };
 
-   
+
     const handleStartHourChange = (event) => {
         let inputHour = event.target.value;
 
@@ -250,15 +214,12 @@ export default function EditEvent() {
         setEndHour(inputHour);
     };
 
-    const saveHour = () => {
-        toggleEditHourPageOpen();
-    };
-
+    
     useEffect(() => {
         if (!isVip) {
-          setVipLimit(0);
+            setVipLimit(0);
         }
-      }, [isVip]);
+    }, [isVip]);
 
     const handleToggleVip = () => {
         setIsVip(!isVip);
@@ -274,19 +235,7 @@ export default function EditEvent() {
         setVipLimit(onlyNumbers);
     };
 
-    const saveLimit = () => {
-        if (limit <= 0) {
-            setLimitError('O número de vagas normais deve ser maior que zero.');
-            return;
-        }
-        if (isVip && vipLimit <= 0) {
-            setLimitError('O número de vagas VIP deve ser maior que zero quando o modo VIP está ativado.');
-            return;
-        }
-        
-        setLimitError('');
-        toggleEditMaxGuestsPageOpen();
-    };
+    
 
 
     const handleImageChange = (event) => {
@@ -311,12 +260,6 @@ export default function EditEvent() {
         setName(event.target.value);
     };
 
-    const saveName = () => {
-        toggleEditNamePageOpen();
-    };
-
-
-
     const handlePriceChange = (event) => {
         const onlyNumbers = event.target.value.replace(/\D/g, "");
         const formattedPrice = (parseInt(onlyNumbers) / 100).toLocaleString('pt-BR', {
@@ -328,8 +271,87 @@ export default function EditEvent() {
         setPrice(formattedPrice);
     };
 
+    // implementar com api
+    const saveName = () => {
+        toggleEditNamePageOpen();
+        console.log(name);
+    };
+
+    // implementar com api
     const savePrice = () => {
         toggleEditPricePageOpen();
+        console.log(price);
+        console.log(acceptsPix);
+        console.log(acceptsCard);
+        console.log(acceptsCash);
+    };
+
+    // implementar com api
+    const saveDate = () => {
+        const [day, month, year] = date.split('/').map(Number);
+        const currentYear = new Date().getFullYear();
+
+        let maxDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
+            maxDaysInMonth[1] = 29;
+        }
+
+        if (year < currentYear) {
+            setDateError('O ano inserido é inválido. Por favor, insira um ano atual ou futuro.');
+        } else if (month < 1 || month > 12) {
+            setDateError('O mês inserido é inválido. Por favor, insira um mês entre 01 e 12.');
+        } else if (day < 1 || day > maxDaysInMonth[month - 1]) {
+            setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
+        } else {
+            setDateError('');
+            toggleEditDatePageOpen();
+
+            console.log(day,month,year)
+        }
+    };
+
+    // implementar com api
+     const saveHour = () => {
+        toggleEditHourPageOpen();
+        console.log(startHour)
+        console.log(endHour)
+    };
+
+    // implementar com api
+    const saveLimit = () => {
+        if (limit <= 0) {
+            setLimitError('O número de vagas normais deve ser maior que zero.');
+            return;
+        }
+        if (isVip && vipLimit <= 0) {
+            setLimitError('O número de vagas VIP deve ser maior que zero quando o modo VIP está ativado.');
+            return;
+        }
+
+        setLimitError('');
+        toggleEditMaxGuestsPageOpen();
+        console.log(limit);
+        console.log(vipLimit);
+    };
+
+    // implementar com api
+    const saveAddress = () => {
+        toggleEditAddressPageOpen();
+        console.log(address)
+    };
+
+    // implementar com api
+    const saveDescription = () => {
+        toggleEditDescriptionPageOpen();
+        console.log(description)
+    };    
+
+    // implementar com api
+    const saveTags = () => {
+        setEventTags(tempEventTags);
+        toggleEditTagsPageOpen();
+        console.log(tempEventTags)
     };
 
     const makeRequest = async (url, data) => {
@@ -350,20 +372,20 @@ export default function EditEvent() {
                 token: token,
                 code: partyCode
             });
-            
+
             setData(response);
 
             setName(response.title);
-            setDate(response.date.day+"/"+response.date.rawMonth+"/"+response.date.year);
+            setDate(response.date.day + "/" + response.date.month + "/" + response.date.year);
             setStartHour(response.hour.start);
             setEndHour(response.hour.end);
             setLimit(response.guests.capacity);
             setVipLimit('0');
             setAddress(response.address);
             setDescription(response.description);
-            setPrice(response.pricePerItem);
-        } 
-        
+            setPrice(response.ticket);
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -371,7 +393,6 @@ export default function EditEvent() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) {
@@ -382,14 +403,14 @@ export default function EditEvent() {
         );
     }
 
-    if(data.error) {
+    if (data.error) {
         return (
             <div className="h-screen w-full flex flex-col justify-between content-center items-center">
                 <PageHeader
-                pageTitle={'Detalhes'}
-                isBack={true}
-                checker={() => { null }}
-            />
+                    pageTitle={'Detalhes'}
+                    isBack={true}
+                    checker={() => { null }}
+                />
                 <h1 className="w-[90%] h-full flex justify-center items-center content-center text-3xl text-center">
                     Desculpe, esta resenha não existe ou foi excluída. 🫤
                 </h1>
@@ -401,8 +422,6 @@ export default function EditEvent() {
 
     return (
         <div className="bg-purpleT1 h-screen min-h-fit">
-
-            {/* TITULO */}
             <EditInfoPage
                 isOpen={isEditNamePageOpen}
                 pageTitle={'Nome da resenha'}
@@ -423,7 +442,6 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-            {/* DATA */}
             <EditInfoPage
                 isOpen={isEditDatePageOpen}
                 pageTitle={'Data da resenha'}
@@ -449,7 +467,7 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
-            {/* HORARIO */}
+
             <EditInfoPage
                 isOpen={isEditHourPageOpen}
                 pageTitle={'Horário da resenha'}
@@ -485,8 +503,6 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-
-            {/* LIMITE */}
             <EditInfoPage
                 isOpen={isEditMaxGuestsPageOpen}
                 pageTitle={'Limite de convidados'}
@@ -514,14 +530,13 @@ export default function EditEvent() {
                 </div>}
                 <Toggle labelText={'Vagas VIP'} showLabel={true} showQuestion={true} onToggle={handleToggleVip} startToggled={isVip} />
                 <div>
-                {limitError && <div className='text-red-500'>{limitError}</div>} {/* Error message div */}
+                    {limitError && <div className='text-red-500'>{limitError}</div>}
                     <p className='text-sm'>
                         O limite de convidados é o número máximo de pessoas que você pode receber em sua resenha. Este é o número que os convidados verão ao acessar o seu convite, o que os ajudará a entender a escala e a exclusividade do evento.
                     </p>
                 </div>
             </EditInfoPage>
 
-            {/* ENDERECO */}
             <EditInfoPage isOpen={isEditAddressPageOpen} pageTitle={'Endereço da resenha'} saveAction={saveAddress} togglePage={toggleEditAddressPageOpen}>
                 <div className='w-full'>
                     <input
@@ -540,15 +555,14 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-            {/* DESCRICAO */}
             <EditInfoPage isOpen={isEditDescriptionPageOpen} saveAction={saveDescription} pageTitle={'Descrição da resenha'} togglePage={toggleEditDescriptionPageOpen}>
                 <div className='w-full'>
                     <textarea
                         rows="4"
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
                         placeholder='Descrição da resenha'
-                        value={description}  // O valor do textarea agora é controlado pelo estado 'description'
-                        onChange={handleDescriptionChange}  // Atualiza o estado 'description' toda vez que o usuário altera o conteúdo do textarea
+                        value={description}
+                        onChange={handleDescriptionChange}
                     ></textarea>
                 </div>
                 <div>
@@ -559,7 +573,6 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-            {/* TAGS */}
             <EditInfoPage isOpen={isEditTagsPageOpen} pageTitle={'Tags da resenha'} saveAction={saveTags} togglePage={toggleEditTagsPageOpen}>
                 <div className='w-full'>
                     <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
@@ -586,7 +599,6 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
-            {/* PREÇO */}
             <EditInfoPage
                 isOpen={isEditPricePageOpen}
                 pageTitle={'Preço do Evento'}
@@ -603,9 +615,9 @@ export default function EditEvent() {
                 </div>
 
                 <div>
-                    <Toggle labelText={'Pagamento com PIX'} showLabel={true} startToggled={true} showQuestion={true} />
-                    <Toggle labelText={'Pagamento com cartão'} showLabel={true} startToggled={true} showQuestion={true} />
-                    <Toggle labelText={'Pagamento com dinheiro'} showLabel={true} startToggled={true} showQuestion={true} />
+                    <Toggle onToggle={setAcceptsPix} labelText={'Pagamento com PIX'} showLabel={true} startToggled={true} showQuestion={true} />
+                    <Toggle onToggle={setAcceptsCard} labelText={'Pagamento com cartão'} showLabel={true} startToggled={true} showQuestion={true} />
+                    <Toggle onToggle={setAcceptsCash} labelText={'Pagamento com dinheiro'} showLabel={true} startToggled={true} showQuestion={true} />
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -658,7 +670,7 @@ export default function EditEvent() {
                         </div>
                     </div>
 
-                    
+
                     <div className="w-full gap-2 flex flex-col p-5">
                         <div className="flex flex-row justify-between items-center w-full max-w-screen-xs">
                             <div
@@ -680,12 +692,12 @@ export default function EditEvent() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-around gap-2">
-                            <button onClick={toggleEditDatePageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 w-fit h-fit p-2 rounded-2xl">
+                            <button onClick={toggleEditDatePageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 w-full h-fit p-2 rounded-2xl">
                                 <div className="flex flex-row gap-2 items-center">
                                     <p className="font-bold">{dayOfWeek}</p>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p>{day} de {month}</p>
+                                <p className="flex flex-row">{day} de {month}</p>
                             </button>
                             <div onClick={toggleEditHourPageOpen} className="bg-transparent ring-1 ring-inset min-w-fit ring-whiteT1 rounded-2xl h-fit p-2 flex flex-row gap-2 w-full items-center">
                                 <div className="flex flex-col">
@@ -752,8 +764,8 @@ export default function EditEvent() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-around w-full">
-                            <button className="py-4 w-2/3 px-8">Voltar</button>
-                            <Button label={'Salvar'} icon={'check'} action={() => logthecontent()} iconSide='right' height={1} width={1} textAlign='center' />
+                            {/* <button className="py-4 w-2/3 px-8">Voltar</button>
+                            <Button label={'Salvar'} icon={'check'} action={() => logthecontent()} iconSide='right' height={1} width={1} textAlign='center' /> */}
                         </div>
                     </div>
                 </section>
