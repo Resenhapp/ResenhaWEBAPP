@@ -1,9 +1,4 @@
-import InputField from '@/src/components/InputField';
-import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
-import GoogleButton from '@/src/components/GoogleButton';
-import Toggle from '@/src/components/Toggle';
-import Link from 'next/link';
 
 export const metadata = {
     title: 'Resenha.app • E-mail enviado',
