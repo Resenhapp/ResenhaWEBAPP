@@ -1732,9 +1732,30 @@ function getMessages()
             returnError("chatting_yourself");
         }
 
+        else {
+            $query = "SELECT id FROM users WHERE username = '$code'";
+            $destinationId = queryDB($query)[0];
+
+            $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
+            $result = queryDB($query);
+
+            if (!empty($result)) {
+                $query = "SELECT id FROM followers WHERE followed = '$id' AND follower = '$destinationId'";
+                $result = queryDB($query);
+
+                if (empty($result)) {
+                    returnError("not_mutual");
+                }
+            }
+            
+            returnError("not_mutual");
+        }
+
         if ($type == 'dm') {
             $query = "SELECT id FROM users WHERE username = '$code'";
-        } else {
+        } 
+        
+        else {
             $query = "SELECT id FROM parties WHERE code = '$code'";
         }
 
