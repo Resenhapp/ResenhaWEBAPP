@@ -15,7 +15,6 @@ import Comment from '@/src/components/Comment';
 
 import { interestsData } from '@/src/components/interestsData';
 
-
 export default function Profile() {
     var token = Cookies.get('token');
 
@@ -133,7 +132,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
-                                            <SendMessageButton onClick={() => handleNavigation('/chat')}/>
+                                            <SendMessageButton onClick={() => handleNavigation('/chat?u='+profile)}/>
                                         </div>
                                     )}
                                 </div>
@@ -184,7 +183,7 @@ export default function Profile() {
                                         <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                         {partiesWent.some((party) => party.used !== 1) && (
                                             <div className='text-purpleT5'>
-                                            Vou
+                                                Vou
                                             </div>
                                         )}
                                         {partiesWent.map((party) => (
@@ -194,14 +193,14 @@ export default function Profile() {
                                                 imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                                                 partyGuests={party.confirmed}
                                                 partyDate={party.date}
-                                                partyHour={party.time}
+                                                partyHour={party.start}
                                                 partyName={party.name}
                                             />
                                             ) : null
                                         ))}
                                         {partiesWent.some((party) => party.used === 1) && (
                                             <div className='text-purpleT5'>
-                                            Fui
+                                                Fui
                                             </div>
                                         )}
                                         {partiesWent.map((party) => (

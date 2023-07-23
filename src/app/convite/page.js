@@ -25,7 +25,7 @@ export default function Invite() {
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
-        code = urlParams.get('code');
+        code = urlParams.get('c');
     }
 
     const handleNextClick = () => {
@@ -96,7 +96,7 @@ export default function Invite() {
         );
     }
 
-    const { ticket, date, guests, hour, address, host, title, description, users, tags } = data;
+    const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
 
     const renderDescription = () => {
         if (isExpanded) {
@@ -155,8 +155,8 @@ export default function Invite() {
     const handleShare = () => {
         const shareData = {
             title: title,
-            text: `Confira essa incrível ${title}!`,
-            url: "https://example.com/resenha",
+            text: `Que tal colar no ${title}? Só confirmar pelo link: https://resenha.app/convite?c=${code}`,
+            url: `https://resenha.app/convite?c=${code}`,
         };
 
         if (navigator.share) {
@@ -184,7 +184,7 @@ export default function Invite() {
             <section className="relative">
                 <div className="relative">
                     <Image
-                        src="https://resenha.app/publico/recursos/resenhas/DGPcBwzI.png"
+                        src={`https://media.resenha.app/r/${hash}.png`}
                         alt="Picture of the author"
                         layout=""
                         width={300}
@@ -301,16 +301,25 @@ export default function Invite() {
                                 </div>
                             </div>
                             <div className="flex flex-col mb-4 w-full">
-                                <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
+                            {users.length > 0 && (
+                                <div>
+                                    <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
                                     Quem vai:
-                                </h1>
-                                <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
+                                    </h1>
+                                    <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
                                     {users.map((user) => (
                                         <div key={user.id}>
-                                            <UserPortrait isBlurried={false} imageUrl={`https://media.resenha.app/u/${user.hash}.png`} userName={user.username} userId={user.id}/>
+                                        <UserPortrait
+                                            isBlurried={false}
+                                            imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
+                                            userName={user.username}
+                                            userId={user.id}
+                                        />
                                         </div>
                                     ))}
+                                    </div>
                                 </div>
+                            )}
                             </div>
                             <div className="justify-center align-center w-full max-w-screen-xs flex mb-3">
                                 <h1 className="font-regular">

@@ -43,7 +43,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         } else {
           filled(false);
         }
-      }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
+    }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
     const handleDateSelect = (day, month, year) => {
         setSelectedDay(day);

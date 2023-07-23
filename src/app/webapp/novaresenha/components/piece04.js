@@ -44,10 +44,14 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
                 return tag;
             }
         });
+        
         setAllTags(updatedTags);
+
         if (updatedTags.find(tag => tag.id === tagId).selected) {
             setTempEventTags([...tempEventTags, tagId]);
-        } else {
+        } 
+        
+        else {
             setTempEventTags(tempEventTags.filter(tagIdTemp => tagIdTemp !== tagId));
         }
     };
@@ -55,6 +59,7 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
     const saveTags = () => {
         setEventTags(tempEventTags);
         toggleEditTagsPageOpen();
+        selectedTags(tempEventTags);
     };
 
     const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
