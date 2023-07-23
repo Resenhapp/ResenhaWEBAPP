@@ -36,7 +36,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
   
     const fetchData = async () => {
       try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', {
+        const response = await makeRequest('https://api.resenha.app/', {
           request: 'getUserData',
           token: token
         });
@@ -51,7 +51,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
   
     const checkIfUserNotified = async () => {
       try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', {
+        const response = await makeRequest('https://api.resenha.app/', {
           request: 'getUserData',
           token: token,
           requested: 'notified'

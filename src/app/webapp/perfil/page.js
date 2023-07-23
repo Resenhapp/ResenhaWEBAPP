@@ -55,7 +55,7 @@ export default function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
+            const response = await makeRequest('https://api.resenha.app/', {
                 request: 'getUserData',
                 token: token,
                 profile: profile
@@ -76,7 +76,7 @@ export default function Profile() {
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
+            const response = await makeRequest('https://api.resenha.app/', {
                 request: 'switchFollowUser',
                 token: token,
                 profile: profile
@@ -220,7 +220,7 @@ export default function Profile() {
                                 )}
 
                                 {activeTab === 'Comentários' && (
-                                    <div> {/* CONTEUDO DE COMENTÁRIOS */}
+                                    <div>
                                         <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                         {comments.map((comment) => (
                                             <div key={comment.id}>
@@ -231,7 +231,7 @@ export default function Profile() {
                                                     comment={comment.content}
                                                     day={parseInt(comment.date.split('/')[0])}
                                                     month={parseInt(comment.date.split('/')[1])}
-                                                    userUrl={`http://localhost:3000/webapp/perfil?u=${comment.username}`}
+                                                    userUrl={`https://resenha.app/webapp/perfil?u=${comment.username}`}
                                                 />
                                             </div>
                                         ))}

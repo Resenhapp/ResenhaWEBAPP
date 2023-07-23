@@ -62,7 +62,7 @@ export default function Info() {
     
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getInviteData', code: code });
+            const response = await makeRequest('https://api.resenha.app/', { request: 'getInviteData', code: code });
             setData(response);
         }
 

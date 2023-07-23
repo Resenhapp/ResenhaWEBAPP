@@ -43,7 +43,7 @@ export default function Feed() {
 
   const handleSaveButton = async (party) => {
     try {
-      const response = await makeRequest('http://localhost/resenha.app/api/', { 
+      const response = await makeRequest('https://api.resenha.app/', { 
         request: 'switchSaveEvent',
         party: party.code,
         token: token,
@@ -70,7 +70,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', { 
+        const response = await makeRequest('https://api.resenha.app/', { 
           request: 'getFeedData',
           token: token,
         });
@@ -98,7 +98,7 @@ export default function Feed() {
         "vibe": tempUserInterests,
       };
 
-      const response = await makeRequest('http://localhost/resenha.app/api/', {
+      const response = await makeRequest('https://api.resenha.app/', {
         request: 'getFeedData',
         token: token,
         filterParameters: filterParameters
@@ -122,7 +122,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-      const response = await makeRequest('http://localhost/resenha.app/api/', {
+      const response = await makeRequest('https://api.resenha.app/', {
         request: 'getFeedData',
         token: token,
         searchTerm: searchTerm
@@ -141,7 +141,7 @@ export default function Feed() {
     setLoading(true);
 
     try {
-      const response = await makeRequest('http://localhost/resenha.app/api/', {
+      const response = await makeRequest('https://api.resenha.app/', {
         request: 'getFeedData',
         token: token,
         hype: true

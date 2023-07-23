@@ -26,7 +26,7 @@ export default function Credit() {
             const minor = Cookies.get('minor');
             const method = Cookies.get('method').toLowerCase();
 
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
+            const response = await makeRequest('https://api.resenha.app/', { request: 'tryToCreateGuest', method: method, code: code, name: name, birth: minor, email: email});
         } 
         
         catch (error) {

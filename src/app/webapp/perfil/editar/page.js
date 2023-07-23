@@ -54,7 +54,7 @@ export default function EditProfile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
+            const response = await makeRequest('https://api.resenha.app/', {
                 request: 'getUserData',
                 token: token
             });
@@ -87,7 +87,7 @@ export default function EditProfile() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('http://localhost/resenha.app/api/', {
+          const response = await makeRequest('https://api.resenha.app/', {
             request: 'editUserData',
             token: token,
             data: data
