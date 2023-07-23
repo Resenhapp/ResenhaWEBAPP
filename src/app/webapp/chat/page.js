@@ -51,7 +51,7 @@ export default function Chat() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
+            const response = await makeRequest('https://api.resenha.app/', {
                 request: 'getMessages',
                 token: token,
                 code: chatCode,
@@ -90,7 +90,7 @@ export default function Chat() {
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', {
+            const response = await makeRequest('https://api.resenha.app/', {
                 request: 'tryToSendMessage',
                 token: token,
                 destination: chatCode,

@@ -54,7 +54,7 @@ export default function NewEvent() {
       };
 
       try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', { 
+        const response = await makeRequest('https://api.resenha.app/', { 
           request: 'tryToCreateEvent',
           token: token,
           details: details

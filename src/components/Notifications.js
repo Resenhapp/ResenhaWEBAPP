@@ -34,7 +34,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
   
     const clearUserNotifications = async () => {
       try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', {
+        const response = await makeRequest('https://api.resenha.app/', {
           request: 'clearUserNotifications',
           token: token
         });
@@ -47,7 +47,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
   
     const seeUserNotifications = async () => {
       try {
-        const response = await makeRequest('http://localhost/resenha.app/api/', {
+        const response = await makeRequest('https://api.resenha.app/', {
           request: 'seeUserNotifications',
           token: token
         });
@@ -60,7 +60,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
 
     const getUserData = async () => {
         try {
-          const response = await makeRequest('http://localhost/resenha.app/api/', {
+          const response = await makeRequest('https://api.resenha.app/', {
             request: 'getUserData',
             token: token,
             requested: 'notifications'

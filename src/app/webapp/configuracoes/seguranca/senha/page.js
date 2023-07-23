@@ -77,7 +77,7 @@ export default function PasswordConfig() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('http://localhost/resenha.app/api/', {
+          const response = await makeRequest('https://api.resenha.app/', {
             request: 'editUserData',
             token: token,
             data: data

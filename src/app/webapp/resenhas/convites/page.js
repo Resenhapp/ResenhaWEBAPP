@@ -37,7 +37,7 @@ export default function MyInvites() {
   
     const fetchData = async () => {
         try {
-          const response = await makeRequest('http://localhost/resenha.app/api/', {
+          const response = await makeRequest('https://api.resenha.app/', {
               request: 'getUserData',
               token: token
           });

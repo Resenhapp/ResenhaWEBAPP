@@ -25,7 +25,7 @@ export default function Help() {
     const [data, setData] = useState(null);
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getHelpData'});
+            const response = await makeRequest('https://api.resenha.app/', { request: 'getHelpData'});
             setData(response);
         }
 

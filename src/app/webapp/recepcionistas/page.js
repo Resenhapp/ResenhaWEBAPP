@@ -27,7 +27,7 @@ export default function Concierges() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('http://localhost/resenha.app/api/', { request: 'getUserData', id: id });
+            const response = await makeRequest('https://api.resenha.app/', { request: 'getUserData', id: id });
             setData(response);
         }
 
