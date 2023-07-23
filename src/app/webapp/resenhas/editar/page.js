@@ -101,7 +101,7 @@ export default function EditEvent() {
         setIsEditPricePageOpen(!isEditPricePageOpen);
     };
 
-    const [eventTags, setEventTags] = useState([1, 2, 4]);
+    const [eventTags, setEventTags] = useState([]);
     const [tempEventTags, setTempEventTags] = useState(eventTags);
 
     const [allTags, setAllTags] = useState(
@@ -140,8 +140,6 @@ export default function EditEvent() {
         }
     };
 
-    
-
     const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
     const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
 
@@ -153,7 +151,6 @@ export default function EditEvent() {
         setAddress(event.target.value);
     };
 
-
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -162,7 +159,6 @@ export default function EditEvent() {
         setDate(input);
     };
 
-    
     const formatDate = (dateString) => {
         const months = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
         const parts = dateString.split("/");
@@ -187,8 +183,11 @@ export default function EditEvent() {
 
     const handleToggle = () => {
         setIsEndTime(!isEndTime);
-    };
 
+        if (isEndTime) {
+            setEndHour("none");
+        }
+    };
 
     const handleStartHourChange = (event) => {
         let inputHour = event.target.value;
@@ -235,9 +234,6 @@ export default function EditEvent() {
         setVipLimit(onlyNumbers);
     };
 
-    
-
-
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -255,7 +251,6 @@ export default function EditEvent() {
         setImage(null);
     };
 
-
     const handleNameChange = (event) => {
         setName(event.target.value);
     };
@@ -271,23 +266,64 @@ export default function EditEvent() {
         setPrice(formattedPrice);
     };
 
-    // implementar com api
-    const saveName = () => {
-        toggleEditNamePageOpen();
-        console.log(name);
+    const sendEditRequest = async (data) => {
+        try {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'editEventData',
+            token: token,
+            code: partyCode,
+            data: data
+          });
+      
+          return response;
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
     };
 
-    // implementar com api
-    const savePrice = () => {
-        toggleEditPricePageOpen();
-        console.log(price);
+    const saveName = async () => {
+        const data = {
+            name: name
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditNamePageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    const savePrice = async () => {
+        const data = {
+            price: price
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditPricePageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+
         console.log(acceptsPix);
         console.log(acceptsCard);
         console.log(acceptsCash);
     };
 
-    // implementar com api
-    const saveDate = () => {
+    const saveDate = async () => {
         const [day, month, year] = date.split('/').map(Number);
         const currentYear = new Date().getFullYear();
 
@@ -299,59 +335,143 @@ export default function EditEvent() {
 
         if (year < currentYear) {
             setDateError('O ano inserido é inválido. Por favor, insira um ano atual ou futuro.');
-        } else if (month < 1 || month > 12) {
+        } 
+        
+        else if (month < 1 || month > 12) {
             setDateError('O mês inserido é inválido. Por favor, insira um mês entre 01 e 12.');
-        } else if (day < 1 || day > maxDaysInMonth[month - 1]) {
+        } 
+        
+        else if (day < 1 || day > maxDaysInMonth[month - 1]) {
             setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
-        } else {
+        } 
+        
+        else {
             setDateError('');
-            toggleEditDatePageOpen();
 
-            console.log(day,month,year)
+            const data = {
+                date: day+"/"+month+"/"+year
+            };
+        
+            try {
+                const response = await sendEditRequest(data);
+          
+                if (!response.error) {
+                    toggleEditDatePageOpen();
+                }
+            } 
+            
+            catch (error) {
+                console.error(error);
+            }
         }
     };
 
-    // implementar com api
-     const saveHour = () => {
-        toggleEditHourPageOpen();
-        console.log(startHour)
-        console.log(endHour)
+    const saveHour = async () => {
+        const data = {
+            start: startHour,
+            end: endHour
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditHourPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    // implementar com api
-    const saveLimit = () => {
+    const saveLimit = async () => {
         if (limit <= 0) {
             setLimitError('O número de vagas normais deve ser maior que zero.');
             return;
         }
+
         if (isVip && vipLimit <= 0) {
             setLimitError('O número de vagas VIP deve ser maior que zero quando o modo VIP está ativado.');
             return;
         }
 
         setLimitError('');
-        toggleEditMaxGuestsPageOpen();
-        console.log(limit);
+
+        const data = {
+            capacity: limit
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditMaxGuestsPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+
         console.log(vipLimit);
     };
 
-    // implementar com api
-    const saveAddress = () => {
-        toggleEditAddressPageOpen();
-        console.log(address)
+    const saveAddress = async () => {
+        const data = {
+            address: address
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditAddressPageOpen();
+
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
-    // implementar com api
-    const saveDescription = () => {
-        toggleEditDescriptionPageOpen();
-        console.log(description)
+    const saveDescription = async () => {
+        const data = {
+            description: description
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditDescriptionPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };    
 
-    // implementar com api
-    const saveTags = () => {
+    const saveTags = async () => {
         setEventTags(tempEventTags);
-        toggleEditTagsPageOpen();
-        console.log(tempEventTags)
+
+        const data = {
+            tags: tempEventTags
+        };
+    
+        try {
+            const response = await sendEditRequest(data);
+      
+            if (!response.error) {
+                toggleEditTagsPageOpen();
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
     };
 
     const makeRequest = async (url, data) => {
@@ -378,12 +498,30 @@ export default function EditEvent() {
             setName(response.title);
             setDate(response.date.day + "/" + response.date.month + "/" + response.date.year);
             setStartHour(response.hour.start);
+
             setEndHour(response.hour.end);
+
+            if (response.hour.end != "none") {
+                setIsEndTime(true);
+            }
+
             setLimit(response.guests.capacity);
             setVipLimit('0');
             setAddress(response.address);
             setDescription(response.description);
-            setPrice(response.ticket);
+
+            response.tags = response.tags.map(tag => parseInt(tag));
+
+            setEventTags(response.tags);
+
+            const onlyNumbers = response.ticket.replace(/\D/g, "");
+            const formattedPrice = (parseInt(onlyNumbers)).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2
+            });
+    
+            setPrice(formattedPrice);
         }
 
         catch (error) {
@@ -720,7 +858,7 @@ export default function EditEvent() {
                                     <p className="font-bold">Limite</p>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p>10/{parseInt(limit) + parseInt(vipLimit)}</p>
+                                <p>{guests.confirmed}/{parseInt(limit) + parseInt(vipLimit)}</p>
                             </button>
                         </div>
                         <button onClick={toggleEditAddressPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">

@@ -28,6 +28,7 @@ $public = [
     "tryToCreateEvent",
     "tryToDeleteEvent",
     "editUserData",
+    "editEventData",
     "clearUserNotifications",
     "seeUserNotifications",
     "switchFollowUser",

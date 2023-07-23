@@ -606,6 +606,80 @@ function calculateDistance($lat1, $lon1, $lat2, $lon2)
     return $distance;
 }
 
+function editEventData()
+{
+    $userData = check_session($_POST['token']);
+
+    $code = $_POST['code'];
+    $data = $_POST['data'];
+
+    foreach ($userData as $column) {
+        $responseData = [
+            'status' => 'success',
+        ];
+
+        $query = "SELECT id FROM parties WHERE code = '$code'";
+        $id = queryDB($query)[0];
+
+        foreach ($data as $key => $value) {
+            if ($key == 'price') {
+                $key = str_replace('R$ ', '', $key);
+                $key = str_replace(',', '.', $key);
+                $key = floatval($key);
+            }
+
+            if ($key == 'address') {
+                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($key)."&format=json";
+
+                $httpOptions = [
+                    "http" => [
+                        "method" => "GET",
+                        "header" => "User-Agent: Nominatim-Test",
+                    ],
+                ];
+
+                $streamContext = stream_context_create($httpOptions);
+
+                $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+
+                $addressDecoded = json_decode($json, true);
+
+                $lat = "none";
+                $lon = "none";
+
+                if (!empty($addressDecoded)) {
+                    $lat = $addressDecoded[0]["lat"];
+                    $lon = $addressDecoded[0]["lon"];
+                }
+
+                $query = "UPDATE parties SET lat = '$lat' WHERE id = '$id'";
+                queryNR($query);
+
+                $query = "UPDATE parties SET lon = '$lon' WHERE id = '$id'";
+                queryNR($query);
+            }
+
+            if ($key == 'tags') {
+                $query = "DELETE FROM tags WHERE party = '$code'";
+                queryNR($query);
+
+                foreach ($value as $tag) {
+                    $query = "INSERT INTO tags (tag, party) VALUES ('$tag', '$code')";
+                    queryNR($query);
+                }
+            }
+
+            else {
+                $query = "UPDATE parties SET `$key` = '$value' WHERE id = '$id'";
+                queryNR($query);
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($responseData);
+    }
+}
+
 function editUserData()
 {
     $userData = check_session($_POST['token']);
