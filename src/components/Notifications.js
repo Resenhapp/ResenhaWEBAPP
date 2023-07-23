@@ -5,6 +5,8 @@ import Notification from './Notification';
 import Cookies from 'js-cookie';
 import { useState } from "react";
 import { useEffect } from 'react';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const token = Cookies.get('token');
@@ -34,7 +36,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
   
     const clearUserNotifications = async () => {
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest({apiUrl}, {
           request: 'clearUserNotifications',
           token: token
         });
@@ -47,7 +49,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
   
     const seeUserNotifications = async () => {
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest({apiUrl}, {
           request: 'seeUserNotifications',
           token: token
         });
@@ -60,7 +62,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
 
     const getUserData = async () => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
+          const response = await makeRequest({apiUrl}, {
             request: 'getUserData',
             token: token,
             requested: 'notifications'

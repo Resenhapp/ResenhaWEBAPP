@@ -5,6 +5,8 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function PasswordConfig() {
     const token = Cookies.get('token');
@@ -77,7 +79,7 @@ export default function PasswordConfig() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
+          const response = await makeRequest({apiUrl}, {
             request: 'editUserData',
             token: token,
             data: data

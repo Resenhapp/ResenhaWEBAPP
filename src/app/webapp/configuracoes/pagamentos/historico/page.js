@@ -5,6 +5,8 @@ import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function BuyHistory() {
 
@@ -36,7 +38,7 @@ export default function BuyHistory() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getUserData',
                 token: token
             });

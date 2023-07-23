@@ -12,6 +12,8 @@ import Vector from '@/src/components/Vector';
 import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 import { interestsData } from '@/src/components/interestsData';
 
@@ -55,7 +57,7 @@ export default function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getUserData',
                 token: token,
                 profile: profile
@@ -76,7 +78,7 @@ export default function Profile() {
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'switchFollowUser',
                 token: token,
                 profile: profile

@@ -10,7 +10,8 @@ import Back from '@/src/components/Back';
 import Cookies from 'js-cookie';
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 export default function Personal() {
   const axios = require('axios');
   const qs = require('qs');
@@ -36,7 +37,7 @@ export default function Personal() {
 
   const handleClick = async () => {
     try {
-      const response = await makeRequest('https://api.resenha.app/', { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
+      const response = await makeRequest({apiUrl}, { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
     } 
     
     catch (error) {

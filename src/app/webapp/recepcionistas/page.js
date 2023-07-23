@@ -8,6 +8,9 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
+
 export default function Concierges() {
     function RemoveConcierge() {
 
@@ -27,7 +30,7 @@ export default function Concierges() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', { request: 'getUserData', id: id });
+            const response = await makeRequest({apiUrl}, { request: 'getUserData', id: id });
             setData(response);
         }
 

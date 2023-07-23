@@ -7,6 +7,8 @@ import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import Loading from "@/src/components/Loading";
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 import { useState } from "react";
 import { useEffect } from 'react';
@@ -41,7 +43,7 @@ export default function HomePage() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getUserData',
                 token: token
             });

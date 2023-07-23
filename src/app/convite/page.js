@@ -12,6 +12,8 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
+import { apiUrl } from "@/src/components/globalVariables";
+import { imageUrlPrefix } from "@/src/components/globalVariables";
 
 export default function Invite() {
     const axios = require('axios');
@@ -53,7 +55,7 @@ export default function Invite() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', { 
+            const response = await makeRequest({apiUrl}, { 
                 request: 'getInviteData', 
                 code: code 
             });

@@ -12,6 +12,8 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader"
 import { setHours } from "date-fns"
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function EditEvent() {
     var token = Cookies.get('token');
@@ -345,7 +347,7 @@ export default function EditEvent() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getInviteData',
                 token: token,
                 code: partyCode

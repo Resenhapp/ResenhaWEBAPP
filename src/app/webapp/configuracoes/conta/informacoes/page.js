@@ -6,6 +6,8 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function AccountInfo() {
     const token = Cookies.get('token');
@@ -221,7 +223,7 @@ export default function AccountInfo() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
+          const response = await makeRequest({apiUrl}, {
             request: 'editUserData',
             token: token,
             data: data
@@ -237,7 +239,7 @@ export default function AccountInfo() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getUserData',
                 token: token
             });

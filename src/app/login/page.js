@@ -10,6 +10,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Login() {
   const axios = require('axios');
@@ -33,7 +35,7 @@ export default function Login() {
 
   const handleClick = async () => {
     try {
-      const response = await makeRequest('https://api.resenha.app/', {
+      const response = await makeRequest({apiUrl}, {
         request: 'tryToAuthenticate', 
         email: email, 
         password: password 

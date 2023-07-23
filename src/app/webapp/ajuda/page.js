@@ -8,6 +8,8 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Help() {
     const copyVector = () => {
@@ -25,7 +27,7 @@ export default function Help() {
     const [data, setData] = useState(null);
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', { request: 'getHelpData'});
+            const response = await makeRequest({apiUrl}, { request: 'getHelpData'});
             setData(response);
         }
 

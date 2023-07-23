@@ -5,6 +5,8 @@ import PageHeader from '@/src/components/PageHeader';
 import PartyBanner from '@/src/components/PartyBanner';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function AccountPartySaved() {
     const token = Cookies.get('token');
@@ -37,7 +39,7 @@ export default function AccountPartySaved() {
   
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest({apiUrl}, {
                 request: 'getUserData',
                 token: token,
                 requested: "saved"

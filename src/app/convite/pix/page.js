@@ -8,6 +8,8 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useState } from "react";
 import Cookies from 'js-cookie';
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 export default function Pix() {
     const [data, setData] = useState(null);
@@ -22,7 +24,7 @@ export default function Pix() {
     
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', { request: 'tryToCreateGuest', method: method.toLowerCase(), code: code, name: name, birth: minor, email: email});
+            const response = await makeRequest({apiUrl}, { request: 'tryToCreateGuest', method: method.toLowerCase(), code: code, name: name, birth: minor, email: email});
             setData(response);
         }
 

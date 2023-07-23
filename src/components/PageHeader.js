@@ -9,6 +9,8 @@ import Back from './Back';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
+import {apiUrl} from '@/src/components/globalVariables';
+import {imageUrlPrefix} from '@/src/components/globalVariables';
 
 const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination }) => {
     const token = Cookies.get('token');
@@ -36,7 +38,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
   
     const fetchData = async () => {
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest({apiUrl}, {
           request: 'getUserData',
           token: token
         });
@@ -51,7 +53,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
   
     const checkIfUserNotified = async () => {
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest({apiUrl}, {
           request: 'getUserData',
           token: token,
           requested: 'notified'
