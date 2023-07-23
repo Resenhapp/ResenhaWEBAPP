@@ -54,8 +54,8 @@ export default function Home() {
         {/* Sidebar */}
         <div className={`fixed inset-y-0 right-0 w-full bg-purpleT0 max-w-md z-30 transform transition-transform ease-in-out duration-500 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className='flex flex-col py-20 px-4 flex-start gap-8 mt-12'>
-          <button className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Criar conta</button>
-            <button className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Fazer login</button>
+          <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Criar conta</button>
+            <button onClick={() => window.location.href = 'https://resenha.app/login'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Fazer login</button>
         </div>
           <div className='absolute top-0 left-0 p-8'>
             <button onClick={() => setSidebarOpen(false)}>
