@@ -1,0 +1,10 @@
+{
+    "functions": {
+      "api/*.php": {
+        "runtime": "functions@0.6.0"
+      }
+    },
+    "routes": [
+      { "src": "/(.*)",  "dest": "/api/default.php" }
+    ]
+  }
