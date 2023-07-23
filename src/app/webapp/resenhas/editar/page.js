@@ -345,7 +345,7 @@ export default function EditEvent() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getInviteData',
                 token: token,
                 code: partyCode

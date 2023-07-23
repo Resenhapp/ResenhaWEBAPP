@@ -221,7 +221,7 @@ export default function AccountInfo() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'editUserData',
             token: token,
             data: data
@@ -237,7 +237,7 @@ export default function AccountInfo() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token
             });

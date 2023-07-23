@@ -36,7 +36,7 @@ export default function Personal() {
 
   const handleClick = async () => {
     try {
-      const response = await makeRequest('https://api.resenha.app/', { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
     } 
     
     catch (error) {
