@@ -5,5 +5,5 @@ export const partyData = [
     {bgColor:'greenT2', icon:'clock01', special:false, tagname:'Recente' },
     {bgColor:'greenT1', icon:'sale01', special:false, tagname:'Com desconto' },
     {bgColor:'redT3', icon:'hourglass01', special:false, tagname:'Esgotando' },
-    {bgColor:'purpleT3', icon:'verified01', special:false, tagname:'Verificada' }
+    {bgColor:'purpleT3', icon:'verified03', special:false, tagname:'Verificada' }
 ];

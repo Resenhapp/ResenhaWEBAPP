@@ -81,6 +81,8 @@ export default function Chat() {
             sent: true
         };
 
+        
+
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
         try {
@@ -91,8 +93,6 @@ export default function Chat() {
                 type: chatType,
                 content: message
             });
-
-            console.log(response);
         } 
         
         catch (error) {
@@ -127,16 +127,22 @@ export default function Chat() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
-                                    {[...messages].map((message, index) => (
+                                {
+                                    messages.length === 0 ? (
+                                        <p>Ninguém enviou mensagens nesse chat ainda 😒. Seja o primeiro!</p>
+                                    ) : (
+                                        [...messages].map((message, index) => (
                                         <ChatBubble
                                             key={index}
                                             showImage={false}
                                             imageUrl={message.imageUrl}
                                             message={message.content}
-                                            timestamp={message.date.hour}
+                                            timestamp={message.date.hour + ":" + message.date.minute}
                                             sent={message.sent}
                                         />
-                                    ))}
+                                        ))
+                                    )
+                                }
                                 </div>
                                 <ChatInput onSendMessage={sendMessage} />
                             </div>

@@ -14,19 +14,22 @@ import PageHeader from "@/src/components/PageHeader"
 import { setHours } from "date-fns"
 
 export default function EditEvent() {
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
+    var token = Cookies.get('token');
+
     let urlParams = new URLSearchParams();
 
+    var partyCode = ''
+
     if (typeof window !== 'undefined') {
-        if (!u || !validator) {
+        if (!token) {
             if (typeof window !== 'undefined') {
                 window.location.href = '/login';
             }
         }
         const urlParams = new URLSearchParams(window.location.search);
+        partyCode = urlParams.get('r');
     }
-    const partyCode = urlParams.get('r');
+
 
     const axios = require('axios');
     const qs = require('qs');
@@ -131,6 +134,7 @@ export default function EditEvent() {
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
+    
     const saveDescription = () => {
         toggleEditDescriptionPageOpen();
     };
@@ -235,7 +239,7 @@ export default function EditEvent() {
 
 
 
-    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC
+    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC    // LIMIT LOGIC 
     const [limit, setLimit] = useState('');
     const [isVip, setIsVip] = useState(false);
     const [vipLimit, setVipLimit] = useState('');
@@ -345,9 +349,8 @@ export default function EditEvent() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getInviteData',
-                username: u,
-                validator: validator,
-                code: partyCode,
+                token: token,
+                code: partyCode
             });
             
             setData(response);

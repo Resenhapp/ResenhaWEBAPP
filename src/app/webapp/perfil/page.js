@@ -15,7 +15,6 @@ import Comment from '@/src/components/Comment';
 
 import { interestsData } from '@/src/components/interestsData';
 
-
 export default function Profile() {
     var token = Cookies.get('token');
 
@@ -194,7 +193,7 @@ export default function Profile() {
                                                 imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                                                 partyGuests={party.confirmed}
                                                 partyDate={party.date}
-                                                partyHour={party.time}
+                                                partyHour={party.start}
                                                 partyName={party.name}
                                             />
                                             ) : null

@@ -9,8 +9,6 @@ import Loading from "@/src/components/Loading";
 export default function AccountHistory() {
     const token = Cookies.get('token');
 
-    // Use the useEffect hook to handle side-effects.
-    // This ensures that your redirect logic will only run on the client side.
     useEffect(() => {
         if (!token) {
             if (typeof window !== 'undefined') { 
@@ -39,8 +37,7 @@ export default function AccountHistory() {
         try {
             const response = await makeRequest('http://localhost/resenha.app/api/', {
                 request: 'getUserData',
-                token: token,
-                requested: "activity"
+                token: token
             });
 
             setData(response);
@@ -64,17 +61,17 @@ export default function AccountHistory() {
         );
     }
 
-    var { activity } = data;
+    var { activities } = data;
 
     return (
         <div className="flex flex-col w-screen h-screen">
-            <PageHeader isBack={true} checker={() => { null }} pageTitle="Hist. de atividades" />
+            <PageHeader isBack={true} checker={() => { null }} pageTitle="Hist. de atividades" userData={data} />
             <div className="flex flex-col items-center justify-start h-screen px-4 py-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                {activity.map((item, index) => 
+                                {activities.map((item, index) => 
                                     <NotificationBase
                                         key={index}
                                         imageUrl={item.hash ? `https://media.resenha.app/r/${item.hash}.png` : undefined}

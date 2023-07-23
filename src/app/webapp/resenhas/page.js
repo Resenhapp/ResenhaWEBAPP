@@ -74,7 +74,8 @@ export default function HomePage() {
         var eventNameToUser = userParty.name;
         var eventDateToUser = userParty.date;
         var eventTimeToUser = userParty.start;
-        var eventCodeToUser = userParty.code;
+        var eventCodeToUser = userParty.token;
+        var eventCode = userParty.code;
         var eventHashToUser = userParty.hash;
     }
 
@@ -101,6 +102,7 @@ export default function HomePage() {
                         eventName={eventNameToUser}
                         eventDate={eventDateToUser}
                         eventHour={eventTimeToUser}
+                        eventCode={eventCode}
                         token={eventCodeToUser}
                         eventImage={`https://media.resenha.app/r/${eventHashToUser}.png`}
                     /> :
