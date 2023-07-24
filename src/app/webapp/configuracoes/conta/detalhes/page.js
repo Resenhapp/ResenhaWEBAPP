@@ -6,6 +6,7 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
+import Confirmed from '@/src/components/Confirmed';
 
 export default function AccountDetails() {
     const token = Cookies.get('token');
@@ -221,7 +222,10 @@ export default function AccountDetails() {
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditEmailPageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">E-mail</p>
+                                    <div className='flex flex-row justify-between'>
+                                        <p className="text-whiteT1 text-sm font-semibold">E-mail</p>
+                                        <Confirmed initialConfirmation={true} />
+                                    </div>
                                     <InputFieldPurple value={email} readOnly={true}/>
                                 </div>
                             </div>

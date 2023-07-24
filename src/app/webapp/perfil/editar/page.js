@@ -39,12 +39,19 @@ export default function EditProfile() {
     const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
     const [errorIndex, setErrorIndex] = useState(null);
     const errors = [
-        "0",
-        "O nome de usuário deve ter pelo menos 5 caracteres.",
-        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).",
-        "Este nome de usuário já existe.",
-        "O nome de usuário não pode ficar vazio",
-        "O seu nome não pode ficar vazio",
+        "0", // 0
+        "O nome de usuário deve ter pelo menos 5 caracteres.", // 1
+        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).", // 2
+        "Este nome de usuário já existe.", // 3
+        "O nome de usuário não pode ficar vazio.", // 4
+        "O seu nome não pode ficar vazio.", // 5
+        "O seu nome não pode conter caracteres especiais.",  // 6
+        "Os campos de nome de usuário e nome não podem ficar vazios.", // 7
+        "O nome de usuário e o nome não podem conter caracteres especiais.", // 8
+        "Os campos de nome de usuário e nome devem ter pelo menos 5 caracteres.", // 9
+        "Este nome de usuário já existe e o nome não pode ficar vazio.", // 10
+        "Este nome de usuário já existe e o nome não pode conter caracteres especiais.", // 11
+        "O nome de usuário e o nome devem começar com uma letra e podem conter apenas letras, números e sublinhados (_).", // 12
       ];
       
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
@@ -201,36 +208,56 @@ export default function EditProfile() {
 
             try {
                 const response = await sendEditRequest(data);
-
+              
                 if (response.error) {
-                    if (response.error === "used_username") {
-                        setErrorIndex(3);
-                        setIsUsernameErrorVisible(true);
-                    }
+                  switch (response.error) {
+                    case "used_username":
+                      setErrorIndex(3);
+                      break;
+                    case "empty_username":
+                      setErrorIndex(4);
+                      break;
+                    case "short_username":
+                      setErrorIndex(1);
+                      break;
+                    case "invalid_username":
+                      setErrorIndex(2);
+                      break;
+                    default:
+                      console.error('Unhandled error type:', response.error);
+                      break;
+                  }
+                  setIsUsernameErrorVisible(true);
                 } else {
-                    if (response.username && response.validator) {
-                        Cookies.set('token', response.token);
-                    }
-                    if (username.includes(' ')) {
-                        setErrorIndex(2);
-                        setIsUsernameErrorVisible(true);
-                    } else if (username.length < 6) {
-                        setErrorIndex(1);
-                        setIsUsernameErrorVisible(true);
-                    } else if (username.length < 1) {
-                        setErrorIndex(4);
-                        setIsUsernameErrorVisible(true);
-                    } else if (newTempName.length<1) {
-                        setErrorIndex(5);
-                        setIsUsernameErrorVisible(true);
-                    }
-                     else {
-                        toggleEditUsernamePageOpen();
-                    }
+                  if (response.username && response.validator) {
+                    Cookies.set('token', response.token);
+                  }
+                  if (username.includes(' ')) {
+                    setErrorIndex(2);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 6) {
+                    setErrorIndex(1);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 1) {
+                    setErrorIndex(4);
+                    setIsUsernameErrorVisible(true);
+                  } else if (newTempName.length < 1) {
+                    setErrorIndex(5);
+                    setIsUsernameErrorVisible(true);
+                  } else if (newTempName.includes(' ')) {
+                    setErrorIndex(6);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 1 && newTempName.length < 1) {
+                    setErrorIndex(7);
+                    setIsUsernameErrorVisible(true);
+                  } else {
+                    toggleEditUsernamePageOpen();
+                  }
                 }
-            } catch (error) {
+              } catch (error) {
                 console.error(error);
-            }
+              }
+              
         }
 
         else {
