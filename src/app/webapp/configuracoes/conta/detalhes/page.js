@@ -16,6 +16,17 @@ export default function AccountDetails() {
         }
     }
 
+    const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
+    const [errorIndex, setErrorIndex] = useState(null);
+    const errors = [
+        "0",
+        "O nome de usuário deve ter pelo menos 5 caracteres.",
+        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).",
+        "Este nome de usuário já existe.",
+        "O nome de usuário não pode ficar vazio",
+        "O seu nome não pode ficar vazio",
+      ];
+
     const axios = require('axios');
     const qs = require('qs');
 
@@ -60,10 +71,19 @@ export default function AccountDetails() {
             if (response.token) {
                 Cookies.set('token', response.token);
             }
-    
+            
+            if (response.error) {
+                if (response.error === "used_username") {
+                    setErrorIndex(3);
+                    setIsUsernameErrorVisible(true);
+                }
+            }
+
             if (!response.error) {
                 toggleEditNamePageOpen();
             }
+
+            
         } 
         
         catch (error) {
@@ -89,16 +109,6 @@ export default function AccountDetails() {
         catch (error) {
             console.error(error);
         }
-    };
-
-    const cancelEditName = () => {
-        setTempName(name);
-        toggleEditNamePageOpen();
-    };
-
-    const cancelEditEmail = () => {
-        setTempEmail(email);
-        toggleEditEmailPageOpen();
     };
 
     const makeRequest = async (url, data) => {
@@ -148,7 +158,7 @@ export default function AccountDetails() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     if (!data) {
@@ -177,7 +187,7 @@ export default function AccountDetails() {
                 </div>
                 <div>
                     <p className='text-sm'>
-                        O nome da resenha é o que as pessoas verão quando entrarem no seu convite, então ele deve ser objetivo e simples, algo que traduza o que vai ser sua resenha.
+                    Seu nome de usuário é um identificador importante. O seu nome de usuário é unico e só pode ser utilizado por você.
                     </p>
                 </div>
             </EditInfoPage>
@@ -196,7 +206,7 @@ export default function AccountDetails() {
                 </div>
                 <div>
                     <p className='text-sm'>
-                        O nome da resenha é o que as pessoas verão quando entrarem no seu convite, então ele deve ser objetivo e simples, algo que traduza o que vai ser sua resenha.
+                        O seu e-mail é utilizado por nós para comunicações sobre o app e por você para fazer login, recuperar sua conta caso perca o acesso e outras funções importantes da plataforma.
                     </p>
                 </div>
             </EditInfoPage>
