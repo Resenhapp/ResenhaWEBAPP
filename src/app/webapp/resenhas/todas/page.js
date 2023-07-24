@@ -60,7 +60,7 @@ export default function MyParties() {
     };
 
     const handleCopyClick = async (party) => {
-        const partyUrl = `https://resenha.app/r/${party.code}`;
+        const partyUrl = `https://resenha.app/convite?c=${party.code}`;
     
         await navigator.clipboard.writeText(partyUrl);
     };
