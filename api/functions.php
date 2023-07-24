@@ -95,6 +95,10 @@ function getDayOfWeek($dateString)
 
 function check_email($email)
 {
+    if (strlen($email) < 5) {
+        return "short_email";
+    }
+
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = queryDBRows($query);
 
@@ -680,6 +684,41 @@ function editEventData()
     }
 }
 
+function checkUsername($username) {
+    if (empty($username)) {
+        return "empty_username";
+    }
+
+    if (strlen($username) < 5) {
+        return "short_username";
+    }
+
+    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $username)) {
+        return "invalid_username";
+    }
+
+    $query = "SELECT id FROM users WHERE username = '$username'";
+    $result = queryDB($query);
+
+    if ($result && count($result) > 0) {
+        return "used_username";
+    }
+
+    return null;
+}
+
+function checkName($name) {
+    if (empty($name)) {
+        return "empty_username";
+    }
+
+    if (strlen($name) < 5) {
+        return "short_username";
+    }
+
+    return null;
+}
+
 function editUserData()
 {
     $userData = check_session($_POST['token']);
@@ -693,17 +732,12 @@ function editUserData()
             'status' => 'success',
         ];
 
-        if (isset($data['username'])) {
-            $newToken = random_key();
+        if (isset($data['name'])) {
+            $nameError = checkName($data['name']);
 
-            $newUsername = $data['username'];
-
-            $query = "SELECT id FROM users WHERE username = '$newUsername'";
-            $result = queryDB($query);
-
-            if ($result && count($result) > 0) {
-                returnError('used_username');
-            } 
+            if (isset($nameError)) {
+                returnError($nameError);
+            }
         }
 
         if (isset($data['email'])) {
@@ -714,6 +748,20 @@ function editUserData()
             }
         }
 
+        if (isset($data['username'])) {
+            $usernameError = checkUsername($data['username']);
+
+            if (isset($usernameError)) {
+                returnError($usernameError);
+            }
+
+            else {
+                $newToken = random_key();
+
+                $data['api'] = $newToken;
+            }
+        }
+
         if (isset($data['password']) ) {
             $passwordError = check_password($data['password']);
 
@@ -721,14 +769,16 @@ function editUserData()
                 returnError($passwordError);
             }
 
-            $newToken = random_key();
+            else {
+                $newToken = random_key();
 
-            $data['api'] = $newToken;
-
-            $newPassword = $data['password'];
-
-            $data['password'] = hash256($newPassword);
-            $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
+                $data['api'] = $newToken;
+    
+                $newPassword = $data['password'];
+    
+                $data['password'] = hash256($newPassword);
+                $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
+            }
         }
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
@@ -1097,8 +1147,8 @@ function getInviteData()
     $code = sanitize($_POST['code']);
 
     $query = "SELECT * FROM parties WHERE code = '$code'";
-
     $result = queryDBRows($query);
+
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
             $host = $row["host"];
@@ -1186,49 +1236,61 @@ function getInviteData()
             if (isset($_POST['token'])) {
                 $userData = check_session($_POST['token']);
 
-                if ($userData) {
-                    $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
-                    $party_price = queryDB($party_price_query)[0];
+                foreach ($userData as $column) {
+                    $userId = $column["id"];
 
-                    $guests_query = "SELECT method FROM guests WHERE party = '$code'";
-                    $payment_results = queryDBRows($guests_query);
-
-                    $income = [
-                        "card" => 0,
-                        "cash" => 0,
-                        "pix" => 0,
-                    ];
-
-                    foreach ($payment_results as $payment_row) {
-                        $method = $payment_row['method'];
-
-                        if ($method == 'pix') {
-                            $income['pix'] += $party_price;
-                        } elseif ($method == 'cartao') {
-                            $income['card'] += $party_price;
-                        } else {
-                            $income['cash'] += $party_price;
+                    if ($userId == $host) {
+                        $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
+                        $party_price = queryDB($party_price_query)[0];
+    
+                        $guests_query = "SELECT method FROM guests WHERE party = '$code'";
+                        $payment_results = queryDBRows($guests_query);
+    
+                        $income = [
+                            "card" => 0,
+                            "cash" => 0,
+                            "pix" => 0,
+                        ];
+    
+                        foreach ($payment_results as $payment_row) {
+                            $method = $payment_row['method'];
+    
+                            if ($method == 'pix') {
+                                $income['pix'] += $party_price;
+                            } 
+                            
+                            elseif ($method == 'cartao') {
+                                $income['card'] += $party_price;
+                            } 
+                            
+                            else {
+                                $income['cash'] += $party_price;
+                            }
                         }
+    
+                        $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+    
+                        $sql_date = $date->format('Y-m-d H:i:s');
+    
+                        $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
+                        $impressions_count = queryDB($impressions_query)[0];
+    
+                        $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
+                        $views_count = queryDB($views_query)[0];
+    
+                        $impressions = [
+                            'views' => $impressions_count,
+                            'clicks' => $views_count,
+                            'purchases' => 0,
+                        ];
+    
+                        $data["income"] = $income;
+                        $data["impressions"] = $impressions;
                     }
 
-                    $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-
-                    $sql_date = $date->format('Y-m-d H:i:s');
-
-                    $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
-                    $impressions_count = queryDB($impressions_query)[0];
-
-                    $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
-                    $views_count = queryDB($views_query)[0];
-
-                    $impressions = [
-                        'views' => $impressions_count,
-                        'clicks' => $views_count,
-                        'purchases' => 0,
-                    ];
-
-                    $data["income"] = $income;
-                    $data["impressions"] = $impressions;
+                    else {
+                        returnError("not_host");
+                    }
                 }
             }
 
@@ -1766,6 +1828,14 @@ function tryToSendMessage()
         }
 
         $destination = queryDB($query)[0];
+
+        if ($type == 'dm') {
+            createNotification(
+                $destination,
+                "Nova mensagem!", 
+                "Você tem uma nova mensagem do usuário @$username."
+            );
+        }
 
         $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
         queryNR($query);
