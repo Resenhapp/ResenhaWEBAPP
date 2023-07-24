@@ -67,29 +67,6 @@ export default function HomePage() {
         );
     }
 
-    var { partiesWent, partiesMade } = data
-
-    if (partiesWent.length > 0) {
-        const userParty = partiesWent[0];
-        var eventNameToUser = userParty.name;
-        var eventDateToUser = userParty.date;
-        var eventTimeToUser = userParty.start;
-        var eventCodeToUser = userParty.token;
-        var eventCode = userParty.code;
-        var eventHashToUser = userParty.hash;
-    }
-
-    if (partiesMade.length > 0) {
-        const userParty = partiesMade[0];
-        var eventNameFromUser = userParty.name;
-        var eventDateFromUser = userParty.date;
-        var eventTimeFromUser = userParty.start;
-        var eventConfirmedFromUser = userParty.confirmed;
-        var eventCapacityFromUser = userParty.capacity;
-        var eventHashFromUser = userParty.hash;
-        var eventCodeFromUser = userParty.code;
-    }
-
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Resenhas'} userData={data} />
