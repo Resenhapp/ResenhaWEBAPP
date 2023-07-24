@@ -31,7 +31,7 @@ const InputField = ({ placeholder, value, action, showIcon = false, Icon, Requir
       )}
       <input
         type="text"
-        className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-purpleT2 placeholder-purpleT5 ${showIcon ? 'pl-10' : ''
+        className={`pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5 ${showIcon ? 'pl-10' : ''
           }`}
         placeholder={placeholder}
         value={value}
