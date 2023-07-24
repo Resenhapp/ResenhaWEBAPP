@@ -257,48 +257,6 @@ function checkPrivateRequest($request)
     }
 }
 
-function tryToEditWithdraw()
-{
-    $id = sanitize($_POST["id"]);
-
-    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
-    $isAlreadyApproved = queryDB($id)[0];
-
-    if ($isAlreadyApproved == "0") {
-        $moderator = sanitize($_POST["moderator"]);
-        $reason = sanitize($_POST["reason"]);
-        $approved = sanitize($_POST["approved"]);
-    
-        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
-        $user = queryDB($id)[0];
-    
-        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
-        $amount = queryDB($id)[0];
-
-        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
-        queryNR($query);
-    
-        if ($approved == "0") {
-            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
-            queryNR($query);
-        }
-    
-        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
-        queryNR($query);
-
-        $responseData = [
-            'status' => 'success'
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
-    }
-
-    else {
-        returnError("already_approved");
-    }
-}
-
 function getHelpData()
 {
     $response = [];
@@ -342,7 +300,42 @@ function getHelpData()
     echo json_encode($response);
 }
 
-function check_session($token)
+function checkUsername($username) {
+    if (empty($username)) {
+        return "empty_username";
+    }
+
+    if (strlen($username) < 5) {
+        return "short_username";
+    }
+
+    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $username)) {
+        return "invalid_username";
+    }
+
+    $query = "SELECT id FROM users WHERE username = '$username'";
+    $result = queryDB($query);
+
+    if ($result && count($result) > 0) {
+        return "used_username";
+    }
+
+    return null;
+}
+
+function checkName($name) {
+    if (empty($name)) {
+        return "empty_username";
+    }
+
+    if (strlen($name) < 5) {
+        return "short_username";
+    }
+
+    return null;
+}
+
+function checkSession($token)
 {
     $api = decrypt($token, GLOBAL_ENCKEY);
 
@@ -356,6 +349,23 @@ function check_session($token)
     else {
         return null;
     }
+}
+
+function getHash($userHash, $urlType) {
+    // $imageUrl = "https://media.resenha.app/u/$userHash.png";
+
+    // $headers = @get_headers($imageUrl, 1);
+
+    // if ($headers && isset($headers[0])) {
+    //     $statusCode = explode(' ', $headers[0])[1];
+    //     $statusCode = intval($statusCode);
+
+    //     if ($statusCode === 200) {
+    //         return $imageUrl;
+    //     }
+    // }
+
+    return hash256("default");
 }
 
 function createNotification($user, $title, $content)
@@ -377,6 +387,48 @@ function createWithdraw($user, $amount)
     $id = queryDB($query)[0];
 
     return $id;
+}
+
+function tryToEditWithdraw()
+{
+    $id = sanitize($_POST["id"]);
+
+    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
+    $isAlreadyApproved = queryDB($id)[0];
+
+    if ($isAlreadyApproved == "0") {
+        $moderator = sanitize($_POST["moderator"]);
+        $reason = sanitize($_POST["reason"]);
+        $approved = sanitize($_POST["approved"]);
+    
+        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
+        $user = queryDB($id)[0];
+    
+        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
+        $amount = queryDB($id)[0];
+
+        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
+        queryNR($query);
+    
+        if ($approved == "0") {
+            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
+            queryNR($query);
+        }
+    
+        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
+        queryNR($query);
+
+        $responseData = [
+            'status' => 'success'
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($responseData);
+    }
+
+    else {
+        returnError("already_approved");
+    }
 }
 
 function getParties($result, $userId)
@@ -505,7 +557,7 @@ function getParties($result, $userId)
 
 function getFeedData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userId = $column["id"];
@@ -590,29 +642,9 @@ function getFeedData()
     }
 }
 
-function calculateDistance($lat1, $lon1, $lat2, $lon2)
-{
-    $earthRadius = 6371;
-
-    $lat1Rad = deg2rad($lat1);
-    $lon1Rad = deg2rad($lon1);
-    $lat2Rad = deg2rad($lat2);
-    $lon2Rad = deg2rad($lon2);
-
-    $deltaLat = $lat2Rad - $lat1Rad;
-    $deltaLon = $lon2Rad - $lon1Rad;
-
-    $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLon / 2) * sin($deltaLon / 2);
-    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-    $distance = $earthRadius * $c;
-
-    return $distance;
-}
-
 function editEventData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $code = $_POST['code'];
     $data = $_POST['data'];
@@ -684,44 +716,9 @@ function editEventData()
     }
 }
 
-function checkUsername($username) {
-    if (empty($username)) {
-        return "empty_username";
-    }
-
-    if (strlen($username) < 5) {
-        return "short_username";
-    }
-
-    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $username)) {
-        return "invalid_username";
-    }
-
-    $query = "SELECT id FROM users WHERE username = '$username'";
-    $result = queryDB($query);
-
-    if ($result && count($result) > 0) {
-        return "used_username";
-    }
-
-    return null;
-}
-
-function checkName($name) {
-    if (empty($name)) {
-        return "empty_username";
-    }
-
-    if (strlen($name) < 5) {
-        return "short_username";
-    }
-
-    return null;
-}
-
 function editUserData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $data = $_POST['data'];
 
@@ -809,26 +806,9 @@ function editUserData()
     }
 }
 
-function getHash($userHash, $urlType) {
-    // $imageUrl = "https://media.resenha.app/u/$userHash.png";
-
-    // $headers = @get_headers($imageUrl, 1);
-
-    // if ($headers && isset($headers[0])) {
-    //     $statusCode = explode(' ', $headers[0])[1];
-    //     $statusCode = intval($statusCode);
-
-    //     if ($statusCode === 200) {
-    //         return $imageUrl;
-    //     }
-    // }
-
-    return hash256("default");
-}
-
 function getUserData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     if ($userData) {
         if (isset($_POST["profile"])) {
@@ -1109,7 +1089,7 @@ function getUserData()
         } 
         
         else {
-            $userData = check_session($_POST['token']);
+            $userData = checkSession($_POST['token']);
 
             foreach ($userData as $column) {
                 $profileId = $column["id"];
@@ -1234,7 +1214,7 @@ function getInviteData()
             ];
 
             if (isset($_POST['token'])) {
-                $userData = check_session($_POST['token']);
+                $userData = checkSession($_POST['token']);
 
                 foreach ($userData as $column) {
                     $userId = $column["id"];
@@ -1313,7 +1293,7 @@ function tryToCreateGuest()
     $method = sanitize($_POST['method']);
 
     if (isset($_POST['token'])) {
-        $userData = check_session($_POST['token']);
+        $userData = checkSession($_POST['token']);
     
         foreach ($userData as $column) {
             $user = $column["id"];
@@ -1511,7 +1491,7 @@ function tryToAuthenticate()
 
 function clearUserNotifications()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["userName"];
@@ -1533,7 +1513,7 @@ function switchSaveEvent()
 {
     $partyCode = sanitize($_POST['party']);
 
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userId = $column["id"];
@@ -1577,7 +1557,7 @@ function switchSaveEvent()
 
 function switchFollowUser()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -1628,7 +1608,7 @@ function switchFollowUser()
 
 function seeUserNotifications()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -1657,7 +1637,7 @@ function seeUserNotifications()
 
 function tryToWithdraw()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $id = $column["id"];
@@ -1752,7 +1732,7 @@ function tryToWithdraw()
 
 function tryToDeleteEvent()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["userName"];
@@ -1766,7 +1746,7 @@ function tryToDeleteEvent()
 
 function tryToSendMessage()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $destination = sanitize($_POST['destination']);
     $type = sanitize($_POST['type']);
@@ -1852,7 +1832,7 @@ function tryToSendMessage()
 
 function getMessages()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $code = sanitize($_POST['code']);
     $type = sanitize($_POST['type']);
@@ -1970,7 +1950,7 @@ function getMessages()
 
 function tryToCreateEvent()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -2095,7 +2075,7 @@ function tryToClickOnEvent()
 {
     $code = sanitize($_POST['party']);
 
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $id = $column["id"];
