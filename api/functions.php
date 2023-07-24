@@ -1767,6 +1767,14 @@ function tryToSendMessage()
 
         $destination = queryDB($query)[0];
 
+        if ($type == 'dm') {
+            createNotification(
+                $destination,
+                "Nova mensagem!", 
+                "Você tem uma nova mensagem do usuário @$username."
+            );
+        }
+
         $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
         queryNR($query);
 
