@@ -7,7 +7,7 @@ import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import Loading from "@/src/components/Loading";
-
+import Button from '@/src/components/Button';
 import { useState } from "react";
 import { useEffect } from 'react';
 
@@ -17,6 +17,12 @@ export default function HomePage() {
     if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
+
+    const handleNavigation = (pageToGo) => {
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
+    };
 
     const axios = require('axios');
     const qs = require('qs');
@@ -108,7 +114,12 @@ export default function HomePage() {
                             eventImage={`https://media.resenha.app/r/${data.partiesWent[0].hash}.png`}
                         />
                         :
-                        <p>SEM RESENHAS</p>)
+                        <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
+                            <p className='mt-20 text-2xl'>Você ainda não confirmou presença em nenhuma resenha! Toque abaixo pra dar uma olhada no que tá rolando na sua região!</p>
+                            <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
+                                <Button label={'Descobrir Resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={3} width={1} textAlign='center' />
+                            </div>
+                        </section>)
                     :
                     (data.partiesMade.length > 0 ?
                         <MyEventsDisplay
@@ -121,7 +132,12 @@ export default function HomePage() {
                             eventImage={`https://media.resenha.app/r/${data.partiesMade[0].hash}.png`}
                         />
                         :
-                        <p>SEM RESENHAS</p>)
+                        <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
+                            <p className='mt-20 text-2xl'>Você ainda não criou nenhuma resenha! Bora juntar a galera pra curtir?! Toque abaixo pra criar uma nova resenha!</p>
+                            <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
+                            <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha/')} iconSide='right' height={1} width={1} textAlign='center' />
+                            </div>
+                        </section>)
                 }
             </div>
         </div>
