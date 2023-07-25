@@ -13,8 +13,9 @@ import Confirmation from "./pieces/confirmation";
 
 export default function Checkout() {
 
-    const [progress, setProgress] = useState(1);
     const maxProgress = 5;
+
+    const [progress, setProgress] = useState(1);
     const [isFilled, setIsFilled] = useState(false);
 
     const [partyName, setPartyName] = useState('Resenha no Terraço');
