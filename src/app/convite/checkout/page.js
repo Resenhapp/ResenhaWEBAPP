@@ -101,7 +101,7 @@ export default function Checkout() {
         }
     };
 
-    let title, subtitle, button;
+    let title, subtitle, button, action;
     switch (progress) {
         case 0:
             title = '';
@@ -113,22 +113,26 @@ export default function Checkout() {
             title = 'Informações';
             subtitle = 'Antes de continuar, precisamos de algumas informações...';
             button = 'Próximo';
+            action = handleNextStep;
             break;
         case 2:
             if (paymentMethod === 'pix') {
                 title = 'Pagamento com pix';
                 subtitle = 'Realize o pagamento copiando o código abaixo e colando no aplicativo do seu banco.';
                 button = 'Próximo';
+                action = handleNextStep;
             }
             else if (paymentMethod === 'Cartão') {
                 title = 'pagamento com cartão';
                 subtitle = 'Insira os dados do seu cartão abaixo para efetuar o pagamento:';
                 button = 'Pagar!';
+                action = getValues;
             }
             else if (paymentMethod === 'Dinheiro') {
                 title = 'Pagamento com dinheiro'
                 subtitle = 'Siga as instruções abaixo para pagar com dinheiro no dia da resenha:';
                 button = 'Próximo';
+                action = handleNextStep;
             }
             break;
         default:
@@ -153,7 +157,7 @@ export default function Checkout() {
             <footer className="flex flex-col gap-12">
                 <div className="flex flex-row w-full">
                     <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                    <Button label={button} icon={'arrow'} action={handleNextStep} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                    <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
                 </div>
                 <div className="flex items-center justify-center">
                     <p className="mr-1">Tem uma conta?</p>
