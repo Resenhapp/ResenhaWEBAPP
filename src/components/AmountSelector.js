@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AmountSelector = ({ onChange }) => {
+const AmountSelector = ({ setTicketsAmount }) => {
   const [count, setCount] = useState(1);
 
   const handleIncrement = () => {
@@ -14,8 +14,8 @@ const AmountSelector = ({ onChange }) => {
   };
 
   useEffect(() => {
-    onChange && onChange(count);
-  }, [count, onChange]);
+    setTicketsAmount(count);
+  }, [count, setTicketsAmount]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
