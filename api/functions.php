@@ -93,7 +93,11 @@ function getDayOfWeek($dateString)
     return $dayNames[$dayOfWeek] ?? $dayOfWeek;
 }
 
-function check_email($email)
+function redirect($url = GLOBAL_REDIRECT) {
+    header("Location: $url");
+}
+
+function checkEmail($email)
 {
     if (strlen($email) < 5) {
         return "short_email";
@@ -109,7 +113,7 @@ function check_email($email)
     }
 }
 
-function check_cpf($cpf)
+function checkCpf($cpf)
 {
     $query = "SELECT * FROM users WHERE cpf = '$cpf'";
     $result = queryDBRows($query);
@@ -120,20 +124,26 @@ function check_cpf($cpf)
     }
 }
 
-function check_password($password)
+function checkPassword($password)
 {
     if (strlen($password) < 8) {
         return "small_password";
-    } elseif (!preg_match("/[0-9]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[0-9]/", $password)) {
         return "numeric_password";
-    } elseif (!preg_match("/[a-zA-Z]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[a-zA-Z]/", $password)) {
         return "alphabetic_password";
-    } elseif (!preg_match("/[!@#$%^&*()\-_=+{};:,<.>]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[!@#$%^&*()\-_=+{};:,<.>]/", $password)) {
         return "special_password";
     }
 }
 
-function random_code($length)
+function randomCode($length)
 {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     $charactersLength = strlen($characters);
@@ -147,7 +157,7 @@ function random_code($length)
     return $code;
 }
 
-function random_key()
+function randomKey()
 {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
     $charactersLength = strlen($characters);
@@ -161,7 +171,7 @@ function random_key()
     return $key;
 }
 
-function register_log($user, $type, $action, $description = "none")
+function registerLog($user, $type, $action, $description = "none")
 {
     $variables = [ &$user, &$type, &$action, &$description];
 
@@ -176,7 +186,7 @@ function register_log($user, $type, $action, $description = "none")
     queryNR($query);
 }
 
-function send_message($embed, $webhook)
+function sendMessage($embed, $webhook)
 {
     $payload = json_encode(['content' => '', 'embeds' => [$embed]]);
 
@@ -195,17 +205,16 @@ function getIp()
     return $ip;
 }
 
-function request_pagarme($data)
+function requestPagarMe($data)
 {
-    global $pagarmeKey;
-
     $ch = curl_init('https://api.pagar.me/core/v5/orders');
+
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Basic ' . $pagarmeKey,
+        'Authorization: Basic ' . GLOBAL_PAGARMEKEY,
         'Accept: application/json']
     );
 
@@ -229,6 +238,23 @@ function returnError($error)
     echo json_encode($data);
 
     exit();
+}
+
+function returnSuccess($message)
+{
+    $data = [
+        'status' => "success",
+        'action' => "$message"
+    ];
+    
+    header('Content-Type: application/json');
+    echo json_encode($data);
+}
+
+function returnData($data)
+{
+    header('Content-Type: application/json');
+    echo json_encode($data);
 }
 
 function checkPublicRequest($request)
@@ -352,20 +378,31 @@ function checkSession($token)
 }
 
 function getHash($userHash, $urlType) {
-    // $imageUrl = "https://media.resenha.app/u/$userHash.png";
+    $userHash = hash256($userHash);
 
-    // $headers = @get_headers($imageUrl, 1);
+    if ($urlType == "event") {
+        $urlPrefix = "r";
+    }
+    
+    else {
+        $urlPrefix = "u";
+    }
 
-    // if ($headers && isset($headers[0])) {
-    //     $statusCode = explode(' ', $headers[0])[1];
-    //     $statusCode = intval($statusCode);
+    $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
 
-    //     if ($statusCode === 200) {
-    //         return $imageUrl;
-    //     }
-    // }
+    $ch = curl_init($imageUrl);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    return hash256("default");
+    if ($statusCode == 200) {
+        return $userHash;
+    } 
+    
+    else {
+        return hash256("default");
+    }
 }
 
 function createNotification($user, $title, $content)
@@ -422,8 +459,7 @@ function tryToEditWithdraw()
             'status' => 'success'
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
+        returnData($responseData);
     }
 
     else {
@@ -591,11 +627,9 @@ function getFeedData()
 
                 $addressDecoded = json_decode($json, true);
 
-
                 if (!empty($addressDecoded)) {
                     $userLatitude = $addressDecoded[0]["lat"];
                     $userLongitude = $addressDecoded[0]["lon"];
-
 
                     $query .= " AND
                         (6371 * 2 *
@@ -637,8 +671,7 @@ function getFeedData()
 
         $parties = getParties($result, $userId);
 
-        header('Content-Type: application/json');
-        echo json_encode($parties);
+        returnData($parties);
     }
 }
 
@@ -711,8 +744,7 @@ function editEventData()
             }
         }
 
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
+        returnData($responseData);
     }
 }
 
@@ -738,7 +770,7 @@ function editUserData()
         }
 
         if (isset($data['email'])) {
-            $emailError = check_email($data['email']);
+            $emailError = checkEmail($data['email']);
 
             if (isset($emailError)) {
                 returnError($emailError);
@@ -753,21 +785,21 @@ function editUserData()
             }
 
             else {
-                $newToken = random_key();
+                $newToken = randomKey();
 
                 $data['api'] = $newToken;
             }
         }
 
         if (isset($data['password']) ) {
-            $passwordError = check_password($data['password']);
+            $passwordError = checkPassword($data['password']);
 
             if (isset($passwordError)) {
                 returnError($passwordError);
             }
 
             else {
-                $newToken = random_key();
+                $newToken = randomKey();
 
                 $data['api'] = $newToken;
     
@@ -801,8 +833,7 @@ function editUserData()
             }
         }
 
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
+        returnData($responseData);
     }
 }
 
@@ -1106,19 +1137,33 @@ function getUserData()
         }
 
         if (isset($_POST["requested"])) {
-            $var = $data[sanitize($_POST["requested"])];
+            $requested = $_POST["requested"];
 
-            $data = [
-                sanitize($_POST["requested"]) => $var,
-            ];
+            if (is_array($requested)) {
+                $tempData = [];
+                foreach ($requested as $item) {
+                    $sanitizedItem = sanitize($item);
+
+                    $var = $data[$sanitizedItem];
+
+                    $tempData[$sanitizedItem] = $var; 
+                }
+            } 
+            
+            else {
+                $sanitizedRequested = sanitize($_POST["requested"]);
+
+                $var = $data[$sanitizedRequested];
+
+                $tempData = [
+                    $sanitizedRequested => $var
+                ];
+            }
+
+            $data = $tempData;
         }
 
-        if (isset($requested)) {
-
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
@@ -1274,8 +1319,7 @@ function getInviteData()
                 }
             }
 
-            header('Content-Type: application/json');
-            echo json_encode($data);
+            returnData($data);
         }
     } 
     
@@ -1292,16 +1336,14 @@ function tryToCreateGuest()
     $email = sanitize($_POST['email']);
     $method = sanitize($_POST['method']);
 
+    $user = "none";
+
     if (isset($_POST['token'])) {
         $userData = checkSession($_POST['token']);
     
         foreach ($userData as $column) {
             $user = $column["id"];
         }
-    }
-
-    else {
-        $user = "none";
     }
 
     $date = date("d/m/Y H:i");
@@ -1355,18 +1397,13 @@ function tryToCreateGuest()
             ],
         ];
 
-        $array = request_pagarme(json_encode($req));
+        $array = requestPagarMe(json_encode($req));
 
         $qrcode = $array["charges"][0]["last_transaction"]["qr_code"];
         $qrcodeurl = $array["charges"][0]["last_transaction"]["qr_code_url"];
 
         $charge = $array["charges"][0]["id"];
     } 
-
-    // else if ($method == "cartao") {
-    //     $paid = "1";
-    //     $charge = "none";
-    // }
     
     else {
         $paid = "0";
@@ -1436,7 +1473,7 @@ function tryToCreateGuest()
         ],
     ];
 
-    send_message($embed, $webhook);
+    sendMessage($embed, $webhook);
 
     if ($user != "none") {
         $query = "SELECT username FROM users WHERE id = '$user'";
@@ -1462,8 +1499,7 @@ function tryToCreateGuest()
             'status' => "success",
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
@@ -1482,9 +1518,10 @@ function tryToAuthenticate()
             'token' => $response,
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    } else {
+        returnData($data);
+    } 
+    
+    else {
         returnError("invalid_credentials");
     }
 }
@@ -1494,18 +1531,12 @@ function clearUserNotifications()
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
         $userId = $column["id"];
 
         $query = "UPDATE notifications SET cleared = '1' WHERE user = '$userId' AND cleared = '0'";
         queryNR($query);
 
-        $data = [
-            'status' => "success",
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess("notifications_cleared");
     }
 }
 
@@ -1534,24 +1565,17 @@ function switchSaveEvent()
             $deleteQuery = "DELETE FROM saved WHERE id = '$savedId'";
             queryNR($deleteQuery);
 
-            $data = [
-                'status' => "success",
-                'action' => "unsaved"
-            ];
+            $action = "unsaved";
         }
 
         else {
             $insertQuery = "INSERT INTO saved (`id`, `user`, `party`, `date`) VALUES (NULL, '$userId', '$partyCode', '$dateTimeF')";
             queryNR($insertQuery);
 
-            $data = [
-                'status' => "success",
-                'action' => "saved"
-            ];
+            $action = "saved";
         }
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess($action);
     }
 }
 
@@ -1623,13 +1647,8 @@ function seeUserNotifications()
 
                 $query = "UPDATE notifications SET seen = '1' WHERE user = '$id' AND seen = '0'";
                 queryNR($query);
-
-                $data = [
-                    'status' => "success",
-                ];
-
-                header('Content-Type: application/json');
-                echo json_encode($data);
+                
+                returnSuccess("notifications_seen");
             }
         }
     }
@@ -1721,7 +1740,7 @@ function tryToWithdraw()
 
             $webhook = "https://discord.com/api/webhooks/1116575716646068254/xAmqlhC3WpinvTw-HI5hdbom6-FA94YuY1v5NEUONTSXwroXTwA3PgaqTazIxezTFGn7";
 
-            send_message($embed, $webhook);
+            sendMessage($embed, $webhook);
         } 
         
         else {
@@ -1735,22 +1754,42 @@ function tryToDeleteEvent()
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
+        $id = $column["id"];
 
         $code = sanitize($_POST['code']);
 
-        $query = "DELETE FROM parties WHERE code = '$code'";
-        queryNR($query);
+        $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro'";
+        $confirmed = queryDB($query);
+
+        if ($confirmed) {
+            $query = "SELECT host FROM parties WHERE code = '$code'";
+            $host = queryDB($query)[0];
+    
+            if ($id == $host) {
+                $query = "DELETE FROM parties WHERE code = '$code'";
+                queryNR($query);
+    
+                returnSuccess("event_deleted");
+            }
+    
+            else {
+                returnError("invalid_token");
+            }
+        }
+
+        else {
+            returnError("guests_confirmed");
+        }
     }
 }
 
 function tryToSendMessage()
 {
-    $userData = checkSession($_POST['token']);
-
     $destination = sanitize($_POST['destination']);
     $type = sanitize($_POST['type']);
     $content = sanitize($_POST['content']);
+
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $id = $column["id"];
@@ -1820,13 +1859,7 @@ function tryToSendMessage()
         $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
         queryNR($query);
 
-        $data = [
-            'status' => "success",
-            'action' => "message_sent"
-        ];
-        
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess("message_sent");
     }
 }
 
@@ -1943,8 +1976,7 @@ function getMessages()
             'messages' => $messagesArray,
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
@@ -1953,12 +1985,9 @@ function tryToCreateEvent()
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["username"];
+        $host = $column["id"];
 
         $details = $_POST['details'];
-
-        $query = "SELECT id FROM users WHERE username = '$userName'";
-        $host = queryDB($query)[0];
 
         $requiredFields = ['name', 'address', 'isForAdults', 'start', 'hasTimeToEnd', 'end', 'dateSelected', 'selectedGuests', 'selectedPrice', 'descriptionContent'];
 
@@ -1982,7 +2011,7 @@ function tryToCreateEvent()
 
         $date = date('d/m/Y', strtotime($details['dateSelected']));
 
-        $code = random_code(8);
+        $code = randomCode(8);
 
         $timezone = new DateTimeZone('America/Sao_Paulo');
         $now = new DateTime('now', $timezone);
@@ -2067,7 +2096,7 @@ function tryToCreateEvent()
             "A $name foi criada com sucesso."
         );
 
-        send_message($embed, $webhook);
+        sendMessage($embed, $webhook);
     }
 }
 
@@ -2093,11 +2122,11 @@ function tryToCreateUser()
     $cpf = sanitize($_POST['cpf']);
     $birth = sanitize($_POST['birth']);
 
-    $error = check_email($email) or check_password($password) or check_cpf($cpf);
+    $error = checkEmail($email) or checkPassword($password) or checkCpf($cpf);
 
     if (!isset($error)) {
         $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
-        $api = random_key();
+        $api = randomKey();
         $date = date('d/m/Y H:i');
         $registration = getIp();
         $last = getIp();
@@ -2141,15 +2170,13 @@ function tryToCreateUser()
                 ],
             ];
 
-            send_message($embed, $webhook);
+            sendMessage($embed, $webhook);
 
             $data = [
-                'user' => $user,
-                'status' => "success",
+                'user' => $user
             ];
 
-            header('Content-Type: application/json');
-            echo json_encode($data);
+            returnData($data);
         }
     } 
     
