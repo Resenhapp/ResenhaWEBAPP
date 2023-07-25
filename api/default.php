@@ -27,10 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verifica se a chave "userid" está presente na solicitação GET
     if (isset($_GET['userid'])) {
         // Chama a função para retornar os dados do usuário em formato JSON
-        getUserDataById();
+        getUserDataDiscord();
+    } elseif (isset($_GET['user@'])) {
+        getUserDataDiscord();
+    } elseif (isset($_GET['useremail'])) {
+        getUserDataDiscord();
     } elseif (isset($_GET['party'])) {
-        getPartyDataByCode();
-    } else {
+        getPartyDataDiscord();
+    }
+     else {
         // Caso a chave "userid" não seja fornecida, retorna um erro em JSON
         $errorData = array('error' => 'No param provided');
         echo json_encode($errorData);
