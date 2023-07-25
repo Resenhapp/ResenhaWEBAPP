@@ -7,6 +7,9 @@ import Vector from "@/src/components/Vector";
 import Info from "./pieces/info";
 import Loading from "@/src/components/Loading";
 import Pix from "./pieces/pix";
+import Card from "./pieces/card";
+import Cash from "./pieces/cash";
+import Confirmation from "./pieces/confirmation";
 
 export default function Checkout() {
 
@@ -22,7 +25,7 @@ export default function Checkout() {
     const [customerEmail, setCustomerEmail] = useState('');
     const [ticketsAmount, setTicketsAmount] = useState(0);
     const [customerIsEighteen, setCustomerIsEighteen] = useState(true);
-    
+
     const getValues = () => {
         console.log(`Customer Name: ${customerName}`);
         console.log(`Customer Email: ${customerEmail}`);
@@ -30,7 +33,7 @@ export default function Checkout() {
         console.log(`Is Eighteen: ${customerIsEighteen}`);
         console.log(`Payment Method: ${paymentMethod}`);
     }
-    
+
     var method = 'pix';
     const renderPiece = () => {
         switch (progress) {
@@ -44,21 +47,25 @@ export default function Checkout() {
                     setSelectionAmout={setTicketsAmount}
                     getPartyName={partyName}
                     getPartyPrice={partyPrice}
-                    setIsFilled={setIsFilled} 
+                    setIsFilled={setIsFilled}
                     setCustomerIsEighteen={setCustomerIsEighteen}
                     canBeUnderaged={canBeUnderaged}
                 />;
             case 2:
-                if (method == 'pix') {
+                if (paymentMethod === 'Pix') {
                     return <Pix setPixKey={'sdkasdk-w3d20dk20kd0kdf00-dk29kf0f-f92kf29fj'}
-                            setPixQrCodeUrl={'https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfdssssskc0K)CJ3wf03jf30ftgj030sd-ssss0K)CJ3wf03jf30ftgj030sd-sssssssssssskc0K)CJ3wf03sssssssskc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdssck03qwkc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdasdasdddddddddddd3d3df3f-g&chld=L|1&choe=UTF-8'}/>
+                        setPixQrCodeUrl={'https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfdssssskc0K)CJ3wf03jf30ftgj030sd-ssss0K)CJ3wf03jf30ftgj030sd-sssssssssssskc0K)CJ3wf03sssssssskc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdssck03qwkc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdasdasdddddddddddd3d3df3f-g&chld=L|1&choe=UTF-8'} />
                 }
-                else if (method == 'cash') {
-                    return <Cash />
+                else if (paymentMethod === 'Dinheiro') {
+                    return <Cash setIsFilled={setIsFilled}/>
                 }
-                else if (method == 'card') {
-                    return <Card />
+                else if (paymentMethod === 'Cartão') {
+                    return <Card setIsFilled={setIsFilled}/>
                 }
+            case 3:
+                return (
+                    <Confirmation />
+                )
             default:
                 return null;
         }
@@ -93,7 +100,7 @@ export default function Checkout() {
         }
     };
 
-    let title, subtitle;
+    let title, subtitle, button;
     switch (progress) {
         case 0:
             title = '';
@@ -104,11 +111,23 @@ export default function Checkout() {
         case 1:
             title = 'Informações';
             subtitle = 'Antes de continuar, precisamos de algumas informações...';
+            button = 'Próximo';
             break;
         case 2:
-            if (method == 'pix') {
+            if (paymentMethod === 'pix') {
                 title = 'Pagamento com pix';
                 subtitle = 'Realize o pagamento copiando o código abaixo e colando no aplicativo do seu banco.';
+                button = 'Próximo';
+            }
+            else if (paymentMethod === 'Cartão') {
+                title = 'pagamento com cartão';
+                subtitle = 'Insira os dados do seu cartão abaixo para efetuar o pagamento:';
+                button = 'Pagar!';
+            }
+            else if (paymentMethod === 'Dinheiro') {
+                title = 'Pagamento com dinheiro'
+                subtitle = 'Siga as instruções abaixo para pagar com dinheiro no dia da resenha:';
+                button = 'Próximo';
             }
             break;
         default:
@@ -133,7 +152,7 @@ export default function Checkout() {
             <footer className="flex flex-col gap-12">
                 <div className="flex flex-row w-full">
                     <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                    <Button label={'Próximo'} icon={'arrow'} action={handleNextStep} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                    <Button label={button} icon={'arrow'} action={handleNextStep} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
                 </div>
                 <div className="flex items-center justify-center">
                     <p className="mr-1">Tem uma conta?</p>

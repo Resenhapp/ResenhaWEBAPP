@@ -4,7 +4,7 @@ import CopyInput from '@/src/components/CopyInput';
 import Timer from '@/src/components/Timer';
 import Image from 'next/image';
 
-export default function Pix({setPixKey, setPixQrCodeUrl}) {
+export default function Pix({setPixKey, setPixQrCodeUrl, setIsFilled}) {
     
     return(
         <div className="flex flex-col items-center justify-center">
