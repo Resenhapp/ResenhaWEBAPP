@@ -11,6 +11,15 @@ function queryDB($query)
     return $row;
 }
 
+function queryDBDiscord($query)
+{
+    global $link;
+    $result = $link->query($query);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC); // Adicione o parâmetro MYSQLI_ASSOC aqui
+
+    return $row;
+}
+
 function queryNR($query)
 {
     global $link;
@@ -834,6 +843,52 @@ function editUserData()
         }
 
         returnData($responseData);
+    }
+}
+
+function getUserDataById()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['userid'])) {
+        $userId = sanitize($_GET['userid']);
+
+        $query = "SELECT * FROM users WHERE id = $userId";
+        $result = queryDBDiscord($query);
+
+        if ($result) {
+            echo json_encode($result);
+        } else {
+            $errorData = array('error' => 'User not found');
+            echo json_encode($errorData);
+        }
+    } else {
+        $errorData = array('error' => 'No userid provided');
+        echo json_encode($errorData);
+    }
+}
+
+function getPartyDataByCode()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['party'])) {
+        $partyCode = sanitize($_GET['party']);
+
+        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
+        $result = queryDBDiscord($query);
+
+        if ($result) {
+            echo json_encode($result);
+        } else {
+            $errorData = array('error' => 'Party not found');
+            echo json_encode($errorData);
+        }
+    } else {
+        $errorData = array('error' => 'No party code provided');
+        echo json_encode($errorData);
     }
 }
 
