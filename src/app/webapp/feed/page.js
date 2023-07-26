@@ -41,6 +41,20 @@ export default function Feed() {
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
 
+  const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
+
+  const reverseGeocode = async (lat, lon) => {
+      const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const addressDetails = res.data.address;
+  
+      const road = addressDetails.road || '';
+      const suburb = addressDetails.suburb || addressDetails.neighbourhood || '';
+      const city = addressDetails.city || '';
+      const state = addressDetails.state || '';
+  
+      return `${road}, ${suburb}, ${city}`;
+  }
+
   const handleSaveButton = async (party) => {
     try {
       const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
@@ -82,22 +96,56 @@ export default function Feed() {
 
   const fetchData = async () => {
     setLoading(true);
-
+  
     try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-          request: 'getFeedData',
-          token: token,
+      if (navigator.geolocation) {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
         });
-
+  
+        var newPosition = [position.coords.latitude, position.coords.longitude];
+  
+        const address = await reverseGeocode(newPosition[0], newPosition[1]);
+  
+        setInputValue(address);
+  
+        var filterParameters = {
+          "coordinates": newPosition,
+          "radius": inputRadiusValue
+        };
+  
+        try {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getFeedData',
+            token: token,
+            filterParameters: filterParameters
+          });
+  
+          setData(response);
+        } 
+        
+        catch (error) {
+          console.error(error);
+        }
+      } 
+      
+      else {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getFeedData',
+          token: token
+        });
         setData(response);
-    }
-
+      }
+    } 
+    
     catch (error) {
-        console.error(error);
+      console.error(error);
     }
-
+  
     setLoading(false);
   };
+  
+  
 
   const filterFeedData = async () => {
     toggleEditFilterPageOpen();
@@ -187,6 +235,10 @@ export default function Feed() {
     toggleModal();
   };
 
+  const handleLocationStart = (location) => {
+    setInputValue(location);
+  };
+
   const saveTags = () => {
     setEventTags(tempEventTags);
     toggleEditTagsPageOpen();
@@ -271,6 +323,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -316,7 +369,7 @@ export default function Feed() {
               Ver no mapa
             </button>
             <Modal show={isModalOpen} close={toggleModal}>
-              <Map onLocationSelect={handleLocationSelect} />
+              <Map onLocationSelect={handleLocationSelect} onLocationStart={handleLocationStart} />
             </Modal>
           </div>
           <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
