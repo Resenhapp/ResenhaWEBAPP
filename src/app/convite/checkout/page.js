@@ -233,8 +233,8 @@ export default function Checkout() {
             {
                 progress < 3 ?
                     (
-                        <footer className="flex flex-col gap-12" >
-                            <div className="flex flex-row w-full">
+                        <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
+                            <div className="flex flex-row w-full justify-center max-w-md">
                                 <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
                                 <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
                             </div>
