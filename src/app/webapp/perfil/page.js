@@ -194,6 +194,7 @@ export default function Profile() {
                                                 partyDate={party.date}
                                                 partyHour={party.start}
                                                 partyName={party.name}
+                                                eventCode={party.code}
                                             />
                                             ) : null
                                         ))}
@@ -211,6 +212,7 @@ export default function Profile() {
                                                 partyDate={party.date}
                                                 partyHour={party.time}
                                                 partyName={party.name}
+                                                eventCode={party.code}
                                             />
                                             ) : null
                                         ))}

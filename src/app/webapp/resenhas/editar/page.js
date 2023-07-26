@@ -515,6 +515,7 @@ export default function EditEvent() {
             setEventTags(response.tags);
 
             const onlyNumbers = response.ticket.replace(/\D/g, "");
+            
             const formattedPrice = (parseInt(onlyNumbers)).toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
