@@ -849,7 +849,6 @@ function editUserData()
 function getUserDataDiscord()
 {
     header('Content-Type: application/json');
-    global $link;
 
     if (isset($_GET['userid'])) {
         $userId = sanitize($_GET['userid']);
@@ -870,11 +869,40 @@ function getUserDataDiscord()
             echo json_encode($errorData);
         }
 }
+function getUsersFromParty()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['usersfromparty'])) {
+        $partyCode = sanitize($_GET['usersfromparty']);
+
+        $query = "SELECT * FROM guests WHERE party = ?";
+        $stmt = $link->prepare($query);
+        $stmt->bind_param("s", $partyCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $usersData = array();
+            while ($row = $result->fetch_assoc()) {
+                $usersData[] = $row;
+            }
+
+            echo json_encode($usersData);
+        } else {
+            $errorData = array('error' => 'Party does not exist or does not contain guests');
+            echo json_encode($errorData);
+        }
+    } else {
+        $errorData = array('error' => 'No party code provided');
+        echo json_encode($errorData);
+    }
+}
 
 function getPartyDataDiscord()
 {
     header('Content-Type: application/json');
-    global $link;
 
     if (isset($_GET['party'])) {
         $partyCode = sanitize($_GET['party']);
