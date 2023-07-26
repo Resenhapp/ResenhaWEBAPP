@@ -608,41 +608,51 @@ function getFeedData()
         if (isset($_POST['filterParameters'])) {
             $filterParameters = $_POST['filterParameters'];
 
-            if (isset($filterParameters["address"]) && isset($filterParameters["radius"])) {
-                $userAddress = $filterParameters["address"];
+            if (isset($filterParameters["radius"])) {
                 $locationRadius = $filterParameters["radius"];
 
-                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=" . urlencode($userAddress) . "&format=json";
+                if (isset($filterParameters["address"])) {
+                    $userAddress = $filterParameters["address"];
 
-                $httpOptions = [
-                    "http" => [
-                        "method" => "GET",
-                        "header" => "User-Agent: Nominatim-Test",
-                    ],
-                ];
+                    $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($userAddress)."&format=json";
 
-                $streamContext = stream_context_create($httpOptions);
+                    $httpOptions = [
+                        "http" => [
+                            "method" => "GET",
+                            "header" => "User-Agent: Nominatim-Test",
+                        ],
+                    ];
 
-                $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+                    $streamContext = stream_context_create($httpOptions);
 
-                $addressDecoded = json_decode($json, true);
+                    $json = file_get_contents($requestToOpenstreet, false, $streamContext);
 
-                if (!empty($addressDecoded)) {
-                    $userLatitude = $addressDecoded[0]["lat"];
-                    $userLongitude = $addressDecoded[0]["lon"];
+                    $addressDecoded = json_decode($json, true);
 
-                    $query .= " AND
-                        (6371 * 2 *
-                            ASIN(
-                                SQRT(
-                                    POWER(SIN((RADIANS(lat) - RADIANS($userLatitude)) / 2), 2) +
-                                    COS(RADIANS($userLatitude)) *
-                                    COS(RADIANS(lat)) *
-                                    POWER(SIN((RADIANS(lon) - RADIANS($userLongitude)) / 2), 2)
-                                )
-                            )
-                    ) <= $locationRadius";
+                    if (!empty($addressDecoded)) {
+                        $userLatitude = $addressDecoded[0]["lat"];
+                        $userLongitude = $addressDecoded[0]["lon"];
+                    }
                 }
+
+                else if (isset($filterParameters["coordinates"])) {
+                    $userCoordinates = $filterParameters["coordinates"];
+
+                    $userLatitude = $userCoordinates[0];
+                    $userLongitude = $userCoordinates[1];
+                }
+
+                $query .= " AND
+                    (6371 * 2 *
+                        ASIN(
+                            SQRT(
+                                POWER(SIN((RADIANS(lat) - RADIANS($userLatitude)) / 2), 2) +
+                                COS(RADIANS($userLatitude)) *
+                                COS(RADIANS(lat)) *
+                                POWER(SIN((RADIANS(lon) - RADIANS($userLongitude)) / 2), 2)
+                            )
+                        )
+                ) <= $locationRadius";
             }
 
             if (isset($filterParameters["tags"])) {

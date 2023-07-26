@@ -35,20 +35,22 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                 <div className='py-4 pl-4'>
                     <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]">{eventName}</h1>
                     <div className='flex flex-row gap-2 items-center'>
-                        <div className='flex flex-row'>
-                            {imageUrl.map((url, index) => (
+                        {imageUrl.length > 0 ? (
+                            <div className='flex flex-row'>
+                                {imageUrl.map((url, index) => (
                                 <div key={index.id}>
                                     <Image
-                                        key={index}
-                                        src={url}
-                                        alt=""
-                                        width={110}
-                                        height={30}
-                                        className={`rounded-full ${index < imageUrl.length - 1 ? "mr-[-10px]" : ""} ring-2 ring-purpleT1 object-cover h-5 w-5`}
+                                    key={index}
+                                    src={url}
+                                    alt=""
+                                    width={110}
+                                    height={30}
+                                    className={`rounded-full ${index < imageUrl.length - 1 ? "mr-[-10px]" : ""} ring-2 ring-purpleT1 object-cover h-5 w-5`}
                                     />
                                 </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : null}
                         <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
                     </div>
                 </div>
