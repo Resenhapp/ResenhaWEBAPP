@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
      else {
         // Caso a chave "userid" não seja fornecida, retorna um erro em JSON
-        $errorData = array('error' => 'No param provided');
+        $errorData = array('error' => 'No valid param provided');
         echo json_encode($errorData);
     }
 } else {
