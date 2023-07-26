@@ -11,6 +11,15 @@ function queryDB($query)
     return $row;
 }
 
+function queryDBDiscord($query)
+{
+    global $link;
+    $result = $link->query($query);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC); // Adicione o parâmetro MYSQLI_ASSOC aqui
+
+    return $row;
+}
+
 function queryNR($query)
 {
     global $link;
@@ -844,6 +853,79 @@ function editUserData()
         }
 
         returnData($responseData);
+    }
+}
+
+function getUserDataDiscord()
+{
+    header('Content-Type: application/json');
+
+    if (isset($_GET['userid'])) {
+        $userId = sanitize($_GET['userid']);
+        $query = "SELECT * FROM users WHERE id = $userId";
+    } elseif (isset($_GET['user@'])) {
+        $userName = sanitize($_GET['user@']);
+        $query = "SELECT * FROM users WHERE username = '$userName'";
+    } elseif (isset($_GET['useremail'])) {
+        $userEmail = sanitize($_GET['useremail']);
+        $query = "SELECT * FROM users WHERE email = '$userEmail'";
+    }
+        $result = queryDBDiscord($query);
+
+        if ($result) {
+            echo json_encode($result);
+        } else {
+            $errorData = array('error' => 'User not found');
+            echo json_encode($errorData);
+        }
+}
+function getUsersFromParty()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['usersfromparty'])) {
+        $partyCode = sanitize($_GET['usersfromparty']);
+
+        $query = "SELECT * FROM guests WHERE party = ?";
+        $stmt = $link->prepare($query);
+        $stmt->bind_param("s", $partyCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $usersData = array();
+            while ($row = $result->fetch_assoc()) {
+                $usersData[] = $row;
+            }
+
+            echo json_encode($usersData);
+        } else {
+            $errorData = array('error' => 'Party does not exist or does not contain guests');
+            echo json_encode($errorData);
+        }
+    } else {
+        $errorData = array('error' => 'No party code provided');
+        echo json_encode($errorData);
+    }
+}
+
+function getPartyDataDiscord()
+{
+    header('Content-Type: application/json');
+
+    if (isset($_GET['party'])) {
+        $partyCode = sanitize($_GET['party']);
+        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
+
+    $result = queryDBDiscord($query);
+
+    if ($result) {
+        echo json_encode($result);
+    } else {
+        $errorData = array('error' => 'Party not found');
+        echo json_encode($errorData);
+    }
     }
 }
 
