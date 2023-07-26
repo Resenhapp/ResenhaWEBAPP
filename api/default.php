@@ -32,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         getUserDataDiscord();
     } elseif (isset($_GET['useremail'])) {
         getUserDataDiscord();
+    } elseif (isset($_GET['userbalanceid'])) {
+        getUserDataDiscord();
     } elseif (isset($_GET['party'])) {
         getPartyDataDiscord();
     } elseif (isset($_GET['usersfromparty'])) {

@@ -867,6 +867,9 @@ function getUserDataDiscord()
     } elseif (isset($_GET['useremail'])) {
         $userEmail = sanitize($_GET['useremail']);
         $query = "SELECT * FROM users WHERE email = '$userEmail'";
+    } elseif (isset($_GET['userbalanceid'])) {
+        $userId = sanitize($_GET['userbalanceid']);
+        $query = "SELECT * FROM balances WHERE user = $userId";
     }
         $result = queryDBDiscord($query);
 
