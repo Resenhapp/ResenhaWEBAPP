@@ -27,15 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verifica se a chave "userid" está presente na solicitação GET
     if (isset($_GET['userid'])) {
         // Chama a função para retornar os dados do usuário em formato JSON
-        getUserDataDiscord();
+        getSingleDataDiscord();
     } elseif (isset($_GET['user@'])) {
-        getUserDataDiscord();
+        getSingleDataDiscord();
     } elseif (isset($_GET['useremail'])) {
-        getUserDataDiscord();
+        getSingleDataDiscord();
     } elseif (isset($_GET['userbalanceid'])) {
-        getUserDataDiscord();
+        getSingleDataDiscord();
     } elseif (isset($_GET['party'])) {
-        getPartyDataDiscord();
+        getSingleDataDiscord();
     } elseif (isset($_GET['usersfromparty'])) {
         getUsersFromParty();
     } elseif (isset($_GET['conciergesfromparty'])) {

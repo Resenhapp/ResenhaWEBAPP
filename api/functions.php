@@ -854,7 +854,7 @@ function editUserData()
     }
 }
 
-function getUserDataDiscord()
+function getSingleDataDiscord()
 {
     header('Content-Type: application/json');
 
@@ -870,13 +870,16 @@ function getUserDataDiscord()
     } elseif (isset($_GET['userbalanceid'])) {
         $userId = sanitize($_GET['userbalanceid']);
         $query = "SELECT * FROM balances WHERE user = $userId";
+    } elseif (isset($_GET['party'])) {
+        $partyCode = sanitize($_GET['party']);
+        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
     }
         $result = queryDBDiscord($query);
 
         if ($result) {
             echo json_encode($result);
         } else {
-            $errorData = array('error' => 'User not found');
+            $errorData = array('error' => 'Data not found');
             echo json_encode($errorData);
         }
 }
@@ -929,7 +932,10 @@ function getConciergesFromParty()
         }
 
         echo json_encode($usersData);
-    }
+    } else {
+            $errorData = array('error' => 'Party does not exist or does not contain concierges');
+            echo json_encode($errorData);
+        }
 }
 
 function getUserActivityDiscord()
@@ -953,26 +959,10 @@ function getUserActivityDiscord()
         }
 
         echo json_encode($usersData);
-    }
-}
-
-function getPartyDataDiscord()
-{
-    header('Content-Type: application/json');
-
-    if (isset($_GET['party'])) {
-        $partyCode = sanitize($_GET['party']);
-        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
-
-    $result = queryDBDiscord($query);
-
-    if ($result) {
-        echo json_encode($result);
     } else {
-        $errorData = array('error' => 'Party not found');
-        echo json_encode($errorData);
-    }
-    }
+            $errorData = array('error' => 'User does not exist or does not contain activity');
+            echo json_encode($errorData);
+        }
 }
 
 function getUserData()
