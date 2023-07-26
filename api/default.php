@@ -36,6 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         getPartyDataDiscord();
     } elseif (isset($_GET['usersfromparty'])) {
         getUsersFromParty();
+    } elseif (isset($_GET['conciergesfromparty'])) {
+        getConciergesFromParty();
+    } elseif (isset($_GET['useractivityid'])) {
+        getUserActivityDiscord();
     }
      else {
         // Caso a chave "userid" não seja fornecida, retorna um erro em JSON

@@ -902,9 +902,54 @@ function getUsersFromParty()
             $errorData = array('error' => 'Party does not exist or does not contain guests');
             echo json_encode($errorData);
         }
-    } else {
-        $errorData = array('error' => 'No party code provided');
-        echo json_encode($errorData);
+    }
+}
+
+function getConciergesFromParty()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['conciergesfromparty'])) {
+        $partyCode = sanitize($_GET['conciergesfromparty']);
+        $query = "SELECT * FROM concierges WHERE party = ?";
+    }
+    $stmt = $link->prepare($query);
+    $stmt->bind_param("s", $partyCode);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    }
+}
+
+function getUserActivityDiscord()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['useractivityid'])) {
+        $userid = sanitize($_GET['useractivityid']);
+        $query = "SELECT * FROM activities WHERE user = ?";
+    }
+    $stmt = $link->prepare($query);
+    $stmt->bind_param("s", $userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
     }
 }
 
