@@ -17,6 +17,12 @@ export default function MyParties() {
         window.location.href = '/login';
     }
 
+    const handleNavigation = (pageToGo) => {
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
+    };
+
     const axios = require('axios');
     const qs = require('qs');
 
@@ -62,8 +68,16 @@ export default function MyParties() {
     const handleCopyClick = async (party) => {
         const partyUrl = `https://resenha.app/convite?c=${party.code}`;
     
-        await navigator.clipboard.writeText(partyUrl);
+        const copyData = {
+            text: `Que tal colar na minha resenha? Só confirmar pelo link: `,
+            url: `${partyUrl}`,
+        };
+    
+        const fullTextToCopy = `${copyData.text}${copyData.url}`;
+        
+        await navigator.clipboard.writeText(fullTextToCopy);
     };
+    
 
     const handleTrashClick = async (party) => {
         try {
@@ -130,7 +144,7 @@ export default function MyParties() {
                     </div>
                 </section>
                 <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-                <Button label={'Criar resenha'} icon={'plus'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+                <Button label={'Criar resenha'} icon={'plus'} action={() => handleNavigation('novaresenha')} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
             </div>
         </div>

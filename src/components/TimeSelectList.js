@@ -15,7 +15,7 @@ const TimeSelectList = ({ range, onClick, selected }) => {
     }, [selected]);
 
     return (
-        <div className='flex flex-col overflow-y-auto gap-1 h-[85px]'>
+        <div className='flex flex-col overflow-y-auto gap-1 h-[105px]'>
             {numbers.map(num => (
                 <div key={num}>
                     <button

@@ -17,9 +17,9 @@ if (typeof window !== 'undefined') {
   delete L.Icon.Default.prototype._getIconUrl;
 
   L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://resenha.app/publico/recursos/imagens/ui/pin001.png',
-    iconUrl: 'https://resenha.app/publico/recursos/imagens/ui/pin002.png',
-    shadowUrl: 'https://resenha.app/publico/recursos/imagens/ui/shadow001.png',
+    iconRetinaUrl: 'https://media.resenha.app/s/ui/pin001.png',
+    iconUrl: 'https://media.resenha.app/s/ui/pin001.png',
+    shadowUrl: 'https://media.resenha.app/s/ui/shadow001.png',
   });
 }
 

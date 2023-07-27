@@ -5,7 +5,7 @@ const DateComponent = ({ number, day, month, year, selectedDate, onDateSelect })
   const isSelected = selectedDate?.getTime() === fullDate.getTime(); // Check if this date is selected
 
   const handleClick = () => {
-    onDateSelect(fullDate, number, month, year); // Pass the full date and its components to onDateSelect
+    onDateSelect(fullDate); // Pass the full date and its components to onDateSelect
   };
 
   return (

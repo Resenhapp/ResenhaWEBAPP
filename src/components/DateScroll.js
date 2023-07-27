@@ -4,9 +4,9 @@ import DateComponent from './DateComponent';
 const DateScroll = ({ onDateSelect }) => {
   const [selected, setSelected] = useState(null);
 
-  const handleDateSelect = (date, day, month, year) => {
+  const handleDateSelect = (date) => {
     setSelected(date);
-    onDateSelect(day, month, year);
+    onDateSelect(date);
   };
 
   const currentDate = new Date();
