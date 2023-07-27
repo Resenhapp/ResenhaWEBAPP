@@ -134,6 +134,7 @@ export default function Feed() {
           request: 'getFeedData',
           token: token
         });
+        
         setData(response);
       }
     } 
@@ -189,6 +190,7 @@ export default function Feed() {
         token: token,
         searchTerm: searchTerm
       });
+
       setData(response);
     } 
     
@@ -208,6 +210,7 @@ export default function Feed() {
         token: token,
         hype: true
       });
+
       setData(response);
     } 
     
