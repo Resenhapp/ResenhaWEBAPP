@@ -37,7 +37,7 @@ export default function MyInvites() {
   
     const fetchData = async () => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
               request: 'getUserData',
               token: token
           });
@@ -81,7 +81,7 @@ export default function MyInvites() {
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                            partyCode={party.code}
+                            partyCode={party.token}
                             partyGuests={party.confirmed}
                             partyDate={party.date}
                             partyHour={party.time}

@@ -20,10 +20,20 @@ export default function AccountPartySaved() {
 
     const [data, setData] = useState(null);
 
-    const handleSaveButton = () => {
-
+    const handleSaveButton = async (party) => {
+        try {
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'switchSaveEvent',
+            party: party.code,
+            token: token,
+          });
+        }
+    
+        catch (error) {
+            console.error(error);
+        }
     };
-
+    
     const makeRequest = async (url, data) => {
         try {
             const response = await axios.post(url, qs.stringify(data));
@@ -37,7 +47,7 @@ export default function AccountPartySaved() {
   
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token,
                 requested: "saved"
@@ -75,7 +85,7 @@ export default function AccountPartySaved() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 {saved.length > 0 ? (saved.map((party) => {
-                                    var { hash, price, start, confirmed, capacity, title, code, headers, guests } = party;
+                                    var { hash, price, start, confirmed, capacity, title, code, headers, guests} = party;
 
                                     const guestsImages = [];
 
@@ -88,20 +98,20 @@ export default function AccountPartySaved() {
                                     }
 
                                     return (
-                                    <PartyBanner
-                                        key={guest.id}
-                                        imageUrl={guestsImages}
-                                        eventName={title}
-                                        eventImage={`https://media.resenha.app/r/${hash}.png`}
-                                        eventHour={start}
-                                        eventGuests={confirmed}
-                                        eventMax={capacity}
-                                        eventPrice={price}
-                                        eventSaved={'delete'}
-                                        eventTags={headers}
-                                        eventCode={code}
-                                        handleSaveButton={handleSaveButton}
-                                    />
+                                        <PartyBanner
+                                            key={hash}
+                                            imageUrl={guestsImages}
+                                            eventName={title}
+                                            eventImage={`https://media.resenha.app/r/${hash}.png`}
+                                            eventHour={start}
+                                            eventGuests={confirmed}
+                                            eventMax={capacity}
+                                            eventPrice={price}
+                                            eventSaved={'delete'}
+                                            eventTags={headers}
+                                            eventCode={code}
+                                            handleSaveButton={() => handleSaveButton(party)}
+                                        />
                                     );
                                 })
                                 ) : (

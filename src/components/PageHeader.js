@@ -35,10 +35,17 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     };
   
     const fetchData = async () => {
+      const requested = [
+        "username",
+        "notified",
+        "notifications"
+      ];
+
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'getUserData',
-          token: token
+          token: token,
+          requested: requested
         });
 
         setData(response);
@@ -51,7 +58,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
   
     const checkIfUserNotified = async () => {
       try {
-        const response = await makeRequest('https://api.resenha.app/', {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'getUserData',
           token: token,
           requested: 'notified'

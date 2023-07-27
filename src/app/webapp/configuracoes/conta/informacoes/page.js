@@ -6,10 +6,10 @@ import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-
+import Confirmed from '@/src/components/Confirmed';
 export default function AccountInfo() {
     const token = Cookies.get('token');
-    
+
     if (!token) {
         if (typeof window !== 'undefined') {
             window.location.href = '/login';
@@ -88,15 +88,15 @@ export default function AccountInfo() {
         const data = {
             name: tempName
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditNamePageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -108,16 +108,16 @@ export default function AccountInfo() {
         const data = {
             birth: tempBirthday
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditBirthdayPageOpen();
 
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -129,15 +129,15 @@ export default function AccountInfo() {
         const data = {
             phone: tempPhone
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditPhonePageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -149,15 +149,15 @@ export default function AccountInfo() {
         const data = {
             address: tempAddress
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditAddressPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -169,15 +169,15 @@ export default function AccountInfo() {
         const data = {
             address: tempAddress
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditCpfPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -207,7 +207,7 @@ export default function AccountInfo() {
         setTempCpf(cpf);
         toggleEditCpfPageOpen();
     };
-    
+
     const makeRequest = async (url, data) => {
         try {
             const response = await axios.post(url, qs.stringify(data));
@@ -221,23 +221,23 @@ export default function AccountInfo() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
-            request: 'editUserData',
-            token: token,
-            data: data
-          });
-      
-          return response;
-        } 
-        
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'editUserData',
+                token: token,
+                data: data
+            });
+
+            return response;
+        }
+
         catch (error) {
-          console.error(error);
+            console.error(error);
         }
     };
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token
             });
@@ -249,8 +249,8 @@ export default function AccountInfo() {
             setBirthday(response.birth);
             setPhone(response.phone);
             setCpf(response.cpf);
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -264,7 +264,7 @@ export default function AccountInfo() {
     if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }
@@ -393,17 +393,23 @@ export default function AccountInfo() {
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditPhonePageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">Telefone</p>
-                                    <InputFieldPurple value={phone} readOnly={true} />
+                                    <div className='flex flex-row justify-between'>
+                                        <p className="text-whiteT1 text-sm font-semibold">Telefone</p>
+                                        <Confirmed initialConfirmation={true} />
+                                    </div>
+                                    <InputFieldPurple value={phone} readOnly={true} placeholder={'(01) 9 2345-6789'}/>
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditAddressPageOpen}>
                                     <p className="text-whiteT1 text-sm font-semibold">Endereço</p>
-                                    <InputFieldPurple value={address} readOnly={true} />
+                                    <InputFieldPurple value={address} readOnly={true} placeholder={'Rua do James da Salada de Fruta'}/>
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditCpfPageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">CPF</p>
+                                    <div className='flex flex-row justify-between'>
+                                        <p className="text-whiteT1 text-sm font-semibold">CPF</p>
+                                        <Confirmed initialConfirmation={true} />
+                                    </div>
                                     <InputFieldPurple value={cpf} readOnly={true} />
                                 </div>
                             </div>

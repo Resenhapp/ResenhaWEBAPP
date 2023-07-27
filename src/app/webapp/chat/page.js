@@ -51,7 +51,7 @@ export default function Chat() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getMessages',
                 token: token,
                 code: chatCode,
@@ -59,7 +59,7 @@ export default function Chat() {
             });
 
             if (response.error) {
-                handleNavigation("feed");
+                window.history.back();
             }
 
             if (response && Array.isArray(response.messages)) {
@@ -85,12 +85,10 @@ export default function Chat() {
             sent: true
         };
 
-        
-
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'tryToSendMessage',
                 token: token,
                 destination: chatCode,
@@ -136,14 +134,14 @@ export default function Chat() {
                                         <p>Ninguém enviou mensagens nesse chat ainda 😒. Seja o primeiro!</p>
                                     ) : (
                                         [...messages].map((message, index) => (
-                                        <ChatBubble
-                                            key={index}
-                                            showImage={false}
-                                            imageUrl={message.imageUrl}
-                                            message={message.content}
-                                            timestamp={message.date.hour + ":" + message.date.minute}
-                                            sent={message.sent}
-                                        />
+                                            <ChatBubble
+                                                key={index}
+                                                showImage={false}
+                                                imageUrl={message.imageUrl}
+                                                message={message.content}
+                                                timestamp={message.date.hour + ":" + message.date.minute}
+                                                sent={message.sent}
+                                            />
                                         ))
                                     )
                                 }

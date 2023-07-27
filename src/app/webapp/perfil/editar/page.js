@@ -23,7 +23,7 @@ export default function EditProfile() {
 
     const axios = require('axios');
     const qs = require('qs');
-    
+
     var [about, setAbout] = useState('');
     var [tempAbout, setTempAbout] = useState('');
     var [newTempAbout, setNewTempAbout] = useState('');
@@ -36,7 +36,24 @@ export default function EditProfile() {
     var [tempUsername, setTempUsername] = useState('');
     var [newTempUsername, setNewTempUsername] = useState('');
     var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
-
+    const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
+    const [errorIndex, setErrorIndex] = useState(null);
+    const errors = [
+        "0", // 0
+        "O nome de usuário deve ter pelo menos 5 caracteres.", // 1
+        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).", // 2
+        "Este nome de usuário já existe.", // 3
+        "O nome de usuário não pode ficar vazio.", // 4
+        "O seu nome não pode ficar vazio.", // 5
+        "O seu nome não pode conter caracteres especiais.",  // 6
+        "Os campos de nome de usuário e nome não podem ficar vazios.", // 7
+        "O nome de usuário e o nome não podem conter caracteres especiais.", // 8
+        "Os campos de nome de usuário e nome devem ter pelo menos 5 caracteres.", // 9
+        "Este nome de usuário já existe e o nome não pode ficar vazio.", // 10
+        "Este nome de usuário já existe e o nome não pode conter caracteres especiais.", // 11
+        "O nome de usuário e o nome devem começar com uma letra e podem conter apenas letras, números e sublinhados (_).", // 12
+      ];
+      
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
     const [userInterests, setUserInterests] = useState([]);
     const [tempUserInterests, setTempUserInterests] = useState(userInterests);
@@ -54,7 +71,7 @@ export default function EditProfile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token
             });
@@ -77,9 +94,9 @@ export default function EditProfile() {
                 interestsAsIntegers.push(interest);
             }
 
-            setUserInterests(interestsAsIntegers); 
-        } 
-        
+            setUserInterests(interestsAsIntegers);
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -87,17 +104,17 @@ export default function EditProfile() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest('https://api.resenha.app/', {
-            request: 'editUserData',
-            token: token,
-            data: data
-          });
-      
-          return response;
-        } 
-        
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'editUserData',
+                token: token,
+                data: data
+            });
+
+            return response;
+        }
+
         catch (error) {
-          console.error(error);
+            console.error(error);
         }
     };
 
@@ -111,26 +128,26 @@ export default function EditProfile() {
     const handleInterestClick = (interestId) => {
         setTempUserInterests(
             tempUserInterests.includes(interestId)
-            ? tempUserInterests.filter(id => id !== interestId)
-            : [...tempUserInterests, interestId]
+                ? tempUserInterests.filter(id => id !== interestId)
+                : [...tempUserInterests, interestId]
         );
     };
 
     const saveInterests = async () => {
         setUserInterests(tempUserInterests);
-      
+
         const data = {
             interests: tempUserInterests
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-    
+
             if (!response.error) {
                 toggleEditInterestsPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -142,6 +159,7 @@ export default function EditProfile() {
 
     const toggleEditUsernamePageOpen = () => {
         setIsEditUsernamePageOpen(!isEditUsernamePageOpen);
+        setIsUsernameErrorVisible(false);
     };
 
     const cancelNameUsernameChange = () => {
@@ -162,47 +180,84 @@ export default function EditProfile() {
 
     const saveNameAndUsername = async () => {
         setName(prevName => {
-          if (prevName !== newTempName) {
-            setTempName(newTempName);
-            return newTempName;
-          }
-          return prevName;
+            if (prevName !== newTempName) {
+                setTempName(newTempName);
+                return newTempName;
+            }
+            return prevName;
         });
-      
+
         setUsername(prevUsername => {
-          if (prevUsername !== newTempUsername) {
-            setTempUsername(newTempUsername);
-            return newTempUsername;
-          }
-          return prevUsername;
+            if (prevUsername !== newTempUsername) {
+                setTempUsername(newTempUsername);
+                return newTempUsername;
+            }
+            return prevUsername;
         });
-      
+
         if (newTempUsername !== tempUsername || newTempName !== tempName) {
-          const data = {};
-      
-          if (newTempUsername != tempUsername) {
-            data.username = newTempUsername;
-          }
-      
-          if (newTempName != tempName) {
-            data.name = newTempName;
-          }
-      
-          try {
-            const response = await sendEditRequest(data);
-      
-            if (response.username && response.validator) {
-              Cookies.set('token', response.token);
+            const data = {};
+
+            if (newTempUsername != tempUsername) {
+                data.username = newTempUsername;
             }
 
-            if (!response.error) {
-              toggleEditUsernamePageOpen();
+            if (newTempName != tempName) {
+                data.name = newTempName;
             }
-          } 
-          
-          catch (error) {
-            console.error(error);
-          }
+
+            try {
+                const response = await sendEditRequest(data);
+              
+                if (response.error) {
+                  switch (response.error) {
+                    case "used_username":
+                      setErrorIndex(3);
+                      break;
+                    case "empty_username":
+                      setErrorIndex(4);
+                      break;
+                    case "short_username":
+                      setErrorIndex(1);
+                      break;
+                    case "invalid_username":
+                      setErrorIndex(2);
+                      break;
+                    default:
+                      console.error('Unhandled error type:', response.error);
+                      break;
+                  }
+                  setIsUsernameErrorVisible(true);
+                } else {
+                  if (response.username && response.validator) {
+                    Cookies.set('token', response.token);
+                  }
+                  if (username.includes(' ')) {
+                    setErrorIndex(2);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 6) {
+                    setErrorIndex(1);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 1) {
+                    setErrorIndex(4);
+                    setIsUsernameErrorVisible(true);
+                  } else if (newTempName.length < 1) {
+                    setErrorIndex(5);
+                    setIsUsernameErrorVisible(true);
+                  } else if (newTempName.includes(' ')) {
+                    setErrorIndex(6);
+                    setIsUsernameErrorVisible(true);
+                  } else if (username.length < 1 && newTempName.length < 1) {
+                    setErrorIndex(7);
+                    setIsUsernameErrorVisible(true);
+                  } else {
+                    toggleEditUsernamePageOpen();
+                  }
+                }
+              } catch (error) {
+                console.error(error);
+              }
+              
         }
 
         else {
@@ -232,29 +287,29 @@ export default function EditProfile() {
 
     const saveAbout = async () => {
         setAbout(prevAbout => {
-          if (prevAbout !== newTempAbout) {
-            setTempAbout(newTempAbout);
-            return newTempAbout;
-          }
-          return prevAbout;
-        });
-      
-        if (newTempAbout != tempAbout) {
-          const data = {
-            about: newTempAbout
-          };
-      
-          try {
-            const response = await sendEditRequest(data);
-      
-            if (!response.error) {
-              toggleEditAboutPageOpen();
+            if (prevAbout !== newTempAbout) {
+                setTempAbout(newTempAbout);
+                return newTempAbout;
             }
-          } 
-          
-          catch (error) {
-            console.error(error);
-          }
+            return prevAbout;
+        });
+
+        if (newTempAbout != tempAbout) {
+            const data = {
+                about: newTempAbout
+            };
+
+            try {
+                const response = await sendEditRequest(data);
+
+                if (!response.error) {
+                    toggleEditAboutPageOpen();
+                }
+            }
+
+            catch (error) {
+                console.error(error);
+            }
         }
 
         else {
@@ -273,24 +328,20 @@ export default function EditProfile() {
         if (!isEditAboutPageOpen) {
             setTempAbout(about);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditAboutPageOpen]);
 
     useEffect(() => {
         setTempName(name);
         setTempUsername(username);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, username]);
 
     useEffect(() => {
         setTempName(name);
         setTempUsername(username);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, username]);
 
     useEffect(() => {
         setTempUserInterests(userInterests);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userInterests]);
 
     useEffect(() => {
@@ -300,12 +351,10 @@ export default function EditProfile() {
                 return { ...interest, selected: isSelected };
             }).sort((a, b) => b.selected - a.selected)
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tempUserInterests]);
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const validUserInterests = userInterests.filter(interestId => allInterests.some(interest => interest.id === interestId));
@@ -324,10 +373,10 @@ export default function EditProfile() {
     return (
         <div>
             <div className='flex flex-col w-screen h-screen'>
-                <PageHeader pageTitle={'Editar perfil'} isBack={true} destination={"/webapp/perfil?u="+newTempUsername} checker={() => { null }} userData={data} />
+                <PageHeader pageTitle={'Editar perfil'} isBack={true} destination={"/webapp/perfil?u=" + newTempUsername} checker={() => { null }} userData={data} />
                 <div className="flex flex-col items-center justify-center h-screen px-4">
                     <section className="flex flex-col gap-4 h-full items-center w-full max-w-md p-4">
-                    <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
+                        <EditInfoPage isOpen={isEditInterestsPageOpen} pageTitle={'Seus interesses'} saveAction={saveInterests} togglePage={toggleEditInterestsPageOpen}>
                             <div className='w-full'>
                                 <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
                                     {[...allInterests].sort((a, b) => b.selected - a.selected).map((interest) => (
@@ -368,8 +417,11 @@ export default function EditProfile() {
                                     placeholder='@'
                                     value={newTempUsername}
                                     onChange={handleUsernameChange}
+
                                 />
                             </div>
+                            <p className={`text-redT4 ${isUsernameErrorVisible ? 'block' : 'hidden'}`}>{errors[errorIndex]}</p>
+
                             <p className='text-sm'>
                                 Seu nome e nome de usuário são identificações importantes. O nome pode ser livremente escolhido e o nome de usuário é único, permitindo que outros usuários possam mencionar ou buscar você na plataforma. Escolha um que represente sua identidade.
                             </p>
@@ -429,7 +481,7 @@ export default function EditProfile() {
                             </div>
                         </div>
                         <div className='w-full'>
-                        <div onClick={(e) => {
+                            <div onClick={(e) => {
                                 e.stopPropagation();
                                 toggleEditInterestsPageOpen();
                             }}

@@ -7,7 +7,7 @@ import DualButton from '@/src/components/DualButton';
 import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import Loading from "@/src/components/Loading";
-
+import Button from '@/src/components/Button';
 import { useState } from "react";
 import { useEffect } from 'react';
 
@@ -17,6 +17,12 @@ export default function HomePage() {
     if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
+
+    const handleNavigation = (pageToGo) => {
+        if (typeof window !== 'undefined') {
+            window.location.href = `/webapp/${pageToGo}`;
+        }
+    };
 
     const axios = require('axios');
     const qs = require('qs');
@@ -40,10 +46,19 @@ export default function HomePage() {
     };
 
     const fetchData = async () => {
+        const requested = [
+            "username",
+            "notified",
+            "notifications",
+            "partiesMade",
+            "partiesWent"
+        ];
+
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
-                token: token
+                token: token,
+                requested: requested
             });
 
             setData(response);
@@ -67,29 +82,6 @@ export default function HomePage() {
         );
     }
 
-    var { partiesWent, partiesMade } = data
-
-    if (partiesWent.length > 0) {
-        const userParty = partiesWent[0];
-        var eventNameToUser = userParty.name;
-        var eventDateToUser = userParty.date;
-        var eventTimeToUser = userParty.start;
-        var eventCodeToUser = userParty.token;
-        var eventCode = userParty.code;
-        var eventHashToUser = userParty.hash;
-    }
-
-    if (partiesMade.length > 0) {
-        const userParty = partiesMade[0];
-        var eventNameFromUser = userParty.name;
-        var eventDateFromUser = userParty.date;
-        var eventTimeFromUser = userParty.start;
-        var eventConfirmedFromUser = userParty.confirmed;
-        var eventCapacityFromUser = userParty.capacity;
-        var eventHashFromUser = userParty.hash;
-        var eventCodeFromUser = userParty.code;
-    }
-
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Resenhas'} userData={data} />
@@ -98,23 +90,40 @@ export default function HomePage() {
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ?
-                    <MyInvitesDisplay
-                        eventName={eventNameToUser}
-                        eventDate={eventDateToUser}
-                        eventHour={eventTimeToUser}
-                        eventCode={eventCode}
-                        token={eventCodeToUser}
-                        eventImage={`https://media.resenha.app/r/${eventHashToUser}.png`}
-                    /> :
-                    <MyEventsDisplay
-                        eventName={eventNameFromUser}
-                        eventDate={eventDateFromUser}
-                        eventGuests={eventConfirmedFromUser}
-                        eventHour={eventTimeFromUser}
-                        eventMax={eventCapacityFromUser}
-                        eventCode={eventCodeFromUser}
-                        eventImage={`https://media.resenha.app/r/${eventHashFromUser}.png`}
-                    />
+                    (data.partiesWent.length > 0 ?
+                        <MyInvitesDisplay
+                            eventName={data.partiesWent[0].name}
+                            eventDate={data.partiesWent[0].date}
+                            eventHour={data.partiesWent[0].start}
+                            eventCode={data.partiesWent[0].code}
+                            token={data.partiesWent[0].token}
+                            eventImage={`https://media.resenha.app/r/${data.partiesWent[0].hash}.png`}
+                        />
+                        :
+                        <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
+                            <p className='mt-20 text-2xl'>Você ainda não confirmou presença em nenhuma resenha! Toque abaixo pra dar uma olhada no que tá rolando na sua região!</p>
+                            <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
+                                <Button label={'Descobrir Resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={3} width={1} textAlign='center' />
+                            </div>
+                        </section>)
+                    :
+                    (data.partiesMade.length > 0 ?
+                        <MyEventsDisplay
+                            eventName={data.partiesMade[0].name}
+                            eventDate={data.partiesMade[0].date}
+                            eventGuests={data.partiesMade[0].confirmed}
+                            eventHour={data.partiesMade[0].start}
+                            eventMax={data.partiesMade[0].capacity}
+                            eventCode={data.partiesMade[0].code}
+                            eventImage={`https://media.resenha.app/r/${data.partiesMade[0].hash}.png`}
+                        />
+                        :
+                        <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
+                            <p className='mt-20 text-2xl'>Você ainda não criou nenhuma resenha! Bora juntar a galera pra curtir?! Toque abaixo pra criar uma nova resenha!</p>
+                            <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
+                            <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha/')} iconSide='right' height={1} width={1} textAlign='center' />
+                            </div>
+                        </section>)
                 }
             </div>
         </div>

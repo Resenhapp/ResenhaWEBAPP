@@ -54,7 +54,7 @@ export default function NewEvent() {
       };
 
       try {
-        const response = await makeRequest('https://api.resenha.app/', { 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
           request: 'tryToCreateEvent',
           token: token,
           details: details
@@ -82,7 +82,8 @@ export default function NewEvent() {
   const [hasTimeToEnd, setHasTimeToEnd] = useState(false);
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
-  const [dateSelected, setDateSelected] = useState(null);
+  const [dateSelected, setDateSelected] = useState(''); 
+
   const [selectedGuests, setSelectedGuests] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [descriptionContent, setDescriptionContent] = useState('');
@@ -114,9 +115,22 @@ export default function NewEvent() {
     setEnd(endHour);
   };
 
-  const handlePiece02CalendarSelect = (dateSelected) => {
-    setDateSelected(dateSelected);
-  };
+  const handlePiece02DateSelect = (dateSelected) => {
+    if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
+        return;
+    }
+    const date = new Date(dateSelected);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+  
+    setDateSelected(formattedDate);
+    console.log(formattedDate);
+    console.log(typeof formattedDate);
+};
+  
+
 
   const handlePiece03GuestsSelect = (guests) => {
     setSelectedGuests(guests);
@@ -155,8 +169,7 @@ export default function NewEvent() {
           onToggleChange={handlePiece02ToggleChange}
           onStartHourSelect={handlePiece02StartHourSelect}
           onEndHourSelect={handlePiece02EndHourSelect}
-          onDateCalendarSelect={handlePiece02CalendarSelect}
-          onDateScrollSelect={(day, month, year) => {setDateSelected(day+"/"+month+"/"+year)}}
+          onDateSelect={handlePiece02DateSelect}
           filled={setIsFilled}
         />
         );

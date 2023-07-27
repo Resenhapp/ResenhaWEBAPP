@@ -55,7 +55,7 @@ export default function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token,
                 profile: profile
@@ -76,7 +76,7 @@ export default function Profile() {
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'switchFollowUser',
                 token: token,
                 profile: profile
@@ -90,7 +90,6 @@ export default function Profile() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) {

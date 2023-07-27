@@ -7,6 +7,16 @@ function queryDB($query)
     global $link;
     $result = $link->query($query);
     $row = mysqli_fetch_array($result);
+
+    return $row;
+}
+
+function queryDBDiscord($query)
+{
+    global $link;
+    $result = $link->query($query);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC); // Adicione o parâmetro MYSQLI_ASSOC aqui
+
     return $row;
 }
 
@@ -14,6 +24,7 @@ function queryNR($query)
 {
     global $link;
     mysqli_query($link, $query);
+
 }
 
 function queryDBRows($query)
@@ -91,8 +102,16 @@ function getDayOfWeek($dateString)
     return $dayNames[$dayOfWeek] ?? $dayOfWeek;
 }
 
-function check_email($email)
+function redirect($url = GLOBAL_REDIRECT) {
+    header("Location: $url");
+}
+
+function checkEmail($email)
 {
+    if (strlen($email) < 5) {
+        return "short_email";
+    }
+
     $query = "SELECT * FROM users WHERE email = '$email'";
     $result = queryDBRows($query);
 
@@ -103,7 +122,7 @@ function check_email($email)
     }
 }
 
-function check_cpf($cpf)
+function checkCpf($cpf)
 {
     $query = "SELECT * FROM users WHERE cpf = '$cpf'";
     $result = queryDBRows($query);
@@ -114,20 +133,26 @@ function check_cpf($cpf)
     }
 }
 
-function check_password($password)
+function checkPassword($password)
 {
     if (strlen($password) < 8) {
         return "small_password";
-    } elseif (!preg_match("/[0-9]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[0-9]/", $password)) {
         return "numeric_password";
-    } elseif (!preg_match("/[a-zA-Z]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[a-zA-Z]/", $password)) {
         return "alphabetic_password";
-    } elseif (!preg_match("/[!@#$%^&*()\-_=+{};:,<.>]/", $password)) {
+    } 
+    
+    elseif (!preg_match("/[!@#$%^&*()\-_=+{};:,<.>]/", $password)) {
         return "special_password";
     }
 }
 
-function random_code($length)
+function randomCode($length)
 {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     $charactersLength = strlen($characters);
@@ -141,7 +166,7 @@ function random_code($length)
     return $code;
 }
 
-function random_key()
+function randomKey()
 {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
     $charactersLength = strlen($characters);
@@ -155,7 +180,7 @@ function random_key()
     return $key;
 }
 
-function register_log($user, $type, $action, $description = "none")
+function registerLog($user, $type, $action, $description = "none")
 {
     $variables = [ &$user, &$type, &$action, &$description];
 
@@ -170,7 +195,7 @@ function register_log($user, $type, $action, $description = "none")
     queryNR($query);
 }
 
-function send_message($embed, $webhook)
+function sendMessage($embed, $webhook)
 {
     $payload = json_encode(['content' => '', 'embeds' => [$embed]]);
 
@@ -189,17 +214,16 @@ function getIp()
     return $ip;
 }
 
-function request_pagarme($data)
+function requestPagarMe($data)
 {
-    global $pagarmeKey;
-
     $ch = curl_init('https://api.pagar.me/core/v5/orders');
+
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Basic ' . $pagarmeKey,
+        'Authorization: Basic ' . GLOBAL_PAGARMEKEY,
         'Accept: application/json']
     );
 
@@ -225,6 +249,23 @@ function returnError($error)
     exit();
 }
 
+function returnSuccess($message)
+{
+    $data = [
+        'status' => "success",
+        'action' => "$message"
+    ];
+    
+    header('Content-Type: application/json');
+    echo json_encode($data);
+}
+
+function returnData($data)
+{
+    header('Content-Type: application/json');
+    echo json_encode($data);
+}
+
 function checkPublicRequest($request)
 {
     global $public;
@@ -248,48 +289,6 @@ function checkPrivateRequest($request)
     
     else {
         return false;
-    }
-}
-
-function tryToEditWithdraw()
-{
-    $id = sanitize($_POST["id"]);
-
-    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
-    $isAlreadyApproved = queryDB($id)[0];
-
-    if ($isAlreadyApproved == "0") {
-        $moderator = sanitize($_POST["moderator"]);
-        $reason = sanitize($_POST["reason"]);
-        $approved = sanitize($_POST["approved"]);
-    
-        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
-        $user = queryDB($id)[0];
-    
-        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
-        $amount = queryDB($id)[0];
-
-        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
-        queryNR($query);
-    
-        if ($approved == "0") {
-            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
-            queryNR($query);
-        }
-    
-        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
-        queryNR($query);
-
-        $responseData = [
-            'status' => 'success'
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
-    }
-
-    else {
-        returnError("already_approved");
     }
 }
 
@@ -336,10 +335,43 @@ function getHelpData()
     echo json_encode($response);
 }
 
-function check_session($token)
-{
-    $token = sanitize($token);
+function checkUsername($username) {
+    if (empty($username)) {
+        return "empty_username";
+    }
 
+    if (strlen($username) < 5) {
+        return "short_username";
+    }
+
+    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $username)) {
+        return "invalid_username";
+    }
+
+    $query = "SELECT id FROM users WHERE username = '$username'";
+    $result = queryDB($query);
+
+    if ($result && count($result) > 0) {
+        return "used_username";
+    }
+
+    return null;
+}
+
+function checkName($name) {
+    if (empty($name)) {
+        return "empty_username";
+    }
+
+    if (strlen($name) < 5) {
+        return "short_username";
+    }
+
+    return null;
+}
+
+function checkSession($token)
+{
     $api = decrypt($token, GLOBAL_ENCKEY);
 
     $userQuery = "SELECT * FROM users WHERE api = '$api'";
@@ -347,8 +379,38 @@ function check_session($token)
 
     if (mysqli_num_rows($userData) > 0) {
         return $userData;
-    } else {
+    } 
+    
+    else {
         return null;
+    }
+}
+
+function getHash($userHash, $urlType) {
+    $userHash = hash256($userHash);
+
+    if ($urlType == "event") {
+        $urlPrefix = "r";
+    }
+    
+    else {
+        $urlPrefix = "u";
+    }
+
+    $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
+
+    $ch = curl_init($imageUrl);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($statusCode == 200) {
+        return $userHash;
+    } 
+    
+    else {
+        return hash256("default");
     }
 }
 
@@ -373,6 +435,47 @@ function createWithdraw($user, $amount)
     return $id;
 }
 
+function tryToEditWithdraw()
+{
+    $id = sanitize($_POST["id"]);
+
+    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
+    $isAlreadyApproved = queryDB($id)[0];
+
+    if ($isAlreadyApproved == "0") {
+        $moderator = sanitize($_POST["moderator"]);
+        $reason = sanitize($_POST["reason"]);
+        $approved = sanitize($_POST["approved"]);
+    
+        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
+        $user = queryDB($id)[0];
+    
+        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
+        $amount = queryDB($id)[0];
+
+        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
+        queryNR($query);
+    
+        if ($approved == "0") {
+            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
+            queryNR($query);
+        }
+    
+        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
+        queryNR($query);
+
+        $responseData = [
+            'status' => 'success'
+        ];
+
+        returnData($responseData);
+    }
+
+    else {
+        returnError("already_approved");
+    }
+}
+
 function getParties($result, $userId)
 {
     $parties = [];
@@ -381,15 +484,7 @@ function getParties($result, $userId)
         foreach ($result as $row) {
             $headers = [];
 
-            $partyIdHash = hash256($row["id"]);
-
-            $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
-
-            $imageHeaders = @get_headers($imageUrl);
-
-            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                $partyIdHash = hash256("default");
-            }
+            $partyIdHash = getHash($row["id"], "event");
 
             $code = $row["code"];
             $timestamp = time();
@@ -399,8 +494,13 @@ function getParties($result, $userId)
             
             $dateTimeF = $dateTime->format('d/m/Y H:i');
 
-            $query = "INSERT INTO impressions (user, party, clicked, date) VALUES ('$userId', '$code', '0', '$dateTimeF')";
-            queryNR($query);
+            $query = "SELECT id FROM impressions WHERE user = '$userId' AND party = '$code'";
+            $userHasSeen = queryDB($query);
+
+            if (!$userHasSeen) {
+                $query = "INSERT INTO impressions (user, party, clicked, date) VALUES ('$userId', '$code', '0', '$dateTimeF')";
+                queryNR($query);
+            }
 
             $capacity = $row["capacity"];
 
@@ -424,7 +524,7 @@ function getParties($result, $userId)
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
-            if ($differenceInDays <= 2) {
+            if ($differenceInDays <= 1) {
                 array_push($headers, 0);
             }
 
@@ -432,7 +532,7 @@ function getParties($result, $userId)
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
-            if ($differenceInDays <= 2) {
+            if ($differenceInDays <= 1) {
                 array_push($headers, 3);
             }
 
@@ -461,20 +561,12 @@ function getParties($result, $userId)
                     if ($dsa['user'] != "none") {
                         $userHash = hash256($dsa['user']);
 
-                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-            
-                        $imageHeaders = @get_headers($imageUrl);
-            
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $userHash = hash256("default");
-                        }
-
                         $user['hash'] = $userHash;
                         $guests[] = $user;
 
                         $counter++;
 
-                        if ($counter === 5) {
+                        if ($counter === 4) {
                             break;
                         }
                     }
@@ -510,7 +602,7 @@ function getParties($result, $userId)
 
 function getFeedData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userId = $column["id"];
@@ -525,43 +617,51 @@ function getFeedData()
         if (isset($_POST['filterParameters'])) {
             $filterParameters = $_POST['filterParameters'];
 
-            if (isset($filterParameters["address"]) && isset($filterParameters["radius"])) {
-                $userAddress = $filterParameters["address"];
+            if (isset($filterParameters["radius"])) {
                 $locationRadius = $filterParameters["radius"];
 
-                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=" . urlencode($userAddress) . "&format=json";
+                if (isset($filterParameters["address"])) {
+                    $userAddress = $filterParameters["address"];
 
-                $httpOptions = [
-                    "http" => [
-                        "method" => "GET",
-                        "header" => "User-Agent: Nominatim-Test",
-                    ],
-                ];
+                    $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($userAddress)."&format=json";
 
-                $streamContext = stream_context_create($httpOptions);
+                    $httpOptions = [
+                        "http" => [
+                            "method" => "GET",
+                            "header" => "User-Agent: Nominatim-Test",
+                        ],
+                    ];
 
-                $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+                    $streamContext = stream_context_create($httpOptions);
 
-                $addressDecoded = json_decode($json, true);
+                    $json = file_get_contents($requestToOpenstreet, false, $streamContext);
 
+                    $addressDecoded = json_decode($json, true);
 
-                if (!empty($addressDecoded)) {
-                    $userLatitude = $addressDecoded[0]["lat"];
-                    $userLongitude = $addressDecoded[0]["lon"];
-
-
-                    $query .= " AND
-                        (6371 * 2 *
-                            ASIN(
-                                SQRT(
-                                    POWER(SIN((RADIANS(lat) - RADIANS($userLatitude)) / 2), 2) +
-                                    COS(RADIANS($userLatitude)) *
-                                    COS(RADIANS(lat)) *
-                                    POWER(SIN((RADIANS(lon) - RADIANS($userLongitude)) / 2), 2)
-                                )
-                            )
-                    ) <= $locationRadius";
+                    if (!empty($addressDecoded)) {
+                        $userLatitude = $addressDecoded[0]["lat"];
+                        $userLongitude = $addressDecoded[0]["lon"];
+                    }
                 }
+
+                else if (isset($filterParameters["coordinates"])) {
+                    $userCoordinates = $filterParameters["coordinates"];
+
+                    $userLatitude = $userCoordinates[0];
+                    $userLongitude = $userCoordinates[1];
+                }
+
+                $query .= " AND
+                    (6371 * 2 *
+                        ASIN(
+                            SQRT(
+                                POWER(SIN((RADIANS(lat) - RADIANS($userLatitude)) / 2), 2) +
+                                COS(RADIANS($userLatitude)) *
+                                COS(RADIANS(lat)) *
+                                POWER(SIN((RADIANS(lon) - RADIANS($userLongitude)) / 2), 2)
+                            )
+                        )
+                ) <= $locationRadius";
             }
 
             if (isset($filterParameters["tags"])) {
@@ -590,34 +690,86 @@ function getFeedData()
 
         $parties = getParties($result, $userId);
 
-        header('Content-Type: application/json');
-        echo json_encode($parties);
+        returnData($parties);
     }
 }
 
-function calculateDistance($lat1, $lon1, $lat2, $lon2)
+function editEventData()
 {
-    $earthRadius = 6371;
+    $userData = checkSession($_POST['token']);
 
-    $lat1Rad = deg2rad($lat1);
-    $lon1Rad = deg2rad($lon1);
-    $lat2Rad = deg2rad($lat2);
-    $lon2Rad = deg2rad($lon2);
+    $code = $_POST['code'];
+    $data = $_POST['data'];
 
-    $deltaLat = $lat2Rad - $lat1Rad;
-    $deltaLon = $lon2Rad - $lon1Rad;
+    foreach ($userData as $column) {
+        $responseData = [
+            'status' => 'success',
+        ];
 
-    $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLon / 2) * sin($deltaLon / 2);
-    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $query = "SELECT id FROM parties WHERE code = '$code'";
+        $id = queryDB($query)[0];
 
-    $distance = $earthRadius * $c;
+        foreach ($data as $key => $value) {
+            if ($key == 'price') {
+                $key = str_replace('R$ ', '', $key);
+                $key = str_replace(',', '.', $key);
+                $key = floatval($key);
+            }
 
-    return $distance;
+            if ($key == 'address') {
+                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($key)."&format=json";
+
+                $httpOptions = [
+                    "http" => [
+                        "method" => "GET",
+                        "header" => "User-Agent: Nominatim-Test",
+                    ],
+                ];
+
+                $streamContext = stream_context_create($httpOptions);
+
+                $json = file_get_contents($requestToOpenstreet, false, $streamContext);
+
+                $addressDecoded = json_decode($json, true);
+
+                $lat = "none";
+                $lon = "none";
+
+                if (!empty($addressDecoded)) {
+                    $lat = $addressDecoded[0]["lat"];
+                    $lon = $addressDecoded[0]["lon"];
+                }
+
+                $query = "UPDATE parties SET lat = '$lat' WHERE id = '$id'";
+                queryNR($query);
+
+                $query = "UPDATE parties SET lon = '$lon' WHERE id = '$id'";
+                queryNR($query);
+            }
+
+            if ($key == 'tags') {
+                $query = "DELETE FROM tags WHERE party = '$code'";
+                queryNR($query);
+
+                foreach ($value as $tag) {
+                    $query = "INSERT INTO tags (tag, party) VALUES ('$tag', '$code')";
+                    queryNR($query);
+                }
+            }
+
+            else {
+                $query = "UPDATE parties SET `$key` = '$value' WHERE id = '$id'";
+                queryNR($query);
+            }
+        }
+
+        returnData($responseData);
+    }
 }
 
 function editUserData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $data = $_POST['data'];
 
@@ -628,42 +780,53 @@ function editUserData()
             'status' => 'success',
         ];
 
-        if (isset($data['username'])) {
-            $newToken = random_key();
+        if (isset($data['name'])) {
+            $nameError = checkName($data['name']);
 
-            $newUsername = $data['username'];
-
-            $query = "SELECT id FROM users WHERE username = '$newUsername'";
-            $result = queryDB($query);
-
-            if ($result && count($result) > 0) {
-                returnError('used_username');
-            } 
+            if (isset($nameError)) {
+                returnError($nameError);
+            }
         }
 
         if (isset($data['email'])) {
-            $emailError = check_email($data['email']);
+            $emailError = checkEmail($data['email']);
 
             if (isset($emailError)) {
                 returnError($emailError);
             }
         }
 
+        if (isset($data['username'])) {
+            $usernameError = checkUsername($data['username']);
+
+            if (isset($usernameError)) {
+                returnError($usernameError);
+            }
+
+            else {
+                $newToken = randomKey();
+
+                $data['api'] = $newToken;
+            }
+        }
+
         if (isset($data['password']) ) {
-            $passwordError = check_password($data['password']);
+            $passwordError = checkPassword($data['password']);
 
             if (isset($passwordError)) {
                 returnError($passwordError);
             }
 
-            $newToken = random_key();
+            else {
+                $newToken = randomKey();
 
-            $data['api'] = $newToken;
-
-            $newPassword = $data['password'];
-
-            $data['password'] = hash256($newPassword);
-            $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
+                $data['api'] = $newToken;
+    
+                $newPassword = $data['password'];
+    
+                $data['password'] = hash256($newPassword);
+                $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
+            }
         }
 
         $query = "SELECT id FROM users WHERE username = '$userName'";
@@ -689,14 +852,86 @@ function editUserData()
             }
         }
 
-        header('Content-Type: application/json');
-        echo json_encode($responseData);
+        returnData($responseData);
+    }
+}
+
+function getUserDataDiscord()
+{
+    header('Content-Type: application/json');
+
+    if (isset($_GET['userid'])) {
+        $userId = sanitize($_GET['userid']);
+        $query = "SELECT * FROM users WHERE id = $userId";
+    } elseif (isset($_GET['user@'])) {
+        $userName = sanitize($_GET['user@']);
+        $query = "SELECT * FROM users WHERE username = '$userName'";
+    } elseif (isset($_GET['useremail'])) {
+        $userEmail = sanitize($_GET['useremail']);
+        $query = "SELECT * FROM users WHERE email = '$userEmail'";
+    }
+        $result = queryDBDiscord($query);
+
+        if ($result) {
+            echo json_encode($result);
+        } else {
+            $errorData = array('error' => 'User not found');
+            echo json_encode($errorData);
+        }
+}
+function getUsersFromParty()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['usersfromparty'])) {
+        $partyCode = sanitize($_GET['usersfromparty']);
+
+        $query = "SELECT * FROM guests WHERE party = ?";
+        $stmt = $link->prepare($query);
+        $stmt->bind_param("s", $partyCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $usersData = array();
+            while ($row = $result->fetch_assoc()) {
+                $usersData[] = $row;
+            }
+
+            echo json_encode($usersData);
+        } else {
+            $errorData = array('error' => 'Party does not exist or does not contain guests');
+            echo json_encode($errorData);
+        }
+    } else {
+        $errorData = array('error' => 'No party code provided');
+        echo json_encode($errorData);
+    }
+}
+
+function getPartyDataDiscord()
+{
+    header('Content-Type: application/json');
+
+    if (isset($_GET['party'])) {
+        $partyCode = sanitize($_GET['party']);
+        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
+
+    $result = queryDBDiscord($query);
+
+    if ($result) {
+        echo json_encode($result);
+    } else {
+        $errorData = array('error' => 'Party not found');
+        echo json_encode($errorData);
+    }
     }
 }
 
 function getUserData()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     if ($userData) {
         if (isset($_POST["profile"])) {
@@ -710,15 +945,7 @@ function getUserData()
     foreach ($userData as $column) {
         $userId = $column["id"];
 
-        $userHash = hash256($userId);
-
-        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-
-        $imageHeaders = @get_headers($imageUrl);
-
-        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-            $userHash = hash256("default");
-        }
+        $userHash = getHash($userId, "user");
 
         $query = "SELECT * FROM interests WHERE user = '$userId'";
         $interestsResults = queryDBRows($query);
@@ -779,15 +1006,7 @@ function getUserData()
                     foreach ($partiesResults as $party) {
                         $partyId = $party["id"];
 
-                        $partyIdHash = hash256($partyId);
-
-                        $imageUrl = "https://media.resenha.app/r/$partyIdHash.png";
-
-                        $imageHeaders = @get_headers($imageUrl);
-            
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $partyIdHash = hash256("default");
-                        }
+                        $partyIdHash = getHash($partyId, "party");
 
                         $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                         $partyConfirmed = queryDB($query)[0];
@@ -820,15 +1039,7 @@ function getUserData()
                 $partyId = $party["id"];
                 $partyCode = $party["code"];
 
-                $partyIdHashUser = hash256($partyId);
-
-                $imageUrl = "https://media.resenha.app/r/$partyIdHashUser.png";
-
-                $imageHeaders = @get_headers($imageUrl);
-    
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $partyIdHashUser = hash256("default");
-                }
+                $partyIdHashUser = getHash($partyId, "event");
 
                 $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                 $partyConfirmed = queryDB($query)['total_guests'];
@@ -916,15 +1127,7 @@ function getUserData()
                     }
                 }
 
-                $partyIdHashId = hash256($purchasePartyId);
-
-                $imageUrl = "https://media.resenha.app/r/$partyIdHashId.png";
-
-                $imageHeaders = @get_headers($imageUrl);
-    
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $partyIdHashId = hash256("default");
-                }
+                $partyIdHashId = getHash($purchasePartyId, "event");
 
                 $temp = [
                     "hash" => $partyIdHashId,
@@ -961,15 +1164,7 @@ function getUserData()
                 $query = "SELECT username FROM users WHERE id = '$commentId'";
                 $commentUsername = queryDB($query)[0];
 
-                $commentHash = hash256($commentId);
-
-                $imageUrl = "https://media.resenha.app/u/$commentHash.png";
-        
-                $imageHeaders = @get_headers($imageUrl);
-        
-                if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                    $commentHash = hash256("default");
-                }
+                $commentHash = getHash($commentId, "user");
 
                 $temp = [
                     "hash" => $commentHash,
@@ -1017,7 +1212,7 @@ function getUserData()
         } 
         
         else {
-            $userData = check_session($_POST['token']);
+            $userData = checkSession($_POST['token']);
 
             foreach ($userData as $column) {
                 $profileId = $column["id"];
@@ -1034,19 +1229,33 @@ function getUserData()
         }
 
         if (isset($_POST["requested"])) {
-            $var = $data[sanitize($_POST["requested"])];
+            $requested = $_POST["requested"];
 
-            $data = [
-                sanitize($_POST["requested"]) => $var,
-            ];
+            if (is_array($requested)) {
+                $tempData = [];
+                foreach ($requested as $item) {
+                    $sanitizedItem = sanitize($item);
+
+                    $var = $data[$sanitizedItem];
+
+                    $tempData[$sanitizedItem] = $var; 
+                }
+            } 
+            
+            else {
+                $sanitizedRequested = sanitize($_POST["requested"]);
+
+                $var = $data[$sanitizedRequested];
+
+                $tempData = [
+                    $sanitizedRequested => $var
+                ];
+            }
+
+            $data = $tempData;
         }
 
-        if (isset($requested)) {
-
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
@@ -1055,22 +1264,14 @@ function getInviteData()
     $code = sanitize($_POST['code']);
 
     $query = "SELECT * FROM parties WHERE code = '$code'";
-
     $result = queryDBRows($query);
+
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
             $host = $row["host"];
             $id = $row["id"];
 
-            $partyHash = hash256($id);
-
-            $imageUrl = "https://media.resenha.app/r/$partyHash.png";
-
-            $imageHeaders = @get_headers($imageUrl);
-
-            if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                $partyHash = hash256("default");
-            }
+            $partyHash = getHash($id, "event");
 
             $query = "SELECT name FROM users WHERE id = '$host'";
             $host = queryDB($query)[0];
@@ -1102,15 +1303,7 @@ function getInviteData()
 
                         $user['id'] = $id;
 
-                        $userHash = hash256($dsa['user']);
-
-                        $imageUrl = "https://media.resenha.app/u/$userHash.png";
-                
-                        $imageHeaders = @get_headers($imageUrl);
-                
-                        if ($imageHeaders && strpos($imageHeaders[0], '200 OK') !== true) {
-                            $userHash = hash256("default");
-                        }
+                        $userHash = getHash($dsa['user'], "user");
 
                         $user['hash'] = $userHash;
                         $user['username'] = $uname;
@@ -1158,56 +1351,67 @@ function getInviteData()
             ];
 
             if (isset($_POST['token'])) {
-                $userData = check_session($_POST['token']);
+                $userData = checkSession($_POST['token']);
 
-                if ($userData) {
-                    $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
-                    $party_price = queryDB($party_price_query)[0];
+                foreach ($userData as $column) {
+                    $userId = $column["id"];
 
-                    $guests_query = "SELECT method FROM guests WHERE party = '$code'";
-                    $payment_results = queryDBRows($guests_query);
-
-                    $income = [
-                        "card" => 0,
-                        "cash" => 0,
-                        "pix" => 0,
-                    ];
-
-                    foreach ($payment_results as $payment_row) {
-                        $method = $payment_row['method'];
-
-                        if ($method == 'pix') {
-                            $income['pix'] += $party_price;
-                        } elseif ($method == 'cartao') {
-                            $income['card'] += $party_price;
-                        } else {
-                            $income['cash'] += $party_price;
+                    if ($userId == $host) {
+                        $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
+                        $party_price = queryDB($party_price_query)[0];
+    
+                        $guests_query = "SELECT method FROM guests WHERE party = '$code'";
+                        $payment_results = queryDBRows($guests_query);
+    
+                        $income = [
+                            "card" => 0,
+                            "cash" => 0,
+                            "pix" => 0,
+                        ];
+    
+                        foreach ($payment_results as $payment_row) {
+                            $method = $payment_row['method'];
+    
+                            if ($method == 'pix') {
+                                $income['pix'] += $party_price;
+                            } 
+                            
+                            elseif ($method == 'cartao') {
+                                $income['card'] += $party_price;
+                            } 
+                            
+                            else {
+                                $income['cash'] += $party_price;
+                            }
                         }
+    
+                        $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+    
+                        $sql_date = $date->format('Y-m-d H:i:s');
+    
+                        $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
+                        $impressions_count = queryDB($impressions_query)[0];
+    
+                        $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
+                        $views_count = queryDB($views_query)[0];
+    
+                        $impressions = [
+                            'views' => $impressions_count,
+                            'clicks' => $views_count,
+                            'purchases' => 0,
+                        ];
+    
+                        $data["income"] = $income;
+                        $data["impressions"] = $impressions;
                     }
 
-                    $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-
-                    $sql_date = $date->format('Y-m-d H:i:s');
-
-                    $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
-                    $impressions_count = queryDB($impressions_query)[0];
-
-                    $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
-                    $views_count = queryDB($views_query)[0];
-
-                    $impressions = [
-                        'views' => $impressions_count,
-                        'clicks' => $views_count,
-                        'purchases' => 0,
-                    ];
-
-                    $data["income"] = $income;
-                    $data["impressions"] = $impressions;
+                    else {
+                        returnError("not_host");
+                    }
                 }
             }
 
-            header('Content-Type: application/json');
-            echo json_encode($data);
+            returnData($data);
         }
     } 
     
@@ -1224,16 +1428,14 @@ function tryToCreateGuest()
     $email = sanitize($_POST['email']);
     $method = sanitize($_POST['method']);
 
+    $user = "none";
+
     if (isset($_POST['token'])) {
-        $userData = check_session($_POST['token']);
+        $userData = checkSession($_POST['token']);
     
         foreach ($userData as $column) {
             $user = $column["id"];
         }
-    }
-
-    else {
-        $user = "none";
     }
 
     $date = date("d/m/Y H:i");
@@ -1287,18 +1489,13 @@ function tryToCreateGuest()
             ],
         ];
 
-        $array = request_pagarme(json_encode($req));
+        $array = requestPagarMe(json_encode($req));
 
         $qrcode = $array["charges"][0]["last_transaction"]["qr_code"];
         $qrcodeurl = $array["charges"][0]["last_transaction"]["qr_code_url"];
 
         $charge = $array["charges"][0]["id"];
     } 
-
-    // else if ($method == "cartao") {
-    //     $paid = "1";
-    //     $charge = "none";
-    // }
     
     else {
         $paid = "0";
@@ -1368,7 +1565,7 @@ function tryToCreateGuest()
         ],
     ];
 
-    send_message($embed, $webhook);
+    sendMessage($embed, $webhook);
 
     if ($user != "none") {
         $query = "SELECT username FROM users WHERE id = '$user'";
@@ -1394,8 +1591,7 @@ function tryToCreateGuest()
             'status' => "success",
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
@@ -1414,30 +1610,25 @@ function tryToAuthenticate()
             'token' => $response,
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
-    } else {
+        returnData($data);
+    } 
+    
+    else {
         returnError("invalid_credentials");
     }
 }
 
 function clearUserNotifications()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
         $userId = $column["id"];
 
         $query = "UPDATE notifications SET cleared = '1' WHERE user = '$userId' AND cleared = '0'";
         queryNR($query);
 
-        $data = [
-            'status' => "success",
-        ];
-
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess("notifications_cleared");
     }
 }
 
@@ -1445,7 +1636,7 @@ function switchSaveEvent()
 {
     $partyCode = sanitize($_POST['party']);
 
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userId = $column["id"];
@@ -1466,30 +1657,23 @@ function switchSaveEvent()
             $deleteQuery = "DELETE FROM saved WHERE id = '$savedId'";
             queryNR($deleteQuery);
 
-            $data = [
-                'status' => "success",
-                'action' => "unsaved"
-            ];
+            $action = "unsaved";
         }
 
         else {
             $insertQuery = "INSERT INTO saved (`id`, `user`, `party`, `date`) VALUES (NULL, '$userId', '$partyCode', '$dateTimeF')";
             queryNR($insertQuery);
 
-            $data = [
-                'status' => "success",
-                'action' => "saved"
-            ];
+            $action = "saved";
         }
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess($action);
     }
 }
 
 function switchFollowUser()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -1540,7 +1724,7 @@ function switchFollowUser()
 
 function seeUserNotifications()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $userName = $column["username"];
@@ -1555,13 +1739,8 @@ function seeUserNotifications()
 
                 $query = "UPDATE notifications SET seen = '1' WHERE user = '$id' AND seen = '0'";
                 queryNR($query);
-
-                $data = [
-                    'status' => "success",
-                ];
-
-                header('Content-Type: application/json');
-                echo json_encode($data);
+                
+                returnSuccess("notifications_seen");
             }
         }
     }
@@ -1569,7 +1748,7 @@ function seeUserNotifications()
 
 function tryToWithdraw()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
         $id = $column["id"];
@@ -1653,7 +1832,7 @@ function tryToWithdraw()
 
             $webhook = "https://discord.com/api/webhooks/1116575716646068254/xAmqlhC3WpinvTw-HI5hdbom6-FA94YuY1v5NEUONTSXwroXTwA3PgaqTazIxezTFGn7";
 
-            send_message($embed, $webhook);
+            sendMessage($embed, $webhook);
         } 
         
         else {
@@ -1664,28 +1843,85 @@ function tryToWithdraw()
 
 function tryToDeleteEvent()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["userName"];
+        $id = $column["id"];
 
         $code = sanitize($_POST['code']);
 
-        $query = "DELETE FROM parties WHERE code = '$code'";
-        queryNR($query);
+        $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro'";
+        $confirmed = queryDB($query);
+
+        if ($confirmed) {
+            $query = "SELECT host FROM parties WHERE code = '$code'";
+            $host = queryDB($query)[0];
+    
+            if ($id == $host) {
+                $query = "DELETE FROM parties WHERE code = '$code'";
+                queryNR($query);
+    
+                returnSuccess("event_deleted");
+            }
+    
+            else {
+                returnError("invalid_token");
+            }
+        }
+
+        else {
+            returnError("guests_confirmed");
+        }
     }
 }
 
 function tryToSendMessage()
 {
-    $userData = check_session($_POST['token']);
-
     $destination = sanitize($_POST['destination']);
     $type = sanitize($_POST['type']);
     $content = sanitize($_POST['content']);
 
+    $userData = checkSession($_POST['token']);
+
     foreach ($userData as $column) {
         $id = $column["id"];
+        $username = $column["username"];
+
+        if ($destination == $username) {
+            returnError("chatting_yourself");
+        }
+
+        else {
+            if ($type == "dm") {
+                $query = "SELECT id FROM users WHERE username = '$destination'";
+                $destinationId = queryDB($query)[0];
+                
+                $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
+                $result = queryDB($query);
+                
+                if (!empty($result)) {
+                    $query = "SELECT id FROM followers WHERE follower = '$destinationId' AND followed = '$id'";
+                    $result = queryDB($query);
+                
+                    if (empty($result)) {
+                        returnError("not_mutual");
+                    } 
+                } 
+    
+                else {
+                    returnError("not_mutual");
+                }
+            }
+
+            else {
+                $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$destination'";
+                $isUserAGuest = queryDB($query);
+
+                if (empty($isUserAGuest)) {
+                    returnError("not_guest");
+                }
+            }
+        }
 
         $timestamp = time();
 
@@ -1704,22 +1940,24 @@ function tryToSendMessage()
 
         $destination = queryDB($query)[0];
 
+        if ($type == 'dm') {
+            createNotification(
+                $destination,
+                "Nova mensagem!", 
+                "Você tem uma nova mensagem do usuário @$username."
+            );
+        }
+
         $query = "INSERT INTO `messages` (`id`, `sender`, `date`, `destination`, `chatType`, `content`) VALUES (NULL, '$id', '$formattedDateTime', '$destination', '$type', '$content');";
         queryNR($query);
 
-        $data = [
-            'status' => "success",
-            'action' => "message_sent"
-        ];
-        
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnSuccess("message_sent");
     }
 }
 
 function getMessages()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     $code = sanitize($_POST['code']);
     $type = sanitize($_POST['type']);
@@ -1733,22 +1971,35 @@ function getMessages()
         }
 
         else {
-            $query = "SELECT id FROM users WHERE username = '$code'";
-            $destinationId = queryDB($query)[0];
-
-            $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
-            $result = queryDB($query);
-
-            if (!empty($result)) {
-                $query = "SELECT id FROM followers WHERE followed = '$id' AND follower = '$destinationId'";
+            if ($type == "dm") {
+                $query = "SELECT id FROM users WHERE username = '$code'";
+                $destinationId = queryDB($query)[0];
+                
+                $query = "SELECT id FROM followers WHERE follower = '$id' AND followed = '$destinationId'";
                 $result = queryDB($query);
-
-                if (empty($result)) {
+                
+                if (!empty($result)) {
+                    $query = "SELECT id FROM followers WHERE follower = '$destinationId' AND followed = '$id'";
+                    $result = queryDB($query);
+                
+                    if (empty($result)) {
+                        returnError("not_mutual");
+                    } 
+                } 
+    
+                else {
                     returnError("not_mutual");
                 }
             }
-            
-            returnError("not_mutual");
+
+            else {
+                $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$code'";
+                $isUserAGuest = queryDB($query);
+
+                if (empty($isUserAGuest)) {
+                    returnError("not_guest");
+                }
+            }
         }
 
         if ($type == 'dm') {
@@ -1764,7 +2015,9 @@ function getMessages()
         if ($type == 'dm') {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
-        } else {
+        } 
+        
+        else {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
         }
@@ -1815,22 +2068,18 @@ function getMessages()
             'messages' => $messagesArray,
         ];
 
-        header('Content-Type: application/json');
-        echo json_encode($data);
+        returnData($data);
     }
 }
 
 function tryToCreateEvent()
 {
-    $userData = check_session($_POST['token']);
+    $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
-        $userName = $column["username"];
+        $host = $column["id"];
 
         $details = $_POST['details'];
-
-        $query = "SELECT id FROM users WHERE username = '$userName'";
-        $host = queryDB($query)[0];
 
         $requiredFields = ['name', 'address', 'isForAdults', 'start', 'hasTimeToEnd', 'end', 'dateSelected', 'selectedGuests', 'selectedPrice', 'descriptionContent'];
 
@@ -1852,9 +2101,9 @@ function tryToCreateEvent()
         $price = intval(str_replace(',', '.', $details['selectedPrice']));
         $start = date('H:i', strtotime($details['start']));
 
-        $date = date('d/m/Y', strtotime($details['dateSelected']));
+        $date = $details['dateSelected'];
 
-        $code = random_code(8);
+        $code = randomCode(8);
 
         $timezone = new DateTimeZone('America/Sao_Paulo');
         $now = new DateTime('now', $timezone);
@@ -1939,7 +2188,21 @@ function tryToCreateEvent()
             "A $name foi criada com sucesso."
         );
 
-        send_message($embed, $webhook);
+        sendMessage($embed, $webhook);
+    }
+}
+
+function tryToClickOnEvent() 
+{
+    $code = sanitize($_POST['party']);
+
+    $userData = checkSession($_POST['token']);
+
+    foreach ($userData as $column) {
+        $id = $column["id"];
+
+        $query = "UPDATE impressions SET clicked = '1' WHERE user = '$id' AND party = '$code'";
+        queryNR($query);
     }
 }
 
@@ -1951,11 +2214,11 @@ function tryToCreateUser()
     $cpf = sanitize($_POST['cpf']);
     $birth = sanitize($_POST['birth']);
 
-    $error = check_email($email) or check_password($password) or check_cpf($cpf);
+    $error = checkEmail($email) or checkPassword($password) or checkCpf($cpf);
 
     if (!isset($error)) {
         $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
-        $api = random_key();
+        $api = randomKey();
         $date = date('d/m/Y H:i');
         $registration = getIp();
         $last = getIp();
@@ -1999,15 +2262,13 @@ function tryToCreateUser()
                 ],
             ];
 
-            send_message($embed, $webhook);
+            sendMessage($embed, $webhook);
 
             $data = [
-                'user' => $user,
-                'status' => "success",
+                'user' => $user
             ];
 
-            header('Content-Type: application/json');
-            echo json_encode($data);
+            returnData($data);
         }
     } 
     

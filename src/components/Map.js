@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 
 let L, MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap;
+
 if (typeof window !== 'undefined') {
   L = require('leaflet');
   const leafletReact = require('react-leaflet');
@@ -32,7 +33,6 @@ export default function Map({ onLocationSelect }) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const newPosition = [position.coords.latitude, position.coords.longitude];
                 setUserPosition(newPosition);
-            }, (error) => {
             });
         }
     }

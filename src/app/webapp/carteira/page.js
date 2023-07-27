@@ -33,10 +33,18 @@ export default function Wallet() {
     };
 
     const fetchData = async () => {
+        const requested = [
+            "username",
+            "balances",
+            "notified",
+            "notifications"
+        ];
+
         try {
-            const response = await makeRequest('https://api.resenha.app/', {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
-                token: token
+                token: token,
+                requested: requested
             });
 
             setData(response);

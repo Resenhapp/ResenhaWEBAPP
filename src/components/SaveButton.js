@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Vector from "./Vector";
 
-const BookmarkButton = ({ initialSavedState }) => {
+const BookmarkButton = ({ initialSavedState, handleSaveButtonI }) => {
   const vectorSave = 'bookmarkOutlined01';
   const vectorSaved = 'bookmarkFill01';
   
@@ -9,6 +9,7 @@ const BookmarkButton = ({ initialSavedState }) => {
 
   const handleSaveButton = (event) => {
     setIsSaved(!isSaved);
+    handleSaveButtonI();
     event.stopPropagation();
   };
 
