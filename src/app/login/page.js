@@ -5,19 +5,58 @@ import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
+import Loading from "@/src/components/Loading";
 
 export default function Login() {
+  var token = Cookies.get('token');
+
   const axios = require('axios');
   const qs = require('qs');
 
-  var token = Cookies.get('token');
+  const [loading, setLoading] = useState(false);
 
-  if (token && typeof window !== 'undefined') {
-    window.location.href = '/webapp/feed';
-  }
+  const handleNavigation = (pageToGo) => {
+    if (typeof window !== 'undefined') {
+        window.location.href = `/webapp/${pageToGo}`;
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getUserData',
+          token: token,
+          requested: "mine"
+      });
+
+      try {
+        if (response.mine == true) {
+          handleNavigation("feed");
+        }
+    
+        else {
+          Cookies.remove("token");
+  
+          window.location.href = `/login`;
+        }
+      } 
+
+      catch (error) {
+        Cookies.remove("token");
+
+        window.location.href = `/login`;
+      }
+    } 
+    
+    catch (error) {
+      setLoading(false);
+    }
+  };
 
   const [errorIndex, setErrorIndex] = useState(null);
   const errors = [
@@ -109,6 +148,20 @@ export default function Login() {
       throw new Error(`Request failed: ${error}`);
     }
   };
+  
+  useEffect(() => {
+    if (token) {
+      fetchData();
+    }
+  }, []);
+
+  if (loading) {
+    return (
+        <div className="h-screen w-full flex justify-center content-center items-center">
+            <Loading/>
+        </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4">

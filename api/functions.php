@@ -387,31 +387,31 @@ function checkSession($token)
 }
 
 function getHash($userHash, $urlType) {
-    $userHash = hash256($userHash);
+    // $userHash = hash256($userHash);
 
-    if ($urlType == "event") {
-        $urlPrefix = "r";
-    }
+    // if ($urlType == "event") {
+    //     $urlPrefix = "r";
+    // }
     
-    else {
-        $urlPrefix = "u";
-    }
+    // else {
+    //     $urlPrefix = "u";
+    // }
 
-    $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
+    // $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
 
-    $ch = curl_init($imageUrl);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    // $ch = curl_init($imageUrl);
+    // curl_setopt($ch, CURLOPT_NOBODY, true);
+    // curl_exec($ch);
+    // $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    // curl_close($ch);
 
-    if ($statusCode == 200) {
-        return $userHash;
-    } 
+    // if ($statusCode == 200) {
+    //     return $userHash;
+    // } 
     
-    else {
+    // else {
         return hash256("default");
-    }
+    // }
 }
 
 function createNotification($user, $title, $content)
@@ -799,12 +799,6 @@ function editUserData()
 
             if (isset($usernameError)) {
                 returnError($usernameError);
-            }
-
-            else {
-                $newToken = randomKey();
-
-                $data['api'] = $newToken;
             }
         }
 
@@ -1386,7 +1380,7 @@ function getInviteData()
                 'guests' => [
                     'capacity' => $row["capacity"],
                     'confirmed' => $confirmed,
-                ],
+                ]
             ];
 
             if (isset($_POST['token'])) {
@@ -1407,7 +1401,7 @@ function getInviteData()
                             "cash" => 0,
                             "pix" => 0,
                         ];
-    
+
                         foreach ($payment_results as $payment_row) {
                             $method = $payment_row['method'];
     
@@ -1424,20 +1418,24 @@ function getInviteData()
                             }
                         }
     
-                        $date = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-    
-                        $sql_date = $date->format('Y-m-d H:i:s');
-    
-                        $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR";
+                        $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code'";
                         $impressions_count = queryDB($impressions_query)[0];
     
-                        $views_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code' AND CONVERT_TZ(STR_TO_DATE(date, '%d/%m/%Y %H:%i'), '+00:00', '-03:00') >= '$sql_date' - INTERVAL 1 HOUR AND clicked = '1'";
+                        $views_query = "SELECT COUNT(*) AS clicks_count FROM impressions WHERE party = '$code'";
                         $views_count = queryDB($views_query)[0];
+
+   
+                        $purchases_query = "SELECT COUNT(DISTINCT user) AS user_count 
+                        FROM impressions 
+                        WHERE party = '$code' 
+                        AND user IN (SELECT DISTINCT user FROM guests)";
+
+                        $purchases_count = queryDB($purchases_query)[0];
     
                         $impressions = [
                             'views' => $impressions_count,
                             'clicks' => $views_count,
-                            'purchases' => 0,
+                            'purchases' => $purchases_count
                         ];
     
                         $data["income"] = $income;
@@ -2245,15 +2243,38 @@ function tryToClickOnEvent()
     }
 }
 
+function generateRandomUsername($fullName) {
+    $randomNumber = rand(1, 9999);
+
+    $cleanedFullName = strtolower(str_replace(' ', '', $fullName));
+
+    $nameParts = explode(' ', $cleanedFullName);
+
+    $firstName = $nameParts[0];
+    $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+
+    $username = $firstName . $lastName . $randomNumber;
+
+    $query = "SELECT id FROM users WHERE username = '$username'";
+    $usernameExists = queryDB($query);
+
+    while ($usernameExists) {
+        $randomNumber = rand(1, 9999);
+        $username = $firstName . $lastName . $randomNumber;
+        $query = "SELECT id FROM users WHERE username = '$username'";
+        $usernameExists = queryDB($query);
+    }
+
+    return $username;
+}
+
 function tryToCreateUser()
 {
+    $name = sanitize($_POST['name']);
     $email = sanitize($_POST['email']);
     $password = sanitize($_POST['password']);
-    $name = sanitize($_POST['name']);
-    $cpf = sanitize($_POST['cpf']);
-    $birth = sanitize($_POST['birth']);
 
-    $error = checkEmail($email) or checkPassword($password) or checkCpf($cpf);
+    $error = checkEmail($email) or checkPassword($password);
 
     if (!isset($error)) {
         $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
@@ -2261,20 +2282,31 @@ function tryToCreateUser()
         $date = date('d/m/Y H:i');
         $registration = getIp();
         $last = getIp();
-        $pix = "none";
+
+        $cpf = "";
+        $birth = "";
+        $address = "";
+        $phone = "";
+
         $tax = 10;
-        
+
+        $verified = "0";
+        $about = "Sou novo por aqui... 🤓";
+
         $password_hash = hash256($password);
+
+        $username = generateRandomUsername($name);
 
         $confirmation_link = "https://resenha.app/api/?token=$token";
 
         //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
 
         if (!$error) {
-            $query = "INSERT INTO users (email, password, name, birth, cpf, pix, date, api, tax, registration, last, token) VALUES ('$email', '$password_hash', '$name', '$birth', '$cpf', '$pix', '$date', '$api', '$tax', '$registration', '$last', '$token')";
+            $query = "INSERT INTO users (username, email, password, name, birth, phone, cpf, address, date, api, tax, verified, about, registration, last, token) VALUES
+            ('$username', '$email', '$password_hash', '$name', '$birth', '$phone', '$cpf', '$address', '$date', '$api', '$tax', '$verified', '$about', '$registration', '$last', '$token')";
             queryNR($query);
 
-            $query = "SELECT id FROM users WHERE email = '$email' AND password = '$password_hash'";
+            $query = "SELECT id FROM users WHERE username = '$username'";
             $user = queryDB($query)[0];
 
             $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
@@ -2296,15 +2328,15 @@ function tryToCreateUser()
                     ],
                     [
                         'name' => 'IP',
-                        'value' => $registration,
-                    ],
+                        'value' => $registration
+                    ]
                 ],
             ];
 
             sendMessage($embed, $webhook);
 
             $data = [
-                'user' => $user
+                'token' => encrypt($api, GLOBAL_ENCKEY)
             ];
 
             returnData($data);

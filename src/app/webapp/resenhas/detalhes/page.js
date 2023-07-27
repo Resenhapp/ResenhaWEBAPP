@@ -10,19 +10,22 @@ import { useState } from "react";
 import { useEffect } from 'react';
 
 export default function EventDetails() {
-    var u = Cookies.get('username');
-    var validator = Cookies.get('validator');
-    let urlParams = new URLSearchParams();
+    var token = Cookies.get('token');
 
-    if (!u || !validator) {
+    let urlParams = new URLSearchParams();
+    var partyCode = '';
+
+
+    if (!token) {
         if (typeof window !== 'undefined') {
             window.location.href = '/login';
         }
     }
+
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
+        partyCode = urlParams.get('r');
     }
-    const partyCode = urlParams.get('r');
     
     const axios = require('axios');
     const qs = require('qs');
@@ -49,11 +52,11 @@ export default function EventDetails() {
     const fetchData = async () => {
         try {
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getChatMessages',
-                username: u,
-                validator: validator,
-                code: partyCode,
+                request: 'getInviteData',
+                token: token,
+                code: partyCode
             });
+
             setData(response);
         } 
         
@@ -91,7 +94,7 @@ export default function EventDetails() {
         )
     }
 
-    var { name, guests, date, hour, income, impressions } = data
+    var { guests, date, income, impressions } = data
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -108,7 +111,7 @@ export default function EventDetails() {
                         <div className="flex flex-row gap-4">
                             <div className="flex flex-col">
                                 <p className="flex flex-row items-center gap-1"><Vector vectorname={'calendar04'} />Data: </p>
-                                <p className="text-lg font-bold">{date.day}/{date.rawMonth}/{date.year}</p>
+                                <p className="text-lg font-bold">{date.day}/{date.month}/{date.year}</p>
                             </div>
                             <div className="flex flex-col">
                                 <p className="flex flex-row items-center gap-1"><Vector vectorname={'user04'} />Confirmados: </p>
@@ -146,11 +149,11 @@ export default function EventDetails() {
                         <p className="text-2xl font-bold">Resenha no terraço</p>
                         <div className="flex flex-col gap-1">
                             <p className="flex flex-row items-center gap-1"><Vector vectorname={'eye01'} />
-                            {impressions.views} Impressões na última hora</p>
+                            {impressions.views} impressões</p>
                             <p className="flex flex-row items-center gap-1"><Vector vectorname={'eye02'} />
                             {impressions.clicks} pessoas abriram o convite</p>
                             <p className="flex flex-row items-center gap-1"><Vector vectorname={'coin01'} />
-                            {impressions.purchases} pessoas compraram suas entradas</p>
+                            {impressions.purchases} pessoas compraram entradas</p>
                         </div>
                     </div>
                 </div>
