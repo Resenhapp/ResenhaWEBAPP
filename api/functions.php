@@ -965,6 +965,33 @@ function getUserActivityDiscord()
         }
 }
 
+function getPartiesFromUser()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['partiesfromuserid'])) {
+        $userid = sanitize($_GET['partiesfromuserid']);
+        $query = "SELECT * FROM parties WHERE host = ?";
+    }
+    $stmt = $link->prepare($query);
+    $stmt->bind_param("s", $userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+            $errorData = array('error' => 'User does not exist or does not contain a party');
+            echo json_encode($errorData);
+        }
+}
+
 function getUserData()
 {
     $userData = checkSession($_POST['token']);
