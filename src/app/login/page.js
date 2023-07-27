@@ -13,10 +13,20 @@ export default function Login() {
   const axios = require('axios');
   const qs = require('qs');
 
+  const [errorIndex, setErrorIndex] = useState(null);
+  const errors = [
+    "Ocorreu um erro desconhecido.", // 0
+    "Nome de usuário muito curto.", // 1
+    "Nome de usuário inválido.", // 2
+    "Credenciais inválidas.", // 3
+    "Nome de usuário não pode ser vazio.", // 4
+  ];
+
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
-
+  const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -64,7 +74,29 @@ export default function Login() {
   const makeRequest = async (url, data) => {
     try {
       const response = await axios.post(url, qs.stringify(data));
-      return response.data;
+
+      if (response.data && response.data.error) {
+        switch (response.data.error) {
+          case "invalid_credentials":
+            setErrorIndex(3);
+            break;
+          case "empty_username":
+            setErrorIndex(4);
+            break;
+          case "short_username":
+            setErrorIndex(1);
+            break;
+          case "invalid_username":
+            setErrorIndex(2);
+            break;
+          default:
+            setErrorIndex(0);  // Set to 0 for an unknown error
+            break;
+        }
+        setIsLoginErrorVisible(true); // Set the error to visible when an error occurs
+      }
+
+      else {return response.data;}
     } 
     
     catch (error) {
@@ -83,6 +115,7 @@ export default function Login() {
           <div className="flex flex-col mb-4 gap-4 w-full">
             <InputField placeholder="Email" showIcon={true} Icon="mail" value={email} action={handleEmailChange} />
             <PasswordField placeholder="Senha" showIcon={true} value={password} action={handlePasswordChange} />
+            {errorIndex && <p className='text-redT4'>{errors[errorIndex]}</p>}
           </div>
         </div>
         <div className="flex-row flex gap-3 items-center mb-4 w-full">
