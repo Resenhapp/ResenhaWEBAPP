@@ -228,10 +228,9 @@ export default function EditProfile() {
                       break;
                   }
                   setIsUsernameErrorVisible(true);
-                } else {
-                  if (response.username && response.validator) {
-                    Cookies.set('token', response.token);
-                  }
+                } 
+                
+                else {
                   if (username.includes(' ')) {
                     setErrorIndex(2);
                     setIsUsernameErrorVisible(true);
@@ -254,10 +253,11 @@ export default function EditProfile() {
                     toggleEditUsernamePageOpen();
                   }
                 }
-              } catch (error) {
-                console.error(error);
-              }
+              } 
               
+            catch (error) {
+                console.error(error);
+            }
         }
 
         else {

@@ -1,19 +1,15 @@
 'use client';
 
 import InputField from '@/src/components/InputField';
-import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import GoogleButton from '@/src/components/GoogleButton';
-import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
 import Back from '@/src/components/Back';
 import Cookies from 'js-cookie';
 import React, { useState } from 'react';
-import axios from 'axios';
 
 export default function Personal() {
-  const axios = require('axios');
-  const qs = require('qs');
+
 
   const email = Cookies.get('email');
   const password = Cookies.get('password');
@@ -32,25 +28,6 @@ export default function Personal() {
 
   const handleBirthChange = (event) => {
     setBirth(event.target.value);
-  };
-
-  const handleClick = async () => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'tryToCreateUser', email: email, password: password, name: name, cpf: cpf, birth: birth });
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
-  };
-
-  const makeRequest = async (url, data) => {
-    try {
-      const response = await axios.post(url, qs.stringify(data));
-      return response.data;
-    } catch (error) {
-      throw new Error(`Request failed: ${error}`);
-    }
   };
 
   return (

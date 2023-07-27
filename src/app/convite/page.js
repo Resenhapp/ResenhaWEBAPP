@@ -67,7 +67,6 @@ export default function Invite() {
         }
     };
 
-
     useEffect(() => {
         const getRenderedTags = async () => {
             const tags = await fetchData();
@@ -83,7 +82,6 @@ export default function Invite() {
         };
 
         getRenderedTags();
-
     }, []);
 
     if (!data) {
@@ -313,16 +311,16 @@ export default function Invite() {
                                             Quem vai:
                                         </h1>
                                         <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-2 w-full">
-                                            {users.map((user) => (
-                                                <div key={user.id}>
-                                                    <UserPortrait
-                                                        isBlurried={false}
-                                                        imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
-                                                        userName={user.username}
-                                                        userId={user.id}
-                                                    />
-                                                </div>
-                                            ))}
+                                        {users.map((user, index) => (
+                                            <div key={user.id}>
+                                                <UserPortrait
+                                                isBlurried={false} // index >= 5
+                                                imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
+                                                userName={user.username}
+                                                userId={user.id}
+                                                />
+                                            </div>
+                                        ))}
                                         </div>
                                     </div>
                                 )}

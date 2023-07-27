@@ -99,42 +99,45 @@ export default function Feed() {
   
     try {
       if (navigator.geolocation) {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-  
-        var newPosition = [position.coords.latitude, position.coords.longitude];
-  
-        const address = await reverseGeocode(newPosition[0], newPosition[1]);
-  
-        setInputValue(address);
-  
-        var filterParameters = {
-          "coordinates": newPosition,
-          "radius": inputRadiusValue
-        };
-  
         try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getFeedData',
-            token: token,
-            filterParameters: filterParameters
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
           });
-  
-          setData(response);
+      
+          var newPosition = [position.coords.latitude, position.coords.longitude];
+      
+          const address = await reverseGeocode(newPosition[0], newPosition[1]);
+      
+          setInputValue(address);
+      
+          var filterParameters = {
+            "coordinates": newPosition,
+            "radius": inputRadiusValue
+          };
+      
+          try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+              request: 'getFeedData',
+              token: token,
+              filterParameters: filterParameters
+            });
+      
+            setData(response);
+          } 
+          
+          catch (error) {
+            console.error("Error while fetching feed data:", error);
+          }
         } 
         
         catch (error) {
-          console.error(error);
-        }
-      } 
+          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getFeedData',
+            token: token
+          });
       
-      else {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'getFeedData',
-          token: token
-        });
-        setData(response);
+          setData(response);
+        }
       }
     } 
     
@@ -144,8 +147,6 @@ export default function Feed() {
   
     setLoading(false);
   };
-  
-  
 
   const filterFeedData = async () => {
     toggleEditFilterPageOpen();
@@ -189,6 +190,7 @@ export default function Feed() {
         token: token,
         searchTerm: searchTerm
       });
+
       setData(response);
     } 
     
@@ -208,6 +210,7 @@ export default function Feed() {
         token: token,
         hype: true
       });
+
       setData(response);
     } 
     

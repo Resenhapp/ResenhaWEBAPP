@@ -8,6 +8,9 @@ import Cookies from 'js-cookie';
 import Vector from './Vector';
 
 const RegisterPageComponent = ({}) => {
+  const axios = require('axios');
+  const qs = require('qs');
+
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +41,18 @@ const RegisterPageComponent = ({}) => {
     return re.test(password);
   }
 
-  const handleNextClick = () => {
+  const makeRequest = async (url, data) => {
+    try {
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
+    } 
+    
+    catch (error) {
+      throw new Error(`Request failed: ${error}`);
+    }
+  };
+
+  const handleNextClick = async () => {
     if (!name) {
       alert('Por favor, insira o seu nome.');
       return;
@@ -54,10 +68,24 @@ const RegisterPageComponent = ({}) => {
       return;
     }
 
-    Cookies.set('email', email);
-    Cookies.set('password', password);
-    if (typeof window !== 'undefined') {
-      window.location.href = 'cadastro/pessoal/';
+    try {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'tryToCreateUser', 
+        name: name,
+        email: email, 
+        password: password
+      });
+      
+      if (response.token && typeof window !== 'undefined') {
+        expirationDate.setDate(expirationDate.getDate() + 30);
+        Cookies.set('token', response.token, { expires: expirationDate });
+
+        window.location.href = '/webapp/feed';
+      }
+    } 
+    
+    catch (error) {
+      console.error(error);
     }
   };
 
@@ -81,7 +109,6 @@ const RegisterPageComponent = ({}) => {
         </div>
         <div className="flex flex-col mb-2 mt-10 w-full">
         </div>
-       
 
         <div className="flex items-center justify-end">
           <p className="mr-1">Já tem uma conta?</p>

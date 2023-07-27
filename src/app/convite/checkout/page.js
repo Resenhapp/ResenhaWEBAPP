@@ -10,10 +10,8 @@ import Pix from "./pieces/pix";
 import Card from "./pieces/card";
 import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
-import html2canvas from 'html2canvas';
 
 export default function Checkout() {
-
     const maxProgress = 5;
 
     const [progress, setProgress] = useState(1);
@@ -60,6 +58,7 @@ export default function Checkout() {
         console.log(`Is Eighteen: ${customerIsEighteen}`);
         console.log(`Payment Method: ${paymentMethod}`);
     }
+
     const printRef = useRef();
     const saveInvite = async () => {
         setTimeout(() => {
@@ -197,7 +196,7 @@ export default function Checkout() {
                 action = handleNextStep;
             }
             else if (paymentMethod === 'Cartão') {
-                title = 'pagamento com cartão';
+                title = 'Pagamento com cartão';
                 subtitle = 'Insira os dados do seu cartão abaixo para efetuar o pagamento:';
                 button = 'Pagar!';
                 action = payRequest;

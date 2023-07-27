@@ -23,6 +23,7 @@ export default function Profile() {
     if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
     }
+    
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         var profile = urlParams.get('u');

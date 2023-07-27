@@ -1,6 +1,6 @@
 <?php
-// header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Origin: https://www.resenha.app');
+header('Access-Control-Allow-Origin: http://localhost:3000');
+//header('Access-Control-Allow-Origin: https://www.resenha.app');
 header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -43,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         getConciergesFromParty();
     } elseif (isset($_GET['useractivityid'])) {
         getUserActivityDiscord();
+    } elseif (isset($_GET['partiesfromuserid'])) {
+        getPartiesFromUser();
     }
      else {
         // Caso a chave "userid" não seja fornecida, retorna um erro em JSON
