@@ -407,7 +407,7 @@ function getHash($userHash, $urlType) {
 
     if ($statusCode == 200) {
         return $userHash;
-    } 
+    }
     
     else {
         return hash256("default");
@@ -1280,8 +1280,21 @@ function getUserData()
 
             if (!empty($result)) {
                 $data['follower'] = true;
-            } else {
+            } 
+            
+            else {
                 $data['follower'] = false;
+            }
+
+            $query = "SELECT id FROM followers WHERE follower = '$userId' AND followed = '$profileId'";
+            $result = queryDB($query);
+
+            if (!empty($result)) {
+                $data['beingFollowed'] = true;
+            } 
+            
+            else {
+                $data['beingFollowed'] = false;
             }
         }
 

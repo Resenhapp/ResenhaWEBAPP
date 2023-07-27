@@ -10,11 +10,7 @@ const SendMessageButton = ({ onClick, active = false }) => {
     buttonClasses += isActive ? "bg-purpleT3" : "bg-grayT0";
 
     return (
-        <button
-            onClick={onClick}
-            className={buttonClasses}
-            disabled={!isActive}
-        >
+        <button onClick={onClick} className={buttonClasses} disabled={!isActive}>
             <Vector vectorname='message01' />
             {'Mensagem'}
         </button>

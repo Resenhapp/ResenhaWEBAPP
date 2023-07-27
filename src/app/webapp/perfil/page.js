@@ -35,6 +35,7 @@ export default function Profile() {
     const [activeTab, setActiveTab] = useState('Sobre');
     const [data, setData] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [isMutual, setIsMutual] = useState(false);
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
     const handleNavigation = (pageToGo) => {
@@ -65,6 +66,10 @@ export default function Profile() {
             setData(response);
             setIsFollowing(response.follower);
             setFollowersCount(response.followers);
+
+            if (response.follower == true && response.beingFollowed == true) {
+                setIsMutual(true);
+            }
         } 
         
         catch (error) {
@@ -132,7 +137,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
-                                            <SendMessageButton onClick={() => handleNavigation('/chat?u='+profile)}/>
+                                            <SendMessageButton active={isMutual} onClick={() => handleNavigation('/chat?u='+profile) }/>
                                         </div>
                                     )}
                                 </div>
