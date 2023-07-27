@@ -7,6 +7,9 @@ import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Confirmed from '@/src/components/Confirmed';
+import ReactInputMask from 'react-input-mask';
+import { te } from 'date-fns/locale';
+
 export default function AccountInfo() {
     const token = Cookies.get('token');
 
@@ -301,12 +304,22 @@ export default function AccountInfo() {
                 cancelAction={cancelEditBirthday}
             >
                 <div className='w-full'>
-                    <input
-                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Data de nascimento'
+                    <ReactInputMask
+                        mask="99/99/9999"
+                        maskChar=""
                         value={tempBirthday}
                         onChange={handleBirthdayChange}
-                    />
+                    >
+                        {(inputProps) =>
+                            <input
+                                {...inputProps}
+                                className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                maxLength={10}
+                                placeholder='Data de nascimento'
+                                type='tel'
+                            />
+                        }
+                    </ReactInputMask>
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -322,12 +335,22 @@ export default function AccountInfo() {
                 cancelAction={cancelEditPhone}
             >
                 <div className='w-full'>
-                    <input
-                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Telefone'
+                    <ReactInputMask
+                        mask="(99) 9 9999-9999"
+                        maskChar=""
                         value={tempPhone}
                         onChange={handlePhoneChange}
-                    />
+                    >
+                        {(inputProps) =>
+                            <input
+                                {...inputProps}
+                                className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                placeholder='Telefone'
+                                type='tel'
+                            />
+                        }
+                    </ReactInputMask>
+
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -364,12 +387,21 @@ export default function AccountInfo() {
                 cancelAction={cancelEditCpf}
             >
                 <div className='w-full'>
-                    <input
-                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='CPF'
+                    <ReactInputMask
+                        mask="999.999.999-99"
+                        maskChar=""
                         value={tempCpf}
                         onChange={handleCpfChange}
-                    />
+                    >
+                        {(inputProps) =>
+                            <input
+                                {...inputProps}
+                                className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                                placeholder='CPF'
+                            />
+                        }
+                    </ReactInputMask>
+
                 </div>
                 <div>
                     <p className='text-sm'>
@@ -397,12 +429,12 @@ export default function AccountInfo() {
                                         <p className="text-whiteT1 text-sm font-semibold">Telefone</p>
                                         <Confirmed initialConfirmation={true} />
                                     </div>
-                                    <InputFieldPurple value={phone} readOnly={true} placeholder={'(01) 9 2345-6789'}/>
+                                    <InputFieldPurple value={phone} readOnly={true} placeholder={'(01) 9 2345-6789'} />
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditAddressPageOpen}>
                                     <p className="text-whiteT1 text-sm font-semibold">Endereço</p>
-                                    <InputFieldPurple value={address} readOnly={true} placeholder={'Rua do James da Salada de Fruta'}/>
+                                    <InputFieldPurple value={address} readOnly={true} placeholder={'Rua do James da Salada de Fruta'} />
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditCpfPageOpen}>
