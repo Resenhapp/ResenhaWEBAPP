@@ -13,6 +13,12 @@ export default function Login() {
   const axios = require('axios');
   const qs = require('qs');
 
+  var token = Cookies.get('token');
+
+  if (token && typeof window !== 'undefined') {
+    window.location.href = '/webapp/feed';
+  }
+
   const [errorIndex, setErrorIndex] = useState(null);
   const errors = [
     "Ocorreu um erro desconhecido.", // 0
@@ -22,11 +28,11 @@ export default function Login() {
     "Nome de usuário não pode ser vazio.", // 4
   ];
 
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };

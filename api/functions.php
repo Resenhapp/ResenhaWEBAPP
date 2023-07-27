@@ -559,7 +559,7 @@ function getParties($result, $userId)
             if (mysqli_num_rows($dba) > 0) {
                 foreach ($dba as $dsa) {
                     if ($dsa['user'] != "none") {
-                        $userHash = hash256($dsa['user']);
+                        $userHash = getHash($dsa['user'], "user");
 
                         $user['hash'] = $userHash;
                         $guests[] = $user;
@@ -1042,7 +1042,7 @@ function getUserData()
                     foreach ($partiesResults as $party) {
                         $partyId = $party["id"];
 
-                        $partyIdHash = getHash($partyId, "party");
+                        $partyIdHash = getHash($partyId, "event");
 
                         $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
                         $partyConfirmed = queryDB($query)[0];
