@@ -1,6 +1,7 @@
 import Button from '@/src/components/Button';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Vector from '@/src/components/Vector';
 
 export default function Confirmation({
   PartyImage,
@@ -22,11 +23,11 @@ export default function Confirmation({
   }, [buttonsVisible]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center px-4">
       <section className="flex flex-col items-center w-full max-w-md">
         <div className="flex flex-col items-center justify-center h-fit px-4">
           <section className="flex flex-col items-center w-full max-w-md">
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full my-2">
               <div className="flex flex-col rounded-2xl ring-1 ring-whiteT2 bg-white p-4">
                 <div className="flex flex-col">
                   <div className="flex flex-row">
@@ -67,12 +68,14 @@ export default function Confirmation({
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row mt-6 justify-between h-[0px] rounded-full outline-dotted bg-whiteT2" />
-                <div className="flex items-center mt-4 justify-center">
+                <div className='flex flex-col justify-center items-center content-center mt-4'>
+                  <Vector vectorname={'dotted'} />
+                </div>
+                <div className="flex items-center mt-8 mb-4 justify-center">
                   <img
                     src={InviteQrCodeUrl}
-                    width={240}
-                    height={240}
+                    width={210}
+                    height={210}
                     alt="QR Code"
                     className="z-1 object-cover"
                   />
@@ -80,7 +83,7 @@ export default function Confirmation({
               </div>
             </div>
             {visible == true ? (
-              <div className="flex flex-row-reverse gap-2 items-center mb-4 mt-4 w-full" id="idOfElementToHide">
+              <div className="flex flex-row-reverse gap-2 items-center my-4 w-full" id="idOfElementToHide">
                 <Button
                   label={'Salvar'}
                   icon={'arrowDown'}
