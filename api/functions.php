@@ -711,13 +711,11 @@ function editEventData()
 
         foreach ($data as $key => $value) {
             if ($key == 'price') {
-                $key = str_replace('R$ ', '', $key);
-                $key = str_replace(',', '.', $key);
-                $key = floatval($key);
+                // $formattedValue = str_replace('R$', '', $value);
             }
 
             if ($key == 'address') {
-                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($key)."&format=json";
+                $requestToOpenstreet = "https://nominatim.openstreetmap.org/search?q=".urlencode($value)."&format=json";
 
                 $httpOptions = [
                     "http" => [
@@ -1269,6 +1267,9 @@ function getInviteData()
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
             $host = $row["host"];
+
+            $hostId = $host;
+
             $id = $row["id"];
 
             $partyHash = getHash($id, "event");
@@ -1356,7 +1357,7 @@ function getInviteData()
                 foreach ($userData as $column) {
                     $userId = $column["id"];
 
-                    if ($userId == $host) {
+                    if ($userId == $hostId) {
                         $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
                         $party_price = queryDB($party_price_query)[0];
     
@@ -1853,7 +1854,7 @@ function tryToDeleteEvent()
         $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro'";
         $confirmed = queryDB($query);
 
-        if ($confirmed) {
+        if (!$confirmed) {
             $query = "SELECT host FROM parties WHERE code = '$code'";
             $host = queryDB($query)[0];
     
