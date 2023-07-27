@@ -1,30 +1,31 @@
 'use client'
 import { useState } from 'react';
 import { QrReader } from 'react-qr-reader';
+// import { AudioHTMLAttributes } from 'react';
 export default function Scanner({typeCode, scanResult}) {
-    const [data, setData] = useState('No result');
+    const [data, setData] = useState('No result');  
 
     const [code, setCode] = useState('');
-    const soundx = new Audio("https://media.resenha.app/s/entrada.mp3");
-    const soundy = new Audio("https://media.resenha.app/s/invalido.mp3");
-    const soundz = new Audio("https://media.resenha.app/s/proibida.mp3");
-    const beep = new Audio("https://media.resenha.app/s/beep.mp3");
+    // const soundx = new Audio("https://media.resenha.app/s/entrada.mp3");
+    // const soundy = new Audio("https://media.resenha.app/s/invalido.mp3");
+    // const soundz = new Audio("https://media.resenha.app/s/proibida.mp3");
+    // const beep = new Audio("https://media.resenha.app/s/beep.mp3");
 
 
     const tryToAllow = (scannedCode) => {
         console.log(scannedCode);
         if (scannedCode == '1') {
-            soundx.play();
+            // soundx.play();
             // beep.play();
             scanResult('Granted');
         }
         else if (scannedCode == '2') {
-            soundz.play();
+            // soundz.play();
             // beep.play();
             scanResult('Denied');
         }
         else if (scannedCode == '3') {
-            soundy.play();
+            // soundy.play();
             // beep.play();
             scanResult('Used');
         }
