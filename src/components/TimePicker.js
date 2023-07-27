@@ -23,7 +23,7 @@ const TimePicker = ({ onTimeSelect }) => {
     }
 
     return (
-        <div className="flex flex-row items-center gap-1">
+        <div className="flex flex-row h-28 items-center gap-1">
             <TimeSelectList range={24} onClick={setSelectedHour} selected={selectedHour} />
             <h1 className="text-3xl mb-2">:</h1>
             <TimeSelectList range={60} onClick={setSelectedMinute} selected={selectedMinute} />

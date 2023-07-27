@@ -43,11 +43,11 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
     const handleToggleChange = (isChecked) => {
-        setToggleValue(isChecked);
-        onToggleChange(isChecked);
-        setHasEnd(!isChecked);
-        if(!isChecked) {
-          setEndHourSelected(false);
+        setToggleValue(!isChecked);
+        onToggleChange(!isChecked);
+        setHasEnd(isChecked);
+        if(isChecked) {
+          setEndHourSelected(true);
         }
       };
     
@@ -157,11 +157,11 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                     </Modal>
                 }
                 <Toggle
-                    labelText={'Não tem hora pra acabar'}
+                    labelText={'Tem hora pra acabar'}
                     questionAction={''}
                     showLabel={true}
                     showQuestion={false}
-                    startToggled={!hasEnd}
+                    startToggled={false}
                     textColor={'white'}
                     onToggle={handleToggleChange}
                 />
