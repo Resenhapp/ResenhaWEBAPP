@@ -2318,7 +2318,7 @@ function tryToCreateUser()
         $tax = 10;
 
         $verified = "0";
-        $about = "Sou novo por aqui... 🤓";
+        $about = "Acabei de chegar aqui... 🤓";
 
         $password_hash = hash256($password);
 
