@@ -387,31 +387,31 @@ function checkSession($token)
 }
 
 function getHash($userHash, $urlType) {
-    // $userHash = hash256($userHash);
+    $userHash = hash256($userHash);
 
-    // if ($urlType == "event") {
-    //     $urlPrefix = "r";
-    // }
+    if ($urlType == "event") {
+        $urlPrefix = "r";
+    }
     
-    // else {
-    //     $urlPrefix = "u";
-    // }
+    else {
+        $urlPrefix = "u";
+    }
 
-    // $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
+    $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
 
-    // $ch = curl_init($imageUrl);
-    // curl_setopt($ch, CURLOPT_NOBODY, true);
-    // curl_exec($ch);
-    // $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    // curl_close($ch);
+    $ch = curl_init($imageUrl);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    // if ($statusCode == 200) {
-    //     return $userHash;
-    // } 
+    if ($statusCode == 200) {
+        return $userHash;
+    } 
     
-    // else {
+    else {
         return hash256("default");
-    // }
+    }
 }
 
 function createNotification($user, $title, $content)
