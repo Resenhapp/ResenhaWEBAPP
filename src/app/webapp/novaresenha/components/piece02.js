@@ -11,7 +11,7 @@ import TimePicker from '@/src/components/TimePicker';
 registerLocale('pt', ptBR)
 
 
-const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
+const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
     const [hasEnd, setHasEnd] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -34,9 +34,6 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
     const [startHourSelected, setStartHourSelected] = useState(false);
     const [endHourSelected, setEndHourSelected] = useState(false);
 
-    
-      
-
     useEffect(() => {
         if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
           filled(true);
@@ -44,13 +41,6 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
           filled(false);
         }
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
-
-    const handleDateSelect = (day, month, year) => {
-        setSelectedDay(day);
-        setSelectedMonth(month);
-        setSelectedYear(year);
-        setIsDateSelected(true);
-    };
 
     const handleToggleChange = (isChecked) => {
         setToggleValue(isChecked);
@@ -61,18 +51,21 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         }
       };
     
-
-    const handleCalendarDateChange = (datePicked) => {
-        setSelectedDate(datePicked);
-        onDateCalendarSelect(datePicked);
+    const handleDateChange = (date) => {
+        setSelectedDay(date.getDate());
+        setSelectedMonth(date.getMonth() + 1);
+        setSelectedYear(date.getFullYear());
         setIsDateSelected(true);
-    }
+        setSelectedDate(date);
+        onDateSelect(date);
+      };
+      
 
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {
-            onDateScrollSelect(selectedDay, selectedMonth, selectedYear);
+            onDateSelect(selectedDay, selectedMonth, selectedYear);
         }
-    }, [selectedDay, selectedMonth, selectedYear, onDateScrollSelect]);
+    }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
 
     const currentTime = new Date().toLocaleTimeString([], {
         hour: '2-digit',
@@ -104,7 +97,6 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newStartTime.setHours(time.hour, time.minute);
         setStartTime(newStartTime);
         handleStartChange(newStartTime);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startTime, handleStartChange, setStartTime]);
 
     const onEndTimeSelect = useCallback((time) => {
@@ -112,7 +104,6 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
         newEndTime.setHours(time.hour, time.minute);
         setEndTime(newEndTime);
         handleEndChange(newEndTime);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [endTime, handleEndChange, setEndTime]);
 
     return (
@@ -128,7 +119,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
                 <Modal show={isOpen} close={() => setIsOpen(false)}>
                     <DatePicker
                         selected={selectedDate}
-                        onChange={handleCalendarDateChange}
+                        onChange={handleDateChange}
                         inline
                         locale="pt"
                     />
@@ -138,7 +129,7 @@ const Piece02 = ({ onDateScrollSelect, onDateCalendarSelect, onStartHourSelect, 
                 </Modal>
 
             </div>
-            <DateScroll onDateSelect={handleDateSelect} />
+            <DateScroll onDateSelect={handleDateChange} />
             <hr className='bg-purpleT4 h-[2px] border-none rounded-full' />
             <div className='flex flex-col gap-2'>
                 <EventHour

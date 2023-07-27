@@ -566,7 +566,7 @@ function getParties($result, $userId)
 
                         $counter++;
 
-                        if ($counter === 5) {
+                        if ($counter === 4) {
                             break;
                         }
                     }
@@ -2101,7 +2101,7 @@ function tryToCreateEvent()
         $price = intval(str_replace(',', '.', $details['selectedPrice']));
         $start = date('H:i', strtotime($details['start']));
 
-        $date = date('d/m/Y', strtotime($details['dateSelected']));
+        $date = $details['dateSelected'];
 
         $code = randomCode(8);
 

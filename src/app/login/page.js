@@ -91,7 +91,7 @@ export default function Login() {
         </div>
 
         <div className="flex flex-col mb-4 w-full">
-          <Button action={handleClick} label="Entrar" icon="arrow" />
+          <Button action={handleClick} label="Entrar" icon="arrow" iconSide='right'/>
         </div>
 
         {/* <div className="flex flex-col mb-2 mt-10 w-full">

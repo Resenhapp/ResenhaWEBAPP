@@ -34,26 +34,25 @@ const PartyBanner = ({imageUrl, eventCode, eventName, eventGuests, eventMax, eve
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>
                     <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]">{eventName}</h1>
-                    <div className='flex flex-row gap-2 items-center'>
+                    <div className=' items-center flex'>
                         {imageUrl.length > 0 ? (
-                            <div className='flex flex-row'>
-                                {imageUrl.map((url, index) => (
-                                <div key={index.id}>
-                                    <Image
-                                    key={index}
-                                    src={url}
-                                    alt=""
-                                    width={110}
-                                    height={30}
-                                    className={`rounded-full ${index < imageUrl.length - 1 ? "mr-[-10px]" : ""} ring-2 ring-purpleT1 object-cover h-5 w-5`}
-                                    />
-                                </div>
-                                ))}
+                        <div className='flex flex-row mr-[-20px]'>
+                            {imageUrl.map((url, index) => (
+                            <div key={index} className='' style={{position: "", transform: `translateX(${-index*10}px)`}}>
+                                <Image
+                                src={url}
+                                alt=""
+                                width={110}
+                                height={30}
+                                className="rounded-full ring-2 ring-purpleT1 object-cover h-5 w-5"
+                                />
                             </div>
+                            ))}
+                        </div>
                         ) : null}
                         <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
                     </div>
-                </div>
+                    </div>
                 <div className='p-4 z-[1]'>
                     <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
                         <h1 className="text-purpleT2 text-center font-bold">
