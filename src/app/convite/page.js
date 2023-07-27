@@ -10,6 +10,7 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
+import Back from "@/src/components/Back";
 
 export default function Invite() {
     const axios = require('axios');
@@ -30,7 +31,7 @@ export default function Invite() {
         Cookies.set('code', code);
 
         if (typeof window !== 'undefined') {
-            window.location.href = 'convite/checkout?c='+code;
+            window.location.href = 'convite/checkout?c=' + code;
         }
     };
 
@@ -51,39 +52,38 @@ export default function Invite() {
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'getInviteData', 
-                code: code 
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'getInviteData',
+                code: code
             });
 
             setData(response);
-      
+
             return response.tags;
-        } 
-        
+        }
+
         catch (error) {
-          console.error(error);
+            console.error(error);
         }
     };
-      
-    
+
+
     useEffect(() => {
         const getRenderedTags = async () => {
             const tags = await fetchData();
             const eventTags = tags.map((tag) => parseInt(tag, 10));
             const allTags = [...tagsData].map((tag) => {
-            const isSelected = eventTags.includes(tag.id);
-            return { ...tag, selected: isSelected };
+                const isSelected = eventTags.includes(tag.id);
+                return { ...tag, selected: isSelected };
             }).sort((a, b) => b.selected - a.selected);
             const validEventTags = eventTags.filter(tagId => allTags.some(tag => tag.id === tagId));
             const renderTags = validEventTags.map(tagId => allTags.find(tag => tag.id === tagId));
-        
+
             setRenderedTags(renderTags);
         };
-        
+
         getRenderedTags();
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) {
@@ -164,8 +164,8 @@ export default function Invite() {
                 })
                 .catch((error) => {
                 });
-        } 
-        
+        }
+
         else {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -179,10 +179,15 @@ export default function Invite() {
             }
         }
     };
- 
+
     return (
         <div className="flex flex-col justify-start min-h-screen h-fit relative bg-purpleT01">
             <section className="relative">
+                <div className="absolute z-[4] top-4 left-4">
+                    <button onClick={() => {window.location.href = `https://www.resenha.app/webapp/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                        <Vector vectorname={'arrowLeft01'} />
+                    </button>
+                </div>
                 <div className="relative">
                     <Image
                         src={`https://media.resenha.app/r/${hash}.png`}
@@ -265,8 +270,8 @@ export default function Invite() {
                             </div>
                             <div className="mt-4">
                                 <h1 className="font-bold mb-1">
-                                        Tags:
-                                    </h1>
+                                    Tags:
+                                </h1>
                                 <div className="flex flex-wrap gap-2">
                                     {renderedTags.map((tag) => (
                                         <div key={tag.id}>
@@ -302,29 +307,29 @@ export default function Invite() {
                                 </div>
                             </div>
                             <div className="flex flex-col mb-4 w-full">
-                            {users.length > 0 && (
-                                <div>
-                                    <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
-                                    Quem vai:
-                                    </h1>
-                                    <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-0 w-full">
-                                    {users.map((user) => (
-                                        <div key={user.id}>
-                                        <UserPortrait
-                                            isBlurried={false}
-                                            imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
-                                            userName={user.username}
-                                            userId={user.id}
-                                        />
+                                {users.length > 0 && (
+                                    <div>
+                                        <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
+                                            Quem vai:
+                                        </h1>
+                                        <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-2 w-full">
+                                            {users.map((user) => (
+                                                <div key={user.id}>
+                                                    <UserPortrait
+                                                        isBlurried={false}
+                                                        imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
+                                                        userName={user.username}
+                                                        userId={user.id}
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
                                     </div>
-                                </div>
-                            )}
+                                )}
                             </div>
                             <div className="justify-center align-center w-full max-w-screen-xs flex mb-3">
                                 <h1 className="font-regular">
-                                    Feito com: <a href="https://resenha.app"><b><u>Resenha.app</u></b></a>
+                                    Feito com: <a href="https://www.resenha.app/"><b><u>Resenha.app</u></b></a>
                                 </h1>
                             </div>
                         </div>
