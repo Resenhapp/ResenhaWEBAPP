@@ -1,13 +1,11 @@
 'use client'
 import Image from "next/image";
-import defaultImage from "@/assets/images/default.jpg";
 import Button from "@/src/components/Button";
 import RoundButton from "@/src/components/RoundButton";
 import { useState } from "react";
 import UserPortrait from "@/src/components/UserPortrait";
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
@@ -32,7 +30,7 @@ export default function Invite() {
         Cookies.set('code', code);
 
         if (typeof window !== 'undefined') {
-            window.location.href = 'convite/dados/';
+            window.location.href = 'convite/checkout?c='+code;
         }
     };
 
@@ -115,6 +113,7 @@ export default function Invite() {
                 </>
             );
         }
+
         let text = ''
         let shortDescription = description;
 
@@ -165,7 +164,9 @@ export default function Invite() {
                 })
                 .catch((error) => {
                 });
-        } else {
+        } 
+        
+        else {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
             if (isMobile) {
