@@ -75,12 +75,11 @@ const RegisterPageComponent = ({}) => {
         email: email, 
         password: password
       });
-      
+      window.location.href = 'https://www.resenha.app/login';
       if (response.token && typeof window !== 'undefined') {
         expirationDate.setDate(expirationDate.getDate() + 30);
         Cookies.set('token', response.token, { expires: expirationDate });
 
-        window.location.href = '/webapp/feed';
       }
     } 
     
@@ -101,6 +100,7 @@ const RegisterPageComponent = ({}) => {
           <InputField placeholder="Seu nome" showIcon={true} Icon="person" value={name} action={handleNameChange}/>
           <InputField placeholder="Email" showIcon={true} Icon="mail" value={email} action={handleEmailChange}/>
           <PasswordField placeholder="Senha" showIcon={true} value={password} action={handlePasswordChange}/>
+          <p className='text-sm'>A sua senha precisa ter 8 caracteres, pelo menos uma letra maiúscula, uma minúscula, um número e um súmbolo (tipo # @ ! e tals)</p>
         </div>
         </div>
 

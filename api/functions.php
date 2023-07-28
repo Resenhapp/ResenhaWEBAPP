@@ -1294,6 +1294,32 @@ function getPartiesFromUser()
         }
 }
 
+function getAllParties()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    $userid = sanitize($_GET['allparties']);
+    $query = "SELECT * FROM parties";
+
+    $stmt = $link->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+        $errorData = array('error' => 'DB does not contain any party');
+        echo json_encode($errorData);
+    }
+}
+
+
 function getUserData()
 {
     $userData = checkSession($_POST['token']);
