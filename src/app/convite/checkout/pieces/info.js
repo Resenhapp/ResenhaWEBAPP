@@ -4,9 +4,9 @@ import AmountSelector from '@/src/components/AmountSelector';
 import { useState, useEffect } from 'react';
 import Toggle from '@/src/components/Toggle';
 
-export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+export default function Info({ setSelectionAmout, setPaymentMethod, loadName, loadEmail, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
+    const [name, setName] = useState(loadName);
+    const [email, setEmail] = useState(loadEmail);
     const [ticketsAmount, setTicketsAmount] = useState(1);
     const [isEighteen, setIsEighteen] = useState(true);
     const [emailValid, setEmailValid] = useState(false);

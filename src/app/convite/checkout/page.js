@@ -156,6 +156,8 @@ export default function Checkout() {
                     setCustomerName={setCustomerName}
                     setCustomerEmail={setCustomerEmail}
                     setSelectionAmout={setTicketsAmount}
+                    loadName={customerName}
+                    loadEmail={customerEmail}
                     getPartyName={partyName}
                     getPartyPrice={partyPrice}
                     setIsFilled={setIsFilled}
