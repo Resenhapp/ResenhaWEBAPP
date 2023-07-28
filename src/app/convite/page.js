@@ -179,8 +179,8 @@ export default function Invite() {
     };
 
     return (
-        <div className="flex flex-col justify-start min-h-screen h-fit relative bg-purpleT01">
-            <section className="relative">
+        <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
+            <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 <div className="absolute z-[4] top-4 left-4">
                     <button onClick={() => {window.location.href = `https://www.resenha.app/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
                         <Vector vectorname={'arrowLeft01'} />
@@ -193,7 +193,7 @@ export default function Invite() {
                         layout=""
                         width={300}
                         height={300}
-                        className="object-cover w-full h-[300px]"
+                        className="object-cover w-full h-[300px] xl:rounded-t-xl"
                     />
                     <div className="absolute inset-0">
                         <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT01 opacity-100 w-full h-2/5" />

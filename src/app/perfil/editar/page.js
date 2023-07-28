@@ -208,7 +208,7 @@ export default function EditProfile() {
 
             try {
                 const response = await sendEditRequest(data);
-              
+                if (response.status = 'success'){toggleEditUsernamePageOpen};
                 if (response.error) {
                   switch (response.error) {
                     case "used_username":
@@ -231,27 +231,8 @@ export default function EditProfile() {
                 } 
                 
                 else {
-                  if (username.includes(' ')) {
-                    setErrorIndex(2);
-                    setIsUsernameErrorVisible(true);
-                  } else if (username.length < 6) {
-                    setErrorIndex(1);
-                    setIsUsernameErrorVisible(true);
-                  } else if (username.length < 1) {
-                    setErrorIndex(4);
-                    setIsUsernameErrorVisible(true);
-                  } else if (newTempName.length < 1) {
-                    setErrorIndex(5);
-                    setIsUsernameErrorVisible(true);
-                  } else if (newTempName.includes(' ')) {
-                    setErrorIndex(6);
-                    setIsUsernameErrorVisible(true);
-                  } else if (username.length < 1 && newTempName.length < 1) {
-                    setErrorIndex(7);
-                    setIsUsernameErrorVisible(true);
-                  } else {
-                    toggleEditUsernamePageOpen();
-                  }
+                    setIsUsernameErrorVisible(false);
+            toggleEditUsernamePageOpen();
                 }
               } 
               
