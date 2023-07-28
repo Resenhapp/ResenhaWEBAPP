@@ -51,6 +51,7 @@ export default function Checkout() {
     const [cardExpiration, setCardExpiration] = useState('');
     const [cardCvv, setCardCvv] = useState('');
     const [cardCpf, setCardCpf] = useState('');
+    const [pixData, setPixData] = useState(null);
    
     const [hidestyle, setHideStyle] = useState(!false);
 
@@ -65,6 +66,15 @@ export default function Checkout() {
         console.log(`Credit card cpf: ${cardCpf}`);
     }
 
+    useEffect(() => {
+        if (paymentMethod === 'Pix') {
+            fetchData().then(data => {
+                setPixData(data);
+                setLoading(false);
+            });
+        }
+    }, [paymentMethod]); // Re-run the effect when `paymentMethod` changes
+
     const makeRequest = async (url, data) => {
         try {
             const response = await axios.post(url, qs.stringify(data));
@@ -77,6 +87,8 @@ export default function Checkout() {
     };
 
     const fetchData = async () => {
+        setLoading(true);
+
         try {
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'tryToCreateGuest',
@@ -158,9 +170,7 @@ export default function Checkout() {
                 />;
                 break;
             case 2:
-                if (paymentMethod === 'Pix') {
-                    var pixData = fetchData();
-
+                if (paymentMethod === 'Pix' && pixData) {
                     return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} />
                 }
 
@@ -200,27 +210,10 @@ export default function Checkout() {
             const details = {
                 content,
             };
-
-            try {
-                const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                    request: 'tryToCreateEvent',
-                    token: token,
-                    details: details
-                });
-
-                if (!response.error && typeof window !== 'undefined') {
-                    window.location.href = '/webapp/resenhas/';
-                }
-            }
-
-            catch (error) {
-                console.error(error);
-            }
         }
 
         else {
             setProgress(progress + 1);
-            console.log(progress);
             setIsFilled(!isFilled)
         }
     };
