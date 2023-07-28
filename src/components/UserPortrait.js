@@ -4,7 +4,7 @@ const UserPortrait = ({ isBlurried, imageUrl, userId, userName }) => {
 
   const handlePortraitClick = () => {
     if (typeof window !== 'undefined') {
-      window.location.href = `/webapp/perfil?u=${userName}`;
+      window.location.href = `/perfil?u=${userName}`;
     }
   };
 

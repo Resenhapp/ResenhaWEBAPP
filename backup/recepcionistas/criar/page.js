@@ -24,7 +24,7 @@ export default function NewConcierge() {
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
-            window.location.href = `/webapp/${pageToGo}`;
+            window.location.href = `/${pageToGo}`;
         }
     };
 

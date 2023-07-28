@@ -6,7 +6,7 @@ import MyEventsBanner from './MyEventsBanner';
 const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax, eventImage, eventCode}) => {
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
-            window.location.href = `/webapp/${pageToGo}`;
+            window.location.href = `/${pageToGo}`;
         }
     };
     return (

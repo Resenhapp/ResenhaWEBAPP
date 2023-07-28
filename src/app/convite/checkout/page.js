@@ -224,7 +224,7 @@ export default function Checkout() {
             title = '';
             subtitle = '';
             if (typeof window !== 'undefined') {
-                window.location.href = '/webapp/resenhas/';
+                window.location.href = '/resenhas/';
             }
         case 1:
             title = 'Informações';
