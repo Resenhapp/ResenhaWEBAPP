@@ -66,14 +66,12 @@ export default function Checkout() {
         console.log(`Credit card cpf: ${cardCpf}`);
     }
 
-    useEffect(() => {
-        if (paymentMethod === 'Pix') {
+    const generatePix = () => {
             fetchData().then(data => {
                 setPixData(data);
                 setLoading(false);
             });
-        }
-    }, [paymentMethod]); // Re-run the effect when `paymentMethod` changes
+    }
 
     const makeRequest = async (url, data) => {
         try {
@@ -204,8 +202,10 @@ export default function Checkout() {
         }
     }
 
-    const handleNextStep = async () => {
-        console.log(progress);
+    const handleNextStep = () => {
+        if (paymentMethod === "Pix"){
+            generatePix();
+        }
         if (progress + 1 > maxProgress) {
             const details = {
                 content,

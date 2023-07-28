@@ -24,15 +24,30 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedYear, setSelectedYear] = useState(null);
-    const [toggleValue, setToggleValue] = useState(true);
     const [isDateSelected, setIsDateSelected] = useState(false);
-    // const [isHourSelected, setIsHourSelected] = useState(false);
 
     const [tempStart, setTempStart] = useState('');
     const handleStartSet = (event) => {
         setTempStart(event.target.value);
         setStartHourSelected(true);
     };
+
+    const handleStartSave = () => {
+        let [hours, minutes] = tempStart.split(':');
+        let newStartTime = new Date(startTime.setHours(hours, minutes));
+        setStartTime(newStartTime);
+        setIsStartTimeModalOpen(false);
+        onStartHourSelect(newStartTime);
+    };
+
+    const handleEndSave = () => {
+        let [hours, minutes] = tempEnd.split(':');
+        let newEndTime = new Date(endTime.setHours(hours, minutes));
+        setEndTime(newEndTime);
+        setIsEndTimeModalOpen(false);
+        onEndHourSelect(newEndTime);
+    };
+
     const [tempEnd, setTempEnd] = useState('');
 
     const handleEndSet = (event) => {
@@ -49,7 +64,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         }
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
     const handleToggleChange = (isChecked) => {
-        setToggleValue(!isChecked);
         onToggleChange(!isChecked);
         setHasEnd(isChecked);
         if (isChecked) {
@@ -69,42 +83,8 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
             onDateSelect(selectedDay, selectedMonth, selectedYear);
         }
     }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
-    // const currentTime = new Date().toLocaleTimeString([], {
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: false,
-    // });
     const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
-    // const lateTime = currentDate.toLocaleTimeString([], {
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: false,
-    // });
-
-    // const handleStartChange = (date) => {
-    //     setStartHourSelected(true);
-    //     onStartHourSelect(date);
-    // }
-
-    // const handleEndChange = (date) => {
-    //     setEndHourSelected(true);
-    //     onEndHourSelect(date);
-    // }
-
-    // const onStartTimeSelect = useCallback((time) => {
-    //     const newStartTime = new Date(startTime);
-    //     newStartTime.setHours(time.hour, time.minute);
-    //     setStartTime(newStartTime);
-    //     handleStartChange(newStartTime);
-    // }, [startTime, handleStartChange, setStartTime]);
-
-    // const onEndTimeSelect = useCallback((time) => {
-    //     const newEndTime = new Date(endTime);
-    //     newEndTime.setHours(time.hour, time.minute);
-    //     setEndTime(newEndTime);
-    //     handleEndChange(newEndTime);
-    // }, [endTime, handleEndChange, setEndTime]);
     return (
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">
@@ -138,58 +118,98 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                     onEndTimeClick={() => setIsEndTimeModalOpen(true)}
                 />
                 {isStartTimeModalOpen &&
-                    <Modal show={isStartTimeModalOpen} close={() => setIsStartTimeModalOpen(false)}>
-                        <div className='flex flex-col justify-center items-center'>
-                            <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha começa</h1>
-                            <ReactInputMask
-                                mask="99:99"
-                                maskChar=""
-                                value={tempStart}
-                                onChange={handleStartSet}
-                            >
-                                {(inputProps) =>
-                                    <input
-                                        {...inputProps}
-                                        className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
-                                        placeholder='Toque aqui'
-                                        type='tel'
-                                    />
-                                }
-                            </ReactInputMask>
-                            {/* <TimePicker onTimeSelect={onStartTimeSelect} /> */}
-                            <div className='flex flex-row justify-around w-full'>
-                                <button onClick={() => setIsStartTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
-                                <button onClick={() => setIsStartTimeModalOpen(false)} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            zIndex: 9999,
+                        }}
+                        onClick={close}
+                    >
+                        <div
+                            style={{
+                            }}
+                            className='bg-purpleT0 px-2 py-4 ring-2 ring-purpleT1 rounded-2xl max-w-[70%]'
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className='flex flex-col justify-center items-center'>
+                                <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha começa</h1>
+                                <ReactInputMask
+                                    mask="99:99"
+                                    maskChar=""
+                                    value={tempStart}
+                                    onChange={handleStartSet}
+                                >
+                                    {(inputProps) =>
+                                        <input
+                                            {...inputProps}
+                                            className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
+                                            placeholder='Toque aqui'
+                                            type='tel'
+                                        />
+                                    }
+                                </ReactInputMask>
+                                <div className='flex flex-row justify-around w-full'>
+                                    <button onClick={() => setIsStartTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
+                                    <button onClick={handleStartSave} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                                </div>
                             </div>
                         </div>
-                    </Modal>
+                    </div>
                 }
                 {isEndTimeModalOpen &&
-                    <Modal show={isEndTimeModalOpen} close={() => setIsEndTimeModalOpen(false)}>
-                        <div className='flex flex-col justify-center items-center'>
-                            <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha termina</h1>
-                            <ReactInputMask
-                                mask="99:99"
-                                maskChar=""
-                                value={tempEnd}
-                                onChange={handleEndSet}
-                            >
-                                {(inputProps) =>
-                                    <input
-                                        {...inputProps}
-                                        className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
-                                        placeholder='Toque aqui'
-                                        type='tel'
-                                    />
-                                }
-                            </ReactInputMask>
-                            {/* <TimePicker onTimeSelect={onEndTimeSelect} /> */}
-                            <div className='flex flex-row justify-around w-full'>
-                                <button onClick={() => setIsEndTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
-                                <button onClick={() => setIsEndTimeModalOpen(false)} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            zIndex: 9999,
+                        }}
+                        onClick={close}
+                    >
+                        <div
+                            style={{
+                            }}
+                            className='bg-purpleT0 px-2 py-4 ring-2 ring-purpleT1 rounded-2xl max-w-[70%]'
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className='flex flex-col justify-center items-center'>
+                                <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha termina</h1>
+                                <ReactInputMask
+                                    mask="99:99"
+                                    maskChar=""
+                                    value={tempEnd}
+                                    onChange={handleEndSet}
+                                >
+                                    {(inputProps) =>
+                                        <input
+                                            {...inputProps}
+                                            className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
+                                            placeholder='Toque aqui'
+                                            type='tel'
+                                        />
+                                    }
+                                </ReactInputMask>
+                                <div className='flex flex-row justify-around w-full'>
+                                    <button onClick={() => setIsEndTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
+                                    <button onClick={handleEndSave} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                                </div>
                             </div>
                         </div>
-                    </Modal>
+                    </div>
                 }
                 <Toggle
                     labelText={'Tem hora pra acabar'}

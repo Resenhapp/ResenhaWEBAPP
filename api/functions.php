@@ -1833,6 +1833,40 @@ function tryToCreateGuest()
 
         $charge = $array["charges"][0]["id"];
     } 
+
+    if ($method == "Cartão"){
+        $req = [
+            "items" => [
+                [
+                    "amount" => $price * 100,
+                    "description" => "Resenha.app",
+                    "quantity" => 1,
+                ],
+            ],
+            "customer" => [
+                "name" => $name,
+                "email" => $email,
+                "type" => "individual",
+                "document" => "02332277099",
+                "phones" => [
+                    "mobile_phone" => [
+                        "country_code" => "55",
+                        "number" => "997722334",
+                        "area_code" => "51",
+                    ],
+                ],
+            ],
+            "payments" => [
+                [
+                    "payment_method" => "card",
+                    "card" => [
+                        
+                    ],
+                ],
+            ],
+        ];
+        $array = requestPagarMe(json_encode($req));
+    }
     
     else {
         $paid = "0";

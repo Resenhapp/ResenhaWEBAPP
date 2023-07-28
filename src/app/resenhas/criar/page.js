@@ -103,17 +103,33 @@ export default function NewEvent() {
     setIsForAdults(isChecked);
   };
 
-  const handlePiece02ToggleChange = (isChecked) => {
-    setHasTimeToEnd(!isChecked);
-  };
-
   const handlePiece02StartHourSelect = (startHour) => {
-    setStart(startHour);
-  };
+    const date = new Date(startHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-  const handlePiece02EndHourSelect = (endHour) => {
-    setEnd(endHour);
-  };
+    const formattedStartHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    setStart(formattedStartHour);
+    console.log(formattedStartHour);
+};
+
+const handlePiece02EndHourSelect = (endHour) => {
+    const date = new Date(endHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    const formattedEndHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    setEnd(formattedEndHour);
+    console.log(formattedEndHour);
+};
 
   const handlePiece02DateSelect = (dateSelected) => {
     if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
@@ -129,8 +145,6 @@ export default function NewEvent() {
     console.log(formattedDate);
     console.log(typeof formattedDate);
 };
-  
-
 
   const handlePiece03GuestsSelect = (guests) => {
     setSelectedGuests(guests);
@@ -166,7 +180,7 @@ export default function NewEvent() {
       case 2:
         return (
           <Piece02
-          onToggleChange={handlePiece02ToggleChange}
+          onToggleChange={setHasTimeToEnd}
           onStartHourSelect={handlePiece02StartHourSelect}
           onEndHourSelect={handlePiece02EndHourSelect}
           onDateSelect={handlePiece02DateSelect}

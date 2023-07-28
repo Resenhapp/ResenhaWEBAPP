@@ -5,7 +5,7 @@ define("GLOBAL_ENCKEY", "lifeisaparty");
 define("GLOBAL_REDIRECT", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 define("GLOBAL_PAGARMEKEY", "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og=="); // testes c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og== // producao c2tfcU5ENEpOMERpMkk0R205Qjo=
 
-define("DB_SERVER", "154.49.247.103");
+define("DB_SERVER", "154.56.47.103");
 define("DB_NAME", "u878630845_resenhadb");
 define("DB_USERNAME", "u878630845_resenhadb");
 define("DB_PASSWORD", "kXiHdsMv7g$0");
