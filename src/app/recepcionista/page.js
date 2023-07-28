@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState } from 'react';
 import Vector from '@/src/components/Vector';
 import Link from 'next/link';
@@ -8,16 +9,82 @@ import Granted from './pieces/granted';
 import Denied from './pieces/denied';
 import Used from './pieces/used';
 import Help from './pieces/help';
+import Cookies from 'js-cookie';
 
 export default function Concierge() {
     const [content, setContent] = useState('Scanner');
+
+    var concierge = Cookies.get('concierge');
+
+    if (!concierge && typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        concierge = urlParams.get('t');
+
+        if (concierge) {
+            Cookies.set('concierge', concierge);
+        }
+
+        else {
+            returnToHome("Help");
+        }
+    }
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const tryToAllow = async (scannedCode) => {
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'tryToAllowGuest',
+                token: concierge,
+                code: scannedCode
+            });
+
+            if (response.status == "success") {
+                if (response.access == 'granted') {
+                    // soundx.play();
+                    // beep.play();
+                    setContent('Granted');
+                }
+
+                else if (response.access == 'bill') {
+                    // soundx.play();
+                    // beep.play();
+                    setContent('Cash');
+                }
+            }
+
+            else {
+                if (response.error == 'used') {
+                    setContent('Used');
+                }
+
+                setContent('Denied');
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    }
     
     const mount = (content) => {
         switch(content) {
             case "Scanner":
-                return <Scanner typeCode={callTypeCode} scanResult={setContent}/>;
+                return <Scanner typeCode={callTypeCode} tryToAllow={tryToAllow}/>;
             case "TypeCode":
-                return <TypeCode useCamera={callUseCamera} codeResponse={setContent}/>;
+                return <TypeCode useCamera={callUseCamera} codeResponse={setContent} tryToAllow={tryToAllow}/>;
             case "Granted":
                 return <Granted returnToHome={setContent}/>
             case "Denied":
@@ -34,6 +101,7 @@ export default function Concierge() {
     const callTypeCode = () => {
         setContent('TypeCode');
     }
+
     const callUseCamera = () => {
         setContent('Scanner');
     }

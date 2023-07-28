@@ -765,6 +765,84 @@ function editEventData()
     }
 }
 
+
+function tryToAllowGuest()
+{
+    $token = $_POST['token'];
+    $code = $_POST['code'];
+
+    $query = "SELECT party FROM concierges WHERE token = '$token'";
+    $conciergeResults = queryDB($query);
+
+    if ($conciergeResults) {
+        $party = $conciergeResults[0];
+
+        $query = "SELECT * FROM guests WHERE code = '$code' AND party = '$party'";
+        $guestsResults = queryDB($query);
+
+        if ($guestsResults) {
+            foreach ($guestsResults as $column) {
+                $paid = $column["paid"];
+                $method = $column["paid"];
+                $used = $column["used"];
+
+                if ($used == "0") {
+                    if ($paid == "1") {
+                        $data = [
+                            'status' => "success",
+                            'access' => "granted",
+                        ];
+
+                        $query = "UPDATE guests SET used = '1' WHERE code = '$code' AND party = '$party'";
+                        queryNR($query);
+                
+                        returnData($data);
+                    }
+    
+                    else {
+                        if ($method == "Cash") {
+                            $data = [
+                                'status' => "success",
+                                'access' => "bill",
+                            ];
+                    
+                            returnData($data);
+                        }
+    
+                        else {
+                            $data = [
+                                'status' => "fail",
+                                'access' => "denied",
+                                'error' => "charge"
+                            ];
+                    
+                            returnData($data);
+                        }
+                    }
+                }
+
+                else {
+                    $data = [
+                        'status' => "fail",
+                        'access' => "denied",
+                        'error' => "used"
+                    ];
+            
+                    returnData($data);
+                }
+            }
+        }
+
+        else {
+            returnError("invalid_guest");
+        }
+    }
+
+    else {
+        returnError("invalid_token");
+    }
+}
+
 function editUserData()
 {
     $userData = checkSession($_POST['token']);

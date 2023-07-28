@@ -3,10 +3,10 @@ import Vector from "@/src/components/Vector"
 import { useState } from "react"
 
 export default function Granted({ returnToHome }) {
-
     const goBack = () => {
         returnToHome("Scanner")
     }
+
     return (
         <div className="flex flex-col justify-center h-[70vh] mt-12 content-center items-center z-[100]">
             <div className="flex flex-col justify-center gap-4 items-center content-center">

@@ -5,7 +5,6 @@ import Accordion from "@/src/components/Accordion"
 
 
 export default function Help({ returnToHome }) {
-
     const goBack = () => {
         returnToHome("Scanner")
     }

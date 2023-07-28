@@ -28,6 +28,7 @@ $public = [
     "tryToClickOnEvent",
     "tryToCreateEvent",
     "tryToDeleteEvent",
+    "tryToAllowGuest",
     "editUserData",
     "editEventData",
     "clearUserNotifications",
