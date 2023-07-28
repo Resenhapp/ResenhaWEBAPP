@@ -1267,6 +1267,59 @@ function getSpecificData($userId, $item) {
     }
 }
 
+function getPartiesFromUser()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    if (isset($_GET['partiesfromuserid'])) {
+        $userid = sanitize($_GET['partiesfromuserid']);
+        $query = "SELECT * FROM parties WHERE host = ?";
+    }
+    $stmt = $link->prepare($query);
+    $stmt->bind_param("s", $userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+            $errorData = array('error' => 'User does not exist or does not contain a party');
+            echo json_encode($errorData);
+        }
+}
+
+function getAllParties()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    $userid = sanitize($_GET['allparties']);
+    $query = "SELECT * FROM parties";
+
+    $stmt = $link->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+        $errorData = array('error' => 'DB does not contain any party');
+        echo json_encode($errorData);
+    }
+}
+
+
 function getUserData()
 {
     $userData = checkSession($_POST['token']);
@@ -2484,7 +2537,7 @@ function tryToCreateUser()
         $tax = 10;
 
         $verified = "0";
-        $about = "Sou novo por aqui... 🤓";
+        $about = "Acabei de chegar aqui... 🤓";
 
         $password_hash = hash256($password);
 

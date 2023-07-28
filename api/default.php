@@ -1,8 +1,6 @@
 <?php
-
-//header('Access-Control-Allow-Origin: https://www.resenha.app');
-
-header('Access-Control-Allow-Origin: http://localhost:3000');
+// header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: https://www.resenha.app');
 header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -12,56 +10,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['request'])) {
         $request = sanitize($_POST['request']);
 
-        if (checkPublicRequest($request)) {
+        if (checkPublicRequest($request) || (checkPrivateRequest($request) && sanitize($_POST["key"]) == GLOBAL_APIKEY)) {
             $request();
-        } 
-        
-        elseif (checkPrivateRequest($request)) {
-            $privateKey = sanitize($_POST["key"]);
-
-            if ($privateKey == GLOBAL_APIKEY) {
-                $request();
-            }
-        } 
-        
-        else {
+        } else {
             returnError("invalid_request");
         }
-    } 
-    
-    else {
+    } else {
         returnError("no_request");
     }
-}
+} elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $validParams = array(
+        'userid',
+        'user@',
+        'useremail',
+        'userbalanceid',
+        'party',
+        'usersfromparty',
+        'conciergesfromparty',
+        'useractivityid',
+        'partiesfromuserid',
+        'allparties'
+    );
 
-elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Verifica se a chave "userid" está presente na solicitação GET
-    if (isset($_GET['userid'])) {
-        // Chama a função para retornar os dados do usuário em formato JSON
-        getSingleDataDiscord();
-    } elseif (isset($_GET['user@'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['useremail'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['userbalanceid'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['party'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['usersfromparty'])) {
-        getUsersFromParty();
-    } elseif (isset($_GET['conciergesfromparty'])) {
-        getConciergesFromParty();
-    } elseif (isset($_GET['useractivityid'])) {
-        getUserActivityDiscord();
+    $requestedParam = null;
+
+    foreach ($validParams as $param) {
+        if (isset($_GET[$param])) {
+            $requestedParam = $param;
+            break;
+        }
     }
-     else {
-        // Caso a chave "userid" não seja fornecida, retorna um erro em JSON
+
+    if ($requestedParam !== null) {
+        switch ($requestedParam) {
+            case 'userid':
+            case 'user@':
+            case 'useremail':
+            case 'userbalanceid':
+            case 'party':
+                getSingleDataDiscord();
+                break;
+            case 'usersfromparty':
+                getUsersFromParty();
+                break;
+            case 'conciergesfromparty':
+                getConciergesFromParty();
+                break;
+            case 'useractivityid':
+                getUserActivityDiscord();
+                break;
+            case 'partiesfromuserid':
+                getPartiesFromUser();
+                break;
+            case 'allparties':
+                getAllParties();
+                break;
+        }
+    } else {
         $errorData = array('error' => 'No valid param provided');
         echo json_encode($errorData);
     }
-} 
-
-else {
+} else {
     returnError("invalid_request");
 }
+
 ?>
