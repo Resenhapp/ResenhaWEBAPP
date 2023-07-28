@@ -35,7 +35,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
         'conciergesfromparty',
         'useractivityid',
         'partiesfromuserid',
-        'allparties'
+        'allparties', 
+        'allusers'
     );
 
     $requestedParam = null;
@@ -70,6 +71,9 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 break;
             case 'allparties':
                 getAllParties();
+                break;
+            case 'allusers':
+                getAllUsers();
                 break;
         }
     } 
