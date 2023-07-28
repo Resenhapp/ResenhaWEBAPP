@@ -101,7 +101,7 @@ const RegisterPageComponent = ({}) => {
           <InputField placeholder="Seu nome" showIcon={true} Icon="person" value={name} action={handleNameChange}/>
           <InputField placeholder="Email" showIcon={true} Icon="mail" value={email} action={handleEmailChange}/>
           <PasswordField placeholder="Senha" showIcon={true} value={password} action={handlePasswordChange}/>
-          <p className='text-sm'>A sua senha precisa ter 8 caracteres, pelo menos uma letra maiúscula, uma minúscula, um número e um súmbolo (tipo # @ ! e tals)</p>
+          <p className='text-sm'>A sua senha precisa ter 8 caracteres, pelo menos uma letra maiúscula, uma minúscula, um número e um símbolo (tipo # @ ! e tals)</p>
         </div>
         </div>
 
