@@ -1,4 +1,5 @@
 'use client'
+
 import Button from '@/src/components/Button';
 import Back from '@/src/components/Back';
 import PartyPortrait from '@/src/components/PartyPortrait';
@@ -7,8 +8,7 @@ import PageHeader from '@/src/components/PageHeader';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-import { useState } from "react";
-import { useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function MyParties() {
     const token = Cookies.get('token');
@@ -41,10 +41,18 @@ export default function MyParties() {
   
     const fetchData = async () => {
         try {
+            const requested = [
+                "username",
+                "notifications",
+                "parties"
+            ];
+
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token,
+                requested: requested
             });
+
             setData(response);
         } 
         
@@ -106,7 +114,7 @@ export default function MyParties() {
         );
     }
 
-    var { partiesMade } = data
+    var { parties } = data
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -120,7 +128,7 @@ export default function MyParties() {
                             </div>
                             <div className='w-full h-full flex flex-col'>
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                {partiesMade.map((party) => (
+                                {parties.made.map((party) => (
                                     <div key={party.id}>
                                         <PartyPortrait
                                             partyCode={party.code} 

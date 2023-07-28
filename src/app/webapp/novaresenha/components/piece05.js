@@ -16,7 +16,7 @@ const Piece05 = ({filled = true}) => {
   return (
         <div className='w-full flex flex-col h-fit gap-3'>
             <div className='w-full content-center flex justify-center'>
-            <ImageInput image={image} onChange={handleImageChange} />
+              <ImageInput image={image} onChange={handleImageChange} />
             </div>
         </div>
   )

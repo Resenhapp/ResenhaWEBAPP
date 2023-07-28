@@ -30,7 +30,6 @@ export default function EditEvent() {
         partyCode = urlParams.get('r');
     }
 
-
     const axios = require('axios');
     const qs = require('qs');
     var currentImage = 'https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png';
@@ -234,12 +233,55 @@ export default function EditEvent() {
         setVipLimit(onlyNumbers);
     };
 
-    const handleImageChange = (event) => {
+    const makeImageRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            return response.data;
+        }
+    
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const sendImageRequest = async (data) => {
+        try {
+            const response = await makeImageRequest(process.env.NEXT_PUBLIC_API_URL, data);
+    
+            return response;
+        }
+    
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
+    const handleImageChange = async (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             setImage(reader.result);
+            //onChange(reader.result); davilas mexer aqui
+
+            let formData = new FormData();
+            formData.append('request', 'tryToUploadEventImage');
+            formData.append('token', token);
+            formData.append('code', partyCode);
+            formData.append('image', file);
+
+            try {
+                console.log(await sendImageRequest(formData));
+            } 
+            
+            catch (error) {
+                console.error('Error while uploading image: ', error);
+            }
         };
 
         if (file) {
@@ -606,7 +648,6 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
-
             <EditInfoPage
                 isOpen={isEditHourPageOpen}
                 pageTitle={'Horário da resenha'}
@@ -752,7 +793,6 @@ export default function EditEvent() {
                         type="tel"
                     />
                 </div>
-
                 <div>
                     <Toggle onToggle={setAcceptsPix} labelText={'Pagamento com PIX'} showLabel={true} startToggled={true} showQuestion={true} />
                     <Toggle onToggle={setAcceptsCard} labelText={'Pagamento com cartão'} showLabel={true} startToggled={true} showQuestion={true} />
