@@ -6,7 +6,7 @@ import Button from '@/src/components/Button';
 const Menu = ({ isOpen, toggleMenu, userData }) => {
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
-            window.location.href = `/webapp/${pageToGo}`;
+            window.location.href = `/${pageToGo}`;
         }
     };
 

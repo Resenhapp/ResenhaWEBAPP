@@ -476,9 +476,10 @@ function tryToEditWithdraw()
     }
 }
 
-function getParties($result, $userId)
+function getParties($result, $userId, $type)
 {
     $parties = [];
+    $processedHosts = [];
 
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
@@ -543,6 +544,14 @@ function getParties($result, $userId)
             $query = "SELECT host FROM parties WHERE code = '$code'";
             $host = queryDB($query)[0];
 
+            if ($type == "feed") {
+                if (in_array($host, $processedHosts)) {
+                    continue;
+                }
+    
+                array_push($processedHosts, $host);
+            }
+
             $query = "SELECT verified FROM users WHERE id = '$host'";
             $verified = queryDB($query)[0];
 
@@ -552,7 +561,7 @@ function getParties($result, $userId)
 
             $guests = [];
 
-            $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+            $query = "SELECT * FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro') GROUP BY user";
             $dba = queryDBRows($query);
 
             $counter = 0;
@@ -587,11 +596,20 @@ function getParties($result, $userId)
                 'guests' => $guests,
             ];
 
+            if ($row["lat"] && $row["lon"]) {
+                $data["coordinates"] = [
+                    "lat" => $row["lat"],
+                    "lon" => $row["lon"]
+                ];
+            }
+
             if (isset($_POST['hype'])) {
                 if (count($headers) > 0) {
                     array_push($parties, $data);
                 }
-            } else {
+            } 
+            
+            else {
                 array_push($parties, $data);
             }
         }
@@ -688,7 +706,7 @@ function getFeedData()
 
         $result = queryDBRows($query);
 
-        $parties = getParties($result, $userId);
+        $parties = getParties($result, $userId, "feed");
 
         returnData($parties);
     }
@@ -762,6 +780,84 @@ function editEventData()
         }
 
         returnData($responseData);
+    }
+}
+
+
+function tryToAllowGuest()
+{
+    $token = $_POST['token'];
+    $code = $_POST['code'];
+
+    $query = "SELECT party FROM concierges WHERE token = '$token'";
+    $conciergeResults = queryDB($query);
+
+    if ($conciergeResults) {
+        $party = $conciergeResults[0];
+
+        $query = "SELECT * FROM guests WHERE code = '$code' AND party = '$party'";
+        $guestsResults = queryDB($query);
+
+        if ($guestsResults) {
+            foreach ($guestsResults as $column) {
+                $paid = $column["paid"];
+                $method = $column["paid"];
+                $used = $column["used"];
+
+                if ($used == "0") {
+                    if ($paid == "1") {
+                        $data = [
+                            'status' => "success",
+                            'access' => "granted",
+                        ];
+
+                        $query = "UPDATE guests SET used = '1' WHERE code = '$code' AND party = '$party'";
+                        queryNR($query);
+                
+                        returnData($data);
+                    }
+    
+                    else {
+                        if ($method == "Cash") {
+                            $data = [
+                                'status' => "success",
+                                'access' => "bill",
+                            ];
+                    
+                            returnData($data);
+                        }
+    
+                        else {
+                            $data = [
+                                'status' => "fail",
+                                'access' => "denied",
+                                'error' => "charge"
+                            ];
+                    
+                            returnData($data);
+                        }
+                    }
+                }
+
+                else {
+                    $data = [
+                        'status' => "fail",
+                        'access' => "denied",
+                        'error' => "used"
+                    ];
+            
+                    returnData($data);
+                }
+            }
+        }
+
+        else {
+            returnError("invalid_guest");
+        }
+    }
+
+    else {
+        returnError("invalid_token");
     }
 }
 
@@ -1218,7 +1314,7 @@ function getSpecificData($userId, $item) {
             $query = "SELECT * FROM saved INNER JOIN parties ON saved.party = parties.code WHERE saved.user = '$userId'";
             $savedResults = queryDBRows($query);
     
-            $saved = getParties($savedResults, $userId);
+            $saved = getParties($savedResults, $userId, "saved");
 
             return $saved;
         case 'followers':
@@ -1315,6 +1411,31 @@ function getAllParties()
         echo json_encode($usersData);
     } else {
         $errorData = array('error' => 'DB does not contain any party');
+        echo json_encode($errorData);
+    }
+}
+
+function getAllUsers()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    $userid = sanitize($_GET['allusers']);
+    $query = "SELECT * FROM users";
+
+    $stmt = $link->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+        $errorData = array('error' => 'DB does not contain any user');
         echo json_encode($errorData);
     }
 }
@@ -1487,7 +1608,7 @@ function getInviteData()
             $dayOfWeek = getDayOfWeek($dateString);
 
             $users = [];
-            $query = "SELECT * FROM guests WHERE party = '$code'";
+            $query = "SELECT * FROM guests WHERE party = '$code' GROUP BY user";
             $dba = queryDBRows($query);
 
             if (mysqli_num_rows($dba) > 0) {
@@ -1625,7 +1746,7 @@ function tryToCreateGuest()
 {
     $party = sanitize($_POST['code']);
     $name = sanitize($_POST['name']);
-    $birth = sanitize($_POST['birth']);
+    $maiority = sanitize($_POST['maiority']);
     $email = sanitize($_POST['email']);
     $method = sanitize($_POST['method']);
 
@@ -1652,7 +1773,7 @@ function tryToCreateGuest()
 
     $paid = "0";
     
-    if ($method == "pix") {
+    if ($method == "Pix") {
         $req = [
             "items" => [
                 [
@@ -1703,14 +1824,14 @@ function tryToCreateGuest()
         $charge = "none";
     }
 
-    if ($method != "pix") {
+    if ($method != "Pix") {
         //send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
     }
 
     $used = "0";
     $deleted = "0";
 
-    $query = "INSERT INTO guests (user, party, name, birth, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$birth', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
+    $query = "INSERT INTO guests (user, party, name, maiority, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$maiority', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
     queryNR($query);
 
     $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
@@ -1785,11 +1906,11 @@ function tryToCreateGuest()
         $notificationText
     );
 
-    if ($method == "pix") {
+    if ($method == "Pix") {
         $data = [
-            'guest' => $guest,
-            'qrcode' => $qrcode,
             'status' => "success",
+            'code' => $qrcode,
+            'qrcode' => $qrcodeurl,
         ];
 
         returnData($data);
@@ -2409,7 +2530,6 @@ function tryToUploadUserImage()
             
             if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
                 returnError("invalid_image_format");
-                return;
             }
     
             $targetDirectory = "../media/u/";
@@ -2463,6 +2583,94 @@ function tryToUploadUserImage()
             
             else {
                 returnError("invalid_image");
+            }
+        }
+    }
+}
+
+function tryToUploadEventImage() 
+{
+    $code = sanitize($_POST['code']);
+    $userData = checkSession($_POST['token']);
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $query = "SELECT host FROM parties WHERE code = '$code'";
+        $hostId = queryDB($query)[0];
+
+        if ($userId == $hostId) {
+            $query = "SELECT id FROM parties WHERE code = '$code'";
+            $partyId = queryDB($query)[0];
+
+            $partyHash = hash256($partyId);
+
+            if (isset($_FILES['image'])) {
+                $uploadedFile = $_FILES['image'];
+                
+                $fileExtension = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
+                
+                if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    returnError("invalid_image_format");
+                }
+        
+                $targetDirectory = "../media/r/";
+                $targetFile = $targetDirectory.$partyHash .'.' .$fileExtension;
+                
+                if (move_uploaded_file($uploadedFile["tmp_name"], $targetFile)) {
+                    switch ($fileExtension) {
+                        case 'jpg':
+                        case 'jpeg':
+                            $src = imagecreatefromjpeg($targetFile);
+                            break;
+                        case 'png':
+                            $src = imagecreatefrompng($targetFile);
+                            break;
+                        case 'gif':
+                            $src = imagecreatefromgif($targetFile);
+                            break;
+                    }
+                    
+                    $oldWidth = imagesx($src);
+                    $oldHeight = imagesy($src);
+    
+                    if ($oldWidth > $oldHeight) {
+                        $newWidth = intval(512 * ($oldWidth / $oldHeight));
+                        $newHeight = 512;
+                    } else {
+                        $newHeight = intval(512 * ($oldHeight / $oldWidth));
+                        $newWidth = 512;
+                    }
+    
+                    $dst = imagescale($src, $newWidth, $newHeight);
+                    
+                    $x = ($newWidth - 512) / 2;
+                    $y = ($newHeight - 512) / 2;
+    
+                    $cropped = imagecrop($dst, ['x' => $x, 'y' => $y, 'width' => 512, 'height' => 512]);
+    
+                    if ($cropped !== false) {
+                        imagedestroy($dst);
+                        $dst = $cropped;
+                    }
+                
+                    $outputFile = $targetDirectory.$partyHash.'.png';
+                    imagepng($dst, $outputFile);
+                    
+                    imagedestroy($src);
+                    imagedestroy($dst);
+                    
+                    if (file_exists($targetFile)){
+                        unlink($targetFile);
+                    }
+                    
+                    returnSuccess("image_uploaded");
+                
+                } 
+                
+                else {
+                    returnError("invalid_image");
+                }
             }
         }
     }

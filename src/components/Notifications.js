@@ -17,7 +17,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const qs = require('qs');
 
     const [showNotifications, setShowNotifications] = useState(true);
-    const [notifications, setNotifications] = useState(userData.notifications);
+    const [notifications, setNotifications] = useState(userData.notifications.notifications);
 
     var updateInterval = 150;
   

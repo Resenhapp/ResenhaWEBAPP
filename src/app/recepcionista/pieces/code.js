@@ -2,22 +2,8 @@
 import Vector from "@/src/components/Vector"
 import { useState } from "react"
 
-export default function TypeCode({ useCamera, codeResponse }) {
-
+export default function TypeCode({ useCamera, codeResponse, tryToAllow }) {
     const [code, setCode] = useState('');
-
-    const tryToAllow = () => {
-        console.log(code);
-        if (code == '1') {
-            codeResponse('Granted')
-        }
-        else if (code == '2') {
-            codeResponse('Denied')
-        }
-        else if (code == '3') {
-            codeResponse('Used')
-        }
-    }
 
     return (
         <div className="flex flex-col justify-center mt-12 content-center items-center z-[100]">

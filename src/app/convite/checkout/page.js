@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@/src/components/Button";
 import Link from "next/link";
 import Vector from "@/src/components/Vector";
@@ -10,12 +10,23 @@ import Pix from "./pieces/pix";
 import Card from "./pieces/card";
 import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
+import Cookies from 'js-cookie';
 
 export default function Checkout() {
+    var token = Cookies.get('token');
+
     const maxProgress = 5;
+
+    let code = '';
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        code = urlParams.get('c');
+    }
 
     const [progress, setProgress] = useState(1);
     const [isFilled, setIsFilled] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [partyName, setPartyName] = useState('Resenha no Terraço');
     const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
@@ -30,7 +41,7 @@ export default function Checkout() {
 
     const [partyPrice, setPartyPrice] = useState(20.0);
     const [canBeUnderaged, setCanBeUnderaged] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('pix');
+    const [paymentMethod, setPaymentMethod] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [ticketsAmount, setTicketsAmount] = useState(0);
@@ -40,8 +51,12 @@ export default function Checkout() {
     const [cardExpiration, setCardExpiration] = useState('');
     const [cardCvv, setCardCvv] = useState('');
     const [cardCpf, setCardCpf] = useState('');
+    const [pixData, setPixData] = useState(null);
    
     const [hidestyle, setHideStyle] = useState(!false);
+
+    const axios = require('axios');
+    const qs = require('qs');
 
     const payRequest = () => {
         console.log(`Credit card holder: ${cardHolder}`);
@@ -51,13 +66,56 @@ export default function Checkout() {
         console.log(`Credit card cpf: ${cardCpf}`);
     }
 
-    const getValues = () => {
-        console.log(`Customer Name: ${customerName}`);
-        console.log(`Customer Email: ${customerEmail}`);
-        console.log(`Tickets Amount: ${ticketsAmount}`);
-        console.log(`Is Eighteen: ${customerIsEighteen}`);
-        console.log(`Payment Method: ${paymentMethod}`);
-    }
+    useEffect(() => {
+        if (paymentMethod === 'Pix') {
+            fetchData().then(data => {
+                setPixData(data);
+                setLoading(false);
+            });
+        }
+    }, [paymentMethod]); // Re-run the effect when `paymentMethod` changes
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } 
+        
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'tryToCreateGuest',
+                token: token,
+                name: customerName,
+                email: customerEmail,
+                maiority: customerIsEighteen,
+                method: paymentMethod,
+                code: code
+            });
+
+            if (response.error) {
+                window.history.back();
+            }
+
+            var data = [
+                response.code,
+                response.qrcode
+            ];
+            
+            return data;
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     const printRef = useRef();
     const saveInvite = async () => {
@@ -102,6 +160,8 @@ export default function Checkout() {
                     setCustomerName={setCustomerName}
                     setCustomerEmail={setCustomerEmail}
                     setSelectionAmout={setTicketsAmount}
+                    loadName={customerName}
+                    loadEmail={customerEmail}
                     getPartyName={partyName}
                     getPartyPrice={partyPrice}
                     setIsFilled={setIsFilled}
@@ -110,13 +170,14 @@ export default function Checkout() {
                 />;
                 break;
             case 2:
-                if (paymentMethod === 'Pix') {
-                    return <Pix setPixKey={'sdkasdk-w3d20dk20kd0kdf00-dk29kf0f-f92kf29fj'}
-                        setPixQrCodeUrl={'https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfdssssskc0K)CJ3wf03jf30ftgj030sd-ssss0K)CJ3wf03jf30ftgj030sd-sssssssssssskc0K)CJ3wf03sssssssskc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdssck03qwkc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdasdasdddddddddddd3d3df3f-g&chld=L|1&choe=UTF-8'} />
+                if (paymentMethod === 'Pix' && pixData) {
+                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} />
                 }
+
                 else if (paymentMethod === 'Dinheiro') {
                     return <Cash setIsFilled={setIsFilled} />
                 }
+
                 else if (paymentMethod === 'Cartão') {
                     return <Card setIsFilled={setIsFilled}
                         setCardHolder={setCardHolder}
@@ -149,27 +210,10 @@ export default function Checkout() {
             const details = {
                 content,
             };
-
-            try {
-                const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                    request: 'tryToCreateEvent',
-                    token: token,
-                    details: details
-                });
-
-                if (!response.error && typeof window !== 'undefined') {
-                    window.location.href = '/webapp/resenhas/';
-                }
-            }
-
-            catch (error) {
-                console.error(error);
-            }
         }
 
         else {
             setProgress(progress + 1);
-            console.log(progress);
             setIsFilled(!isFilled)
         }
     };
@@ -180,7 +224,7 @@ export default function Checkout() {
             title = '';
             subtitle = '';
             if (typeof window !== 'undefined') {
-                window.location.href = '/webapp/resenhas/';
+                window.location.href = '/resenhas/';
             }
         case 1:
             title = 'Informações';
@@ -218,6 +262,56 @@ export default function Checkout() {
             break;
     }
 
+    const fetchUserData = async () => {
+        setLoading(true);
+    
+        try {
+            const requested = [
+                "name",
+                "email"
+            ];
+
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'getUserData',
+                token: token,
+                requested: requested
+            });
+
+            if (response.name && response.email) {
+                setCustomerName(response.name);
+                setCustomerEmail(response.email);
+            }
+        }
+        
+        catch (error) {
+            console.error(error);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if ((paymentMethod === 'Pix' || paymentMethod === 'Dinheiro' || paymentMethod === 'Cartão') && (canBeUnderaged || customerIsEighteen)) {
+            setIsFilled(true);
+        } else {
+            setIsFilled(false);
+        }
+    }, [paymentMethod, customerIsEighteen, canBeUnderaged]);
+    
+    useEffect(() => {
+        if (token) {
+          fetchUserData();
+        }
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col justify-around h-screen p-4" >
             <div className='w-full flex flex-col gap-2'>
@@ -231,21 +325,18 @@ export default function Checkout() {
             </div>
             {renderPiece()}
             {
-                progress < 3 ?
-                    (
-                        <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
-                            <div className="flex flex-row w-full justify-center max-w-md">
-                                <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                                <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
-                            </div>
-                            <div className="flex items-center justify-center">
-                                <p className="mr-1">Tem uma conta?</p>
-                                <Link href="/cadastro" className="font-bold">Entre aqui!</Link>
-                            </div>
-                        </footer>
-                    )
-                    :
-                    null
+                progress < 3 ? (
+                    <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
+                        <div className="flex flex-row w-full justify-center max-w-md">
+                            <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
+                            <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                        </div>
+                        <div className="flex items-center justify-center">
+                            <p className="mr-1">Tem uma conta?</p>
+                            <Link href="/cadastro" className="font-bold">Entre aqui!</Link>
+                        </div>
+                    </footer>
+                ) : null
             }
         </div>
     )

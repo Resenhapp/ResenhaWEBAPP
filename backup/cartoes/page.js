@@ -7,7 +7,7 @@ export default function CreditCards() {
 
     const handleNavigation = (pageToGo) => {
         
-        window.location.href = `/webapp/${pageToGo}`;
+        window.location.href = `/${pageToGo}`;
     };
 
     const [selectedCard, setSelectedCard] = useState(0);

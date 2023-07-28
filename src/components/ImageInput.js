@@ -1,14 +1,62 @@
 import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
+import Cookies from 'js-cookie';
 
 const ImageInput = ({ image, onChange }) => {
-    const handleImageChange = (event) => {
+    const axios = require('axios');
+    const qs = require('qs');
+
+    var token = Cookies.get('token');
+
+    const makeImageRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            return response.data;
+        }
+    
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const sendImageRequest = async (data) => {
+        try {
+            const response = await makeImageRequest(process.env.NEXT_PUBLIC_API_URL, data);
+    
+            return response;
+        }
+    
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
+    const handleImageChange = async (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
 
-        reader.onloadend = () => {
-            onChange(reader.result);
+        reader.onloadend = async () => {
+            setImage(reader.result);
+
+            let formData = new FormData();
+            formData.append('request', 'tryToUploadEventImage');
+            formData.append('token', token);
+            formData.append('code', partyCode);
+            formData.append('image', file);
+
+            try {
+                console.log(await sendImageRequest(formData));
+            } 
+            
+            catch (error) {
+                console.error('Error while uploading image: ', error);
+            }
         };
 
         if (file) {

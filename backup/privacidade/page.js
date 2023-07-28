@@ -5,7 +5,7 @@ import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Privacy() {
     const handleNavigation = (pageToGo) => {
-        window.location.href = `/webapp/configuracoes/privacidade/${pageToGo}`;
+        window.location.href = `/configuracoes/privacidade/${pageToGo}`;
     };
 
     return (

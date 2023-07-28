@@ -5,7 +5,7 @@ import Vector from './Vector';
 const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuests, eventMax, eventImage }) => {
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
-            window.location.href = `/webapp/${pageToGo}`;
+            window.location.href = `/${pageToGo}`;
         }
     };
 

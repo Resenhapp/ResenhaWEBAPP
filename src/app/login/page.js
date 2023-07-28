@@ -20,7 +20,7 @@ export default function Login() {
 
   const handleNavigation = (pageToGo) => {
     if (typeof window !== 'undefined') {
-        window.location.href = `/webapp/${pageToGo}`;
+        window.location.href = `/${pageToGo}`;
     }
   };
 
@@ -106,7 +106,7 @@ export default function Login() {
         Cookies.set('token', response.token, { expires: expirationDate });
 
         if (typeof window !== 'undefined') {
-          window.location.href = '/webapp/feed/';
+          window.location.href = '/feed/';
         }
       }
     }

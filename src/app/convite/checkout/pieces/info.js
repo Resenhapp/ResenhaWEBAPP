@@ -4,12 +4,13 @@ import AmountSelector from '@/src/components/AmountSelector';
 import { useState, useEffect } from 'react';
 import Toggle from '@/src/components/Toggle';
 
-export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+export default function Info({ setSelectionAmout, setPaymentMethod, loadName, loadEmail, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
+    const [name, setName] = useState(loadName);
+    const [email, setEmail] = useState(loadEmail);
     const [ticketsAmount, setTicketsAmount] = useState(1);
     const [isEighteen, setIsEighteen] = useState(true);
     const [emailValid, setEmailValid] = useState(false);
+
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
         setName(value);
@@ -27,7 +28,6 @@ export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled,
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         setEmailValid(emailRegex.test(email));
     }
-    
 
     const handleTicketsUpdate = (value) => {
         setTicketsAmount(value);
@@ -49,18 +49,10 @@ export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled,
     var newPartyPrice = getPartyPrice*ticketsAmount;
 
     useEffect(() => {
-        if (name && emailValid && ticketsAmount && method) {
-            if (canBeUnderaged || (!canBeUnderaged && isEighteen)) {
-                setIsFilled(true);
-            } else {
-                setIsFilled(false);
-            }
-        } else {
-            setIsFilled(false);
-        }
+        const isValid = name && emailValid && ticketsAmount && method && (canBeUnderaged || isEighteen);
+        setIsFilled(isValid);
     }, [name, emailValid, ticketsAmount, method, isEighteen, canBeUnderaged]);
     
-
     return (
         <div className="flex flex-col items-center justify-center">
             <section className="flex flex-col items-center w-full max-w-md">
