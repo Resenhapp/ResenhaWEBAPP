@@ -100,12 +100,13 @@ export default function Map({ onLocationSelect, displayPartiesAround, partyData 
             </Popup>
         </Marker>
     )}
-    {partiesAround.map((party, index) => {
-        const [lat, lon] = party.split(',').map(Number);
+    {partyData.map((party, index) => {
+        console.log(party); 
         return (
-            <Marker key={index} position={[lat, lon]}>
+            <Marker key={index} position={[party.coordinates.lat, party.coordinates.lon]}>
                 <Popup>
-                    Party location: <br /> {lat}, {lon}
+                    {party.title} <br />
+                    <a href={`https://www.resenha.app/convite?c=${party.code}`} style={{color: '#8E00FF'}} className='pt-4 decoration-transparent font-bold rounded-full'>Ver resenha</a><br />
                 </Popup>
             </Marker>
         );
