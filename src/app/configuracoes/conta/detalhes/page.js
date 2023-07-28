@@ -19,6 +19,7 @@ export default function AccountDetails() {
 
     const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
     const [errorIndex, setErrorIndex] = useState(null);
+
     const errors = [
         "0",
         "O nome de usuário deve ter pelo menos 5 caracteres.",
@@ -41,6 +42,8 @@ export default function AccountDetails() {
 
     const [email, setEmail] = useState('');
     const [tempEmail, setTempEmail] = useState('');
+
+    const [pendencies, setPendencies] = useState([]);
 
     const toggleEditNamePageOpen = () => {
         setIsEditNamePageOpen(!isEditNamePageOpen);
@@ -140,16 +143,25 @@ export default function AccountDetails() {
     };
 
     const fetchData = async () => {
+        const requested = [
+            "username",
+            "email",
+            "pendencies",
+            "notifications"
+        ];
+
         try {
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
-                token: token
+                token: token,
+                requested: requested
             });
 
             setData(response);
 
             setName(response.username);
             setEmail(response.email);
+            setPendencies(response.pendencies);
         } 
         
         catch (error) {
@@ -159,7 +171,6 @@ export default function AccountDetails() {
 
     useEffect(() => {
         fetchData();
-        
     }, []);
 
     if (!data) {
@@ -224,7 +235,7 @@ export default function AccountDetails() {
                                 <div onClick={toggleEditEmailPageOpen}>
                                     <div className='flex flex-row justify-between'>
                                         <p className="text-whiteT1 text-sm font-semibold">E-mail</p>
-                                        <Confirmed initialConfirmation={true} />
+                                        <Confirmed initialConfirmation={pendencies.email === "unconfirmed" ? false : true} />
                                     </div>
                                     <InputFieldPurple value={email} readOnly={true}/>
                                 </div>

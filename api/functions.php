@@ -1541,6 +1541,21 @@ function getUserData()
                     case 'address':
                         $specificData = $column["address"];
                         break;
+                    case 'pendencies':
+                        $userToken = $column["token"];
+
+                        if (substr($userToken, 0, 2) == "ec") {
+                            $userPendencies = [
+                                "email" => "unconfirmed"
+                            ];
+                        } 
+                        
+                        else {
+                            $userPendencies = [];
+                        }
+                        
+                        $specificData = $userPendencies;
+                        break;
                     case 'birth':
                         $specificData = $column["birth"];
                         break;
