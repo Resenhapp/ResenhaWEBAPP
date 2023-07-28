@@ -292,8 +292,10 @@ export default function Checkout() {
                 requested: requested
             });
 
-            setCustomerName(response.name);
-            setCustomerEmail(response.email);
+            if (response.name && response.email) {
+                setCustomerName(response.name);
+                setCustomerEmail(response.email);
+            }
         }
         
         catch (error) {
