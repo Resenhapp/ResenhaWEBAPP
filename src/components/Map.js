@@ -23,9 +23,8 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export default function Map({ onLocationSelect, displayPartiesAround }) {
-    
-    const [partiesAround, setPartiesAround] = useState(["-30.033056, -51.230000", "-30.0269827, -51.200783"]);
+export default function Map({ onLocationSelect, displayPartiesAround, partyData }) {
+    const [partiesAround, setPartiesAround] = useState([]);
     
     const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
     const [marker, setMarker] = useState(null);
@@ -43,7 +42,15 @@ export default function Map({ onLocationSelect, displayPartiesAround }) {
     useEffect(() => {
         setClientSide(true);
         getMyPosition();
-    }, []);
+
+        if (partyData) {
+            const newPartiesAround = partyData.map(item => {
+                return `${item.coordinates.lat}, ${item.coordinates.lon}`;
+            });
+    
+            setPartiesAround(oldParties => [...oldParties, ...newPartiesAround]);
+        }
+    }, [partyData]);
 
     const ChangeView = ({ center, zoom }) => {
         const map = useMap();

@@ -587,11 +587,20 @@ function getParties($result, $userId)
                 'guests' => $guests,
             ];
 
+            if ($row["lat"] && $row["lon"]) {
+                $data["coordinates"] = [
+                    "lat" => $row["lat"],
+                    "lon" => $row["lon"]
+                ];
+            }
+
             if (isset($_POST['hype'])) {
                 if (count($headers) > 0) {
                     array_push($parties, $data);
                 }
-            } else {
+            } 
+            
+            else {
                 array_push($parties, $data);
             }
         }

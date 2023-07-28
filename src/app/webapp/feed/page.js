@@ -372,7 +372,7 @@ export default function Feed() {
               Ver no mapa
             </button>
             <Modal show={isModalOpen} close={toggleModal}>
-              <Map onLocationSelect={handleLocationSelect} onLocationStart={handleLocationStart} />
+              <Map onLocationSelect={handleLocationSelect} onLocationStart={handleLocationStart} partyData={data} />
             </Modal>
           </div>
           <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
