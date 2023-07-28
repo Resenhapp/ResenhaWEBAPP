@@ -12,15 +12,15 @@ export default function Chat() {
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
-    
+
         const groupChat = urlParams.get('r');
         const dualChat = urlParams.get('u');
-    
+
         if (dualChat !== null) {
             var chatCode = dualChat;
             var chatType = 'dm';
-        } 
-        
+        }
+
         else if (groupChat !== null) {
             var chatCode = groupChat;
             var chatType = 'group';
@@ -42,8 +42,8 @@ export default function Chat() {
         try {
             const response = await axios.post(url, qs.stringify(data));
             return response.data;
-        } 
-        
+        }
+
         catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
@@ -64,11 +64,11 @@ export default function Chat() {
 
             if (response && Array.isArray(response.messages)) {
                 setMessages(response.messages);
-            } 
+            }
 
             setIsLoading(false);
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -77,7 +77,7 @@ export default function Chat() {
     const sendMessage = async (message) => {
         const now = new Date();
         const timestamp = now.getHours() + ':' + now.getMinutes();
-    
+
         const newMessage = {
             imageUrl: '',
             content: message,
@@ -95,12 +95,19 @@ export default function Chat() {
                 type: chatType,
                 content: message
             });
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
     };
+
+    const messagesEndRef = React.useRef(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
 
     useEffect(() => {
         fetchData();
@@ -129,22 +136,23 @@ export default function Chat() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div className="bg-scroll flex flex-col gap-2 h-[65vh] w-full overflow-y-auto">
-                                {
-                                    messages.length === 0 ? (
-                                        <p>Ninguém enviou mensagens nesse chat ainda 😒. Seja o primeiro!</p>
-                                    ) : (
-                                        [...messages].map((message, index) => (
-                                            <ChatBubble
-                                                key={index}
-                                                showImage={false}
-                                                imageUrl={message.imageUrl}
-                                                message={message.content}
-                                                timestamp={message.date.hour + ":" + message.date.minute}
-                                                sent={message.sent}
-                                            />
-                                        ))
-                                    )
-                                }
+                                    {
+                                        messages.length === 0 ? (
+                                            <p>Ninguém enviou mensagens nesse chat ainda 😒. Seja o primeiro!</p>
+                                        ) : (
+                                            [...messages].map((message, index) => (
+                                                <ChatBubble
+                                                    key={index}
+                                                    showImage={false}
+                                                    imageUrl={message.imageUrl}
+                                                    message={message.content}
+                                                    timestamp={message.date.hour + ":" + message.date.minute}
+                                                    sent={message.sent}
+                                                />
+                                            ))
+                                        )
+                                    }
+                                    <div ref={messagesEndRef} />
                                 </div>
                                 <ChatInput onSendMessage={sendMessage} />
                             </div>

@@ -84,7 +84,7 @@ export default function HomePage() {
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Resenhas'} userData={data} />
             <div className="flex flex-col items-center justify-center h-fit px-4">
-                <div className='w-[90%] align-center mt-12 justify-between items-center flex flex-row'>
+                <div className='w-[90%] max-w-[640px] align-center mt-12 justify-between items-center flex flex-row'>
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ?

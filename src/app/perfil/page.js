@@ -117,9 +117,9 @@ export default function Profile() {
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
     return (
-        <div className='flex flex-col w-screen h-screen items-center'>
+        <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Perfil'} userData={mine ? data : undefined}/>
-            <div className="flex flex-col justify-start h-screen px-4 ">
+            <div className="flex flex-col justify-start h-screen px-4 items-center">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex '>
                         <div className='w-full flex flex-col items-center '>
