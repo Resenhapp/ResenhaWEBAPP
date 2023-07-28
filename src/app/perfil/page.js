@@ -117,7 +117,7 @@ export default function Profile() {
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
     return (
-        <div className='flex flex-col w-screen h-screen '>
+        <div className='flex flex-col w-screen h-screen items-center'>
             <PageHeader pageTitle={'Perfil'} userData={mine ? data : undefined}/>
             <div className="flex flex-col justify-start h-screen px-4 ">
                 <section className="flex w-full max-w-md p-4 ">
@@ -143,7 +143,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
-                                            <SendMessageButton initialActiveState={isMutual} onClick={() => handleNavigation('/chat?u='+profile) }/>
+                                            <SendMessageButton initialActiveState={isMutual} onClick={() => handleNavigation('chat?u='+profile) }/>
                                         </div>
                                     )}
                                 </div>

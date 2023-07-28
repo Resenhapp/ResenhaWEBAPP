@@ -109,7 +109,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     }, [data, checkIfUserNotified, updateInterval]);
 
     return (
-        <div className="flex flex-row justify-between items-center w-full max-w-md mt-0 px-6 pt-20">
+        <div className="flex flex-row justify-between items-center w-full lg:px-12 max-w mt-0 px-6 pt-20">
           {isBack ? <Back defaultEvent={async () => { await checker(); }} destination={destination} /> : <MenuButton toggleMenu={toggleMenu} />}
           {data && <Menu isOpen={isMenuOpen} toggleMenu={toggleMenu} userData={data} />}
           <h1 className='text-xl text-center text-whiteT1 font-bold'>{pageTitle}</h1>
