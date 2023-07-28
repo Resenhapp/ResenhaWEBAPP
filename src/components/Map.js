@@ -23,7 +23,10 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export default function Map({ onLocationSelect }) {
+export default function Map({ onLocationSelect, displayPartiesAround }) {
+    
+    const [partiesAround, setPartiesAround] = useState(["-30.033056, -51.230000", "-30.0269827, -51.200783"]);
+    
     const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
     const [marker, setMarker] = useState(null);
     const [clientSide, setClientSide] = useState(false);
@@ -78,20 +81,31 @@ export default function Map({ onLocationSelect }) {
     return (
         <div>
             <MapContainer center={userPosition} zoom={13} className='rounded-xl' style={{ height: "75vh", width: "75vw" }}>
-                <ChangeView center={userPosition} zoom={13} />
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                {marker && (
-                    <Marker position={marker}>
-                        <Popup>
-                            Você tocou aqui: <br /> {marker.lat}, {marker.lng}
-                        </Popup>
-                    </Marker>
-                )}
-                <MapEvents />
-            </MapContainer>
+    <ChangeView center={userPosition} zoom={13} />
+    <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    />
+    {marker && (
+        <Marker position={marker}>
+            <Popup>
+                Você tocou aqui: <br /> {marker.lat}, {marker.lng}
+            </Popup>
+        </Marker>
+    )}
+    {partiesAround.map((party, index) => {
+        const [lat, lon] = party.split(',').map(Number);
+        return (
+            <Marker key={index} position={[lat, lon]}>
+                <Popup>
+                    Party location: <br /> {lat}, {lon}
+                </Popup>
+            </Marker>
+        );
+    })}
+    <MapEvents />
+</MapContainer>
+
         </div>
     )
 }
