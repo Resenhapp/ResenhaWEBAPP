@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@/src/components/Button";
 import Link from "next/link";
 import Vector from "@/src/components/Vector";
@@ -13,6 +13,8 @@ import Confirmation from "./pieces/confirmation";
 import Cookies from 'js-cookie';
 
 export default function Checkout() {
+    var token = Cookies.get('token');
+
     const maxProgress = 5;
 
     let code = '';
@@ -24,6 +26,7 @@ export default function Checkout() {
 
     const [progress, setProgress] = useState(1);
     const [isFilled, setIsFilled] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [partyName, setPartyName] = useState('Resenha no Terraço');
     const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
@@ -83,8 +86,6 @@ export default function Checkout() {
 
     const fetchData = async () => {
         try {
-            var token = Cookies.get('token');
-
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'tryToCreateGuest',
                 token: token,
@@ -272,6 +273,46 @@ export default function Checkout() {
             title = '';
             subtitle = '';
             break;
+    }
+
+    const fetchUserData = async () => {
+        setLoading(true);
+    
+        try {
+            const requested = [
+                "name",
+                "email"
+            ];
+
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'getUserData',
+                token: token,
+                requested: requested
+            });
+
+            setCustomerName(response.name);
+            setCustomerEmail(response.email);
+        }
+        
+        catch (error) {
+            console.error(error);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if (token) {
+          fetchUserData();
+        }
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
     }
 
     return (

@@ -10,6 +10,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled,
     const [ticketsAmount, setTicketsAmount] = useState(1);
     const [isEighteen, setIsEighteen] = useState(true);
     const [emailValid, setEmailValid] = useState(false);
+
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
         setName(value);
@@ -27,7 +28,6 @@ export default function Info({ setSelectionAmout, setPaymentMethod, setIsFilled,
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         setEmailValid(emailRegex.test(email));
     }
-    
 
     const handleTicketsUpdate = (value) => {
         setTicketsAmount(value);
