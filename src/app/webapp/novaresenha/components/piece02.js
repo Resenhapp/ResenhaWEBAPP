@@ -17,40 +17,30 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     const [hasEnd, setHasEnd] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
-
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
     const [isStartTimeModalOpen, setIsStartTimeModalOpen] = useState(false);
     const [isEndTimeModalOpen, setIsEndTimeModalOpen] = useState(false);
-
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedYear, setSelectedYear] = useState(null);
-
     const [toggleValue, setToggleValue] = useState(true);
-
     const [isDateSelected, setIsDateSelected] = useState(false);
     // const [isHourSelected, setIsHourSelected] = useState(false);
 
     const [tempStart, setTempStart] = useState('');
-
     const handleStartSet = (event) => {
         setTempStart(event.target.value);
         setStartHourSelected(true);
     };
-
     const [tempEnd, setTempEnd] = useState('');
 
     const handleEndSet = (event) => {
         setTempEnd(event.target.value);
         setEndHourSelected(true);
-
     };
-
-
     const [startHourSelected, setStartHourSelected] = useState(false);
     const [endHourSelected, setEndHourSelected] = useState(false);
-
     useEffect(() => {
         if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
             filled(true);
@@ -58,7 +48,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
             filled(false);
         }
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
-
     const handleToggleChange = (isChecked) => {
         setToggleValue(!isChecked);
         onToggleChange(!isChecked);
@@ -67,7 +56,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
             setEndHourSelected(true);
         }
     };
-
     const handleDateChange = (date) => {
         setSelectedDay(date.getDate());
         setSelectedMonth(date.getMonth() + 1);
@@ -76,23 +64,18 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         setSelectedDate(date);
         onDateSelect(date);
     };
-
-
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {
             onDateSelect(selectedDay, selectedMonth, selectedYear);
         }
     }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
-
     // const currentTime = new Date().toLocaleTimeString([], {
     //     hour: '2-digit',
     //     minute: '2-digit',
     //     hour12: false,
     // });
-
     const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
-
     // const lateTime = currentDate.toLocaleTimeString([], {
     //     hour: '2-digit',
     //     minute: '2-digit',
@@ -122,8 +105,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     //     setEndTime(newEndTime);
     //     handleEndChange(newEndTime);
     // }, [endTime, handleEndChange, setEndTime]);
-
-
     return (
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">
@@ -145,7 +126,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                         <button onClick={() => setIsOpen(false)} className='bg-purpleT3 ring-1 ring-purpleT4 rounded-full ring-inset py-2 px-4'>Fechar</button>
                     </div>
                 </Modal>
-
             </div>
             <DateScroll onDateSelect={handleDateChange} />
             <hr className='bg-purpleT4 h-[2px] border-none rounded-full' />
@@ -161,7 +141,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                     <Modal show={isStartTimeModalOpen} close={() => setIsStartTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
                             <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha começa</h1>
-
                             <ReactInputMask
                                 mask="99:99"
                                 maskChar=""
@@ -185,7 +164,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                         </div>
                     </Modal>
                 }
-
                 {isEndTimeModalOpen &&
                     <Modal show={isEndTimeModalOpen} close={() => setIsEndTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
