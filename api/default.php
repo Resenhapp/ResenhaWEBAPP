@@ -12,13 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (checkPublicRequest($request) || (checkPrivateRequest($request) && sanitize($_POST["key"]) == GLOBAL_APIKEY)) {
             $request();
-        } else {
+        } 
+        
+        else {
             returnError("invalid_request");
         }
-    } else {
+    } 
+    
+    else {
         returnError("no_request");
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
+} 
+
+elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $validParams = array(
         'userid',
         'user@',
@@ -66,11 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 getAllParties();
                 break;
         }
-    } else {
+    } 
+    
+    else {
         $errorData = array('error' => 'No valid param provided');
         echo json_encode($errorData);
     }
-} else {
+} 
+
+else {
     returnError("invalid_request");
 }
 
