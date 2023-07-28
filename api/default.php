@@ -10,14 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['request'])) {
         $request = sanitize($_POST['request']);
 
-        if (checkPublicRequest($request)) {
+        if (checkPublicRequest($request) || (checkPrivateRequest($request) && sanitize($_POST["key"]) == GLOBAL_APIKEY)) {
             $request();
-        } elseif (checkPrivateRequest($request)) {
-            $privateKey = sanitize($_POST["key"]);
-
-            if ($privateKey == GLOBAL_APIKEY) {
-                $request();
-            }
         } else {
             returnError("invalid_request");
         }
@@ -25,30 +19,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         returnError("no_request");
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['userid'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['user@'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['useremail'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['userbalanceid'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['party'])) {
-        getSingleDataDiscord();
-    } elseif (isset($_GET['usersfromparty'])) {
-        getUsersFromParty();
-    } elseif (isset($_GET['conciergesfromparty'])) {
-        getConciergesFromParty();
-    } elseif (isset($_GET['useractivityid'])) {
-        getUserActivityDiscord();
-    } elseif (isset($_GET['partiesfromuserid'])) {
-        getPartiesFromUser();
+    $validParams = array(
+        'userid',
+        'user@',
+        'useremail',
+        'userbalanceid',
+        'party',
+        'usersfromparty',
+        'conciergesfromparty',
+        'useractivityid',
+        'partiesfromuserid',
+        'allparties'
+    );
+
+    $requestedParam = null;
+
+    foreach ($validParams as $param) {
+        if (isset($_GET[$param])) {
+            $requestedParam = $param;
+            break;
+        }
     }
-     else {
+
+    if ($requestedParam !== null) {
+        switch ($requestedParam) {
+            case 'userid':
+            case 'user@':
+            case 'useremail':
+            case 'userbalanceid':
+            case 'party':
+                getSingleDataDiscord();
+                break;
+            case 'usersfromparty':
+                getUsersFromParty();
+                break;
+            case 'conciergesfromparty':
+                getConciergesFromParty();
+                break;
+            case 'useractivityid':
+                getUserActivityDiscord();
+                break;
+            case 'partiesfromuserid':
+                getPartiesFromUser();
+                break;
+            case 'allparties':
+                getAllParties();
+                break;
+        }
+    } else {
         $errorData = array('error' => 'No valid param provided');
         echo json_encode($errorData);
     }
 } else {
     returnError("invalid_request");
 }
+
 ?>
