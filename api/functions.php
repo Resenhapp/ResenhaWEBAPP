@@ -2487,7 +2487,6 @@ function tryToUploadUserImage()
             
             if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
                 returnError("invalid_image_format");
-                return;
             }
     
             $targetDirectory = "../media/u/";
@@ -2541,6 +2540,94 @@ function tryToUploadUserImage()
             
             else {
                 returnError("invalid_image");
+            }
+        }
+    }
+}
+
+function tryToUploadEventImage() 
+{
+    $code = sanitize($_POST['code']);
+    $userData = checkSession($_POST['token']);
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $query = "SELECT host FROM parties WHERE code = '$code'";
+        $hostId = queryDB($query)[0];
+
+        if ($userId == $hostId) {
+            $query = "SELECT id FROM parties WHERE code = '$code'";
+            $partyId = queryDB($query)[0];
+
+            $partyHash = hash256($partyId);
+
+            if (isset($_FILES['image'])) {
+                $uploadedFile = $_FILES['image'];
+                
+                $fileExtension = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
+                
+                if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    returnError("invalid_image_format");
+                }
+        
+                $targetDirectory = "../media/r/";
+                $targetFile = $targetDirectory.$partyHash .'.' .$fileExtension;
+                
+                if (move_uploaded_file($uploadedFile["tmp_name"], $targetFile)) {
+                    switch ($fileExtension) {
+                        case 'jpg':
+                        case 'jpeg':
+                            $src = imagecreatefromjpeg($targetFile);
+                            break;
+                        case 'png':
+                            $src = imagecreatefrompng($targetFile);
+                            break;
+                        case 'gif':
+                            $src = imagecreatefromgif($targetFile);
+                            break;
+                    }
+                    
+                    $oldWidth = imagesx($src);
+                    $oldHeight = imagesy($src);
+    
+                    if ($oldWidth > $oldHeight) {
+                        $newWidth = intval(512 * ($oldWidth / $oldHeight));
+                        $newHeight = 512;
+                    } else {
+                        $newHeight = intval(512 * ($oldHeight / $oldWidth));
+                        $newWidth = 512;
+                    }
+    
+                    $dst = imagescale($src, $newWidth, $newHeight);
+                    
+                    $x = ($newWidth - 512) / 2;
+                    $y = ($newHeight - 512) / 2;
+    
+                    $cropped = imagecrop($dst, ['x' => $x, 'y' => $y, 'width' => 512, 'height' => 512]);
+    
+                    if ($cropped !== false) {
+                        imagedestroy($dst);
+                        $dst = $cropped;
+                    }
+                
+                    $outputFile = $targetDirectory.$partyHash.'.png';
+                    imagepng($dst, $outputFile);
+                    
+                    imagedestroy($src);
+                    imagedestroy($dst);
+                    
+                    if (file_exists($targetFile)){
+                        unlink($targetFile);
+                    }
+                    
+                    returnSuccess("image_uploaded");
+                
+                } 
+                
+                else {
+                    returnError("invalid_image");
+                }
             }
         }
     }

@@ -48,10 +48,8 @@ export default function HomePage() {
     const fetchData = async () => {
         const requested = [
             "username",
-            "notified",
             "notifications",
-            "partiesMade",
-            "partiesWent"
+            "parties",
         ];
 
         try {
@@ -90,14 +88,14 @@ export default function HomePage() {
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ?
-                    (data.partiesWent.length > 0 ?
+                    (data.parties.went.length > 0 ?
                         <MyInvitesDisplay
-                            eventName={data.partiesWent[0].name}
-                            eventDate={data.partiesWent[0].date}
-                            eventHour={data.partiesWent[0].start}
-                            eventCode={data.partiesWent[0].code}
-                            token={data.partiesWent[0].token}
-                            eventImage={`https://media.resenha.app/r/${data.partiesWent[0].hash}.png`}
+                            eventName={data.parties.went[0].name}
+                            eventDate={data.parties.went[0].date}
+                            eventHour={data.parties.went[0].start}
+                            eventCode={data.parties.went[0].code}
+                            token={data.parties.went[0].token}
+                            eventImage={`https://media.resenha.app/r/${data.parties.went[0].hash}.png`}
                         />
                         :
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
@@ -107,15 +105,15 @@ export default function HomePage() {
                             </div>
                         </section>)
                     :
-                    (data.partiesMade.length > 0 ?
+                    (data.parties.made.length > 0 ?
                         <MyEventsDisplay
-                            eventName={data.partiesMade[0].name}
-                            eventDate={data.partiesMade[0].date}
-                            eventGuests={data.partiesMade[0].confirmed}
-                            eventHour={data.partiesMade[0].start}
-                            eventMax={data.partiesMade[0].capacity}
-                            eventCode={data.partiesMade[0].code}
-                            eventImage={`https://media.resenha.app/r/${data.partiesMade[0].hash}.png`}
+                            eventName={data.parties.made[0].name}
+                            eventDate={data.parties.made[0].date}
+                            eventGuests={data.parties.made[0].confirmed}
+                            eventHour={data.parties.made[0].start}
+                            eventMax={data.parties.made[0].capacity}
+                            eventCode={data.parties.made[0].code}
+                            eventImage={`https://media.resenha.app/r/${data.parties.made[0].hash}.png`}
                         />
                         :
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
