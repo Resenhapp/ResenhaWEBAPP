@@ -64,10 +64,11 @@ export default function Profile() {
             });
 
             setData(response);
-            setIsFollowing(response.follower);
-            setFollowersCount(response.followers);
 
-            if (response.follower == true && response.beingFollowed == true) {
+            setIsFollowing(response.mutual.follower);
+            setFollowersCount(response.followers.followed);
+
+            if (response.mutual.follower == true && response.mutual.following == true) {
                 setIsMutual(true);
             }
         } 
@@ -79,6 +80,11 @@ export default function Profile() {
 
     const handleFollowButton = async (follower) => {
         setIsFollowing(follower);
+        
+        if (data.mutual.following) {
+            setIsMutual(follower);
+        }
+
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
         try {
@@ -106,7 +112,7 @@ export default function Profile() {
         );
     }
 
-    var { name, username, about, following, interests, comments, verified, hash, mine, partiesWent } = data
+    var { name, username, followers, about, interests, comments, verified, hash, mine, parties, mutual } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
@@ -127,7 +133,7 @@ export default function Profile() {
                                     <h3 className='font-normal text-sm'>{'@' + username}</h3>
                                 </div>
                                 <div className='flex flex-row gap-4'>
-                                    <NumberDisplay amount={following} label={'Seguindo'}/>
+                                    <NumberDisplay amount={followers.following} label={'Seguindo'}/>
                                     <div className='h-[80%] w-[1px] bg-whiteT1 rounded-full'/>
                                     <NumberDisplay amount={followersCount} label={'Seguidores'}/>
                                 </div>
@@ -137,7 +143,7 @@ export default function Profile() {
                                     ) : (
                                         <div className='flex flex-row gap-2'>
                                             <FollowButton onClick={handleFollowButton} isFollowing={isFollowing}/>
-                                            <SendMessageButton active={isMutual} onClick={() => handleNavigation('/chat?u='+profile) }/>
+                                            <SendMessageButton initialActiveState={isMutual} onClick={() => handleNavigation('/chat?u='+profile) }/>
                                         </div>
                                     )}
                                 </div>
@@ -186,12 +192,12 @@ export default function Profile() {
                                     <div>
                                         {/* CONTEUDO DE RESENHAS */}
                                         <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                        {partiesWent.some((party) => party.used !== 1) && (
+                                        {parties.went.some((party) => party.used !== 1) && (
                                             <div className='text-purpleT5'>
                                                 Vou
                                             </div>
                                         )}
-                                        {partiesWent.map((party) => (
+                                        {parties.went.map((party) => (
                                             party.used !== 1 ? (
                                             <ProfileEvent
                                                 key={party.hash}
@@ -204,12 +210,12 @@ export default function Profile() {
                                             />
                                             ) : null
                                         ))}
-                                        {partiesWent.some((party) => party.used === 1) && (
+                                        {parties.went.some((party) => party.used === 1) && (
                                             <div className='text-purpleT5'>
                                                 Fui
                                             </div>
                                         )}
-                                        {partiesWent.map((party) => (
+                                        {parties.went.map((party) => (
                                             party.used === 1 ? (
                                             <ProfileEvent
                                                 key={party.hash}

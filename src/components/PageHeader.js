@@ -37,7 +37,6 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     const fetchData = async () => {
       const requested = [
         "username",
-        "notified",
         "notifications"
       ];
 
@@ -57,14 +56,19 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     };
   
     const checkIfUserNotified = async () => {
+      const requested = [
+        "username",
+        "notifications"
+      ];
+
       try {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'getUserData',
           token: token,
-          requested: 'notified'
+          requested: requested
         });
 
-        setNotified(response.notified);
+        setNotified(response.notifications.notified);
       } 
       
       catch (error) {

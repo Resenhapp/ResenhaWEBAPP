@@ -1,17 +1,67 @@
 import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
+import Cookies from 'js-cookie';
 
 const UserProfileEditor = ({currentProfile, onChange}) => {
     const [image, setImage] = React.useState(currentProfile);
 
-    const handleImageChange = (event) => {
+    const axios = require('axios');
+    const qs = require('qs');
+
+    var token = Cookies.get('token');
+
+    const sendImageRequest = async (data) => {
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, data);
+    
+            return response;
+        }
+    
+        catch (error) {
+            console.error(error);
+        }
+    };
+    
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            return response.data;
+        }
+    
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const handleImageChange = async (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             setImage(reader.result);
             onChange(reader.result);
+
+            let formData = new FormData();
+            formData.append('request', 'tryToUploadUserImage');
+            formData.append('token', token);
+            formData.append('image', file);
+
+            // Add extra data as needed
+            // formData.append('key', 'value');
+
+            try {
+                console.log(await sendImageRequest(formData));
+            } 
+            
+            catch (error) {
+                console.error('Error while uploading image: ', error);
+            }
         };
 
         if (file) {
