@@ -552,7 +552,7 @@ function getParties($result, $userId)
 
             $guests = [];
 
-            $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+            $query = "SELECT * FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro') GROUP BY user";
             $dba = queryDBRows($query);
 
             $counter = 0;
@@ -1434,7 +1434,7 @@ function getInviteData()
             $dayOfWeek = getDayOfWeek($dateString);
 
             $users = [];
-            $query = "SELECT * FROM guests WHERE party = '$code'";
+            $query = "SELECT * FROM guests WHERE party = '$code' GROUP BY user";
             $dba = queryDBRows($query);
 
             if (mysqli_num_rows($dba) > 0) {
