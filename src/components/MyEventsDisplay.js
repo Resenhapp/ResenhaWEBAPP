@@ -19,7 +19,7 @@ const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax
                 </div>
             </div>
             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha')} iconSide='right' height={1} width={1} textAlign='center' />
+                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
         </section>
     )
