@@ -15,7 +15,7 @@ function queryDBDiscord($query)
 {
     global $link;
     $result = $link->query($query);
-    $row = mysqli_fetch_array($result, MYSQLI_ASSOC); // Adicione o parâmetro MYSQLI_ASSOC aqui
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     return $row;
 }
@@ -407,7 +407,7 @@ function getHash($userHash, $urlType) {
 
     if ($statusCode == 200) {
         return $userHash;
-    } 
+    }
     
     else {
         return hash256("default");
@@ -953,10 +953,318 @@ function getUserActivityDiscord()
         }
 
         echo json_encode($usersData);
-    } else {
-            $errorData = array('error' => 'User does not exist or does not contain activity');
-            echo json_encode($errorData);
-        }
+    } 
+    
+    else {
+        $errorData = array('error' => 'User does not exist or does not contain activity');
+        echo json_encode($errorData);
+    }
+}
+
+function getSpecificData($userId, $item) {
+    switch ($item) {
+        case 'interests':
+            $query = "SELECT * FROM interests WHERE user = '$userId'";
+            $interestsResults = queryDBRows($query);
+    
+            $interests = [];
+    
+            if (mysqli_num_rows($interestsResults) > 0) {
+                foreach ($interestsResults as $interest) {
+                    array_push($interests, $interest["interest"]);
+                }
+            }
+
+            return $interests;
+        case 'balances':
+            $query = "SELECT * FROM balances WHERE user = '$userId'";
+            $balancesResults = queryDBRows($query);
+    
+            foreach ($balancesResults as $balance) {
+                $balances = [
+                    "available" => number_format($balance["available"], 2, ',', '.'),
+                    "processing" => number_format($balance["processing"], 2, ',', '.'),
+                    "retained" => number_format($balance["retained"], 2, ',', '.'),
+                    "requested" => number_format($balance["requested"], 2, ',', '.'),
+                ];
+            }
+
+            return $balances;
+        case 'concierges':
+            $query = "SELECT * FROM concierges WHERE host = '$userId'";
+            $conciergesResults = queryDBRows($query);
+    
+            $concierges = [];
+    
+            if (mysqli_num_rows($conciergesResults) > 0) {
+                foreach ($conciergesResults as $concierge) {
+                    $temp = [
+                        "name" => $concierge["name"],
+                        "token" => $concierge["token"],
+                    ];
+    
+                    array_push($concierges, $temp);
+                }
+            }
+
+            return $concierges;
+        case 'mutual':
+            $userData = checkSession($_POST['token']);
+
+            foreach ($userData as $column) {
+                $profileId = $column["id"];
+            }
+
+            $query = "SELECT id FROM followers WHERE follower = '$profileId' AND followed = '$userId'";
+            $result = queryDB($query);
+
+            if (!empty($result)) {
+                $isFollower = true;
+            } 
+            
+            else {
+                $isFollower = false;
+            }
+
+            $query = "SELECT id FROM followers WHERE follower = '$userId' AND followed = '$profileId'";
+            $result = queryDB($query);
+
+            if (!empty($result)) {
+                $isFollowed = true;
+            } 
+            
+            else {
+                $isFollowed = false;
+            }
+
+            $comparisonData = [
+                "follower" => $isFollower,
+                "following" => $isFollowed
+            ];
+
+            return $comparisonData;
+        case 'parties':
+            $query = "SELECT * FROM guests WHERE user = '$userId'";
+            $guestsResults = queryDBRows($query);
+
+            $partiesWent = [];
+
+            if (mysqli_num_rows($guestsResults) > 0) {
+                foreach ($guestsResults as $guest) {
+                    $partyCode = $guest["party"];
+                    $userCode = $guest["code"];
+                    $codeUsed = $guest["used"];
+
+                    $query = "SELECT id, name, date, start, end FROM parties WHERE code = '$partyCode'";
+                    $partiesResults = queryDBRows($query);
+
+                    if (mysqli_num_rows($partiesResults) > 0) {
+                        foreach ($partiesResults as $party) {
+                            $partyId = $party["id"];
+
+                            $partyIdHash = getHash($partyId, "event");
+
+                            $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                            $partyConfirmed = queryDB($query)[0];
+
+                            $temp = [
+                                "hash" => $partyIdHash,
+                                "name" => $party["name"],
+                                "date" => $party["date"],
+                                "start" => $party["start"],
+                                "end" => $party["end"],
+                                "confirmed" => $partyConfirmed,
+                                "used" => $codeUsed,
+                                "token" => $userCode,
+                                "code" => $partyCode
+                            ];
+
+                            array_push($partiesWent, $temp);
+                        }
+                    }
+                }
+            }
+
+            $query = "SELECT * FROM parties WHERE host = '$userId'";
+            $partiesResults = queryDBRows($query);
+    
+            $partiesMade = [];
+    
+            if (mysqli_num_rows($partiesResults) > 0) {
+                foreach ($partiesResults as $party) {
+                    $partyId = $party["id"];
+                    $partyCode = $party["code"];
+    
+                    $partyIdHashUser = getHash($partyId, "event");
+    
+                    $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                    $partyConfirmed = queryDB($query)['total_guests'];
+    
+                    $temp = [
+                        "hash" => $partyIdHashUser,
+                        "code" => $partyCode,
+                        "name" => $party["name"],
+                        "date" => $party["date"],
+                        "start" => $party["start"],
+                        "end" => $party["end"],
+                        "capacity" => $party["capacity"],
+                        "confirmed" => $partyConfirmed,
+                    ];
+    
+                    array_push($partiesMade, $temp);
+                }
+            }
+
+            $partiesData = [
+                "went" => $partiesWent,
+                "made" => $partiesMade
+            ];
+
+            return $partiesData;
+        case 'notifications':
+            $query = "SELECT * FROM notifications WHERE user = '$userId'";
+            $notificationsResults = queryDBRows($query);
+    
+            $notifications = [];
+            $notified = false;
+    
+            if (mysqli_num_rows($notificationsResults) > 0) {
+                foreach ($notificationsResults as $notification) {
+                    if ($notification["cleared"] == "0") {
+                        $temp = [
+                            "id" => $notification["id"],
+                            "title" => $notification["title"],
+                            "content" => $notification["content"],
+                            "date" => $notification["date"],
+                        ];
+    
+                        array_push($notifications, $temp);
+                    }
+    
+                    if ($notification["seen"] == "0") {
+                        $notified = true;
+                    }
+                }
+            }
+
+            $notifiedData = [
+                "notified" => $notified,
+                "notifications" => $notifications
+            ];
+
+            return $notifiedData;
+        case 'activities':
+            $query = "SELECT * FROM activities WHERE type = 'user' AND user = '$userId'";
+            $activitiesResults = queryDBRows($query);
+    
+            $activities = [];
+    
+            if (mysqli_num_rows($activitiesResults) > 0) {
+                foreach ($activitiesResults as $activity) {
+                    $temp = [
+                        "title" => $activity["title"],
+                        "description" => $activity["description"],
+                        "date" => $activity["date"],
+                    ];
+    
+                    if ($activity["hash"] != "none") {
+                        $temp["hash"] = $activity["hash"];
+                    }
+    
+                    array_push($activities, $temp);
+                }
+            }
+
+            return $activities;
+        case 'purchases':
+            $query = "SELECT * FROM guests WHERE user = '$userId'";
+            $purchasesResults = queryDBRows($query);
+    
+            $purchases = [];
+    
+            if (mysqli_num_rows($purchasesResults) > 0) {
+                foreach ($purchasesResults as $purchase) {
+                    $purchaseGuestCode = $purchase["code"];
+                    $purchasePartyCode = $purchase["party"];
+                    $purchasePartyDate = $purchase["date"];
+    
+                    $query = "SELECT * FROM parties WHERE code = '$purchasePartyCode'";
+                    $purchasePartyResults = queryDBRows($query);
+    
+                    if (mysqli_num_rows($purchasePartyResults) > 0) {
+                        foreach ($purchasePartyResults as $purchaseParty) {
+                            $purchasePartyId = $purchaseParty["id"];
+                            $purchasePartyName = $purchaseParty["name"];
+                            $purchasePartyPrice = number_format($purchaseParty["price"], 2, ',', '.');
+                        }
+                    }
+    
+                    $partyIdHashId = getHash($purchasePartyId, "event");
+    
+                    $temp = [
+                        "hash" => $partyIdHashId,
+                        "name" => $purchasePartyName,
+                        "code" => $purchaseGuestCode,
+                        "price" => $purchasePartyPrice,
+                        "date" => $purchasePartyDate
+                    ];
+    
+                    array_push($purchases, $temp);
+                }
+            }
+
+            return $purchases;
+        case 'saved':
+            $query = "SELECT * FROM saved INNER JOIN parties ON saved.party = parties.code WHERE saved.user = '$userId'";
+            $savedResults = queryDBRows($query);
+    
+            $saved = getParties($savedResults, $userId);
+
+            return $saved;
+        case 'followers':
+            $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$userId'";
+            $followers = queryDB($query)[0];
+
+            $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$userId'";
+            $following = queryDB($query)[0];
+
+            $followingData = [
+                "following" => $following,
+                "followed" => $followers,
+            ];
+
+            return $followingData;
+        case 'comments':
+            $query = "SELECT c.*, u.name FROM comments AS c INNER JOIN parties AS p ON c.party = p.code INNER JOIN users AS u ON c.user = u.id WHERE p.host = '$userId'";
+            $commentsResults = queryDBRows($query);
+    
+            $comments = [];
+    
+            if (mysqli_num_rows($commentsResults) > 0) {
+                foreach ($commentsResults as $comment) {
+                    $commentId = $comment["user"];
+    
+                    $query = "SELECT username FROM users WHERE id = '$commentId'";
+                    $commentUsername = queryDB($query)[0];
+    
+                    $commentHash = getHash($commentId, "user");
+    
+                    $temp = [
+                        "hash" => $commentHash,
+                        "user" => $commentId,
+                        "username" => $commentUsername,
+                        "name" => $comment["name"],
+                        "content" => $comment["content"],
+                        "rate" => $comment["rate"],
+                        "date" => $comment["date"],
+                    ];
+    
+                    array_push($comments, $temp);
+                }
+            }
+
+            return $comments;
+    }
 }
 
 function getPartiesFromUser()
@@ -1000,316 +1308,119 @@ function getUserData()
     }
 
     foreach ($userData as $column) {
-        $userId = $column["id"];
+        $data = [];
 
+        $userId = $column["id"];
         $userHash = getHash($userId, "user");
 
-        $query = "SELECT * FROM interests WHERE user = '$userId'";
-        $interestsResults = queryDBRows($query);
-
-        $interests = [];
-
-        if (mysqli_num_rows($interestsResults) > 0) {
-            foreach ($interestsResults as $interest) {
-                array_push($interests, $interest["interest"]);
-            }
-        }
-
-        $query = "SELECT * FROM balances WHERE user = '$userId'";
-        $balancesResults = queryDBRows($query);
-
-        if (mysqli_num_rows($balancesResults) > 0) {
-            foreach ($balancesResults as $balance) {
-                $balances = [
-                    "available" => number_format($balance["available"], 2, ',', '.'),
-                    "processing" => number_format($balance["processing"], 2, ',', '.'),
-                    "retained" => number_format($balance["retained"], 2, ',', '.'),
-                    "requested" => number_format($balance["requested"], 2, ',', '.'),
-                ];
-            }
-        }
-
-        $query = "SELECT * FROM concierges WHERE host = '$userId'";
-        $conciergesResults = queryDBRows($query);
-
-        $concierges = [];
-
-        if (mysqli_num_rows($conciergesResults) > 0) {
-            foreach ($conciergesResults as $concierge) {
-                $temp = [
-                    "name" => $concierge["name"],
-                    "token" => $concierge["token"],
-                ];
-
-                array_push($concierges, $temp);
-            }
-        }
-
-        $query = "SELECT * FROM guests WHERE user = '$userId'";
-        $guestsResults = queryDBRows($query);
-
-        $partiesWent = [];
-
-        if (mysqli_num_rows($guestsResults) > 0) {
-            foreach ($guestsResults as $guest) {
-                $partyCode = $guest["party"];
-                $userCode = $guest["code"];
-                $codeUsed = $guest["used"];
-
-                $query = "SELECT id, name, date, start, end FROM parties WHERE code = '$partyCode'";
-                $partiesResults = queryDBRows($query);
-
-                if (mysqli_num_rows($partiesResults) > 0) {
-                    foreach ($partiesResults as $party) {
-                        $partyId = $party["id"];
-
-                        $partyIdHash = getHash($partyId, "event");
-
-                        $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
-                        $partyConfirmed = queryDB($query)[0];
-
-                        $temp = [
-                            "hash" => $partyIdHash,
-                            "name" => $party["name"],
-                            "date" => $party["date"],
-                            "start" => $party["start"],
-                            "end" => $party["end"],
-                            "confirmed" => $partyConfirmed,
-                            "used" => $codeUsed,
-                            "token" => $userCode,
-                            "code" => $partyCode
-                        ];
-
-                        array_push($partiesWent, $temp);
-                    }
-                }
-            }
-        }
-
-        $query = "SELECT * FROM parties WHERE host = '$userId'";
-        $partiesResults = queryDBRows($query);
-
-        $partiesMade = [];
-
-        if (mysqli_num_rows($partiesResults) > 0) {
-            foreach ($partiesResults as $party) {
-                $partyId = $party["id"];
-                $partyCode = $party["code"];
-
-                $partyIdHashUser = getHash($partyId, "event");
-
-                $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
-                $partyConfirmed = queryDB($query)['total_guests'];
-
-                $temp = [
-                    "hash" => $partyIdHashUser,
-                    "code" => $partyCode,
-                    "name" => $party["name"],
-                    "date" => $party["date"],
-                    "start" => $party["start"],
-                    "end" => $party["end"],
-                    "capacity" => $party["capacity"],
-                    "confirmed" => $partyConfirmed,
-                ];
-
-                array_push($partiesMade, $temp);
-            }
-        }
-
-        $query = "SELECT * FROM notifications WHERE user = '$userId'";
-        $notificationsResults = queryDBRows($query);
-
-        $notifications = [];
-        $notified = false;
-
-        if (mysqli_num_rows($notificationsResults) > 0) {
-            foreach ($notificationsResults as $notification) {
-                if ($notification["cleared"] == "0") {
-                    $temp = [
-                        "id" => $notification["id"],
-                        "title" => $notification["title"],
-                        "content" => $notification["content"],
-                        "date" => $notification["date"],
-                    ];
-
-                    array_push($notifications, $temp);
-                }
-
-                if ($notification["seen"] == "0") {
-                    $notified = true;
-                }
-            }
-        }
-
-        $query = "SELECT * FROM activities WHERE type = 'user' AND user = '$userId'";
-        $activitiesResults = queryDBRows($query);
-
-        $activities = [];
-
-        if (mysqli_num_rows($activitiesResults) > 0) {
-            foreach ($activitiesResults as $activity) {
-                $temp = [
-                    "title" => $activity["title"],
-                    "description" => $activity["description"],
-                    "date" => $activity["date"],
-                ];
-
-                if ($activity["hash"] != "none") {
-                    $temp["hash"] = $activity["hash"];
-                }
-
-                array_push($activities, $temp);
-            }
-        }
-
-        $query = "SELECT * FROM guests WHERE user = '$userId'";
-        $purchasesResults = queryDBRows($query);
-
-        $purchases = [];
-
-        if (mysqli_num_rows($purchasesResults) > 0) {
-            foreach ($purchasesResults as $purchase) {
-                $purchaseGuestCode = $purchase["code"];
-                $purchasePartyCode = $purchase["party"];
-                $purchasePartyDate = $purchase["date"];
-
-                $query = "SELECT * FROM parties WHERE code = '$purchasePartyCode'";
-                $purchasePartyResults = queryDBRows($query);
-
-                if (mysqli_num_rows($purchasePartyResults) > 0) {
-                    foreach ($purchasePartyResults as $purchaseParty) {
-                        $purchasePartyId = $purchaseParty["id"];
-                        $purchasePartyName = $purchaseParty["name"];
-                        $purchasePartyPrice = number_format($purchaseParty["price"], 2, ',', '.');
-                    }
-                }
-
-                $partyIdHashId = getHash($purchasePartyId, "event");
-
-                $temp = [
-                    "hash" => $partyIdHashId,
-                    "name" => $purchasePartyName,
-                    "code" => $purchaseGuestCode,
-                    "price" => $purchasePartyPrice,
-                    "date" => $purchasePartyDate
-                ];
-
-                array_push($purchases, $temp);
-            }
-        }
-
-        $query = "SELECT * FROM saved INNER JOIN parties ON saved.party = parties.code WHERE saved.user = '$userId'";
-        $savedResults = queryDBRows($query);
-
-        $saved = getParties($savedResults, $userId);
-
-        $query = "SELECT COUNT(*) AS followerCount FROM followers WHERE followed = '$userId'";
-        $followers = queryDB($query)[0];
-
-        $query = "SELECT COUNT(*) AS followingCount FROM followers WHERE follower = '$userId'";
-        $following = queryDB($query)[0];
-
-        $query = "SELECT c.*, u.name FROM comments AS c INNER JOIN parties AS p ON c.party = p.code INNER JOIN users AS u ON c.user = u.id WHERE p.host = '$userId'";
-        $commentsResults = queryDBRows($query);
-
-        $comments = [];
-
-        if (mysqli_num_rows($commentsResults) > 0) {
-            foreach ($commentsResults as $comment) {
-                $commentId = $comment["user"];
-
-                $query = "SELECT username FROM users WHERE id = '$commentId'";
-                $commentUsername = queryDB($query)[0];
-
-                $commentHash = getHash($commentId, "user");
-
-                $temp = [
-                    "hash" => $commentHash,
-                    "user" => $commentId,
-                    "username" => $commentUsername,
-                    "name" => $comment["name"],
-                    "content" => $comment["content"],
-                    "rate" => $comment["rate"],
-                    "date" => $comment["date"],
-                ];
-
-                array_push($comments, $temp);
-            }
-        }
-
-        $data = [
-            'hash' => $userHash,
-            'username' => $column["username"],
-            'name' => $column["name"],
-            'about' => $column["about"],
-            'verified' => $column["verified"],
-            'interests' => $interests,
-            'followers' => $followers,
-            'following' => $following,
-            'comments' => $comments,
-            'partiesMade' => $partiesMade,
-            'partiesWent' => $partiesWent,
-            'mine' => false,
-        ];
-
-        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
-            $data["birth"] = $column["birth"];
-            $data["address"] = $column["address"];
-            $data["phone"] = $column["phone"];
-            $data['cpf'] = $column["cpf"];
-            $data['email'] = $column["email"];
-            $data['balances'] = $balances;
-            $data['notifications'] = $notifications;
-            $data['saved'] = $saved;
-            $data['notified'] = $notified;
-            $data['concierges'] = $concierges;
-            $data['activities'] = $activities;
-            $data['purchases'] = $purchases;
-            $data['mine'] = true;
-        } 
-        
-        else {
-            $userData = checkSession($_POST['token']);
-
-            foreach ($userData as $column) {
-                $profileId = $column["id"];
-            }
-
-            $query = "SELECT id FROM followers WHERE follower = '$profileId' AND followed = '$userId'";
-            $result = queryDB($query);
-
-            if (!empty($result)) {
-                $data['follower'] = true;
-            } else {
-                $data['follower'] = false;
-            }
-        }
+        $data["hash"] = $userHash;
 
         if (isset($_POST["requested"])) {
             $requested = $_POST["requested"];
+        }
 
-            if (is_array($requested)) {
-                $tempData = [];
-                foreach ($requested as $item) {
-                    $sanitizedItem = sanitize($item);
+        else {
+            $requested = [
+                "username",
+                "name",
+                "about",
+                "verified",
+                "email",
+                "cpf",
+                "phone",
+                "address",
+                "birth",
+                "email",
+                "balances",
+                "notifications",
+                "saved",
+                "concierges",
+                "mutual",
+                "activities",
+                "purchases",
+                "interests",
+                "balances",
+                "concierges",
+                "mutual",
+                "parties",
+                "notifications",
+                "activities",
+                "purchases",
+                "saved",
+                "followers",
+                "comments"
+            ];
+        }
 
-                    $var = $data[$sanitizedItem];
+        if (is_array($requested)) {
+            $privateData = [
+                "cpf",
+                "phone",
+                "address",
+                "birth",
+                "email",
+                "balances",
+                "notifications",
+                "saved",
+                "notified",
+                "concierges",
+                "activities",
+                "purchases"
+            ];
 
-                    $tempData[$sanitizedItem] = $var; 
+            foreach ($requested as $item) {
+                switch ($item) {
+                    case 'username':
+                        $specificData = $column["username"];
+                        break;
+                    case 'name':
+                        $specificData = $column["name"];
+                        break;
+                    case 'about':
+                        $specificData = $column["about"];
+                        break;
+                    case 'verified':
+                        $specificData = $column["verified"];
+                        break;
+                    case 'email':
+                        $specificData = $column["email"];
+                        break;
+                    case 'cpf':
+                        $specificData = $column["cpf"];
+                        break;
+                    case 'phone':
+                        $specificData = $column["phone"];
+                        break;
+                    case 'address':
+                        $specificData = $column["address"];
+                        break;
+                    case 'birth':
+                        $specificData = $column["birth"];
+                        break;
+                    default:
+                        $sanitizedItem = sanitize($item);
+                        $specificData = getSpecificData($userId, $sanitizedItem);
+                        break;
                 }
-            } 
-            
-            else {
-                $sanitizedRequested = sanitize($_POST["requested"]);
 
-                $var = $data[$sanitizedRequested];
+                if (in_array($item, $privateData)) {
+                    if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
+                        $data[$item] = $specificData;
+                    } 
+                }
 
-                $tempData = [
-                    $sanitizedRequested => $var
-                ];
+                else {
+                    $data[$item] = $specificData;
+                }
             }
+        } 
 
-            $data = $tempData;
+        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
+            $data["mine"] = true;
+        }
+
+        else {
+            $data["mine"] = false;
         }
 
         returnData($data);
@@ -2256,6 +2367,81 @@ function tryToCreateEvent()
     }
 }
 
+function tryToUploadUserImage() 
+{
+    $userData = checkSession($_POST['token']);
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $userHash = hash256($userId);
+
+        if (isset($_FILES['image'])) {
+            $uploadedFile = $_FILES['image'];
+            
+            $fileExtension = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
+            
+            if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                returnError("invalid_image_format");
+                return;
+            }
+    
+            $targetDirectory = "../media/u/";
+            $targetFile = $targetDirectory . $userHash . '.' . $fileExtension;
+            
+            if (move_uploaded_file($uploadedFile["tmp_name"], $targetFile)) {
+                switch ($fileExtension) {
+                    case 'jpg':
+                    case 'jpeg':
+                        $src = imagecreatefromjpeg($targetFile);
+                        break;
+                    case 'png':
+                        $src = imagecreatefrompng($targetFile);
+                        break;
+                    case 'gif':
+                        $src = imagecreatefromgif($targetFile);
+                        break;
+                }
+                
+                $oldWidth = imagesx($src);
+                $oldHeight = imagesy($src);
+
+                if ($oldWidth > $oldHeight) {
+                    $newWidth = intval(512 * ($oldWidth / $oldHeight));
+                    $newHeight = 512;
+                } else {
+                    $newHeight = intval(512 * ($oldHeight / $oldWidth));
+                    $newWidth = 512;
+                }
+
+                $dst = imagescale($src, $newWidth, $newHeight);
+                
+                $x = ($newWidth - 512) / 2;
+                $y = ($newHeight - 512) / 2;
+
+                $cropped = imagecrop($dst, ['x' => $x, 'y' => $y, 'width' => 512, 'height' => 512]);
+
+                if ($cropped !== false) {
+                    imagedestroy($dst);
+                    $dst = $cropped;
+                }
+                
+                $outputFile = $targetDirectory . $userHash . '.png';
+                imagepng($dst, $outputFile);
+                
+                imagedestroy($src);
+                imagedestroy($dst);
+                
+                returnSuccess("image_uploaded");
+            } 
+            
+            else {
+                returnError("invalid_image");
+            }
+        }
+    }
+}
+
 function tryToClickOnEvent() 
 {
     $code = sanitize($_POST['party']);
@@ -2295,6 +2481,13 @@ function generateRandomUsername($fullName) {
     return $username;
 }
 
+function stripAccents($str) {
+    $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+    $str = preg_replace('/[^a-zA-Z0-9]/', '', $str);
+
+    return $str;
+}
+
 function tryToCreateUser()
 {
     $name = sanitize($_POST['name']);
@@ -2318,11 +2511,11 @@ function tryToCreateUser()
         $tax = 10;
 
         $verified = "0";
-        $about = "Sou novo por aqui... 🤓";
+        $about = "Acabei de chegar aqui... 🤓";
 
         $password_hash = hash256($password);
 
-        $username = generateRandomUsername($name);
+        $username = stripAccents(generateRandomUsername($name));
 
         $confirmation_link = "https://resenha.app/api/?token=$token";
 
