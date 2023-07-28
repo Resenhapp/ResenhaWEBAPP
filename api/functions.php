@@ -1623,7 +1623,7 @@ function getInviteData()
             $dayOfWeek = getDayOfWeek($dateString);
 
             $users = [];
-            $query = "SELECT * FROM guests WHERE party = '$code' GROUP BY user";
+            $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' GROUP BY user";
             $dba = queryDBRows($query);
 
             if (mysqli_num_rows($dba) > 0) {
@@ -2350,7 +2350,7 @@ function getMessages()
         $chatId = queryDB($query)[0];
 
         if ($type == 'dm') {
-            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' OR sender = '$chatId') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
+            $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' AND destination = '$chatId') OR (sender = '$chatId' AND destination = '$id') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
             $messages = queryDBRows($query);
         } 
         
