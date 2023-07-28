@@ -4,8 +4,8 @@ import Vector from './Vector';
 import Link from 'next/link'; // Adicione esta linha
 
 const Comment = ({ userName, userUrl, rate, month, day, comment, imageUrl }) => {
-
     const h3Classes = 'text-[12px]';
+
     const baseFlexClasses = 'flex flex-row items-center gap-1';
     const months = [
         "Jan",
