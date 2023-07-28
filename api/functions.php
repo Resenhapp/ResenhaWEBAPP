@@ -1415,6 +1415,31 @@ function getAllParties()
     }
 }
 
+function getAllUsers()
+{
+    header('Content-Type: application/json');
+    global $link;
+
+    $userid = sanitize($_GET['allusers']);
+    $query = "SELECT * FROM users";
+
+    $stmt = $link->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $usersData = array();
+        while ($row = $result->fetch_assoc()) {
+            $usersData[] = $row;
+        }
+
+        echo json_encode($usersData);
+    } else {
+        $errorData = array('error' => 'DB does not contain any user');
+        echo json_encode($errorData);
+    }
+}
+
 
 function getUserData()
 {
