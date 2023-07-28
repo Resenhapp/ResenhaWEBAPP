@@ -1,6 +1,6 @@
 <?php
-// header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Origin: https://www.resenha.app');
+header('Access-Control-Allow-Origin: http://localhost:3000');
+// header('Access-Control-Allow-Origin: https://www.resenha.app');
 header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -25,9 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         returnError("no_request");
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Verifica se a chave "userid" está presente na solicitação GET
     if (isset($_GET['userid'])) {
-        // Chama a função para retornar os dados do usuário em formato JSON
         getSingleDataDiscord();
     } elseif (isset($_GET['user@'])) {
         getSingleDataDiscord();
@@ -47,12 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         getPartiesFromUser();
     }
      else {
-        // Caso a chave "userid" não seja fornecida, retorna um erro em JSON
         $errorData = array('error' => 'No valid param provided');
         echo json_encode($errorData);
     }
 } else {
-    // Retorna um erro se a solicitação não for POST nem GET
     returnError("invalid_request");
 }
 ?>

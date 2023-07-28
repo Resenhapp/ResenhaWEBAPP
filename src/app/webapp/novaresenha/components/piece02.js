@@ -8,6 +8,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Modal from '@/src/components/Modal';
 import ptBR from 'date-fns/locale/pt-BR';
 import TimePicker from '@/src/components/TimePicker';
+import ReactInputMask from 'react-input-mask';
+
 registerLocale('pt', ptBR)
 
 
@@ -28,17 +30,32 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     const [toggleValue, setToggleValue] = useState(true);
 
     const [isDateSelected, setIsDateSelected] = useState(false);
-    const [isHourSelected, setIsHourSelected] = useState(false);
+    // const [isHourSelected, setIsHourSelected] = useState(false);
 
-  
+    const [tempStart, setTempStart] = useState('');
+
+    const handleStartSet = (event) => {
+        setTempStart(event.target.value);
+        setStartHourSelected(true);
+    };
+
+    const [tempEnd, setTempEnd] = useState('');
+
+    const handleEndSet = (event) => {
+        setTempEnd(event.target.value);
+        setEndHourSelected(true);
+
+    };
+
+
     const [startHourSelected, setStartHourSelected] = useState(false);
     const [endHourSelected, setEndHourSelected] = useState(false);
 
     useEffect(() => {
         if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
-          filled(true);
+            filled(true);
         } else {
-          filled(false);
+            filled(false);
         }
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
@@ -46,11 +63,11 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         setToggleValue(!isChecked);
         onToggleChange(!isChecked);
         setHasEnd(isChecked);
-        if(isChecked) {
-          setEndHourSelected(true);
+        if (isChecked) {
+            setEndHourSelected(true);
         }
-      };
-    
+    };
+
     const handleDateChange = (date) => {
         setSelectedDay(date.getDate());
         setSelectedMonth(date.getMonth() + 1);
@@ -58,8 +75,8 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         setIsDateSelected(true);
         setSelectedDate(date);
         onDateSelect(date);
-      };
-      
+    };
+
 
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {
@@ -67,44 +84,45 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         }
     }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
 
-    const currentTime = new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    });
+    // const currentTime = new Date().toLocaleTimeString([], {
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     hour12: false,
+    // });
 
     const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
 
-    const lateTime = currentDate.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    });
+    // const lateTime = currentDate.toLocaleTimeString([], {
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     hour12: false,
+    // });
 
-    const handleStartChange = (date) => {
-        setStartHourSelected(true);
-        onStartHourSelect(date);
-      }
-    
-      const handleEndChange = (date) => {
-        setEndHourSelected(true);
-        onEndHourSelect(date);
-      }
+    // const handleStartChange = (date) => {
+    //     setStartHourSelected(true);
+    //     onStartHourSelect(date);
+    // }
 
-    const onStartTimeSelect = useCallback((time) => {
-        const newStartTime = new Date(startTime);
-        newStartTime.setHours(time.hour, time.minute);
-        setStartTime(newStartTime);
-        handleStartChange(newStartTime);
-    }, [startTime, handleStartChange, setStartTime]);
+    // const handleEndChange = (date) => {
+    //     setEndHourSelected(true);
+    //     onEndHourSelect(date);
+    // }
 
-    const onEndTimeSelect = useCallback((time) => {
-        const newEndTime = new Date(endTime);
-        newEndTime.setHours(time.hour, time.minute);
-        setEndTime(newEndTime);
-        handleEndChange(newEndTime);
-    }, [endTime, handleEndChange, setEndTime]);
+    // const onStartTimeSelect = useCallback((time) => {
+    //     const newStartTime = new Date(startTime);
+    //     newStartTime.setHours(time.hour, time.minute);
+    //     setStartTime(newStartTime);
+    //     handleStartChange(newStartTime);
+    // }, [startTime, handleStartChange, setStartTime]);
+
+    // const onEndTimeSelect = useCallback((time) => {
+    //     const newEndTime = new Date(endTime);
+    //     newEndTime.setHours(time.hour, time.minute);
+    //     setEndTime(newEndTime);
+    //     handleEndChange(newEndTime);
+    // }, [endTime, handleEndChange, setEndTime]);
+
 
     return (
         <div className="w-full flex flex-col h-fit gap-6">
@@ -142,8 +160,28 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                 {isStartTimeModalOpen &&
                     <Modal show={isStartTimeModalOpen} close={() => setIsStartTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
-                            <h1 className='text-center text-xl mb-4'>Escolha a hora de início da sua resenha</h1>
-                            <TimePicker onTimeSelect={onStartTimeSelect} />
+                            <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha começa</h1>
+
+                            <ReactInputMask
+                                mask="99:99"
+                                maskChar=""
+                                value={tempStart}
+                                onChange={handleStartSet}
+                            >
+                                {(inputProps) =>
+                                    <input
+                                        {...inputProps}
+                                        className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
+                                        placeholder='Toque aqui'
+                                        type='tel'
+                                    />
+                                }
+                            </ReactInputMask>
+                            {/* <TimePicker onTimeSelect={onStartTimeSelect} /> */}
+                            <div className='flex flex-row justify-around w-full'>
+                                <button onClick={() => setIsStartTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
+                                <button onClick={() => setIsStartTimeModalOpen(false)} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                            </div>
                         </div>
                     </Modal>
                 }
@@ -151,8 +189,27 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
                 {isEndTimeModalOpen &&
                     <Modal show={isEndTimeModalOpen} close={() => setIsEndTimeModalOpen(false)}>
                         <div className='flex flex-col justify-center items-center'>
-                            <h1 className='text-center text-xl mb-4'>Escolha a hora de término da sua resenha</h1>
-                            <TimePicker onTimeSelect={onEndTimeSelect} />
+                            <h1 className='text-center text-xl mb-4'>Digite o horário que sua resenha termina</h1>
+                            <ReactInputMask
+                                mask="99:99"
+                                maskChar=""
+                                value={tempEnd}
+                                onChange={handleEndSet}
+                            >
+                                {(inputProps) =>
+                                    <input
+                                        {...inputProps}
+                                        className='w-full text-center text-4xl mb-4 bg-transparent placeholder-purpleT1 text-whiteT1 font-bold'
+                                        placeholder='Toque aqui'
+                                        type='tel'
+                                    />
+                                }
+                            </ReactInputMask>
+                            {/* <TimePicker onTimeSelect={onEndTimeSelect} /> */}
+                            <div className='flex flex-row justify-around w-full'>
+                                <button onClick={() => setIsEndTimeModalOpen(false)} className='px-8 py-4  text-whiteT1 rounded-full mt-4'>Cancelar</button>
+                                <button onClick={() => setIsEndTimeModalOpen(false)} className='px-8 py-4 bg-whiteT1 text-purpleT3 rounded-full mt-4'>Salvar</button>
+                            </div>
                         </div>
                     </Modal>
                 }

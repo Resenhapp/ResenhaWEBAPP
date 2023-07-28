@@ -21,7 +21,7 @@ const Modal = ({ children, show, close }) => {
             <div
                 style={{
                 }}
-                className='bg-purpleT1 ring-2 ring-purpleT3 rounded-3xl p-4 max-w-[95%]'
+                className='bg-purpleT0 ring-2 ring-purpleT1 rounded-xl p-4 max-w-[75%]'
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}
