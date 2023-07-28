@@ -43,7 +43,6 @@ const ImageInput = ({ image, onChange }) => {
 
         reader.onloadend = async () => {
             setImage(reader.result);
-            //onChange(reader.result); davilas mexer aqui
 
             let formData = new FormData();
             formData.append('request', 'tryToUploadEventImage');

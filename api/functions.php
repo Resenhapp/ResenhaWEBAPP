@@ -476,9 +476,10 @@ function tryToEditWithdraw()
     }
 }
 
-function getParties($result, $userId)
+function getParties($result, $userId, $type)
 {
     $parties = [];
+    $processedHosts = [];
 
     if (mysqli_num_rows($result) > 0) {
         foreach ($result as $row) {
@@ -542,6 +543,14 @@ function getParties($result, $userId)
 
             $query = "SELECT host FROM parties WHERE code = '$code'";
             $host = queryDB($query)[0];
+
+            if ($type == "feed") {
+                if (in_array($host, $processedHosts)) {
+                    continue;
+                }
+    
+                array_push($processedHosts, $host);
+            }
 
             $query = "SELECT verified FROM users WHERE id = '$host'";
             $verified = queryDB($query)[0];
@@ -697,7 +706,7 @@ function getFeedData()
 
         $result = queryDBRows($query);
 
-        $parties = getParties($result, $userId);
+        $parties = getParties($result, $userId, "feed");
 
         returnData($parties);
     }
@@ -1305,7 +1314,7 @@ function getSpecificData($userId, $item) {
             $query = "SELECT * FROM saved INNER JOIN parties ON saved.party = parties.code WHERE saved.user = '$userId'";
             $savedResults = queryDBRows($query);
     
-            $saved = getParties($savedResults, $userId);
+            $saved = getParties($savedResults, $userId, "saved");
 
             return $saved;
         case 'followers':
