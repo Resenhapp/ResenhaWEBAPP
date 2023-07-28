@@ -267,7 +267,6 @@ export default function EditEvent() {
 
         reader.onloadend = async () => {
             setImage(reader.result);
-            //onChange(reader.result); davilas mexer aqui
 
             let formData = new FormData();
             formData.append('request', 'tryToUploadEventImage');
