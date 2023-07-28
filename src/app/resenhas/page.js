@@ -119,7 +119,7 @@ export default function HomePage() {
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
                             <p className='mt-20 text-2xl'>Você ainda não criou nenhuma resenha! Bora juntar a galera pra curtir?! Toque abaixo pra criar uma nova resenha!</p>
                             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                            <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha/')} iconSide='right' height={1} width={1} textAlign='center' />
+                            <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
                             </div>
                         </section>)
                 }

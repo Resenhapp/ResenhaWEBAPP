@@ -38,7 +38,7 @@ const Menu = ({ isOpen, toggleMenu, userData }) => {
                                 <Button label={'Ajuda'} icon={'question'} action={() => handleNavigation('ajuda')} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                             <div className='mt-10'>
-                                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('novaresenha')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                         </div>
                     </div>
