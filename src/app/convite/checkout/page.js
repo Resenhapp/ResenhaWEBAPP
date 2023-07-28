@@ -41,7 +41,7 @@ export default function Checkout() {
 
     const [partyPrice, setPartyPrice] = useState(20.0);
     const [canBeUnderaged, setCanBeUnderaged] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState('pix');
+    const [paymentMethod, setPaymentMethod] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [ticketsAmount, setTicketsAmount] = useState(0);
@@ -63,14 +63,6 @@ export default function Checkout() {
         console.log(`Credit card expiration: ${cardExpiration}`);
         console.log(`Credit card cvv: ${cardCvv}`);
         console.log(`Credit card cpf: ${cardCpf}`);
-    }
-
-    const getValues = () => {
-        console.log(`Customer Name: ${customerName}`);
-        console.log(`Customer Email: ${customerEmail}`);
-        console.log(`Tickets Amount: ${ticketsAmount}`);
-        console.log(`Is Eighteen: ${customerIsEighteen}`);
-        console.log(`Payment Method: ${paymentMethod}`);
     }
 
     const makeRequest = async (url, data) => {
@@ -305,6 +297,14 @@ export default function Checkout() {
         setLoading(false);
     };
 
+    useEffect(() => {
+        if ((paymentMethod === 'Pix' || paymentMethod === 'Dinheiro' || paymentMethod === 'Cartão') && (canBeUnderaged || customerIsEighteen)) {
+            setIsFilled(true);
+        } else {
+            setIsFilled(false);
+        }
+    }, [paymentMethod, customerIsEighteen, canBeUnderaged]);
+    
     useEffect(() => {
         if (token) {
           fetchUserData();

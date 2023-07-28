@@ -49,18 +49,10 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
     var newPartyPrice = getPartyPrice*ticketsAmount;
 
     useEffect(() => {
-        if (name && emailValid && ticketsAmount && method) {
-            if (canBeUnderaged || (!canBeUnderaged && isEighteen)) {
-                setIsFilled(true);
-            } else {
-                setIsFilled(false);
-            }
-        } else {
-            setIsFilled(false);
-        }
+        const isValid = name && emailValid && ticketsAmount && method && (canBeUnderaged || isEighteen);
+        setIsFilled(isValid);
     }, [name, emailValid, ticketsAmount, method, isEighteen, canBeUnderaged]);
     
-
     return (
         <div className="flex flex-col items-center justify-center">
             <section className="flex flex-col items-center w-full max-w-md">
