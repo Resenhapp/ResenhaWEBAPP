@@ -10,9 +10,17 @@ import Pix from "./pieces/pix";
 import Card from "./pieces/card";
 import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
+import Cookies from 'js-cookie';
 
 export default function Checkout() {
     const maxProgress = 5;
+
+    let code = '';
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        code = urlParams.get('c');
+    }
 
     const [progress, setProgress] = useState(1);
     const [isFilled, setIsFilled] = useState(false);
@@ -43,6 +51,9 @@ export default function Checkout() {
    
     const [hidestyle, setHideStyle] = useState(!false);
 
+    const axios = require('axios');
+    const qs = require('qs');
+
     const payRequest = () => {
         console.log(`Credit card holder: ${cardHolder}`);
         console.log(`Credit card number: ${cardNumber}`);
@@ -58,6 +69,48 @@ export default function Checkout() {
         console.log(`Is Eighteen: ${customerIsEighteen}`);
         console.log(`Payment Method: ${paymentMethod}`);
     }
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        } 
+        
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            var token = Cookies.get('token');
+
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'tryToCreateGuest',
+                token: token,
+                name: customerName,
+                email: customerEmail,
+                maiority: customerIsEighteen,
+                method: paymentMethod,
+                code: code
+            });
+
+            if (response.error) {
+                window.history.back();
+            }
+
+            var data = [
+                response.code,
+                response.qrcode
+            ];
+            
+            return data;
+        } 
+        
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     const printRef = useRef();
     const saveInvite = async () => {
@@ -111,12 +164,15 @@ export default function Checkout() {
                 break;
             case 2:
                 if (paymentMethod === 'Pix') {
-                    return <Pix setPixKey={'sdkasdk-w3d20dk20kd0kdf00-dk29kf0f-f92kf29fj'}
-                        setPixQrCodeUrl={'https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfdssssskc0K)CJ3wf03jf30ftgj030sd-ssss0K)CJ3wf03jf30ftgj030sd-sssssssssssskc0K)CJ3wf03sssssssskc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdssck03qwkc0K)CJ3wf03jf30ftgj0tjfg30tjk320tj2[dasdasdasdasdddddddddddd3d3df3f-g&chld=L|1&choe=UTF-8'} />
+                    var pixData = fetchData();
+
+                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} />
                 }
+
                 else if (paymentMethod === 'Dinheiro') {
                     return <Cash setIsFilled={setIsFilled} />
                 }
+
                 else if (paymentMethod === 'Cartão') {
                     return <Card setIsFilled={setIsFilled}
                         setCardHolder={setCardHolder}
@@ -231,21 +287,18 @@ export default function Checkout() {
             </div>
             {renderPiece()}
             {
-                progress < 3 ?
-                    (
-                        <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
-                            <div className="flex flex-row w-full justify-center max-w-md">
-                                <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                                <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
-                            </div>
-                            <div className="flex items-center justify-center">
-                                <p className="mr-1">Tem uma conta?</p>
-                                <Link href="/cadastro" className="font-bold">Entre aqui!</Link>
-                            </div>
-                        </footer>
-                    )
-                    :
-                    null
+                progress < 3 ? (
+                    <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
+                        <div className="flex flex-row w-full justify-center max-w-md">
+                            <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
+                            <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                        </div>
+                        <div className="flex items-center justify-center">
+                            <p className="mr-1">Tem uma conta?</p>
+                            <Link href="/cadastro" className="font-bold">Entre aqui!</Link>
+                        </div>
+                    </footer>
+                ) : null
             }
         </div>
     )

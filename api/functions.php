@@ -1625,7 +1625,7 @@ function tryToCreateGuest()
 {
     $party = sanitize($_POST['code']);
     $name = sanitize($_POST['name']);
-    $birth = sanitize($_POST['birth']);
+    $maiority = sanitize($_POST['maiority']);
     $email = sanitize($_POST['email']);
     $method = sanitize($_POST['method']);
 
@@ -1652,7 +1652,7 @@ function tryToCreateGuest()
 
     $paid = "0";
     
-    if ($method == "pix") {
+    if ($method == "Pix") {
         $req = [
             "items" => [
                 [
@@ -1703,14 +1703,14 @@ function tryToCreateGuest()
         $charge = "none";
     }
 
-    if ($method != "pix") {
+    if ($method != "Pix") {
         //send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
     }
 
     $used = "0";
     $deleted = "0";
 
-    $query = "INSERT INTO guests (user, party, name, birth, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$birth', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
+    $query = "INSERT INTO guests (user, party, name, maiority, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$maiority', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
     queryNR($query);
 
     $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
@@ -1785,11 +1785,11 @@ function tryToCreateGuest()
         $notificationText
     );
 
-    if ($method == "pix") {
+    if ($method == "Pix") {
         $data = [
-            'guest' => $guest,
-            'qrcode' => $qrcode,
             'status' => "success",
+            'code' => $qrcode,
+            'qrcode' => $qrcodeurl,
         ];
 
         returnData($data);
