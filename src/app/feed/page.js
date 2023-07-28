@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Loading from "@/src/components/Loading";
 import EditInfoPage from '@/src/components/EditInfoPage';
@@ -12,8 +12,6 @@ import Modal from '@/src/components/Modal';
 import Tag from '@/src/components/Tag';
 import Cookies from 'js-cookie';
 
-import { useState } from "react";
-import { useEffect } from 'react';
 import { tagsData } from "@/src/components/tagsData"
 import { interestsData } from '@/src/components/interestsData';
 
