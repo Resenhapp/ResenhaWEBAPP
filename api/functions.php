@@ -627,6 +627,8 @@ function getFeedData()
 
         $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `start`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
 
+        $startQuery = $query;
+
         if (isset($_POST['searchTerm'])) {
             $searchTerm = sanitize($_POST['searchTerm']);
             $query .= " AND name LIKE '%" . $searchTerm . "%'";
@@ -707,6 +709,12 @@ function getFeedData()
         $result = queryDBRows($query);
 
         $parties = getParties($result, $userId, "feed");
+
+        if ($parties == [] && isset($filterParameters["coordinates"])) {
+            $result = queryDBRows($startQuery);
+
+            $parties = getParties($result, $userId, "feed");
+        }
 
         returnData($parties);
     }

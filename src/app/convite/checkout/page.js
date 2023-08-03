@@ -206,6 +206,7 @@ export default function Checkout() {
         if (paymentMethod === "Pix"){
             generatePix();
         }
+        
         if (progress + 1 > maxProgress) {
             const details = {
                 content,
@@ -236,7 +237,7 @@ export default function Checkout() {
             if (paymentMethod === 'Pix') {
                 title = 'Pagamento com pix';
                 subtitle = 'Realize o pagamento copiando o código abaixo e colando no aplicativo do seu banco. Caso não seja você quem vai pagar, também pode usar o QR Code.';
-                button = 'Próximo';
+                button = 'Já paguei';
                 action = handleNextStep;
             }
             else if (paymentMethod === 'Cartão') {
