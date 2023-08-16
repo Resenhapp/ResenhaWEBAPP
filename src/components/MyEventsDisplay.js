@@ -9,6 +9,7 @@ const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax
             window.location.href = `/${pageToGo}`;
         }
     };
+    
     return (
         <section className="flex content-center justify-center flex-col items-center w-full h-fit max-w-md p-4">
             <div className=' h3 w-full flex'>

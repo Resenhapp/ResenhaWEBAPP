@@ -13,7 +13,7 @@ const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuest
         const shareData = {
             title: eventName,
             text: `Confira essa incrível ${eventName}!`,
-            url: `https://resenha.app/u/${eventCode}!`,
+            url: `https://resenha.app/convite?c=${eventCode}`,
         };
 
         if (navigator.share) {
