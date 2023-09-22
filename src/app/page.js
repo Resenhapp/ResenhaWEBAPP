@@ -8,9 +8,15 @@ import page2 from '@/assets/images/page2.png';
 import page3 from '@/assets/images/page3.png';
 import page4 from '@/assets/images/page4.png';
 import page5 from '@/assets/images/page5.png';
+import page1_desktop from '@/assets/images/page1_desktop.png';
+import page2_desktop from '@/assets/images/page2_desktop.png';
+import page3_desktop from '@/assets/images/page3_desktop.png';
+import page4_desktop from '@/assets/images/page4_desktop.png';
+import page5_desktop from '@/assets/images/page5_desktop.png';
 import Button from '../components/Button';
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isDesktop = window.innerWidth > 1024;
 
   return (
     <main className="">
@@ -23,49 +29,50 @@ export default function Home() {
           </button>
         </nav>
         <section>
-            <Image
-              src={page1}
-              width={1080}
-              height={1920}
+          <Image
+            src={isDesktop ? page1_desktop : page1}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 max-w-[1500px]'
+          />
+        </section>
+        <section>
+        <Image
+              src={isDesktop ? page2_desktop : page2}
+              width={isDesktop ? 2740 : 1080}
+              height={isDesktop ? 1540 : 1920}
               alt='background'
-              className='w-full h-screen object-cover z-0'
+              className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
             />
         </section>
         <section>
         <Image
-              src={page2}
-              width={1080}
-              height={1920}
+              src={isDesktop ? page3_desktop : page3}
+              width={isDesktop ? 2740 : 1080}
+              height={isDesktop ? 1540 : 1920}
               alt='background'
-              className='w-full h-screen object-cover z-0 mt-[-1px]'
+              className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
             />
         </section>
         <section>
         <Image
-              src={page3}
-              width={1080}
-              height={1920}
+              src={isDesktop ? page4_desktop : page4}
+              width={isDesktop ? 2740 : 1080}
+              height={isDesktop ? 1540 : 1920}
               alt='background'
-              className='w-full h-screen object-cover z-0 mt-[-1px]'
-            />
-        </section>
-        <section>
-        <Image
-              src={page4}
-              width={1080}
-              height={1920}
-              alt='background'
-              className='w-full h-screen object-cover z-0 mt-[-1px]'
+              className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
             />
         </section>
         <section className='relative'>
         <Image
-              src={page5}
-              width={1080}
-              height={1920}
+              src={isDesktop ? page5_desktop : page5}
+              width={isDesktop ? 2740 : 1080}
+              height={isDesktop ? 1540 : 1920}
               alt='background'
-              className='w-full h-screen object-cover z-0 mt-[-1px]'
-            />
+              className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
+              
+/>
           <button className='absolute z-4 bg-purpleT3 hover:bg-purpleT2 left-[15%] px-24 rounded-xl truncate py-8 bottom-72' onClick={() => window.location.href = 'https://resenha.app/cadastro'}>Criar conta</button>
           <footer className='absolute bottom-0 mb-12'> 
             <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® 2023 - Todos os direitos reservados.</p>
