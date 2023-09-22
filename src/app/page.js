@@ -2,51 +2,75 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import Vector from "../components/Vector";
-
+import Logo from "@/assets/images/logo.png";
+import page1 from '@/assets/images/page1.png';
+import page2 from '@/assets/images/page2.png';
+import page3 from '@/assets/images/page3.png';
+import page4 from '@/assets/images/page4.png';
+import page5 from '@/assets/images/page5.png';
+import Button from '../components/Button';
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <main className="">
-      <div className='bg-[#5900A0] h-screen w-screen'>
-        <nav className='w-full h-fit bg-[#F1F1F1] p-10 flex flex-row justify-between'>
-          <Vector vectorname={'logo2'} />
+      <div className=' h-screen w-screen'>
+        <nav className='w-full h-fit p-10 flex flex-row justify-between absolute'>
+        <Vector vectorname={'thunder07'} />
 
-          <button onClick={() => setSidebarOpen(true)}>
+          <button onClick={() => setSidebarOpen(true)} className=''>
             <Vector vectorname={'burguer02'} />
           </button>
         </nav>
         <section>
-          <div className='absolute text-[#F1F1F1] z-10 top-[40%] w-full text-center flex justify-center'>
-            <div className='w-[220px] gap-4 flex flex-col'>
-              <div className='flex flex-col'>
-                <h1 className='text-3xl font-bold m-0'>
-                  Resenha.app
-                </h1>
-                <h2 className='font-normal text-xl m-0'>
-                  faça acontecer!
-                </h2>
-              </div>
-              <p className='text-[12px]'>
-                Viva momentos e crie memórias inesquecíveis! Com o resenha.app, <b>você sempre sabe onde vai ser!</b>
-              </p>
-              <div>
-                <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='bg-[#8E00FF] px-16 py-5 rounded-lg text-sm'>Faça parte!</button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className='absolute bg-black opacity-50 z-2 w-screen h-screen' />
             <Image
-              src={'https://media.resenha.app/s/lp/lpbg.jpg'}
-              width={280}
-              height={800}
+              src={page1}
+              width={1080}
+              height={1920}
               alt='background'
               className='w-full h-screen object-cover z-0'
             />
-          </div>
         </section>
-        <section className='bg-F1F1F1 h-fit w-screen'></section>
+        <section>
+        <Image
+              src={page2}
+              width={1080}
+              height={1920}
+              alt='background'
+              className='w-full h-screen object-cover z-0 mt-[-1px]'
+            />
+        </section>
+        <section>
+        <Image
+              src={page3}
+              width={1080}
+              height={1920}
+              alt='background'
+              className='w-full h-screen object-cover z-0 mt-[-1px]'
+            />
+        </section>
+        <section>
+        <Image
+              src={page4}
+              width={1080}
+              height={1920}
+              alt='background'
+              className='w-full h-screen object-cover z-0 mt-[-1px]'
+            />
+        </section>
+        <section className='relative'>
+        <Image
+              src={page5}
+              width={1080}
+              height={1920}
+              alt='background'
+              className='w-full h-screen object-cover z-0 mt-[-1px]'
+            />
+          <button className='absolute z-4 bg-purpleT3 hover:bg-purpleT2 left-[15%] px-24 rounded-xl truncate py-8 bottom-72' onClick={() => window.location.href = 'https://resenha.app/cadastro'}>Criar conta</button>
+          <footer className='absolute bottom-0 mb-12'> 
+            <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® 2023 - Todos os direitos reservados.</p>
+          </footer>
+        </section>
 
         {/* Overlay */}
         <div className={`fixed inset-0 bg-black transition-opacity ${sidebarOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'} z-20`} />
