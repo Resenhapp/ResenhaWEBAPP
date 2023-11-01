@@ -60,9 +60,9 @@ export default function NewEvent() {
           details: details
         });
 
-        if (!response.error && typeof window !== 'undefined') {
+        /*if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/resenhas/';
-        }
+        } para dar o request sem mudar de página*/
       } 
       
       catch (error) {
