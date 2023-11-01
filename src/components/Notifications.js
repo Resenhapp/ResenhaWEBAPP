@@ -70,8 +70,6 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             requested: requested
           });
 
-          console.log(response)
-          
           setNotifications(response.notifications.notifications);
         }
         
