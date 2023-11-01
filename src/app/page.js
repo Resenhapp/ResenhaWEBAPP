@@ -1,62 +1,107 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Vector from "../components/Vector";
+import Logo from "@/assets/images/logo.png";
+import page1 from '@/assets/images/page1.png';
+import page2 from '@/assets/images/page2.png';
+import page3 from '@/assets/images/page3.png';
+import page4 from '@/assets/images/page4.png';
+import page5 from '@/assets/images/page5.png';
+import page1_desktop from '@/assets/images/page1_desktop.png';
+import page2_desktop from '@/assets/images/page2_desktop.png';
+import page3_desktop from '@/assets/images/page3_desktop.png';
+import page4_desktop from '@/assets/images/page4_desktop.png';
+import page5_desktop from '@/assets/images/page5_desktop.png';
+import Button from '../components/Button';
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth > 1024);
+
+    //listener para atualizar a largura quando a janela for redimensionada
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <main className="">
-      <div className='bg-[#5900A0] h-screen w-screen'>
-        <nav className='w-full h-fit bg-[#F1F1F1] p-10 flex flex-row justify-between'>
-          <Vector vectorname={'logo2'} />
-
-          <button onClick={() => setSidebarOpen(true)}>
+      <div className=' h-screen w-screen'>
+        <nav className='w-full h-fit p-10 flex flex-row justify-between absolute'>
+          <Vector vectorname={'thunder07'} />
+          <button onClick={() => setSidebarOpen(true)} className=''>
             <Vector vectorname={'burguer02'} />
           </button>
         </nav>
         <section>
-          <div className='absolute text-[#F1F1F1] z-10 top-[40%] w-full text-center flex justify-center'>
-            <div className='w-[220px] gap-4 flex flex-col'>
-              <div className='flex flex-col'>
-                <h1 className='text-3xl font-bold m-0'>
-                  Resenha.app
-                </h1>
-                <h2 className='font-normal text-xl m-0'>
-                  faça acontecer!
-                </h2>
-              </div>
-              <p className='text-[12px]'>
-                Viva momentos e crie memórias inesquecíveis! Com o resenha.app, <b>você sempre sabe onde vai ser!</b>
-              </p>
-              <div>
-                <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='bg-[#8E00FF] px-16 py-5 rounded-lg text-sm'>Faça parte!</button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className='absolute bg-black opacity-50 z-2 w-screen h-screen' />
-            <Image
-              src={'https://media.resenha.app/s/lp/lpbg.jpg'}
-              width={280}
-              height={800}
-              alt='background'
-              className='w-full h-screen object-cover z-0'
-            />
-          </div>
+          <Image
+            src={isDesktop ? page1_desktop : page1}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 max-w-[1500px]'
+          />
         </section>
-        <section className='bg-F1F1F1 h-fit w-screen'></section>
+        <section>
+          <Image
+            src={isDesktop ? page2_desktop : page2}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
+          />
+        </section>
+        <section>
+          <Image
+            src={isDesktop ? page3_desktop : page3}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
+          />
+        </section>
+        <section>
+          <Image
+            src={isDesktop ? page4_desktop : page4}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
+          />
+        </section>
+        <section className='relative'>
+          <Image
+            src={isDesktop ? page5_desktop : page5}
+            width={isDesktop ? 2740 : 1080}
+            height={isDesktop ? 1540 : 1920}
+            alt='background'
+            className='w-full h-screen object-cover z-0 mt-[-1px] max-w-[1500px]'
+          />
+          <button className='absolute z-4 bg-purpleT3 hover-bg-purpleT2 left-[15%] px-24 rounded-xl truncate py-8 bottom-72' onClick={() => window.location.href = 'https://resenha.app/cadastro'}>Criar conta</button>
+          <footer className='absolute bottom-0 mb-12'>
+            <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® 2023 - Todos os direitos reservados.</p>
+          </footer>
+        </section>
 
         {/* Overlay */}
         <div className={`fixed inset-0 bg-black transition-opacity ${sidebarOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'} z-20`} />
 
         {/* Sidebar */}
         <div className={`fixed inset-y-0 right-0 w-full bg-purpleT0 max-w-md z-30 transform transition-transform ease-in-out duration-500 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className='flex flex-col py-20 px-4 flex-start gap-8 mt-12'>
-          <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Criar conta</button>
+          <div className='flex flex-col py-20 px-4 flex-start gap-8 mt-12'>
+            <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Criar conta</button>
             <button onClick={() => window.location.href = 'https://resenha.app/login'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Fazer login</button>
-        </div>
+          </div>
           <div className='absolute top-0 left-0 p-8'>
             <button onClick={() => setSidebarOpen(false)}>
               <Vector vectorname={'xmark02'} />
@@ -66,5 +111,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }
