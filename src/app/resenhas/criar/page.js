@@ -236,7 +236,7 @@ const handlePiece02EndHourSelect = (endHour) => {
       break;
     case 5:
       title = 'E que tal uma foto?';
-      subtitle = 'Pronto! Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
+      subtitle = 'Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
       buttonText = 'Criar!';
       break;
     default:
@@ -247,7 +247,7 @@ const handlePiece02EndHourSelect = (endHour) => {
 
   return (
     <div className='flex flex-col justify-around w-screen h-screen'>
-      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
+      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-8'>
         <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
           {title}
         </h1>

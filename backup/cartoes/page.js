@@ -17,7 +17,6 @@ export default function CreditCards() {
             setSelectedCard(index);
             return true;
         } else if (index === selectedCard) {
-            alert("Você precisa ter ao menos um cartão selecionado");
             return false;
         }
         return true;

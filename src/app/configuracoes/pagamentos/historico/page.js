@@ -72,15 +72,19 @@ export default function BuyHistory() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                {purchases.map((purchase) => 
+                            {purchases.length > 0 ? (
+                                purchases.map((purchase) => (
                                     <NotificationBase
-                                        key={purchase.id}
-                                        imageUrl={purchase.hash ? `https://media.resenha.app/r/${purchase.hash}.png` : undefined}
-                                        title={'Compra de entrada'}
-                                        description={`Você pagou R$ ${purchase.price} pela entrada da ${purchase.name}. Seu código é ${purchase.code}`}
-                                        date={purchase.date}
+                                    key={purchase.id}
+                                    imageUrl={purchase.hash ? `https://media.resenha.app/r/${purchase.hash}.png` : undefined}
+                                    title={'Compra de entrada'}
+                                    description={`Você pagou R$ ${purchase.price} pela entrada da ${purchase.name}. Seu código é ${purchase.code}`}
+                                    date={purchase.date}
                                     />
-                                )}
+                                ))
+                                ) : (
+                                <p>Você ainda não realizou pagamentos 😔</p>
+                            )}
                             </div>
                         </div>
                     </div>
