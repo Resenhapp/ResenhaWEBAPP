@@ -63,12 +63,8 @@ export default function NewEvent() {
 
         if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/resenhas/';
-<<<<<<< Updated upstream
-        } 
-=======
         }
         */
->>>>>>> Stashed changes
       } 
       
       catch (error) {
