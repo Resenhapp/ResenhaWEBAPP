@@ -59,10 +59,16 @@ export default function NewEvent() {
           token: token,
           details: details
         });
+/*      Para dar o request sem trocar de página
 
         if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/resenhas/';
+<<<<<<< Updated upstream
         } 
+=======
+        }
+        */
+>>>>>>> Stashed changes
       } 
       
       catch (error) {
