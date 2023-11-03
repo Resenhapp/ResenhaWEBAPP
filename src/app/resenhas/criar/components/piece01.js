@@ -57,7 +57,6 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
                 showLabel={true}
                 showQuestion={false}
                 startToggled={toggleValue}
-                value={maiority}
                 textColor='white'
             />
         </div>
