@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/react": "^18.2.34",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",

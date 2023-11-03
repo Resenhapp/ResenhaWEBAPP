@@ -8,7 +8,6 @@ export default function Confirmation({
   PartyName,
   PartyOwner,
   PartyDateDay,
-  PartyDay,
   PartyMonth,
   PartyHour,
   PartyAddress,
