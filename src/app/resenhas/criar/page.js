@@ -59,11 +59,10 @@ export default function NewEvent() {
           token: token,
           details: details
         });
-/*
+
         if (!response.error && typeof window !== 'undefined') {
           window.location.href = '/resenhas/';
         }
-        */
       } 
       
       catch (error) {
