@@ -1,7 +1,5 @@
 {
     "files.associations": {
         "*.css": "tailwindcss"
-      },
-      "thunder-client.saveToWorkspace": true,
-      "thunder-client.httpLibrary": "axios"
+      }
 }
