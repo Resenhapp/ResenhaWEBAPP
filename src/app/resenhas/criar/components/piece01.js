@@ -6,7 +6,7 @@ import Toggle from '@/src/components/Toggle';
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const [toggleValue, setToggleValue] = useState(true);
+    const [maiority, setToggleValue] = useState(true);
 
     useEffect(() => {
         if (name && address) {
@@ -56,7 +56,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
                 labelText='Resenha para +18?'
                 showLabel={true}
                 showQuestion={false}
-                startToggled={toggleValue}
+                value={maiority}
                 textColor='white'
             />
         </div>
