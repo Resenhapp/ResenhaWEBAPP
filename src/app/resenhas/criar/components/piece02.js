@@ -8,8 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Modal from '@/src/components/Modal';
 import ptBR from 'date-fns/locale/pt-BR';
 import ReactInputMask from 'react-input-mask';
-
-//import TimePicker from '@/src/components/TimePicker';
+import TimePicker from '@/src/components/TimePicker';
 
 registerLocale('pt', ptBR)
 

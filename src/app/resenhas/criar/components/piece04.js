@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Vector from '@/src/components/Vector';
 import Tag from '@/src/components/Tag';
-import Modal from '@/src/components/Modal';
 import { tagsData } from '@/src/components/tagsData';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Modal from '@/src/components/Modal';
 
 const Piece04 = ({descriptionContent, selectedTags}) => {
     const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);

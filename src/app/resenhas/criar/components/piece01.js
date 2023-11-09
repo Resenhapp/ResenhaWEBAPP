@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
-import AddressField from '@/src/components/AddressField';
 import Toggle from '@/src/components/Toggle';
+import AddressField from '@/src/components/AddressField';
 
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
     const [name, setName] = useState('');
