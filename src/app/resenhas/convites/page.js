@@ -65,6 +65,35 @@ export default function MyInvites() {
 
     var { partiesWent } = data
 
+
+    if (!partiesWent) {
+      return(
+        <div className='flex flex-col w-screen h-screen'>
+          <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
+          <div className="flex flex-col items-center justify-center h-screen px-4">
+            <section className="flex flex-start items-center w-full max-w-md p-4">
+              <div className='h3 w-full flex'>
+                <div className='w-full flex flex-col'>
+                  <div className='w-full align-center justify-center items-center mb-4 flex flex-row'>
+                    <h2>Você não possui nenhum convite:</h2>
+                  </div>
+                  <div className='w-full h-full flex flex-col'>
+                    <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
+              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+            </div>
+          </div>
+        </div>
+
+      );
+
+    }
+
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
@@ -77,7 +106,7 @@ export default function MyInvites() {
                   </div>
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                      {partiesWent.map((party) => (
+                      {partiesWent && partiesWent.map((party) => (
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
