@@ -1,16 +1,23 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
-import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import MyParty from '@/src/components/MyParty';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+import Link from 'next/link'
+import Back from '@/src/components/Back';
+import PartyPortrait from '@/src/components/PartyPortrait';
+import DefaulEventImage from '@/assets/images/default.jpg';
 
 import { useState } from "react";
 import { useEffect } from 'react';
+
+const handleNavigation = (pageToGo) => {
+  if (typeof window !== 'undefined') {
+      window.location.href = `/${pageToGo}`;
+  }
+};
 
 export default function MyInvites() {
     const token = Cookies.get('token');
@@ -63,10 +70,10 @@ export default function MyInvites() {
         );
     }
 
-    var { partiesWent } = data
+    var { parties } = data
 
 
-    if (partiesWent === null) {
+    if (parties === null) {
       return(
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
@@ -85,7 +92,7 @@ export default function MyInvites() {
               </div>
             </section>
             <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
           </div>
         </div>
@@ -103,16 +110,18 @@ export default function MyInvites() {
                   </div>
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                      {partiesWent && partiesWent.map((party) => (
+                      {parties.went.map((party) => (
                         <div key={party.id}>
+                          <Link href="/feed" prefetch={true}> 
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                             partyCode={party.token}
                             partyGuests={party.confirmed}
                             partyDate={party.date}
-                            partyHour={party.time}
+                            partyHour={party.start} 
                             partyName={party.name}
                           />
+                          </Link>
                         </div>
                       ))}
                     </div>
@@ -121,7 +130,7 @@ export default function MyInvites() {
               </div>
             </section>
             <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
           </div>
         </div>
