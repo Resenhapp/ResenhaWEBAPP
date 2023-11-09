@@ -77,9 +77,9 @@ export default function Wallet() {
     var { balances } = data;
 
     return (
-        <div className='flex flex-col w-screen h-screen '>
+        <div className='flex flex-col w-screen h-screen  '>
             <PageHeader pageTitle={'Carteira'} userData={data} />
-            <div className="flex flex-col  justify-start h-screen px-4 ">
+            <div className="flex flex-col items-center justify-center px-4">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
                         <div className='w-full flex flex-col items-center gap-4'>
