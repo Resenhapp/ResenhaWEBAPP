@@ -15,7 +15,7 @@ registerLocale('pt', ptBR)
 
 
 const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
-    const [hasEnd, setHasEnd] = useState(false);
+    const [hasEnd, setHasEnd] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [startTime, setStartTime] = useState(new Date());
@@ -67,10 +67,12 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
 
     const handleToggleChange = (isChecked) => {
-        onToggleChange(!isChecked);
+        onToggleChange(isChecked);
         setHasEnd(isChecked);
-        if (isChecked) {
-            setEndHourSelected(true);
+        if (!isChecked) {
+            setEndHourSelected(false);
+            setHasEnd(!isChecked);
+            onToggleChange(!isChecked);
         }
     };
 

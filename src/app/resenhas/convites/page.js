@@ -66,7 +66,7 @@ export default function MyInvites() {
     var { partiesWent } = data
 
 
-    if (!partiesWent) {
+    if (partiesWent === null) {
       return(
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
@@ -89,12 +89,9 @@ export default function MyInvites() {
             </div>
           </div>
         </div>
-
       );
-
-    }
-
-    return (
+    } else {
+      return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
           <div className="flex flex-col items-center justify-center h-screen px-4">
@@ -129,4 +126,5 @@ export default function MyInvites() {
           </div>
         </div>
     );
+    }
 }
