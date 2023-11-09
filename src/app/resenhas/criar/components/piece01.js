@@ -6,7 +6,7 @@ import Toggle from '@/src/components/Toggle';
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const [maiority, setToggleValue] = useState(true);
+    const [maiority, setToggleValue] = useState('');
 
     useEffect(() => {
         if (name && address) {
@@ -31,6 +31,11 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     const handleToggleChange = (isChecked) => {
         setToggleValue(isChecked);
         onToggleChange(isChecked);
+
+        if (!isChecked){
+            setToggleValue(!isChecked);
+            onToggleChange(!isChecked);
+        }
     };
 
     return (
