@@ -26,6 +26,8 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const [partyCode, setPartyCode] = useState("");
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -38,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 2 > maxProgress) {  
       const details = {
         name,
         address,
@@ -59,17 +61,21 @@ export default function NewEvent() {
           token: token,
           details: details
         });
-/*      Para dar o request sem trocar de página
 
         if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
+          setPartyCode(response.code);
+
+          setProgress(progress + 1);
         }
-        */
-      } 
+      }
       
       catch (error) {
         console.error(error);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -107,20 +113,28 @@ export default function NewEvent() {
 
   const handlePiece02StartHourSelect = (startHour) => {
     const date = new Date(startHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const formattedStartHour = `${hours}:${minutes}`;
+    const formattedStartHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setStart(formattedStartHour);
     console.log(formattedStartHour);
 };
 
 const handlePiece02EndHourSelect = (endHour) => {
     const date = new Date(endHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const formattedEndHour = `${hours}:${minutes}`;
+    const formattedEndHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setEnd(formattedEndHour);
     console.log(formattedEndHour);
 };
@@ -193,7 +207,7 @@ const handlePiece02EndHourSelect = (endHour) => {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;

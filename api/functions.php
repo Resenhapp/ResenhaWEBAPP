@@ -2526,6 +2526,12 @@ function tryToCreateEvent()
 
         $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
 
+        $returnData = [
+            'code' => $code
+        ];
+
+        returnData($returnData);
+
         $embed = [
             'title' => 'Nova resenha criada!',
             'color' => hexdec('7d00ff'),

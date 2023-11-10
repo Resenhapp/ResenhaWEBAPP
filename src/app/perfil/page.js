@@ -259,7 +259,7 @@ export default function Profile() {
                                           </div>
                                         ))
                                       ) : (
-                                        <div className='text-purpleT5'>
+                                        <div className='text-base'>
                                           Por enquanto ninguém comentou por aqui 😢
                                         </div>
                                       )}
