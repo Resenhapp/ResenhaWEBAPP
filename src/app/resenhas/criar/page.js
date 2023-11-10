@@ -26,6 +26,8 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const [partyCode, setPartyCode] = useState("");
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -38,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 2 > maxProgress) {  
       const details = {
         name,
         address,
@@ -61,13 +63,19 @@ export default function NewEvent() {
         });
 
         if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
+          setPartyCode(response.code);
+
+          setProgress(progress + 1);
         }
-      } 
+      }
       
       catch (error) {
         console.error(error);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -199,7 +207,7 @@ const handlePiece02EndHourSelect = (endHour) => {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;
