@@ -14,7 +14,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 
     useEffect(() => {
         const loader = new Loader({
-          apiKey: "AIzaSyBXZTVLMeQG7r8t1NvyV9dtmNarY7WxrH8",
+          apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
           libraries: ["places"]
         });
     
