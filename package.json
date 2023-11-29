@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.2",
+    "@reach/combobox": "^0.18.0",
+    "@react-google-maps/api": "^2.19.2",
     "@types/react": "^18.2.34",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
