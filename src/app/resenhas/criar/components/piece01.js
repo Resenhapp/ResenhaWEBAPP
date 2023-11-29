@@ -14,46 +14,46 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 
     useEffect(() => {
         const loader = new Loader({
-            apiKey: "AIzaSyBXZTVLMeQG7r8t1NvyV9dtmNarY7WxrH8", // Coloque sua chave da API do Google Maps aqui
-            libraries: ["places"]
+          apiKey: "AIzaSyBXZTVLMeQG7r8t1NvyV9dtmNarY7WxrH8",
+          libraries: ["places"]
         });
-
+    
         loader.importLibrary().then(() => {
-            const input = addressInputRef.current;
-
-            if (input) {
-                const autocomplete = new window.google.maps.places.Autocomplete(input);
-
-                autocomplete.addListener('place_changed', () => {
-                    const place = autocomplete.getPlace();
-                    if (!place.geometry || !place.geometry.location) {
-                        window.alert("No details available for input: '" + place.name + "'");
-                        return;
-                    }
-                    setAddress(place.formatted_address || '');
-                });
-
-                input.addEventListener('input', () => {
-                    const inputText = input.value;
-                    const autocompleteService = new window.google.maps.places.AutocompleteService();
-
-                    autocompleteService.getPlacePredictions(
-                        { input: inputText },
-                        (predictions, status) => {
-                            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                                setSuggestions(predictions.map((prediction) => prediction.description));
-                            } else {
-                                console.error('Error fetching suggestions:', status);
-                                setSuggestions([]);
-                            }
-                        }
-                    );
-                });
-            } else {
-                console.error('Element with ID "pac-input" not found.');
-            }
+          const input = addressInputRef.current;
+    
+          if (input) {
+            const autocomplete = new window.google.maps.places.Autocomplete(input);
+    
+            autocomplete.addListener('place_changed', () => {
+              const place = autocomplete.getPlace();
+              if (!place.geometry || !place.geometry.location) {
+                window.alert("No details available for input: '" + place.name + "'");
+                return;
+              }
+              setAddress(place.formatted_address || '');
+            });
+    
+            input.addEventListener('input', () => {
+              const inputText = input.value;
+              const autocompleteService = new window.google.maps.places.AutocompleteService();
+    
+              autocompleteService.getPlacePredictions(
+                { input: inputText },
+                (predictions, status) => {
+                  if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    setSuggestions(predictions.map((prediction) => prediction.description));
+                  } else {
+                    console.error('Error fetching suggestions:', status);
+                    setSuggestions([]);
+                  }
+                }
+              );
+            });
+          } else {
+            console.error('Element with ID "pac-input" not found.');
+          }
         });
-    }, []);
+      }, []); 
 
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
@@ -91,21 +91,6 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
             return response.data;
         } catch (error) {
             throw new Error(`Request failed: ${error}`);
-        }
-    };
-
-    const sendDataToPHP = async () => {
-        try {
-            const url = 'https://api.resenha.app/'; // Substitua pela URL real da sua API PHP
-            const requestData = {
-                name: name,
-                address: address,
-                majority: maiority,
-            };
-            const responseData = await makeRequest(url, requestData);
-            console.log('Resposta da API:', responseData);
-        } catch (error) {
-            console.error('Erro ao enviar dados para a API:', error);
         }
     };
 
