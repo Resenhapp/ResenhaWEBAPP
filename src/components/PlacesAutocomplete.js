@@ -25,23 +25,22 @@ export default function PlacesAutocomplete() {
   useEffect(() => {
     const loader = new Loader({
       apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
-      version: "weekly", // Defina a versão da API do Google Maps que deseja usar
-      libraries,
+      version: "weekly",
+      libraries // Defina a versão da API do Google Maps que deseja usar
     });
 
-    loader.load()
-      .then(() => {
-        setIsLoaded(true);
-        const service = new window.google.maps.places.PlacesService(
-          document.createElement("div")
-        );
-        setPlacesService(service);
-      })
-      .catch((error) => {
-        setLoadError(true);
-        console.error('Erro ao carregar a API do Google Maps:', error);
-      });
+    loader.importLibrary("places").then(() => {
+      setIsLoaded(true);
+      const service = new window.google.maps.places.PlacesService(
+        document.createElement("div")
+      );
+      setPlacesService(service);
+    }).catch((error) => {
+      setLoadError(true);
+      console.error('Erro ao carregar a API do Google Maps:', error);
+    });
   }, []);
+
 
   const {
     ready,
@@ -73,7 +72,7 @@ export default function PlacesAutocomplete() {
               onChange={(e) => setValue(e.target.value)}
               disabled={!ready}
               className="pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5"
-              placeholder="Procure o Endereço"
+              placeholder="Search an address"
             />
             <ComboboxPopover>
               <ComboboxList>
