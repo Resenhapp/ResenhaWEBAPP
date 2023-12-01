@@ -26,7 +26,7 @@ export default function PlacesAutocomplete() {
     const loader = new Loader({
       apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
       version: "weekly",
-      libraries // Defina a versão da API do Google Maps que deseja usar
+      libraries,
     });
 
     loader.importLibrary("places").then(() => {
@@ -40,7 +40,6 @@ export default function PlacesAutocomplete() {
       console.error('Erro ao carregar a API do Google Maps:', error);
     });
   }, []);
-
 
   const {
     ready,
@@ -90,6 +89,13 @@ export default function PlacesAutocomplete() {
         </div>
       ) : (
         <div>{loadError ? "Error ao carregar" : "Carregando..."}</div>
+      )}
+
+      {/* Exibindo a latitude e longitude */}
+      {selectedLocation && (
+        <div>
+          Latitude: {selectedLocation.lat}, Longitude: {selectedLocation.lng}
+        </div>
       )}
     </>
   );

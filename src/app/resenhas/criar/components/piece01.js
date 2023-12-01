@@ -111,11 +111,11 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     }
   }, [name, filled]);
 
-  const handleAddressSelect = (selectedLocation) => {
-    setSelectedLocation(selectedLocation);
-    if (selectedLocation) {
-      console.log('Latitude:', selectedLocation.lat);
-      console.log('Longitude:', selectedLocation.lng);
+  const handleAddressSelect = (location) => {
+    setSelectedLocation(location);
+    if (location) {
+      console.log('Latitude:', location.lat);
+      console.log('Longitude:', location.lng);
     }
   };
 
@@ -130,7 +130,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
         Required={true}
       />
       <PlacesAutocomplete
-        setSelected={handleAddressSelect} // Atualizado para 'setSelected' para definir a localização selecionada
+        setSelected={handleAddressSelect}
         action={handleAddressChange}
         Icon='pin'
         showIcon={true}
