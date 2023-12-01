@@ -1,6 +1,5 @@
-'use client'
-
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -10,8 +9,12 @@ import Piece05 from './components/piece05';
 import Loading from '@/src/components/Loading';
 import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
+import { Loader } from "@googlemaps/js-api-loader";
 
 export default function NewEvent() {
+  const [placesService, setPlacesService] = useState(null);
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+  
   const token = Cookies.get('token');
 
   if (!token) {
@@ -38,6 +41,27 @@ export default function NewEvent() {
         throw new Error(`Request failed: ${error}`);
     }
   };
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+      version: "weekly",
+      libraries: ["places"],
+    });
+
+    loader.importLibrary("places")
+      .then(() => {
+        const service = new window.google.maps.places.PlacesService(
+          document.createElement("div")
+        );
+        setPlacesService(service);
+        setIsMapsLoaded(true); // Define isMapsLoaded como true quando o serviço é carregado com sucesso
+      })
+      .catch((error) => {
+        console.error('Erro ao carregar a API do Google Maps:', error);
+        setIsMapsLoaded(false); // Define isMapsLoaded como false em caso de erro no carregamento
+      });
+  }, []);
 
   const handleNextStep = async () => {
     if (progress + 2 > maxProgress) {  
@@ -176,39 +200,44 @@ const handlePiece02EndHourSelect = (endHour) => {
       case 0:
         return <Loading />;
       case 1:
-        return (
-            <Piece01
+        return isMapsLoaded ? (
+          <Piece01
+            placesService={placesService}
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
           />
-          
-        );
+        ) : null;
       case 2:
-        return (
+        return isMapsLoaded ? (
           <Piece02
-          onToggleChange={setHasTimeToEnd}
-          onStartHourSelect={handlePiece02StartHourSelect}
-          onEndHourSelect={handlePiece02EndHourSelect}
-          onDateSelect={handlePiece02DateSelect}
-          filled={setIsFilled}
-        />
-        );
+            onToggleChange={setHasTimeToEnd}
+            onStartHourSelect={handlePiece02StartHourSelect}
+            onEndHourSelect={handlePiece02EndHourSelect}
+            onDateSelect={handlePiece02DateSelect}
+            filled={setIsFilled}
+          />
+        ) : null;
       case 3:
-        return (<Piece03 
-          guestsAmount={handlePiece03GuestsSelect}
-          priceAmount={handlePiece03PriceSelect}
-          onFillingComplete={setIsFilled}
-        />);
+        return isMapsLoaded ? (
+          <Piece03 
+            guestsAmount={handlePiece03GuestsSelect}
+            priceAmount={handlePiece03PriceSelect}
+            onFillingComplete={setIsFilled}
+          />
+        ) : null;
       case 4:
-        return (<Piece04 
-        descriptionContent={handlePiece04DescriptionChange}
-        selectedTags={handlePiece04TagsChange}/>);
+        return isMapsLoaded ? (
+          <Piece04 
+            descriptionContent={handlePiece04DescriptionChange}
+            selectedTags={handlePiece04TagsChange}
+          />
+        ) : null;
       case 5:
-        return (<Piece05
-        filled={setIsFilled} partyCode={partyCode}
-        />);
+        return isMapsLoaded ? (
+          <Piece05 filled={setIsFilled} partyCode={partyCode} />
+        ) : null;
       default:
         return null;
     }
