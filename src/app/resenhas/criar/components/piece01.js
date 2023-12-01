@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import Toggle from '@/src/components/Toggle';
@@ -63,8 +64,11 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 };
 
 export default Piece01;
+*/
 
-/*
+
+
+
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import Toggle from '@/src/components/Toggle';
@@ -87,6 +91,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     setAddress(value);
     onAddressFieldChange(value);
   };
+
 
   const handleToggleChange = (isChecked) => {
     setToggleValue(isChecked);
@@ -146,4 +151,3 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 };
 
 export default Piece01;
-*/

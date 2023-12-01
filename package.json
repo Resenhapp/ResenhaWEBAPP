@@ -44,6 +44,8 @@
     "use-places-autocomplete": "^4.0.1"
   },
   "devDependencies": {
-    "@types/google.maps": "^3.54.9"
+    "@types/google.maps": "^3.54.10",
+    "@types/node": "20.10.1",
+    "typescript": "5.3.2"
   }
 }
