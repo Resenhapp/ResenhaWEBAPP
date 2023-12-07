@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';

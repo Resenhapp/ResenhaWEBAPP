@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import Toggle from '@/src/components/Toggle';
@@ -63,19 +64,40 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 };
 
 export default Piece01;
+*/
 
-/*
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import Toggle from '@/src/components/Toggle';
-import PlacesAutocomplete from '@/src/components/PlacesAutocomplete'; // Importando o componente PlacesAutocomplete
+import PlacesAutocomplete from '@/src/components/PlacesAutocomplete';
+import { Loader } from '@googlemaps/js-api-loader';
 
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
   const [name, setName] = useState('');
   const [maiority, setToggleValue] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [address, setAddress] = useState('');
+  const [placesService, setPlacesService] = useState(null);
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
 
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+      version: 'weekly',
+      libraries: ['places'],
+    });
+
+    loader.importLibrary('places')
+      .then(() => {
+        const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+        setPlacesService(service);
+        setIsMapsLoaded(true);
+      })
+      .catch((error) => {
+        console.error('Erro ao carregar a API do Google Maps:', error);
+        setIsMapsLoaded(false);
+      });
+  }, []);
 
   const handleNameFieldChange = (event) => {
     const value = event.target.value;
@@ -106,13 +128,17 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     }
   }, [name, filled]);
 
-  const handleAddressSelect = (selectedLocation) => {
-    setSelectedLocation(selectedLocation);
-    if (selectedLocation) {
-      console.log('Latitude:', selectedLocation.lat);
-      console.log('Longitude:', selectedLocation.lng);
+  const handleAddressSelect = (location) => {
+    setSelectedLocation(location);
+    if (location) {
+      console.log('Latitude:', location.lat);
+      console.log('Longitude:', location.lng);
     }
   };
+
+  if (!isMapsLoaded) {
+    return <div>Carregando...</div>; // Pode ser um componente de carregamento
+  }
 
   return (
     <div className='w-full flex flex-col h-fit gap-3'>
@@ -124,15 +150,22 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
         value={name}
         Required={true}
       />
-      <PlacesAutocomplete
-        setSelected={handleAddressSelect} // Atualizado para 'setSelected' para definir a localização selecionada
-        action={handleAddressChange}
-        Icon='pin'
-        showIcon={true}
-        placeholder='Endereço'
-        value={address}
-        Required={true}
-      />
+      {placesService && (
+        <PlacesAutocomplete
+          setSelected={handleAddressSelect}
+          action={handleAddressChange}
+          Icon='pin'
+          showIcon={true}
+          placeholder='Endereço'
+          value={address}
+          Required={true}
+          placesService={placesService}
+          options={{
+            types: ['geocode'],
+            componentRestrictions: { country: "BR" }
+          }}
+        />
+      )}
       <Toggle
         onToggle={handleToggleChange}
         labelText='Resenha para +18?'
@@ -146,4 +179,3 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
 };
 
 export default Piece01;
-*/
