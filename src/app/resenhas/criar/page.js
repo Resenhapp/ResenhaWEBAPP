@@ -58,13 +58,15 @@ export default function NewEvent() {
           request: 'tryToCreateEvent',
           token: token,
           details: details
-        });
-/*      Para dar o request sem trocar de página
+      });
 
-        if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
-        }
-        */
+      /* Para dar o request sem trocar de página
+
+      if (!response.error && typeof window !== 'undefined') {
+        window.location.href = '/resenhas/';
+      }
+      
+      */
       } 
       
       catch (error) {
