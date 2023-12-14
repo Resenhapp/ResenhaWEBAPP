@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -26,6 +26,8 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const [partyCode, setPartyCode] = useState("");
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -38,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 2 > maxProgress) {  
       const details = {
         name,
         address,
@@ -61,13 +63,19 @@ export default function NewEvent() {
         });
 
         if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
+          setPartyCode(response.code);
+
+          setProgress(progress + 1);
         }
-      } 
+      }
       
       catch (error) {
         console.error(error);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -199,7 +207,7 @@ const handlePiece02EndHourSelect = (endHour) => {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;
@@ -236,7 +244,7 @@ const handlePiece02EndHourSelect = (endHour) => {
       break;
     case 5:
       title = 'E que tal uma foto?';
-      subtitle = 'Pronto! Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
+      subtitle = 'Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
       buttonText = 'Criar!';
       break;
     default:
@@ -247,7 +255,7 @@ const handlePiece02EndHourSelect = (endHour) => {
 
   return (
     <div className='flex flex-col justify-around w-screen h-screen'>
-      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
+      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-8'>
         <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
           {title}
         </h1>

@@ -21,7 +21,7 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     const axios = require('axios');
     const qs = require('qs');
 
-    var updateInterval = 150;
+    var updateInterval = 3;
   
     const makeRequest = async (url, data) => {
       try {

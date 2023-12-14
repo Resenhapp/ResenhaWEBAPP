@@ -65,6 +65,7 @@ export default function RootLayout({ children }) {
         <div className='w-80 h-80 animate-up-down bg-transparent rounded-full moreffect fixed z-[-1] left-[920px] top-[256px]' />
         <div className='w-80 h-80 animate-left-right bg-transparent rounded-full moreffect fixed z-[-1] left-[920px] top-[656px]' />
         <div className='w-80 h-80 animate-left-right bg-transparent rounded-full moreffect fixed z-[-1] left-[-600px] top-[656px]' />
+        {/* <p className='absolute top-0 left-1 opacity-30'>Resenha.app versão 1.3.2</p> */}
         {children}
       </body>
     </html>

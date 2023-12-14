@@ -158,8 +158,12 @@ export default function Profile() {
                                 {activeTab === 'Sobre' && (
                                     <div> {/* CONTEUDO DE SOBRE */}
                                         <div className='w-full'>
-                                            <h1 className='font-bold text-lg'>Resumo</h1>
+                                        <h1 className='font-bold text-lg'>Resumo</h1>
+                                        {about && about.trim() !== "" ? (
                                             <p>{about}</p>
+                                        ) : (
+                                            <p>Ainda não decidi meu resumo 🥶</p>
+                                        )}
                                         </div>
                                         <div className='w-full mt-4'>
                                             {interests.length > 0 && (
@@ -189,67 +193,78 @@ export default function Profile() {
                                 )}
 
                                 {activeTab === 'Resenhas' && (
-                                    <div>
-                                        {/* CONTEUDO DE RESENHAS */}
-                                        <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                        {parties.went.some((party) => party.used !== 1) && (
-                                            <div className='text-purpleT5'>
-                                                Vou
-                                            </div>
-                                        )}
-                                        {parties.went.map((party) => (
-                                            party.used !== 1 ? (
-                                            <ProfileEvent
-                                                key={party.hash}
-                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                                                partyGuests={party.confirmed}
-                                                partyDate={party.date}
-                                                partyHour={party.start}
-                                                partyName={party.name}
-                                                eventCode={party.code}
-                                            />
-                                            ) : null
-                                        ))}
-                                        {parties.went.some((party) => party.used === 1) && (
-                                            <div className='text-purpleT5'>
-                                                Fui
-                                            </div>
-                                        )}
-                                        {parties.went.map((party) => (
-                                            party.used === 1 ? (
-                                            <ProfileEvent
-                                                key={party.hash}
-                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                                                partyGuests={party.confirmed}
-                                                partyDate={party.date}
-                                                partyHour={party.time}
-                                                partyName={party.name}
-                                                eventCode={party.code}
-                                            />
-                                            ) : null
-                                        ))}
+                                <div>
+                                    {/* CONTEUDO DE RESENHAS */}
+                                    <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                    {parties.went.some((party) => party.used !== 1) && (
+                                        <div className='text-purpleT5'>
+                                        Vou
                                         </div>
+                                    )}
+                                    {parties.went.map((party) => (
+                                        party.used !== 1 ? (
+                                        <ProfileEvent
+                                            key={party.hash}
+                                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                            partyGuests={party.confirmed}
+                                            partyDate={party.date}
+                                            partyHour={party.start}
+                                            partyName={party.name}
+                                            eventCode={party.code}
+                                        />
+                                        ) : null
+                                    ))}
+                                    {parties.went.some((party) => party.used === 1) && (
+                                        <div className='text-purpleT5'>
+                                        Fui
+                                        </div>
+                                    )}
+                                    {parties.went.map((party) => (
+                                        party.used === 1 ? (
+                                        <ProfileEvent
+                                            key={party.hash}
+                                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                            partyGuests={party.confirmed}
+                                            partyDate={party.date}
+                                            partyHour={party.time}
+                                            partyName={party.name}
+                                            eventCode={party.code}
+                                        />
+                                        ) : null
+                                    ))}
+                                    {!(parties.went.some((party) => party.used !== 1) || parties.went.some((party) => party.used === 1)) && (
+                                        <div className='text-base'>
+                                        Ainda não participei de resenhas 😢
+                                        </div>
+                                    )}
                                     </div>
+                                </div>
                                 )}
 
                                 {activeTab === 'Comentários' && (
                                     <div>
-                                        <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                        {comments.map((comment) => (
-                                            <div key={comment.id}>
-                                                <Comment
-                                                    userName={comment.name}
-                                                    imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
-                                                    rate={parseInt(comment.rate)}
-                                                    comment={comment.content}
-                                                    day={parseInt(comment.date.split('/')[0])}
-                                                    month={parseInt(comment.date.split('/')[1])}
-                                                    userUrl={`https://resenha.app/perfil?u=${comment.username}`}
-                                                />
-                                            </div>
-                                        ))}
+                                    <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                      {comments.length > 0 ? (
+                                        comments.map((comment) => (
+                                          <div key={comment.id}>
+                                            <Comment
+                                              userName={comment.name}
+                                              imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
+                                              rate={parseInt(comment.rate)}
+                                              comment={comment.content}
+                                              day={parseInt(comment.date.split('/')[0])}
+                                              month={parseInt(comment.date.split('/')[1])}
+                                              userUrl={`https://resenha.app/perfil?u=${comment.username}`}
+                                            />
+                                          </div>
+                                        ))
+                                      ) : (
+                                        <div className='text-base'>
+                                          Por enquanto ninguém comentou por aqui 😢
                                         </div>
+                                      )}
                                     </div>
+                                  </div>
                                 )}
                             </div>
                         </div>

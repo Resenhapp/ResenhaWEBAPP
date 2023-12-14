@@ -305,14 +305,14 @@ export default function Checkout() {
         }
     }, []);
 
-    if (loading) {
+/*    if (loading) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
                 <Loading/>
             </div>
         );
     }
-
+*/
     return (
         <div className="flex flex-col justify-around h-screen p-4" >
             <div className='w-full flex flex-col gap-2'>

@@ -18,7 +18,6 @@ export default function Signature() {
             setSelectedCard(index);
             return true;
         } else if (index === selectedCard) {
-            alert("Você precisa ter ao menos uma assinatura selecionada");
             return false;
         }
         return true;

@@ -27,7 +27,7 @@ export default function AccountDetails() {
         "Este nome de usuário já existe.",
         "O nome de usuário não pode ficar vazio",
         "O seu nome não pode ficar vazio",
-      ];
+    ];
 
     const axios = require('axios');
     const qs = require('qs');

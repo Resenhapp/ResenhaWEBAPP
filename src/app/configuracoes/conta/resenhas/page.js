@@ -47,10 +47,14 @@ export default function AccountPartySaved() {
   
     const fetchData = async () => {
         try {
+            const requested = [
+                "saved"
+            ];
+
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'getUserData',
                 token: token,
-                requested: "saved"
+                requested: requested
             });
 
             setData(response);
