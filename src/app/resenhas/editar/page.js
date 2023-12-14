@@ -1,6 +1,4 @@
 'use client'
-
-import Button from "@/src/components/Button"
 import Image from "next/image"
 import Vector from "@/src/components/Vector"
 import EditInfoPage from "@/src/components/EditInfoPage"
@@ -12,6 +10,8 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader"
 import { setHours } from "date-fns"
+
+import Button from "@/src/components/Button"
 
 export default function EditEvent() {
     var token = Cookies.get('token');

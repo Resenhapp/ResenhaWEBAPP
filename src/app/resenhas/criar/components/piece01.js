@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
-import AddressField from '@/src/components/AddressField';
 import Toggle from '@/src/components/Toggle';
+import AddressField from '@/src/components/AddressField';
 
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const [toggleValue, setToggleValue] = useState(true);
+    const [maiority, setToggleValue] = useState('');
 
     useEffect(() => {
         if (name && address) {
@@ -31,6 +31,11 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     const handleToggleChange = (isChecked) => {
         setToggleValue(isChecked);
         onToggleChange(isChecked);
+
+        if (!isChecked){
+            setToggleValue(!isChecked);
+            onToggleChange(!isChecked);
+        }
     };
 
     return (
@@ -56,7 +61,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
                 labelText='Resenha para +18?'
                 showLabel={true}
                 showQuestion={false}
-                startToggled={toggleValue}
+                value={maiority}
                 textColor='white'
             />
         </div>
