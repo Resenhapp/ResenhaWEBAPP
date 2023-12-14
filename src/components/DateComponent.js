@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
 
 const DateComponent = ({ number, day, month, year, selectedDate, onDateSelect }) => {
-  const fullDate = new Date(year, new Date(`1 ${month} 2000`).getMonth(), number); // Generate the full date object
+
+  const monthsMap = {
+    'jan': 1,
+    'fev': 2,
+    'mar': 3,
+    'abr': 4,
+    'mai': 5,
+    'jun': 6,
+    'jul': 7,
+    'ago': 8,
+    'set': 9,
+    'out': 10,
+    'nov': 11,
+    'dez': 12
+  };
+
+  const fullDate = new Date(year, monthsMap[month] - 1, number); // Generate the full date object
   const isSelected = selectedDate?.getTime() === fullDate.getTime(); // Check if this date is selected
 
   const handleClick = () => {

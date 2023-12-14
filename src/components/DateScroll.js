@@ -5,6 +5,7 @@ const DateScroll = ({ onDateSelect }) => {
   const [selected, setSelected] = useState(null);
 
   const handleDateSelect = (date) => {
+    console.log(date)
     setSelected(date);
     onDateSelect(date);
   };
@@ -12,6 +13,7 @@ const DateScroll = ({ onDateSelect }) => {
   const currentDate = new Date();
 
   const dateComponents = [];
+
   for (let i = 0; i < 30; i++) {
     const date = new Date();
     date.setDate(currentDate.getDate() + i);

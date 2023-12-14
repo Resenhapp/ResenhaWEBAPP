@@ -76,7 +76,7 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
 
     const handleDateChange = (date) => {
         setSelectedDay(date.getDate());
-        setSelectedMonth(date.getMonth() + 1);
+        setSelectedMonth(date.getMonth());
         setSelectedYear(date.getFullYear());
         setIsDateSelected(true);
         setSelectedDate(date);
