@@ -14,7 +14,6 @@ import {
 import "@reach/combobox/styles.css";
 
 const PlacesAutocomplete = ({ setSelected }) => {
-  const [selectedLocation, setSelectedLocation] = useState(null);
   const [placesService, setPlacesService] = useState(null);
 
   useEffect(() => {
@@ -40,9 +39,7 @@ const PlacesAutocomplete = ({ setSelected }) => {
     clearSuggestions();
 
     const results = await getGeocode({ address });
-    const { lat, lng } = await getLatLng(results[0]);
-    setSelectedLocation({ lat, lng });
-    setSelected({ lat, lng });
+    setSelected({ address });
   };
 
   return (

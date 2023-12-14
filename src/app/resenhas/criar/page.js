@@ -40,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 2 > maxProgress) {  
+    if (progress + 1 == maxProgress) {  
       const details = {
         name,
         address,
@@ -143,15 +143,14 @@ const handlePiece02EndHourSelect = (endHour) => {
     if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
         return;
     }
+
     const date = new Date(dateSelected);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
-  
+
     setDateSelected(formattedDate);
-    console.log(formattedDate);
-    console.log(typeof formattedDate);
 };
 
   const handlePiece03GuestsSelect = (guests) => {
@@ -177,23 +176,22 @@ const handlePiece02EndHourSelect = (endHour) => {
         return <Loading />;
       case 1:
         return (
-            <Piece01
+          <Piece01
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
           />
-          
         );
       case 2:
         return (
           <Piece02
-          onToggleChange={setHasTimeToEnd}
-          onStartHourSelect={handlePiece02StartHourSelect}
-          onEndHourSelect={handlePiece02EndHourSelect}
-          onDateSelect={handlePiece02DateSelect}
-          filled={setIsFilled}
-        />
+            onToggleChange={setHasTimeToEnd}
+            onStartHourSelect={handlePiece02StartHourSelect}
+            onEndHourSelect={handlePiece02EndHourSelect}
+            onDateSelect={handlePiece02DateSelect}
+            filled={setIsFilled}
+          />
         );
       case 3:
         return (<Piece03 

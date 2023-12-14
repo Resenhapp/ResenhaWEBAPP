@@ -75,7 +75,6 @@ import { Loader } from '@googlemaps/js-api-loader';
 const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
   const [name, setName] = useState('');
   const [maiority, setToggleValue] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState(null);
   const [address, setAddress] = useState('');
   const [placesService, setPlacesService] = useState(null);
   const [isMapsLoaded, setIsMapsLoaded] = useState(false);
@@ -129,11 +128,8 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
   }, [name, filled]);
 
   const handleAddressSelect = (location) => {
-    setSelectedLocation(location);
-    if (location) {
-      console.log('Latitude:', location.lat);
-      console.log('Longitude:', location.lng);
-    }
+    setAddress(location.address);
+    onAddressFieldChange(location.address);
   };
 
   if (!isMapsLoaded) {
