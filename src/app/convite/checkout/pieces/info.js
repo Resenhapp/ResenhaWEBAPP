@@ -46,7 +46,12 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         setPaymentMethod(event.target.value);
     };
 
-    var newPartyPrice = getPartyPrice*ticketsAmount;
+    const numericPart = parseFloat(getPartyPrice.replace(/[^0-9,]/g, '').replace(',', '.'));
+
+    if (!isNaN(numericPart)) {
+        var newPartyPrice = numericPart * ticketsAmount;
+        newPartyPrice = newPartyPrice.toLocaleString('pt-BR');
+    }
 
     useEffect(() => {
         const isValid = name && emailValid && ticketsAmount && method && (canBeUnderaged || isEighteen);
@@ -65,7 +70,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
                             </div>
                             <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-1 ring-purpleT3'>
                                 <p className="text-sm text-whiteT1 text-left font-normal">{ticketsAmount}x</p>
-                                <p className="text-sm text-whiteT1 text-left font-bold">R$ {newPartyPrice   }</p>
+                                <p className="text-sm text-whiteT1 text-left font-bold">R$ {newPartyPrice}</p>
                             </div>
                         </div>
                     </div>
