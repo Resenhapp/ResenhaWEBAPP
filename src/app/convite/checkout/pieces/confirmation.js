@@ -2,7 +2,7 @@ import Button from '@/src/components/Button';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Vector from '@/src/components/Vector';
-import 
+
 export default function Confirmation({
   PartyImage,
   PartyName,
@@ -72,7 +72,7 @@ export default function Confirmation({
                 </div>
                 <div className="flex items-center mt-8 mb-4 justify-center">
                   <img
-                    src={InviteQrCodeUrl}
+                    src={"https://chart.googleapis.com/chart?chs=220x220&cht=qr&chl="+InviteCode}
                     width={210}
                     height={210}
                     alt="QR Code"

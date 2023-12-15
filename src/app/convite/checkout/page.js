@@ -11,7 +11,7 @@ import Card from "./pieces/card";
 import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
 import Cookies from 'js-cookie';
-
+import html2canvas from 'html2canvas';
 export default function Checkout() {
     var token = Cookies.get('token');
 
@@ -60,13 +60,13 @@ export default function Checkout() {
     const axios = require('axios');
     const qs = require('qs');
 
-    const payRequest = () => {
-        console.log(`Credit card holder: ${cardHolder}`);
-        console.log(`Credit card number: ${cardNumber}`);
-        console.log(`Credit card expiration: ${cardExpiration}`);
-        console.log(`Credit card cvv: ${cardCvv}`);
-        console.log(`Credit card cpf: ${cardCpf}`);
-    }
+    // const payRequest = () => {
+    //     console.log(`Credit card holder: ${cardHolder}`);
+    //     console.log(`Credit card number: ${cardNumber}`);
+    //     console.log(`Credit card expiration: ${cardExpiration}`);
+    //     console.log(`Credit card cvv: ${cardCvv}`);
+    //     console.log(`Credit card cpf: ${cardCpf}`);
+    // }
 
     const generatePix = () => {
             fetchData().then(data => {
