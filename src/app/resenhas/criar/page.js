@@ -170,6 +170,10 @@ const handlePiece02EndHourSelect = (endHour) => {
     setTagsContent(content);
   };
 
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   const renderPiece = () => {
     switch (progress) {
       case 0:
@@ -213,6 +217,7 @@ const handlePiece02EndHourSelect = (endHour) => {
   };
 
   let title, subtitle, buttonText;
+  
   switch (progress) {
     case 0:
       title = '';
@@ -238,12 +243,12 @@ const handlePiece02EndHourSelect = (endHour) => {
     case 4:
       title = 'Algo a acrescentar?';
       subtitle = 'E por fim, adicione uma <b>descrição</b> (como regras, brincadeiras e tals) e <b>tags</b> para sua resenha:';
-      buttonText = 'Próximo';
+      buttonText = 'Criar!';
       break;
     case 5:
       title = 'E que tal uma foto?';
       subtitle = 'Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
-      buttonText = 'Criar!';
+      buttonText = 'Concluir!';
       break;
     default:
       title = '';
@@ -264,9 +269,21 @@ const handlePiece02EndHourSelect = (endHour) => {
         <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
           {renderPiece()}
           <div className='flex flex-row justify-between w-full'>
-            {progress > 0 && (
+            {progress > 1 && progress !== 5 && (
               <button className='py-4 px-8' onClick={() => setProgress(progress - 1)}>
                 Voltar
+              </button>
+            )}
+            
+            {progress == 1 && (
+              <button className='py-4 px-8' onClick={handleCancel}>
+                Cancelar
+              </button>
+            )}
+
+            {progress == 5 && (
+              <button className='py-4 px-8' onClick={handleNextStep}>
+               Pular
               </button>
             )}
             <Button

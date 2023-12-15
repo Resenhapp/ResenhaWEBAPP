@@ -345,7 +345,7 @@ export default function Feed() {
   return (
     <div className='flex flex-col w-screen h-screen'>
       <EditInfoPage isOpen={isEditFilterPageOpen} pageTitle={'Filtros'} togglePage={toggleEditFilterPageOpen} saveAction={filterFeedData}>
-        <div className='w-full flex flex-col gap-2'>
+        <div className='w-full flex flex-col max-w-md gap-2'>
           <p>Filtre a resenha ideal para você!</p>
           <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
             Local:
