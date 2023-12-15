@@ -422,7 +422,7 @@ export default function Feed() {
             <div className='w-full flex flex-col'>
               <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                 <div className="flex flex-col mb-4 gap-4 w-full">
-                  <SearchInput placeholder="Busque por nome ou tag" onDelayedChange={searchFeedData} />
+                  <SearchInput placeholder="Busque pelo nome" onDelayedChange={searchFeedData} />
                   <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"}
                     onRightClick={handleHypedParties} onLeftClick={handleAllParties}
                     onFilterClick={toggleEditFilterPageOpen} />

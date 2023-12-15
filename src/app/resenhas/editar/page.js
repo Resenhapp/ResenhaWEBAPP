@@ -343,8 +343,12 @@ export default function EditEvent() {
     };
 
     const savePrice = async () => {
+        const cleanedPriceString = price.replace(/[^\d,]/g, '');
+
+        const priceAsFloat = parseFloat(cleanedPriceString.replace(',', '.'));
+
         const data = {
-            price: price
+            price: priceAsFloat
         };
     
         try {
@@ -786,7 +790,7 @@ export default function EditEvent() {
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='R$00.00'
+                        placeholder='R$ 00,00'
                         value={price}
                         onChange={handlePriceChange}
                         type="tel"

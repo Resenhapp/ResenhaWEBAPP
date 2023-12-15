@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -26,6 +26,8 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const [partyCode, setPartyCode] = useState("");
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -38,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 1 == maxProgress) {  
       const details = {
         name,
         address,
@@ -61,13 +63,19 @@ export default function NewEvent() {
         });
 
         if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
+          setPartyCode(response.code);
+
+          setProgress(progress + 1);
         }
-      } 
+      }
       
       catch (error) {
         console.error(error);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -135,15 +143,14 @@ const handlePiece02EndHourSelect = (endHour) => {
     if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
         return;
     }
+
     const date = new Date(dateSelected);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
-  
+
     setDateSelected(formattedDate);
-    console.log(formattedDate);
-    console.log(typeof formattedDate);
 };
 
   const handlePiece03GuestsSelect = (guests) => {
@@ -169,23 +176,22 @@ const handlePiece02EndHourSelect = (endHour) => {
         return <Loading />;
       case 1:
         return (
-            <Piece01
+          <Piece01
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
           />
-          
         );
       case 2:
         return (
           <Piece02
-          onToggleChange={setHasTimeToEnd}
-          onStartHourSelect={handlePiece02StartHourSelect}
-          onEndHourSelect={handlePiece02EndHourSelect}
-          onDateSelect={handlePiece02DateSelect}
-          filled={setIsFilled}
-        />
+            onToggleChange={setHasTimeToEnd}
+            onStartHourSelect={handlePiece02StartHourSelect}
+            onEndHourSelect={handlePiece02EndHourSelect}
+            onDateSelect={handlePiece02DateSelect}
+            filled={setIsFilled}
+          />
         );
       case 3:
         return (<Piece03 
@@ -199,7 +205,7 @@ const handlePiece02EndHourSelect = (endHour) => {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;

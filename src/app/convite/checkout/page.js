@@ -11,7 +11,7 @@ import Card from "./pieces/card";
 import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
 import Cookies from 'js-cookie';
-
+import html2canvas from 'html2canvas';
 export default function Checkout() {
     var token = Cookies.get('token');
 
@@ -28,18 +28,18 @@ export default function Checkout() {
     const [isFilled, setIsFilled] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const [partyName, setPartyName] = useState('Resenha no Terraço');
+    const [partyName, setPartyName] = useState('');
     const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
-    const [partyOwner, setPartyOwner] = useState('Vitor Prates');
+    const [partyOwner, setPartyOwner] = useState('');
     const [partyDateDay, setPartyDateDay] = useState('26');
     const [partyDay, setPartyDay] = useState('Quinta');
     const [partyMonth, setPartyMonth] = useState('Maio');
-    const [partyHour, setPartyHour] = useState('21:00h');
-    const [partyAddress, setPartyAddress] = useState('Rua Ramiro Barcelos 1450');
+    const [partyHour, setPartyHour] = useState('');
+    const [partyAddress, setPartyAddress] = useState('');
     const [inviteCode, setInviteCode] = useState('1352');
     const [inviteQrCodeUrl, setInviteQrCodeUrl] = useState('https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfd30qfik0KF)-t23t-23tg-32g-2-g&chld=L|1&choe=UTF-8');
 
-    const [partyPrice, setPartyPrice] = useState(20.0);
+    const [partyPrice, setPartyPrice] = useState('');
     const [canBeUnderaged, setCanBeUnderaged] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('');
     const [customerName, setCustomerName] = useState('');
@@ -55,16 +55,18 @@ export default function Checkout() {
    
     const [hidestyle, setHideStyle] = useState(!false);
 
+    const [data, setData] = useState(null);
+
     const axios = require('axios');
     const qs = require('qs');
 
-    const payRequest = () => {
-        console.log(`Credit card holder: ${cardHolder}`);
-        console.log(`Credit card number: ${cardNumber}`);
-        console.log(`Credit card expiration: ${cardExpiration}`);
-        console.log(`Credit card cvv: ${cardCvv}`);
-        console.log(`Credit card cpf: ${cardCpf}`);
-    }
+    // const payRequest = () => {
+    //     console.log(`Credit card holder: ${cardHolder}`);
+    //     console.log(`Credit card number: ${cardNumber}`);
+    //     console.log(`Credit card expiration: ${cardExpiration}`);
+    //     console.log(`Credit card cvv: ${cardCvv}`);
+    //     console.log(`Credit card cpf: ${cardCpf}`);
+    // }
 
     const generatePix = () => {
             fetchData().then(data => {
@@ -81,6 +83,26 @@ export default function Checkout() {
         
         catch (error) {
             throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchPartyData = async () => {
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'getInviteData',
+                code: code
+            });
+
+            setData(response);
+            setPartyName(response.title);
+            setPartyPrice(response.ticket)
+            setPartyOwner(response.host)
+            setPartyAddress(response.address)
+            setPartyHour(response.hour.start)
+        }
+
+        catch (error) {
+            console.error(error);
         }
     };
 
@@ -229,7 +251,7 @@ export default function Checkout() {
             }
         case 1:
             title = 'Informações';
-            subtitle = 'Antes de continuar, precisamos de algumas informações...';
+            subtitle = 'Para continuar, precisamos de algumas informações...';
             button = 'Próximo';
             action = handleNextStep;
             break;
@@ -305,10 +327,14 @@ export default function Checkout() {
         }
     }, []);
 
-    if (loading) {
+    useEffect(() => {
+        fetchPartyData();
+    }, []);
+
+    if (!data) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }

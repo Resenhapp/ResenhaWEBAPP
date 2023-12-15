@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Vector from "../components/Vector";
-import Logo from "@/assets/images/logo.png";
 import page1 from '@/assets/images/page1.png';
 import page2 from '@/assets/images/page2.png';
 import page3 from '@/assets/images/page3.png';
@@ -13,7 +12,9 @@ import page2_desktop from '@/assets/images/page2_desktop.png';
 import page3_desktop from '@/assets/images/page3_desktop.png';
 import page4_desktop from '@/assets/images/page4_desktop.png';
 import page5_desktop from '@/assets/images/page5_desktop.png';
-import Button from '../components/Button';
+
+//import Button from '../components/Button';
+//import Logo from "@/assets/images/logo.png";
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function Home() {
     setIsDesktop(window.innerWidth > 1024);
 
     //listener para atualizar a largura quando a janela for redimensionada
+
     const handleResize = () => {
       setIsDesktop(window.innerWidth > 1024);
     };

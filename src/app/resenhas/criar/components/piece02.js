@@ -7,14 +7,13 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from '@/src/components/Modal';
 import ptBR from 'date-fns/locale/pt-BR';
-import TimePicker from '@/src/components/TimePicker';
 import ReactInputMask from 'react-input-mask';
+import TimePicker from '@/src/components/TimePicker';
 
 registerLocale('pt', ptBR)
 
-
 const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
-    const [hasEnd, setHasEnd] = useState(false);
+    const [hasEnd, setHasEnd] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [startTime, setStartTime] = useState(new Date());
@@ -25,8 +24,9 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedYear, setSelectedYear] = useState(null);
     const [isDateSelected, setIsDateSelected] = useState(false);
-
+    const [tempEnd, setTempEnd] = useState('');
     const [tempStart, setTempStart] = useState('');
+
     const handleStartSet = (event) => {
         setTempStart(event.target.value);
         setStartHourSelected(true);
@@ -48,14 +48,14 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         onEndHourSelect(newEndTime);
     };
 
-    const [tempEnd, setTempEnd] = useState('');
-
     const handleEndSet = (event) => {
         setTempEnd(event.target.value);
         setEndHourSelected(true);
     };
+
     const [startHourSelected, setStartHourSelected] = useState(false);
     const [endHourSelected, setEndHourSelected] = useState(false);
+
     useEffect(() => {
         if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
             filled(true);
@@ -63,28 +63,35 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
             filled(false);
         }
     }, [isDateSelected, startHourSelected, endHourSelected, hasEnd, filled])
+
     const handleToggleChange = (isChecked) => {
-        onToggleChange(!isChecked);
+        onToggleChange(isChecked);
         setHasEnd(isChecked);
-        if (isChecked) {
-            setEndHourSelected(true);
+        if (!isChecked) {
+            setEndHourSelected(false);
+            setHasEnd(!isChecked);
+            onToggleChange(!isChecked);
         }
     };
+
     const handleDateChange = (date) => {
         setSelectedDay(date.getDate());
-        setSelectedMonth(date.getMonth() + 1);
+        setSelectedMonth(date.getMonth());
         setSelectedYear(date.getFullYear());
         setIsDateSelected(true);
         setSelectedDate(date);
         onDateSelect(date);
     };
+
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {
             onDateSelect(selectedDay, selectedMonth, selectedYear);
         }
     }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
+
     const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
+
     return (
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">
