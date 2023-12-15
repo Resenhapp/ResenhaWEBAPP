@@ -53,7 +53,7 @@ const PlacesAutocomplete = ({ setSelected }) => {
           onChange={(e) => setValue(e.target.value)}
           disabled={!ready}
           className="pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5"
-          placeholder="Digite o Endereço"
+          placeholder="Endereço da resenha"
           options={{
             componentRestrictions: { country: "BR" }
           }}

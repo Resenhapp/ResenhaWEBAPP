@@ -158,10 +158,10 @@ export default function Invite() {
 
         if (navigator.share) {
             navigator.share(shareData)
-                .then(() => {
-                })
-                .catch((error) => {
-                });
+            .then(() => {
+            })
+            .catch((error) => {
+            });
         }
 
         else {
@@ -207,7 +207,7 @@ export default function Invite() {
                                 {title}
                             </h1>
                             <p className="text-sm mb-4 text-purpleT5">
-                                Por: <b>{host}</b>
+                                Por: <b>{host.name}</b>
                             </p>
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
