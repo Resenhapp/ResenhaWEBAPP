@@ -84,6 +84,7 @@ export default function MyInvites() {
                             partyDate={party.date}
                             partyHour={party.time}
                             partyName={party.name}
+                            viewReceipt={()=>(window.location.href = "http://localhost:3000/comprovante")}
                           />
                         </div>
                       ))}

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Vector from '@/src/components/Vector';
 import html2canvas from 'html2canvas';
+import PageHeader from '@/src/components/PageHeader';
 
 
 export default function Receipt({}) {
@@ -59,16 +60,17 @@ export default function Receipt({}) {
   }, [buttonsVisible]);
 
   return (
-    <div className="flex flex-col items-center justify-center px-4">
-      <section className="flex flex-col items-center w-full max-w-md">
-        <div className="flex flex-col items-center justify-center h-fit px-4">
-          <section className="flex flex-col items-center w-full max-w-md">
+    <div className="flex flex-col items-center justify-center px-4 h-full">
+      <PageHeader isBack={true} checker={() => { null }} pageTitle="Comprovante" />
+      <section className="flex flex-col items-center w-full max-w-md h-full">
+        <div className="flex flex-col items-center justify-center px-4 h-full">
+          <section className="flex flex-col items-center w-full max-w-md h-full">
           <div className="flex flex-row justify-center mt-8">
                     <Vector vectorname={'logo'} />
                 </div>
                 <p className='text-center mt-4'>Abaixo está o seu comprovante para participar da resenha. Use o QR code ou a sequência numérica de 4 dígitos para participar.</p>
             <div className="flex flex-col w-full my-2">
-              <div className="flex flex-col rounded-2xl ring-1 ring-whiteT2 bg-white p-4">
+              <div className="flex h-full flex-col rounded-2xl ring-1 ring-whiteT2 bg-white p-4">
                 <div className="flex flex-col">
                   <div className="flex flex-row">
                     <div className="flex items-center rounded-md ring-1 w-fit h-fit ring-whiteT2 justify-center">
@@ -124,7 +126,7 @@ export default function Receipt({}) {
             </div>
             {visible == true ? (
               <div className="flex flex-row-reverse gap-2 items-center my-4 w-full" id="idOfElementToHide">
-                <Button
+                {/* <Button
                   label={'Salvar'}
                   icon={'arrowDown'}
                   action={()=>{saveInvite()}}
@@ -132,7 +134,7 @@ export default function Receipt({}) {
                   height={1}
                   width={1}
                   textAlign="center"
-                />
+                /> */}
               </div>
             ) : null}
           </section>
