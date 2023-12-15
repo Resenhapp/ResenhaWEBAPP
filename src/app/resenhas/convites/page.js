@@ -63,8 +63,6 @@ export default function MyInvites() {
         );
     }
 
-    var { partiesWent } = data
-
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
@@ -77,7 +75,7 @@ export default function MyInvites() {
                   </div>
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                      {partiesWent.map((party) => (
+                      {data.parties.went.map((party) => (
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
