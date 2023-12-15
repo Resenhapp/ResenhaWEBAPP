@@ -1669,7 +1669,10 @@ function getInviteData()
                 'hash' => $partyHash,
                 'ticket' => $row["price"],
                 'address' => $row["address"],
-                'host' => $host,
+                'host' => [
+                    'id' => $hostId,
+                    'name' => $host
+                ],
                 'title' => $row["name"],
                 'description' => $row["description"],
                 'users' => $users,
