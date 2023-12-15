@@ -10,7 +10,7 @@ const EditInfoPage = ({ isOpen, togglePage, pageTitle, children, saveAction }) =
                 <button onClick={saveAction} className='text-greenT3'>Salvar</button>
             </div>
             <hr className='border-purpleT3 mt-4' />
-            <section className="flex flex-col flex-start items-center w-full max-w-md p-8 gap-4">
+            <section className="flex flex-col flex- content-center items-center w-full max-w- justify-center p-8 gap-4">
                 {children}
             </section>
         </div>
