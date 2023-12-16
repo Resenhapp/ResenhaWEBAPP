@@ -10,12 +10,8 @@ const EditInfoPage = ({ isOpen, togglePage, pageTitle, children, saveAction, han
       </div>
       <hr className='border-purpleT3 mt-4' />
       <section className="flex flex-col flex- content-center items-center w-full max-w- justify-center p-8 gap-4">
-        {React.Children.map(children, (child) => {
-          if (child && child.type && child.type.name === 'PlacesAutocomplete') {
-            return React.cloneElement(child, { setSelected: handleAddressSelect });
-          }
-          return child;
-        })}
+
+          {children}
       </section>
     </div>
   );

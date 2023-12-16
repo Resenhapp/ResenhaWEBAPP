@@ -14,6 +14,7 @@ import PlacesAutocomplete from '@/src/components/PlacesAutocomplete';
 import { Loader } from '@googlemaps/js-api-loader';
 import { setHours } from "date-fns";
 import Button from "@/src/components/Button";
+import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 
 export default function EditEvent() {
     var token = Cookies.get('token');
@@ -77,7 +78,6 @@ export default function EditEvent() {
           });
       }, []);
 
-      
       const handleAddressSelect = (location) => {
         setAddress(location.address);
         onAddressFieldChange(location.address);
@@ -247,8 +247,6 @@ export default function EditEvent() {
             setVipLimit(0);
         }
     }, [isVip]);
-
-
 
     const handleToggleVip = () => {
         setIsVip(!isVip);
@@ -762,8 +760,8 @@ export default function EditEvent() {
       saveAction={saveAddress}
     >
       <div className='w-full'>
-      {placesService && isMapsLoaded&&(
-        <PlacesAutocomplete
+      {placesService && isMapsLoaded && (
+        <PlacesAutocomplete_Edit
           setSelected={handleAddressSelect}
           action={handleAddressChange}
           Icon='pin'
@@ -859,7 +857,7 @@ export default function EditEvent() {
 
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
-                <div className="absolute z-[9999] top-4 left-4">
+                <div className="absolute z-[9] top-4 left-4">
     <button onClick={(event) => {
         event.stopPropagation();
         window.history.back();
