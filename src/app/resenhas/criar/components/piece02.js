@@ -12,7 +12,6 @@ import TimePicker from '@/src/components/TimePicker';
 
 registerLocale('pt', ptBR)
 
-
 const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleChange, filled }) => {
     const [hasEnd, setHasEnd] = useState('');
     const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +48,6 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
         onEndHourSelect(newEndTime);
     };
 
-
     const handleEndSet = (event) => {
         setTempEnd(event.target.value);
         setEndHourSelected(true);
@@ -57,6 +55,7 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
 
     const [startHourSelected, setStartHourSelected] = useState(false);
     const [endHourSelected, setEndHourSelected] = useState(false);
+
     useEffect(() => {
         if (isDateSelected && startHourSelected && (!hasEnd || endHourSelected)) {
             filled(true);
@@ -77,19 +76,22 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
 
     const handleDateChange = (date) => {
         setSelectedDay(date.getDate());
-        setSelectedMonth(date.getMonth() + 1);
+        setSelectedMonth(date.getMonth());
         setSelectedYear(date.getFullYear());
         setIsDateSelected(true);
         setSelectedDate(date);
         onDateSelect(date);
     };
+
     useEffect(() => {
         if (selectedDay && selectedMonth && selectedYear) {
             onDateSelect(selectedDay, selectedMonth, selectedYear);
         }
     }, [selectedDay, selectedMonth, selectedYear, onDateSelect]);
+
     const currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 2);
+
     return (
         <div className="w-full flex flex-col h-fit gap-6">
             <div className="flex flex-row flex-end">

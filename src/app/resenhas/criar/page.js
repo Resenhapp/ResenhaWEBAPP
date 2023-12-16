@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -26,6 +26,8 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
+  const [partyCode, setPartyCode] = useState("");
+
   const makeRequest = async (url, data) => {
     try {
         const response = await axios.post(url, qs.stringify(data));
@@ -38,7 +40,7 @@ export default function NewEvent() {
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 1 == maxProgress) {  
       const details = {
         name,
         address,
@@ -58,20 +60,22 @@ export default function NewEvent() {
           request: 'tryToCreateEvent',
           token: token,
           details: details
-      });
+        });
 
-      /* Para dar o request sem trocar de página
+        if (!response.error && typeof window !== 'undefined') {
+          setPartyCode(response.code);
 
-      if (!response.error && typeof window !== 'undefined') {
-        window.location.href = '/resenhas/';
+          setProgress(progress + 1);
+        }
       }
-      
-      */
-      } 
       
       catch (error) {
         console.error(error);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -109,20 +113,28 @@ export default function NewEvent() {
 
   const handlePiece02StartHourSelect = (startHour) => {
     const date = new Date(startHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const formattedStartHour = `${hours}:${minutes}`;
+    const formattedStartHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setStart(formattedStartHour);
     console.log(formattedStartHour);
 };
 
 const handlePiece02EndHourSelect = (endHour) => {
     const date = new Date(endHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    const formattedEndHour = `${hours}:${minutes}`;
+    const formattedEndHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setEnd(formattedEndHour);
     console.log(formattedEndHour);
 };
@@ -131,15 +143,14 @@ const handlePiece02EndHourSelect = (endHour) => {
     if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
         return;
     }
+
     const date = new Date(dateSelected);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
-  
+
     setDateSelected(formattedDate);
-    console.log(formattedDate);
-    console.log(typeof formattedDate);
 };
 
   const handlePiece03GuestsSelect = (guests) => {
@@ -159,29 +170,32 @@ const handlePiece02EndHourSelect = (endHour) => {
     setTagsContent(content);
   };
 
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   const renderPiece = () => {
     switch (progress) {
       case 0:
         return <Loading />;
       case 1:
         return (
-            <Piece01
+          <Piece01
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
           />
-          
         );
       case 2:
         return (
           <Piece02
-          onToggleChange={setHasTimeToEnd}
-          onStartHourSelect={handlePiece02StartHourSelect}
-          onEndHourSelect={handlePiece02EndHourSelect}
-          onDateSelect={handlePiece02DateSelect}
-          filled={setIsFilled}
-        />
+            onToggleChange={setHasTimeToEnd}
+            onStartHourSelect={handlePiece02StartHourSelect}
+            onEndHourSelect={handlePiece02EndHourSelect}
+            onDateSelect={handlePiece02DateSelect}
+            filled={setIsFilled}
+          />
         );
       case 3:
         return (<Piece03 
@@ -195,7 +209,7 @@ const handlePiece02EndHourSelect = (endHour) => {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;
@@ -203,6 +217,7 @@ const handlePiece02EndHourSelect = (endHour) => {
   };
 
   let title, subtitle, buttonText;
+  
   switch (progress) {
     case 0:
       title = '';
@@ -228,12 +243,12 @@ const handlePiece02EndHourSelect = (endHour) => {
     case 4:
       title = 'Algo a acrescentar?';
       subtitle = 'E por fim, adicione uma <b>descrição</b> (como regras, brincadeiras e tals) e <b>tags</b> para sua resenha:';
-      buttonText = 'Próximo';
+      buttonText = 'Criar!';
       break;
     case 5:
       title = 'E que tal uma foto?';
       subtitle = 'Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
-      buttonText = 'Criar!';
+      buttonText = 'Concluir!';
       break;
     default:
       title = '';
@@ -254,9 +269,21 @@ const handlePiece02EndHourSelect = (endHour) => {
         <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
           {renderPiece()}
           <div className='flex flex-row justify-between w-full'>
-            {progress > 0 && (
+            {progress > 1 && progress !== 5 && (
               <button className='py-4 px-8' onClick={() => setProgress(progress - 1)}>
                 Voltar
+              </button>
+            )}
+            
+            {progress == 1 && (
+              <button className='py-4 px-8' onClick={handleCancel}>
+                Cancelar
+              </button>
+            )}
+
+            {progress == 5 && (
+              <button className='py-4 px-8' onClick={handleNextStep}>
+               Pular
               </button>
             )}
             <Button
