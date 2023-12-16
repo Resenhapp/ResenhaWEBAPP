@@ -136,6 +136,7 @@ export default function MyParties() {
                                 partyGuests={party.confirmed} 
                                 partyHour={party.start} 
                                 partyMaxGuests={party.capacity} 
+                                editConcierge={()=>{console.log('cu')}}
                                 partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
                                 partyName={party.name}
                                 viewOnClick={() => handleViewClick(party)}
