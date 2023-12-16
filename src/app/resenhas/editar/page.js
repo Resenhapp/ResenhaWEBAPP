@@ -1,17 +1,19 @@
 'use client'
 
-import Button from "@/src/components/Button"
-import Image from "next/image"
-import Vector from "@/src/components/Vector"
+import Image from "next/image";
+import Vector from "@/src/components/Vector";
 import EditInfoPage from "@/src/components/EditInfoPage"
 import React, { useState, useEffect } from 'react';
-import Tag from "@/src/components/Tag"
-import { tagsData } from "@/src/components/tagsData"
-import Toggle from "@/src/components/Toggle"
+import Tag from "@/src/components/Tag";
+import { tagsData } from "@/src/components/tagsData";
+import Toggle from "@/src/components/Toggle";
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-import PageHeader from "@/src/components/PageHeader"
-import { setHours } from "date-fns"
+import PageHeader from "@/src/components/PageHeader";
+import PlacesAutocomplete from '@/src/components/PlacesAutocomplete';
+import { Loader } from '@googlemaps/js-api-loader';
+import { setHours } from "date-fns";
+import Button from "@/src/components/Button";
 
 export default function EditEvent() {
     var token = Cookies.get('token');
@@ -53,6 +55,39 @@ export default function EditEvent() {
     const [acceptsPix, setAcceptsPix] = useState(true);
     const [acceptsCard, setAcceptsCard] = useState(true);
     const [acceptsCash, setAcceptsCash] = useState(true);
+    const [placesService, setPlacesService] = useState(null);
+    const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+
+    useEffect(() => {
+        const loader = new Loader({
+          apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+          version: 'weekly',
+          libraries: ['places'],
+        });
+    
+        loader.importLibrary('places')
+          .then(() => {
+            const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+            setPlacesService(service);
+            setIsMapsLoaded(true);
+          })
+          .catch((error) => {
+            console.error('Erro ao carregar a API do Google Maps:', error);
+            setIsMapsLoaded(false);
+          });
+      }, []);
+
+      
+      const handleAddressSelect = (location) => {
+        setAddress(location.address);
+        onAddressFieldChange(location.address);
+      };
+
+      const handleAddressChange = (value) => {
+        setAddress(value);
+        onAddressFieldChange(value);
+      };
+
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -146,10 +181,6 @@ export default function EditEvent() {
         setDescription(event.target.value);
     };
 
-    const handleAddressChange = (event) => {
-        setAddress(event.target.value);
-    };
-
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -174,7 +205,6 @@ export default function EditEvent() {
         const parts = dateString.split("/");
         const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
         const dayOfWeek = days[dateObject.getDay()];
-
         return dayOfWeek;
     }
 
@@ -212,12 +242,13 @@ export default function EditEvent() {
         setEndHour(inputHour);
     };
 
-    
     useEffect(() => {
         if (!isVip) {
             setVipLimit(0);
         }
     }, [isVip]);
+
+
 
     const handleToggleVip = () => {
         setIsVip(!isVip);
@@ -604,6 +635,10 @@ export default function EditEvent() {
 
     var { guests } = data
 
+    if (!isMapsLoaded) {
+        return <div>Carregando...</div>;
+      }
+
     return (
         <div className="bg-purpleT1 h-screen min-h-fit">
             <EditInfoPage
@@ -720,23 +755,37 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-            <EditInfoPage isOpen={isEditAddressPageOpen} pageTitle={'Endereço da resenha'} saveAction={saveAddress} togglePage={toggleEditAddressPageOpen}>
-                <div className='w-full'>
-                    <input
-                        value={address}
-                        onChange={handleAddressChange}
-                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Rua ramiro barcelos, 1450'
-                    ></input>
-                </div>
-                <div className="w-full flex flex-row justify-start">
-                </div>
-                <div>
-                    <p className='text-sm'>
-                        O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
-                    </p>
-                </div>
-            </EditInfoPage>
+            <EditInfoPage
+      isOpen={isEditAddressPageOpen}
+      togglePage={toggleEditAddressPageOpen}
+      pageTitle={'Endereço da resenha'}
+      saveAction={saveAddress}
+    >
+      <div className='w-full'>
+      {placesService && isMapsLoaded&&(
+        <PlacesAutocomplete
+          setSelected={handleAddressSelect}
+          action={handleAddressChange}
+          Icon='pin'
+          showIcon={true}
+          placeholder='Endereço'
+          value={address}
+          Required={true}
+          placesService={placesService}
+          options={{
+            types: ['geocode'],
+            componentRestrictions: { country: "BR" }
+          }}
+        />
+      )}
+      </div>
+      <div className="w-full flex flex-row justify-start"></div>
+      <div>
+        <p className='text-sm'>
+          O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
+        </p>
+      </div>
+    </EditInfoPage>
 
             <EditInfoPage isOpen={isEditDescriptionPageOpen} saveAction={saveDescription} pageTitle={'Descrição da resenha'} togglePage={toggleEditDescriptionPageOpen}>
                 <div className='w-full'>
