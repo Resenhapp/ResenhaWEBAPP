@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Vector from './Vector';
 import usePlacesAutocomplete, {
-    getGeocode,
-    getLatLng,
+    getGeocode
   } from "use-places-autocomplete";
 import {
   Combobox,
@@ -37,9 +36,9 @@ const PlacesAutocomplete = ({ setSelected }) => {
   const handleSelect = async (address) => {
     setValue(address, false);
     clearSuggestions();
-
+  
     const results = await getGeocode({ address });
-    setSelected({ address });
+    setSelected({ address, results }); // Armazenando os resultados da geocodificação
   };
 
   return (

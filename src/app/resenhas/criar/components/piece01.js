@@ -65,7 +65,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
   };
 
   if (!isMapsLoaded) {
-    return <div>Carregando...</div>; // Pode ser um componente de carregamento
+    return <div>Carregando...</div>;
   }
 
   return (
