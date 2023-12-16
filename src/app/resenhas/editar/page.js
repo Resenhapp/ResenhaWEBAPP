@@ -10,10 +10,7 @@ import Toggle from "@/src/components/Toggle";
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader";
-import PlacesAutocomplete from '@/src/components/PlacesAutocomplete';
 import { Loader } from '@googlemaps/js-api-loader';
-import { setHours } from "date-fns";
-import Button from "@/src/components/Button";
 import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 
 export default function EditEvent() {
@@ -77,15 +74,12 @@ export default function EditEvent() {
             setIsMapsLoaded(false);
           });
       }, []);
-
       const handleAddressSelect = (location) => {
         setAddress(location.address);
-        onAddressFieldChange(location.address);
       };
 
       const handleAddressChange = (value) => {
         setAddress(value);
-        onAddressFieldChange(value);
       };
 
 
