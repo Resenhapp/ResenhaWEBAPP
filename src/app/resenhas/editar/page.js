@@ -810,47 +810,54 @@ export default function EditEvent() {
 
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
-
-                    <div className="relative w-full">
-                        {!image && (
-                            <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
-                                <input
-                                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
-                                    type="file"
-                                    accept=".gif, .png, .jpg, .jpeg"
-                                    onChange={handleImageChange}
-                                />
-                                <div className='flex flex-col gap-2 justify-center items-center content-center'>
-                                    <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
-                                </div>
-                            </label>
-                        )}
-                        {image && (
-                            <>
-                                <Image
-                                    src={image}
-                                    alt="Selected Image"
-                                    width={400}
-                                    height={270}
-                                    className="object-cover w-full h-[260px]"
-                                />
-                                <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
-                                    <input
-                                        style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
-                                        type="file"
-                                        accept=".gif, .png, .jpg, .jpeg"
-                                        onChange={handleImageChange}
-                                    />
-                                    <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
-                                        <Vector vectorname={"edit02"} />
-                                    </div>
-                                </label>
-                            </>
-                        )}
-                        <div className="absolute inset-0">
-                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
-                        </div>
-                    </div>
+                <div className="absolute z-[9999] top-4 left-4">
+    <button onClick={(event) => {
+        event.stopPropagation();
+        window.history.back();
+    }} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+        <Vector vectorname={'arrowLeft01'} />
+    </button>
+</div>
+<div className="relative w-full">
+    {!image && (
+        <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
+            <input
+                style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
+                type="file"
+                accept=".gif, .png, .jpg, .jpeg"
+                onChange={handleImageChange}
+            />
+            <div className='flex flex-col gap-2 justify-center items-center content-center'>
+                <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
+            </div>
+        </label>
+    )}
+    {image && (
+        <>
+            <Image
+                src={image}
+                alt="Selected Image"
+                width={400}
+                height={270}
+                className="object-cover w-full h-[260px]"
+            />
+            <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
+                <input
+                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
+                    type="file"
+                    accept=".gif, .png, .jpg, .jpeg"
+                    onChange={handleImageChange}
+                />
+                <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
+                    <Vector vectorname={"edit02"} />
+                </div>
+            </label>
+        </>
+    )}
+    <div className="absolute inset-0">
+        <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
+    </div>
+</div>
 
 
                     <div className="w-full gap-2 flex flex-col p-5">
