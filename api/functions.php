@@ -804,12 +804,12 @@ function tryToAllowGuest()
         $party = $conciergeResults[0];
 
         $query = "SELECT * FROM guests WHERE code = '$code' AND party = '$party'";
-        $guestsResults = queryDB($query);
+        $guestsResults = queryDBRows($query);
 
         if ($guestsResults) {
             foreach ($guestsResults as $column) {
                 $paid = $column["paid"];
-                $method = $column["paid"];
+                $method = $column["method"];
                 $used = $column["used"];
 
                 if ($used == "0") {

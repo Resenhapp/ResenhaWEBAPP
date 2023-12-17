@@ -10,6 +10,8 @@ define("DB_NAME", "u878630845_resenhadb");
 define("DB_USERNAME", "u878630845_resenhadb");
 define("DB_PASSWORD", "kXiHdsMv7g$0");
 
+date_default_timezone_set('America/Sao_Paulo');
+
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $iv = chr(0x1) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
 
