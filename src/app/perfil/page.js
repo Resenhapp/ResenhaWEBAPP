@@ -159,7 +159,7 @@ export default function Profile() {
                                 </div>
 
                                 {activeTab === 'Sobre' && (
-                                    <div> {/* CONTEUDO DE SOBRE */}
+                                    <div>
                                         <div className='w-full'>
                                         <h1 className='font-bold text-lg'>Resumo</h1>
                                         {about && about.trim() !== "" ? (
@@ -197,7 +197,6 @@ export default function Profile() {
 
                                 {activeTab === 'Resenhas' && (
                                 <div>
-                                    {/* CONTEUDO DE RESENHAS */}
                                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                     {uniqueParties.some(party => party.used !== 1) && (
                                         <div className='text-purpleT5'>

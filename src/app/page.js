@@ -91,11 +91,7 @@ export default function Home() {
             <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® 2023 - Todos os direitos reservados.</p>
           </footer>
         </section>
-
-        {/* Overlay */}
         <div className={`fixed inset-0 bg-black transition-opacity ${sidebarOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'} z-20`} />
-
-        {/* Sidebar */}
         <div className={`fixed inset-y-0 right-0 w-full bg-purpleT0 max-w-md z-30 transform transition-transform ease-in-out duration-500 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className='flex flex-col py-20 px-4 flex-start gap-8 mt-12'>
             <button onClick={() => window.location.href = 'https://resenha.app/cadastro'} className='text-2xl px-8 py-2 text-purpleT4 rounded-xl'>Criar conta</button>
@@ -106,7 +102,6 @@ export default function Home() {
               <Vector vectorname={'xmark02'} />
             </button>
           </div>
-          {/* Add your sidebar content here */}
         </div>
       </div>
     </main>

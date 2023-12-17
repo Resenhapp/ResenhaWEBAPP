@@ -114,7 +114,7 @@ export default function MyParties() {
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {parties.made.map((party) => (
                                 <PartyPortrait
-                                key={party.code} // Chave única para cada PartyPortrait
+                                key={party.code}
                                 partyCode={party.code} 
                                 partyDate={party.date} 
                                 partyGuests={party.confirmed} 

@@ -52,9 +52,6 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
             formData.append('token', token);
             formData.append('image', file);
 
-            // Add extra data as needed
-            // formData.append('key', 'value');
-
             try {
                 await sendImageRequest(formData);
             } 

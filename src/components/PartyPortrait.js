@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Vector from './Vector';
 
 const PartyPortrait = ({ viewOnClick, editOnClick, editConcierge, copyOnClick, canBeDeleted = true, partyCode, partyName, partyImage, partyDate, partyHour, partyGuests, partyMaxGuests }) => {
-
     const baseFlexClasses = 'flex flex-row items-center gap-1';
     const h3Classes = 'text-[12px]';
 
@@ -25,19 +24,19 @@ const PartyPortrait = ({ viewOnClick, editOnClick, editConcierge, copyOnClick, c
                     </div>
                 </div>
                 <div className='flex flex-row  justify-between'>
-                    <div className='gap-2 flex'> {/* view */}
+                    <div className='gap-2 flex'>
                         <button onClick={viewOnClick} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'magnifier01'} />
-                        </button> {/* edit */}
+                        </button> 
                         <button onClick={editOnClick} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'pencil01'} />
-                        </button> {/* copy */}
+                        </button>
                         <button onClick={copyOnClick} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
-                        </button> {/* copy link */}
+                        </button> 
                         <button onClick={editConcierge} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'user05'} />
-                        </button> {/* copy link */}
+                        </button>
                     </div>
                     
                 </div>

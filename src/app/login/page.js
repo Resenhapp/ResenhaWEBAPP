@@ -61,11 +61,11 @@ export default function Login() {
 
   const [errorIndex, setErrorIndex] = useState(null);
   const errors = [
-    "Ocorreu um erro desconhecido.", // 0
-    "Nome de usuário muito curto.", // 1
-    "Nome de usuário inválido.", // 2
-    "Credenciais inválidas.", // 3
-    "Nome de usuário não pode ser vazio.", // 4
+    "Ocorreu um erro desconhecido.",
+    "Nome de usuário muito curto.",
+    "Nome de usuário inválido.",
+    "Credenciais inválidas.",
+    "Nome de usuário não pode ser vazio."
   ];
 
   const [email, setEmail] = useState('');
@@ -136,10 +136,10 @@ export default function Login() {
             setErrorIndex(2);
             break;
           default:
-            setErrorIndex(0);  // Set to 0 for an unknown error
+            setErrorIndex(0);
             break;
         }
-        setIsLoginErrorVisible(true); // Set the error to visible when an error occurs
+        setIsLoginErrorVisible(true);
       }
 
       else {return response.data;}

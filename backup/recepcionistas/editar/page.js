@@ -14,7 +14,7 @@ export default function EditConcierge() {
     const [isModalOpen, setModalOpen] = useState(false);
 
     const conciergeCurrentName = 'Claudinho bochecha';
-    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName); // initialize new name as current name
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName);
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -37,10 +37,10 @@ export default function EditConcierge() {
     }
 
     const handleInputChange = (e) => {
-        setConciergeNewName(e.target.value); // update new name as the user types
+        setConciergeNewName(e.target.value);
     };
 
-    const isFilled = conciergeNewName !== '';  // Check if the field is filled or not
+    const isFilled = conciergeNewName !== '';
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -58,7 +58,7 @@ export default function EditConcierge() {
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
                                 action={handleInputChange}
-                                value={conciergeNewName}  // change this line
+                                value={conciergeNewName}
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>

@@ -141,7 +141,7 @@ export default function Withdraw() {
                         </div>
                         <div>
                             <Button label={'Solicitar saque'} icon={'arrow'} action={handleWithdraw} iconSide='right' height={1} width={1} textAlign='left' active={isWithdrawalValid} />
-                            {errorContent && <WithdrawError errorContent={errorContent} key={new Date().getTime()} />} {/* Error message will only be displayed if errorContent is not null */}
+                            {errorContent && <WithdrawError errorContent={errorContent} key={new Date().getTime()} />}
                         </div>
                     </div>
                 </section>

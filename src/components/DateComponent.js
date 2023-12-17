@@ -17,11 +17,11 @@ const DateComponent = ({ number, day, month, year, selectedDate, onDateSelect })
     'dez': 12
   };
 
-  const fullDate = new Date(year, monthsMap[month] - 1, number); // Generate the full date object
-  const isSelected = selectedDate?.getTime() === fullDate.getTime(); // Check if this date is selected
+  const fullDate = new Date(year, monthsMap[month] - 1, number);
+  const isSelected = selectedDate?.getTime() === fullDate.getTime();
 
   const handleClick = () => {
-    onDateSelect(fullDate); // Pass the full date and its components to onDateSelect
+    onDateSelect(fullDate);
   };
 
   return (

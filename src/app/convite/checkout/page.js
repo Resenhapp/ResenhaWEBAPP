@@ -62,13 +62,8 @@ export default function Checkout() {
     const axios = require('axios');
     const qs = require('qs');
 
-    // const payRequest = () => {
-    //     console.log(`Credit card holder: ${cardHolder}`);
-    //     console.log(`Credit card number: ${cardNumber}`);
-    //     console.log(`Credit card expiration: ${cardExpiration}`);
-    //     console.log(`Credit card cvv: ${cardCvv}`);
-    //     console.log(`Credit card cpf: ${cardCpf}`);
-    // }
+    const payRequest = () => {
+    }
 
     const generatePix = () => {
         fetchData().then(data => {

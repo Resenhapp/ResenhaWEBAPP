@@ -698,7 +698,7 @@ export default function EditEvent() {
 
                 </div>
                 <div>
-                    {dateError && <div className='text-red-500'>{dateError}</div>} {/* Error message div */}
+                    {dateError && <div className='text-red-500'>{dateError}</div>}
                     <p className='text-sm'>
                         A data da resenha é a informação que as pessoas verão quando acessarem o seu convite para saberem quando que sua resenha vai acontecer.
                     </p>

@@ -23,18 +23,18 @@ const ConciergePortrait = ({ imgUrl, conciergeName, conciergeToken, relativeEven
                         {conciergeToken}
                     </h3>
                 </div>
-                <div className='flex flex-row justify-between w-full mt-4'> {/* 4 button */}
-                    <div className='gap-2 flex w-fit'> {/* 3 buttons */}
+                <div className='flex flex-row justify-between w-full mt-4'>
+                    <div className='gap-2 flex w-fit'>
                         <button onClick={editAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'edit02'} />
-                        </button> {/* edit */}
+                        </button>
                         <button onClick={copyAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
-                        </button> {/* copy link */}
+                        </button>
                     </div>
                     <button onClick={deleteAction} className='bg-redT2 flex ring-redT4 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                         <Vector vectorname={'trash01'} />
-                    </button> {/* delete */}
+                    </button>
                 </div>
             </div>
         </div>

@@ -38,19 +38,19 @@ export default function EditProfile() {
     const [errorIndex, setErrorIndex] = useState(null);
 
     const errors = [
-        "0", // 0
-        "O nome de usuário deve ter pelo menos 5 caracteres.", // 1
-        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).", // 2
-        "Este nome de usuário já existe.", // 3
-        "O nome de usuário não pode ficar vazio.", // 4
-        "O seu nome não pode ficar vazio.", // 5
-        "O seu nome não pode conter caracteres especiais.",  // 6
-        "Os campos de nome de usuário e nome não podem ficar vazios.", // 7
-        "O nome de usuário e o nome não podem conter caracteres especiais.", // 8
-        "Os campos de nome de usuário e nome devem ter pelo menos 5 caracteres.", // 9
-        "Este nome de usuário já existe e o nome não pode ficar vazio.", // 10
-        "Este nome de usuário já existe e o nome não pode conter caracteres especiais.", // 11
-        "O nome de usuário e o nome devem começar com uma letra e podem conter apenas letras, números e sublinhados (_).", // 12
+        "0",
+        "O nome de usuário deve ter pelo menos 5 caracteres.",
+        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).",
+        "Este nome de usuário já existe.", 
+        "O nome de usuário não pode ficar vazio.", 
+        "O seu nome não pode ficar vazio.", 
+        "O seu nome não pode conter caracteres especiais.",  
+        "Os campos de nome de usuário e nome não podem ficar vazios.", 
+        "O nome de usuário e o nome não podem conter caracteres especiais.", 
+        "Os campos de nome de usuário e nome devem ter pelo menos 5 caracteres.", 
+        "Este nome de usuário já existe e o nome não pode ficar vazio.", 
+        "Este nome de usuário já existe e o nome não pode conter caracteres especiais.", 
+        "O nome de usuário e o nome devem começar com uma letra e podem conter apenas letras, números e sublinhados (_).",
     ];
       
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);

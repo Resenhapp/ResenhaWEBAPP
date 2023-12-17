@@ -6,12 +6,12 @@ const FeedDualButton = ({leftButtonText, rightButtonText, onLeftClick, onRightCl
 
     const handleLeftClick = () => {
         setIsLeftActive(true);
-        onLeftClick(); // Call the passed in onLeftClick prop
+        onLeftClick();
     };
 
     const handleRightClick = () => {
         setIsLeftActive(false);
-        onRightClick(); // Call the passed in onRightClick prop
+        onRightClick();
     };
 
     return (

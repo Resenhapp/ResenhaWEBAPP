@@ -10,9 +10,9 @@ const Timer = ({ timeInMinutes = 10, text = "O seu tempo para pagar acaba em:" }
         const intervalId = setInterval(() => {
             const updatedRemainingTime = endTimeRef.current - Date.now();
             setRemainingTime(updatedRemainingTime <= 0 ? 0 : updatedRemainingTime);
-        }, 200); // Check more frequently for a smoother countdown
+        }, 200);
 
-        return () => clearInterval(intervalId); // cleanup on unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {
