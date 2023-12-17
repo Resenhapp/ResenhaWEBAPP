@@ -13,7 +13,6 @@ import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 import Button from "@/src/components/Button";
 import { Loader } from '@googlemaps/js-api-loader';
 import { tagsData } from "@/src/components/tagsData";
-import { add } from 'date-fns';
 
 export default function EditEvent() {
     var token = Cookies.get('token');
