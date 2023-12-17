@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Vector from "@/src/components/Vector";
 import EditInfoPage from "@/src/components/EditInfoPage"
@@ -10,11 +11,9 @@ import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader";
 import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 import Button from "@/src/components/Button";
-
-import React, { useState, useEffect } from 'react';
-
 import { Loader } from '@googlemaps/js-api-loader';
 import { tagsData } from "@/src/components/tagsData";
+import { add } from 'date-fns';
 
 export default function EditEvent() {
     var token = Cookies.get('token');
@@ -40,6 +39,7 @@ export default function EditEvent() {
     const [startHour, setStartHour] = useState('');
     const [limit, setLimit] = useState('');
     const [isVip, setIsVip] = useState(false);
+    const [isPublic, setIsPublic] = useState(true);
     const [vipLimit, setVipLimit] = useState('');
     const [limitError, setLimitError] = useState('');
     const [address, setAddress] = useState('');
@@ -138,6 +138,12 @@ export default function EditEvent() {
     const [isEditPricePageOpen, setIsEditPricePageOpen] = useState(false);
     const toggleEditPricePageOpen = () => {
         setIsEditPricePageOpen(!isEditPricePageOpen);
+    };
+
+    
+    const [isEditPublicPageOpen, setIsEditPublicPageOpen] = useState(false);
+    const toggleEditPublicPageOpen = () => {
+        setIsEditPublicPageOpen(!isEditPublicPageOpen);
     };
 
     const [eventTags, setEventTags] = useState([]);
@@ -253,9 +259,15 @@ export default function EditEvent() {
         }
     }, [isVip]);
 
+    const visibilityLabel = isPublic ? 'Público' : 'Privado'; // Lógica para exibir o rótulo adequado
+
     const handleToggleVip = () => {
         setIsVip(!isVip);
     };
+
+    const handleTogglePublic = (isChecked) => {
+        setIsPublic(isChecked);
+      };
 
     const handleLimitChange = (event) => {
         const onlyNumbers = event.target.value.replace(/\D/g, '');
@@ -448,6 +460,12 @@ export default function EditEvent() {
         }
     };
 
+    const saveVisibility = async () => {
+        const data = {
+          visibility: isPublic ? 'Público' : 'Privado'
+        };
+    };      
+
     const saveDescription = async () => {
         const data = {
             description: description
@@ -459,6 +477,7 @@ export default function EditEvent() {
             toggleEditDescriptionPageOpen();
         }
     };
+    
 
     const saveTags = async () => {
         setEventTags(tempEventTags);
@@ -677,6 +696,34 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
+
+            <EditInfoPage
+            isOpen={isEditPublicPageOpen}
+            pageTitle={'Visibilidade da Resenha'}
+            togglePage={toggleEditPublicPageOpen}
+            saveAction={saveVisibility}
+            >
+            
+        <div className='w-full'>
+            <input
+                className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                value={visibilityLabel}
+                onChange={handleVipLimitChange}
+                type="text"
+                readOnly // Impede que o usuário edite diretamente o campo
+            />
+
+      </div>
+
+      <Toggle
+        labelText={'Visibilidade'}
+        showLabel={true}
+        showQuestion={true}
+        onToggle={handleTogglePublic}
+        startToggled={isPublic}
+      />
+    </EditInfoPage>
+
 
             <EditInfoPage
                 isOpen={isEditAddressPageOpen}
@@ -920,13 +967,14 @@ export default function EditEvent() {
                                 ))}
                             </div>
                         </div>
-                        <button onClick={toggleEditDescriptionPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
-                            <div className="flex flex-row gap-2 items-center">
-                                <p>Visibilidade</p>
-                                <Vector vectorname={'edit02'} />
-                            </div>
-                            <p className="text-left">{"Publico"}</p>
-                        </button>
+                        <button onClick={toggleEditPublicPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                                <div className="flex flex-row gap-2 items-center">
+                                    <p className="font-bold">Visibilidade</p>
+                                    <Vector vectorname={'edit02'} />
+                                </div>
+                                <p>{visibilityLabel}</p>
+                            </button>
+
                         {!canBeDeleted &&
                             <Button label={'Excluir resenha'} icon={'trash'} action={() => setShowDeleteModal(!showDeleteModal)} iconSide='right' height={1} width={1} textAlign='center' />
                         }
