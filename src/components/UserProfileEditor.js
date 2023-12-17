@@ -56,7 +56,7 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
             // formData.append('key', 'value');
 
             try {
-                console.log(await sendImageRequest(formData));
+                await sendImageRequest(formData);
             } 
             
             catch (error) {
