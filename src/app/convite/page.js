@@ -122,17 +122,9 @@ export default function Invite() {
         );
     };
 
-    const isIOS = () => {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
-    };
-
-    const getAppleMapsURL = (address) => {
-        var newAddress = encodeURIComponent(address);
-        return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
-    };
-
     const getGoogleMapsURL = (address) => {
         var newAddress = encodeURIComponent(address);
+
         return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
     };
 
@@ -235,7 +227,7 @@ export default function Invite() {
                                 </h1>
                                 <h1>
                                     <a
-                                        href={isIOS() ? getAppleMapsURL() : getGoogleMapsURL()}
+                                        href={getGoogleMapsURL(address)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
