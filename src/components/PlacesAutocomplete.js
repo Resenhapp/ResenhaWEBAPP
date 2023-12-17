@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Vector from './Vector';
 import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
+  getGeocode
 } from "use-places-autocomplete";
 import {
   Combobox,

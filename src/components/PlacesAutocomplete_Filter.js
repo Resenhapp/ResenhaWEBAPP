@@ -12,7 +12,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
-const PlacesAutocomplete_Edit = ({ setSelected }) => {
+const PlacesAutocomplete_Filter = ({ setSelected }) => {
   const [placesService, setPlacesService] = useState(null);
 
   useEffect(() => {
@@ -81,4 +81,4 @@ const PlacesAutocomplete_Edit = ({ setSelected }) => {
   );
 };
 
-export default PlacesAutocomplete_Edit;
+export default PlacesAutocomplete_Filter;
