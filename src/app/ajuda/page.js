@@ -12,6 +12,8 @@ export default function Help() {
     const axios = require('axios');
     const qs = require('qs');
 
+    const [data, setData] = useState(null);
+
     const copyVector = () => {
         return (
             <div className='inline-flex bg-purpleT2 ring-purpleT3 mx-2 ring-inset rounded-full ring-1 w-6 h-6 align-center justify-center items-center'>
@@ -22,7 +24,6 @@ export default function Help() {
         )
     }
 
-    const [data, setData] = useState(null);
     const fetchData = async () => {
       const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
         request: 'getHelpData'
