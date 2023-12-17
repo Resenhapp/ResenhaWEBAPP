@@ -5,13 +5,7 @@ import Timer from '@/src/components/Timer';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 
-export default function Pix({setPixKey, setPixQrCodeUrl, setIsFilled}) {
-    const token = Cookies.get('token');
-
-    if (!token && typeof window !== 'undefined') {
-      window.location.href = '/login';
-    }
-
+export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setIsFilled}) {
     const axios = require('axios');
     const qs = require('qs');
 
@@ -28,40 +22,36 @@ export default function Pix({setPixKey, setPixQrCodeUrl, setIsFilled}) {
       }
     };
   
-    const getUserData = async () => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getGuestData',
-            guest: guest,
-            party: 'party'
-          });
-          
-          setNotifications(response.notifications);
-        } 
-        
-        catch (error) {
-          console.error(error);
+    const getPaymentInfo = async () => {
+      try {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getTransactionInfo',
+          charge: transactionCharge
+        });
+
+        if (response.paid == 1) {
+          setIsFilled(true);
+
+          // RODAR ANIMAÇÃO DE PAGAMENTO RECEBIDO!
         }
+      } 
+      
+      catch (error) {
+        console.error(error);
+      }
     };
   
     useEffect(() => {
-        const interval = setInterval(() => {
-            getUserData();
-            setShowNotifications(true);
-        }, 1000 * updateInterval);
-      
-        return () => {
-            clearInterval(interval);
-        };
+      const interval = setInterval(async () => {
+        await getPaymentInfo();
+      }, 3000);
+    
+      return () => {
+        clearInterval(interval);
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getUserData, updateInterval]);
+    }, []);
   
-  
-    const handleClearButton = async () => {
-      setShowNotifications(false);
-      await clearUserNotifications();
-    };
-
     return(
         <div className="flex flex-col items-center justify-center">
             <section className="flex flex-col items-center w-full max-w-md">
@@ -73,12 +63,12 @@ export default function Pix({setPixKey, setPixQrCodeUrl, setIsFilled}) {
                     height={190}
                     className='rounded-lg p-1 bg-white mt-4'
                 />
-                    <div className="flex flex-col mt-10 mb-2 gap-4 w-full">
-                        <CopyInput value={setPixKey} showIcon={true} Icon={'copy'} />
-                    </div>
-                    <div className='my-4 w-full'>
-                        <Timer timeInMinutes={10} text="O seu tempo para pagar acaba em:" />
-                    </div>
+                <div className="flex flex-col mt-10 mb-2 gap-4 w-full">
+                    <CopyInput value={setPixKey} showIcon={true} Icon={'copy'} />
+                </div>
+                <div className='my-4 w-full'>
+                    <Timer timeInMinutes={10} text="O seu tempo para pagar acaba em:" />
+                </div>
                 </div>
                 <div className="flex flex-col mb-4 w-full">
                 </div>

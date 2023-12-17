@@ -12,8 +12,7 @@ import Loading from '@/src/components/Loading';
 
 export default function Cash({setIsFilled}) {
     useEffect(() => {
-                setIsFilled(true);
-            
+        setIsFilled(true);
     });
     
     return(

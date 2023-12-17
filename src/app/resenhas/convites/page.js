@@ -82,9 +82,10 @@ export default function MyInvites() {
                             partyCode={party.token}
                             partyGuests={party.confirmed}
                             partyDate={party.date}
-                            partyHour={party.time}
+                            partyHour={party.start}
                             partyName={party.name}
-                            viewReceipt={()=>(window.location.href = "http://localhost:3000/comprovante")}
+                            partyPaid={party.paid}
+                            viewReceipt={()=>(window.location.href = '/comprovante')}
                           />
                         </div>
                       ))}

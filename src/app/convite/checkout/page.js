@@ -69,10 +69,10 @@ export default function Checkout() {
     // }
 
     const generatePix = () => {
-            fetchData().then(data => {
-                setPixData(data);
-                setLoading(false);
-            });
+        fetchData().then(data => {
+            setPixData(data);
+            setLoading(false);
+        });
     }
 
     const makeRequest = async (url, data) => {
@@ -126,7 +126,8 @@ export default function Checkout() {
 
             var data = [
                 response.code,
-                response.qrcode
+                response.qrcode,
+                response.charge
             ];
             
             return data;
@@ -191,7 +192,7 @@ export default function Checkout() {
                 break;
             case 2:
                 if (paymentMethod === 'Pix' && pixData) {
-                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} />
+                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} transactionCharge={pixData[2]} setIsFilled={setIsFilled} />
                 }
 
                 else if (paymentMethod === 'Dinheiro') {
@@ -244,10 +245,8 @@ export default function Checkout() {
     let title, subtitle, button, action;
     switch (progress) {
         case 0:
-            title = '';
-            subtitle = '';
             if (typeof window !== 'undefined') {
-                window.location.href = '/resenhas/';
+                window.history.back();
             }
         case 1:
             title = 'Informações';
@@ -313,6 +312,16 @@ export default function Checkout() {
         setLoading(false);
     };
 
+    const handleButtonClick = () => {
+        if (progress == 1) {
+            window.history.back();
+        }
+
+        else {
+            setProgress(progress - 1);
+        }
+    };
+
     useEffect(() => {
         if ((paymentMethod === 'Pix' || paymentMethod === 'Dinheiro' || paymentMethod === 'Cartão') && (canBeUnderaged || customerIsEighteen)) {
             setIsFilled(true);
@@ -331,7 +340,7 @@ export default function Checkout() {
         fetchPartyData();
     }, []);
 
-    if (!data) {
+    if (!data || loading) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
                 <Loading />
@@ -355,8 +364,10 @@ export default function Checkout() {
                 progress < 3 ? (
                     <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
                         <div className="flex flex-row w-full justify-center max-w-md">
-                            <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                            <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                        <button className="px-12" onClick={handleButtonClick}>
+                            Voltar
+                        </button>
+                        <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
                         </div>
                         <div className="flex items-center justify-center">
                             <p className="mr-1">Tem uma conta?</p>

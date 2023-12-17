@@ -19,6 +19,7 @@ $public = [
     "getHelpData",
     "getFeedData",
     "getMessages",
+    "getTransactionInfo",
     "tryToCreateGuest",
     "tryToSendMessage",
     "tryToWithdraw",

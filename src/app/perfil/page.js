@@ -116,6 +116,8 @@ export default function Profile() {
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 
+    const uniqueParties = Array.from(new Set(parties.went.map(party => party.code))).map(code => parties.went.find(party => party.code === code));
+
     return (
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Perfil'} userData={mine ? data : undefined}/>
@@ -196,14 +198,14 @@ export default function Profile() {
                                 <div>
                                     {/* CONTEUDO DE RESENHAS */}
                                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                    {parties.went.some((party) => party.used !== 1) && (
+                                    {uniqueParties.some(party => party.used !== 1) && (
                                         <div className='text-purpleT5'>
-                                        Vou
+                                            Vou
                                         </div>
-                                    )}
-                                    {parties.went.map((party) => (
+                                        )}
+                                        {uniqueParties.map((party) => (
                                         party.used !== 1 ? (
-                                        <ProfileEvent
+                                            <ProfileEvent
                                             key={party.hash}
                                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                                             partyGuests={party.confirmed}
@@ -211,17 +213,17 @@ export default function Profile() {
                                             partyHour={party.start}
                                             partyName={party.name}
                                             eventCode={party.code}
-                                        />
+                                            />
                                         ) : null
-                                    ))}
-                                    {parties.went.some((party) => party.used === 1) && (
+                                        ))}
+                                        {uniqueParties.some(party => party.used === 1) && (
                                         <div className='text-purpleT5'>
-                                        Fui
+                                            Fui
                                         </div>
-                                    )}
-                                    {parties.went.map((party) => (
+                                        )}
+                                        {uniqueParties.map((party) => (
                                         party.used === 1 ? (
-                                        <ProfileEvent
+                                            <ProfileEvent
                                             key={party.hash}
                                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                                             partyGuests={party.confirmed}
@@ -229,7 +231,7 @@ export default function Profile() {
                                             partyHour={party.time}
                                             partyName={party.name}
                                             eventCode={party.code}
-                                        />
+                                            />
                                         ) : null
                                     ))}
                                     {!(parties.went.some((party) => party.used !== 1) || parties.went.some((party) => party.used === 1)) && (

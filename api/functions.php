@@ -1157,6 +1157,7 @@ function getSpecificData($userId, $item) {
                 foreach ($guestsResults as $guest) {
                     $partyCode = $guest["party"];
                     $userCode = $guest["code"];
+                    $userPaid = $guest["paid"];
                     $codeUsed = $guest["used"];
 
                     $query = "SELECT id, name, date, start, end FROM parties WHERE code = '$partyCode'";
@@ -1178,6 +1179,7 @@ function getSpecificData($userId, $item) {
                                 "start" => $party["start"],
                                 "end" => $party["end"],
                                 "confirmed" => $partyConfirmed,
+                                "paid" => $userPaid,
                                 "used" => $codeUsed,
                                 "token" => $userCode,
                                 "code" => $partyCode
@@ -1845,7 +1847,7 @@ function tryToCreateGuest()
         $charge = $array["charges"][0]["id"];
     } 
 
-    if ($method == "Cartão"){
+    else if ($method == "Cartão"){
         $req = [
             "items" => [
                 [
@@ -1971,6 +1973,7 @@ function tryToCreateGuest()
             'status' => "success",
             'code' => $qrcode,
             'qrcode' => $qrcodeurl,
+            'charge' => $charge,
         ];
 
         returnData($data);
@@ -1997,6 +2000,31 @@ function tryToAuthenticate()
     
     else {
         returnError("invalid_credentials");
+    }
+}
+
+function getTransactionInfo()
+{
+    $charge = sanitize($_POST['charge']);
+
+    $query = "SELECT * FROM guests WHERE charge = '$charge'";
+    $transactionInfo = queryDBRows($query);
+
+    if ($transactionInfo) {
+        foreach ($transactionInfo as $column) {
+            $transactionPaid = $column["paid"];
+    
+            $data = [
+                'charge' => $charge,
+                'paid' => $transactionPaid
+            ];
+
+            returnData($data);
+        }
+    } 
+    
+    else {
+        returnError("invalid_transaction");
     }
 }
 
