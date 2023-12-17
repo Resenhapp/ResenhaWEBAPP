@@ -213,10 +213,14 @@ export default function Feed() {
         return tag;
       }
     });
+    
     setAllTags(updatedTags);
+
     if (updatedTags.find(tag => tag.id === tagId).selected) {
       setTempEventTags([...tempEventTags, tagId]);
-    } else {
+    } 
+    
+    else {
       setTempEventTags(tempEventTags.filter(tagIdTemp => tagIdTemp !== tagId));
     }
   };

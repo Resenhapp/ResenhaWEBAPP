@@ -134,7 +134,9 @@ export default function Login() {
         setIsLoginErrorVisible(true);
       }
 
-      else {return response.data;}
+      else {
+        return response.data
+      }
   };
   
   useEffect(() => {
