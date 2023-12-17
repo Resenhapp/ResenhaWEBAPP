@@ -63,8 +63,12 @@ export default function EditEvent() {
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
                 request: 'tryToDeleteEvent',
                 token: token,
-                code: party.code
+                code: partyCode
             });
+
+            if (response.status == "success") {
+                handleNavigation("resenhas/todas");
+            }
         }
 
         catch (error) {
@@ -1029,7 +1033,6 @@ export default function EditEvent() {
                         </button>
                         {!canBeDeleted &&
                             <Button label={'Excluir resenha'} icon={'trash'} action={() => setShowDeleteModal(!showDeleteModal)} iconSide='right' height={1} width={1} textAlign='center' />
-                            
                         }
                     </div>
                 </section>

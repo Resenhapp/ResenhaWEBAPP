@@ -1776,6 +1776,47 @@ function getInviteData()
     }
 }
 
+function tryToDeleteConcierge()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeToken = sanitize($_POST['concierge']);
+
+    if ($userData && $conciergeToken) {
+        foreach ($userData as $column) {
+            $userId = $column["id"];
+
+            $query = "SELECT host FROM concierges WHERE token = '$conciergeToken'";
+            $hostId = queryDB($query)[0];
+
+            if ($userId == $hostId) {
+                $deleteQuery = "DELETE FROM concierges WHERE token = '$conciergeToken'";
+                queryNR($deleteQuery);
+
+                returnSuccess("concierge_deleted");
+            }
+        }
+    }
+}
+
+function tryToCreateConcierge()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeData = $_POST['data'];
+
+    if ($userData) {
+        foreach ($userData as $column) {
+            $userId = $column["id"];
+    
+            $conciergeParty = $conciergeData["party"];
+            $conciergeName = $conciergeData["name"];
+            $conciergeToken = randomCode(6);
+    
+            $query = "INSERT INTO `concierges` (`id`, `host`, `party`, `name`, `token`) VALUES (NULL, '$userId', '$conciergeParty', '$conciergeName', '$conciergeToken');";
+            queryNR($query);
+        }
+    }
+}
+
 function tryToCreateGuest()
 {
     $party = sanitize($_POST['code']);

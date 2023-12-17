@@ -10,12 +10,16 @@ import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
 export default function Concierges() {
-    
-    function removeConcierge() {
+    const axios = require('axios');
+    const qs = require('qs');
 
-    }
+    const token = Cookies.get('token');
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedConcierge, setSelectedConcierge] = useState(null);
+    const [data, setData] = useState(null);
+
+    const defaultProfileImage = "https://media.resenha.app/s/ui/concierge_default.jpg";
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -23,15 +27,13 @@ export default function Concierges() {
         }
     };
 
-    const defaultProfileImage = "https://media.resenha.app/s/ui/concierge_default.jpg";
-
-    const token = Cookies.get('token');
-
-    const [data, setData] = useState(null);
-
     const fetchData = async () => {
         try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'getUserData', token: token });
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+                request: 'getUserData', 
+                token: token 
+            });
+            
             setData(response);
         }
 
@@ -39,14 +41,6 @@ export default function Concierges() {
             console.error(error);
         }
     };
-
-    useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
 
     const makeRequest = async (url, data) => {
         try {
@@ -59,6 +53,44 @@ export default function Concierges() {
         }
     };
 
+    const removeConcierge = async () => {
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+                request: 'tryToDeleteConcierge', 
+                token: token,
+                concierge: selectedConcierge
+            });
+
+            if (response.status == "success") {
+                // FAZER ALGO
+                
+                setShowDeleteModal(false);
+            }
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleModalButton = async (conciergeToken) => {
+        setShowDeleteModal(!showDeleteModal);
+    
+        if (!showDeleteModal) {
+            setSelectedConcierge(conciergeToken);
+        } 
+        
+        else {
+            setSelectedConcierge(null);
+        }
+    };
+    
+
+    useEffect(() => {
+        fetchData();
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (
@@ -78,7 +110,7 @@ export default function Concierges() {
                     <p className="text-center text-sm text-redT3"> (Esta ação não poderá ser desefeita.)</p>
                     <div className="flex flex-col mt-4 items-center content-center justify-center">
                         <button onClick={()=>{setShowDeleteModal(!showDeleteModal)}} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
-                        <button onClick={()=>{removeConcierge}} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
+                        <button onClick={() => removeConcierge()} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
                     </div>
                     </div>
             </div>}
@@ -97,7 +129,7 @@ export default function Concierges() {
                                             conciergeToken={concierge.token}
                                             copyAction={()=>{navigator.clipboard.writeText("https://resenha.app/recepcionista?t="+concierge.token)}}
                                             relativeEvent={concierge.party}
-                                            deleteAction={()=>{setShowDeleteModal(!showDeleteModal)}}
+                                            deleteAction={() => handleModalButton(concierge.token)}
                                             editAction={() => handleNavigation('recepcionistas/editar?r='+concierge.token)}
                                         />
                                     </div>
