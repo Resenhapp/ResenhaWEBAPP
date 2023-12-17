@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
 import InputField from '@/src/components/InputField';
@@ -9,7 +10,7 @@ import Modal from '@/src/components/Modal';
 import Cookies from 'js-cookie';
 import Loading from '@/src/components/Loading';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function EditConcierge() {
     const axios = require('axios');

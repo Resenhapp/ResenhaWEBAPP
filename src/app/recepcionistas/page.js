@@ -101,19 +101,25 @@ export default function Concierges() {
                     <div className='h3 w-full flex '>
                         <div className='w-full flex flex-col '>
                             <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                {concierges.map((concierge) => (
+                                {concierges.length === 0 ? (
+                                    <p> Você ainda não possui nenhum recepcionista. Que tal adicionar um tocando abaixo? </p>
+                                ) : (
+                                    concierges.map((concierge) => (
                                     <div key={concierge.id}>
                                         <ConciergePortrait
-                                            imgUrl={defaultProfileImage}
-                                            conciergeName={concierge.name}
-                                            conciergeToken={concierge.token}
-                                            copyAction={()=>{navigator.clipboard.writeText("https://resenha.app/recepcionista?t="+concierge.token)}}
-                                            relativeEvent={concierge.party}
-                                            deleteAction={() => handleModalButton(concierge.token)}
-                                            editAction={() => handleNavigation('recepcionistas/editar?r='+concierge.token)}
+                                        imgUrl={defaultProfileImage}
+                                        conciergeName={concierge.name}
+                                        conciergeToken={concierge.token}
+                                        copyAction={() => {
+                                            navigator.clipboard.writeText("https://resenha.app/recepcionista?t=" + concierge.token);
+                                        }}
+                                        relativeEvent={concierge.party}
+                                        deleteAction={() => handleModalButton(concierge.token)}
+                                        editAction={() => handleNavigation('recepcionistas/editar?r=' + concierge.token)}
                                         />
                                     </div>
-                                ))}
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
