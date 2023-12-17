@@ -1,9 +1,10 @@
 <?php
 
-define("GLOBAL_APIKEY", "LN8z62TNVsZdb4oBXIc8mdT4");
-define("GLOBAL_ENCKEY", "lifeisaparty");
+define("GLOBAL_API", "LN8z62TNVsZdb4oBXIc8mdT4");
+define("GLOBAL_ENC", "lifeisaparty");
 define("GLOBAL_REDIRECT", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-define("GLOBAL_PAGARMEKEY", "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og=="); // testes c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og== // producao c2tfcU5ENEpOMERpMkk0R205Qjo=
+define("GLOBAL_PAGARME", "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og=="); // testes c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og== // producao c2tfcU5ENEpOMERpMkk0R205Qjo=
+define("GLOBAL_WEBHOOK", "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4");
 
 define("DB_SERVER", "154.56.47.103");
 define("DB_NAME", "u878630845_resenhadb");

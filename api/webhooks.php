@@ -24,8 +24,6 @@ if (isset($body)) {
                 $query = "UPDATE guests SET paid = '1' WHERE id = '$id'";
                 queryNR($query);
         
-                $value = $charges[0]['paid_amount'] / 100;
-
                 $query = "SELECT * FROM guests WHERE id = '$id'";
                 $info = queryDBRows($query);
 
@@ -38,23 +36,38 @@ if (isset($body)) {
                     }
                 }
 
-                $query = "SELECT host FROM parties WHERE code = '$party'";
-                $host = queryDB($query)[0];
-        
-                if ($value >= 10) {
-                    $value = $value * 0.9;
+                $query = "SELECT * FROM parties WHERE code = '$party'";
+                $hostInfo = queryDBRows($query);
+
+                if (mysqli_num_rows($hostInfo) > 0) {
+                    foreach ($hostInfo as $column) {
+                        $hostId = $column["id"];
+                        $hostTax = $column["tax"];
+                    }
                 }
-    
+                
+                $value = $charges[0]['paid_amount'] / 100;
+
+                $valueAfterTax = (($value * ((100 - $hostTax ) / 100)));
+        
+                if (($valueAfterTax - $value) <= -1) {
+                    $value = $valueAfterTax;
+                }
+                
                 else {
                     $value = $value - 1;
                 }
 
-                update_balance($host, $value, "available");
+                updateBalance($hostId, $value);
+
+                createNotification(
+                    $hostId, 
+                    "Resenha criada!", 
+                    "$name foi criada com sucesso."
+                );
     
                 // send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
             }
-        
-            registerLog($guest, "guest", "pix_paid", "ID do Convidado: ".$guest);
         }
     }
 }
