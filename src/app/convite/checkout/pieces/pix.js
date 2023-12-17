@@ -9,8 +9,6 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
     const axios = require('axios');
     const qs = require('qs');
 
-    var updateInterval = 3;
-  
     const makeRequest = async (url, data) => {
       try {
         const response = await axios.post(url, qs.stringify(data));
