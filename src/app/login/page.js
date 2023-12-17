@@ -5,10 +5,11 @@ import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
 import Loading from "@/src/components/Loading";
+
+import React, { useState, useEffect } from 'react';
 
 export default function Login() {
   var token = Cookies.get('token');

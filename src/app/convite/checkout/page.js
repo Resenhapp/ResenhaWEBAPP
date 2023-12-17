@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useRef, useEffect } from "react";
 import Button from "@/src/components/Button";
 import Link from "next/link";
 import Vector from "@/src/components/Vector";
@@ -12,6 +11,9 @@ import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
 import Cookies from 'js-cookie';
 import html2canvas from 'html2canvas';
+
+import { useState, useRef, useEffect } from "react";
+
 export default function Checkout() {
     var token = Cookies.get('token');
 
@@ -170,7 +172,6 @@ export default function Checkout() {
         }, 3);
     }
     
-    var method = 'pix';
     const renderPiece = () => {
         switch (progress) {
             case 0:

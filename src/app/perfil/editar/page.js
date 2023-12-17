@@ -1,6 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import { interestsData } from '@/src/components/interestsData';
+
 import PageHeader from '@/src/components/PageHeader';
 import UserProfileEditor from '@/src/components/UserProfileEditor';
 import Vector from '@/src/components/Vector';
@@ -9,14 +8,12 @@ import Tag from '@/src/components/Tag';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
+import React, { useState, useEffect } from 'react';
+
+import { interestsData } from '@/src/components/interestsData';
+
 export default function EditProfile() {
     var token = Cookies.get('token');
-
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const [newProfile, setNewProfile] = useState(null);
     const [data, setData] = useState(null);
@@ -36,8 +33,10 @@ export default function EditProfile() {
     var [tempUsername, setTempUsername] = useState('');
     var [newTempUsername, setNewTempUsername] = useState('');
     var [isEditUsernamePageOpen, setIsEditUsernamePageOpen] = useState(false);
+
     const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
     const [errorIndex, setErrorIndex] = useState(null);
+
     const errors = [
         "0", // 0
         "O nome de usuário deve ter pelo menos 5 caracteres.", // 1
@@ -52,11 +51,17 @@ export default function EditProfile() {
         "Este nome de usuário já existe e o nome não pode ficar vazio.", // 10
         "Este nome de usuário já existe e o nome não pode conter caracteres especiais.", // 11
         "O nome de usuário e o nome devem começar com uma letra e podem conter apenas letras, números e sublinhados (_).", // 12
-      ];
+    ];
       
     const [isEditInterestsPageOpen, setIsEditInterestsPageOpen] = useState(false);
     const [userInterests, setUserInterests] = useState([]);
     const [tempUserInterests, setTempUserInterests] = useState(userInterests);
+
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+    }
 
     const makeRequest = async (url, data) => {
         try {

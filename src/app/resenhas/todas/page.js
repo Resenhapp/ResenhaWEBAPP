@@ -1,9 +1,7 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
 import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
@@ -86,11 +84,9 @@ export default function MyParties() {
         await navigator.clipboard.writeText(fullTextToCopy);
     };
     
-
-
-
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

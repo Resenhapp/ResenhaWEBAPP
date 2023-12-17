@@ -2,7 +2,6 @@
 
 import PageHeader from "@/src/components/PageHeader";
 import ButtonConfig from "@/src/components/ButtonConfig";
-import SearchInput from "@/src/components/SearchInput";
 import React from "react";
 import Cookies from "js-cookie";
 
@@ -15,6 +14,7 @@ export default function Settings() {
 
   const handleLogOut = () => {
     Cookies.remove("token");
+    
     if (typeof window !== "undefined") {
       window.location.href = "/login";
     }

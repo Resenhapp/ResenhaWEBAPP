@@ -3,20 +3,21 @@
 import Image from "next/image";
 import Vector from "@/src/components/Vector";
 import EditInfoPage from "@/src/components/EditInfoPage"
-import React, { useState, useEffect } from 'react';
 import Tag from "@/src/components/Tag";
-import { tagsData } from "@/src/components/tagsData";
 import Toggle from "@/src/components/Toggle";
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader";
-import { Loader } from '@googlemaps/js-api-loader';
 import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 import Button from "@/src/components/Button";
+
+import React, { useState, useEffect } from 'react';
+
+import { Loader } from '@googlemaps/js-api-loader';
+import { tagsData } from "@/src/components/tagsData";
+
 export default function EditEvent() {
     var token = Cookies.get('token');
-
-    let urlParams = new URLSearchParams();
 
     var partyCode = ''
 
@@ -94,6 +95,7 @@ export default function EditEvent() {
                 setIsMapsLoaded(false);
             });
     }, []);
+    
     const handleAddressSelect = (location) => {
         setAddress(location.address);
     };
@@ -101,7 +103,6 @@ export default function EditEvent() {
     const handleAddressChange = (value) => {
         setAddress(value);
     };
-
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {

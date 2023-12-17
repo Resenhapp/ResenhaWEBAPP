@@ -1,17 +1,18 @@
 'use client'
-import React, { useState } from 'react';
+
 import PageHeader from '@/src/components/PageHeader';
 import SignatureSelection from '@/src/components/SignatureSelection';
 
+import React, { useState } from 'react';
+
 export default function Signature() {
+    const [selectedCard, setSelectedCard] = useState(0);
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
             window.location.href = `/${pageToGo}`;
         }
     };
-
-    const [selectedCard, setSelectedCard] = useState(0);
 
     const handleCheck = (index) => (isChecked) => {
         if (isChecked) {

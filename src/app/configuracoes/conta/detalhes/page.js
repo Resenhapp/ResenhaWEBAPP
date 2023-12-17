@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
@@ -8,29 +7,16 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Confirmed from '@/src/components/Confirmed';
 
+import React, { useState, useEffect } from 'react';
+
 export default function AccountDetails() {
     const token = Cookies.get('token');
-    
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
-
-    const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
-    const [errorIndex, setErrorIndex] = useState(null);
-
-    const errors = [
-        "0",
-        "O nome de usuário deve ter pelo menos 5 caracteres.",
-        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).",
-        "Este nome de usuário já existe.",
-        "O nome de usuário não pode ficar vazio",
-        "O seu nome não pode ficar vazio",
-    ];
 
     const axios = require('axios');
     const qs = require('qs');
+
+    const [isUsernameErrorVisible, setIsUsernameErrorVisible] = useState(false);
+    const [errorIndex, setErrorIndex] = useState(null);
 
     const [data, setData] = useState(null);
 
@@ -44,6 +30,21 @@ export default function AccountDetails() {
     const [tempEmail, setTempEmail] = useState('');
 
     const [pendencies, setPendencies] = useState([]);
+
+    const errors = [
+        "0",
+        "O nome de usuário deve ter pelo menos 5 caracteres.",
+        "O nome de usuário deve começar com uma letra e pode conter apenas letras, números e sublinhados (_).",
+        "Este nome de usuário já existe.",
+        "O nome de usuário não pode ficar vazio",
+        "O seu nome não pode ficar vazio",
+    ];
+
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+    }
 
     const toggleEditNamePageOpen = () => {
         setIsEditNamePageOpen(!isEditNamePageOpen);

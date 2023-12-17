@@ -1,26 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
+import React, { useState, useEffect } from 'react';
+
 export default function AccountHistory() {
     const token = Cookies.get('token');
-
-    useEffect(() => {
-        if (!token) {
-            if (typeof window !== 'undefined') { 
-                window.location.href = '/login';
-            }
-        }
-    }, [token]);
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [data, setData] = useState(null);
+
+    if (!token) {
+        if (typeof window !== 'undefined') { 
+            window.location.href = '/login';
+        }
+    }
 
     const makeRequest = async (url, data) => {
         try {
@@ -50,6 +49,7 @@ export default function AccountHistory() {
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

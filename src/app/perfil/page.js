@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import EditButton from '@/src/components/EditButton';
 import NumberDisplay from '@/src/components/NumberDisplay';
 import Tag from '@/src/components/Tag';
@@ -13,21 +12,14 @@ import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
 
+import React, { useState, useEffect } from 'react';
+
 import { interestsData } from '@/src/components/interestsData';
 
 export default function Profile() {
     var token = Cookies.get('token');
 
     let urlParams = new URLSearchParams();
-    
-    if (!token && typeof window !== 'undefined') {
-        window.location.href = '/login';
-    }
-    
-    if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        var profile = urlParams.get('u');
-    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -37,6 +29,15 @@ export default function Profile() {
     const [isFollowing, setIsFollowing] = useState(false);
     const [isMutual, setIsMutual] = useState(false);
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
+
+    if (!token && typeof window !== 'undefined') {
+        window.location.href = '/login';
+    }
+    
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        var profile = urlParams.get('u');
+    }
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {

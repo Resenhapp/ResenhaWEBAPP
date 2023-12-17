@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
 import InputField from '@/src/components/InputField';
@@ -9,6 +8,8 @@ import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
 import Cookies from 'js-cookie';
 import Loading from '@/src/components/Loading';
+
+import React, { useState, useEffect } from 'react';
 
 export default function EditConcierge() {
     const axios = require('axios');
@@ -21,7 +22,7 @@ export default function EditConcierge() {
     const [loading, setLoading] = useState(true);
 
     const [conciergeName, setConciergeName] = useState('');
-    const [conciergeNewName, setConciergeNewName] = useState(conciergeName); // initialize new name as current name
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeName);
 
     var conciergeToken = '';
 
@@ -129,7 +130,7 @@ export default function EditConcierge() {
     }
 
     const handleInputChange = (e) => {
-        setConciergeNewName(e.target.value); // update new name as the user types
+        setConciergeNewName(e.target.value);
     };
 
     useEffect(() => {
@@ -146,7 +147,7 @@ export default function EditConcierge() {
         );
     }
 
-    const isFilled = conciergeNewName !== '';  // Check if the field is filled or not
+    const isFilled = conciergeNewName !== '';
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -164,7 +165,7 @@ export default function EditConcierge() {
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
                                 action={handleInputChange}
-                                value={conciergeNewName}  // change this line
+                                value={conciergeNewName}
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>

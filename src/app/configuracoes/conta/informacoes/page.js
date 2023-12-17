@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
@@ -8,16 +7,11 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Confirmed from '@/src/components/Confirmed';
 import ReactInputMask from 'react-input-mask';
-import { te } from 'date-fns/locale';
+
+import React, { useState, useEffect } from 'react';
 
 export default function AccountInfo() {
     const token = Cookies.get('token');
-
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -39,6 +33,12 @@ export default function AccountInfo() {
     const [cpf, setCpf] = useState('');
     const [tempCpf, setTempCpf] = useState('');
     const [data, setData] = useState(null);
+
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+    }
 
     const toggleEditNamePageOpen = () => {
         setTempName(name);

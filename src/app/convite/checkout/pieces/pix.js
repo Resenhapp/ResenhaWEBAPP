@@ -1,9 +1,8 @@
-import Button from '@/src/components/Button';
-import React, { useEffect, useState } from 'react';
 import CopyInput from '@/src/components/CopyInput';
 import Timer from '@/src/components/Timer';
 import Image from 'next/image';
-import Cookies from 'js-cookie';
+
+import React, { useEffect } from 'react';
 
 export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setIsFilled}) {
     const axios = require('axios');
@@ -29,8 +28,6 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
 
         if (response.paid == 1) {
           setIsFilled(true);
-
-          // RODAR ANIMAÇÃO DE PAGAMENTO RECEBIDO!
         }
       } 
       
@@ -47,6 +44,7 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
       return () => {
         clearInterval(interval);
       };
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   

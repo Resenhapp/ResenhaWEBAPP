@@ -1,24 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import PartyBanner from '@/src/components/PartyBanner';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
+import React, { useState, useEffect } from 'react';
+
 export default function AccountPartySaved() {
     const token = Cookies.get('token');
-    
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [data, setData] = useState(null);
+
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+    }
 
     const handleSaveButton = async (party) => {
         try {

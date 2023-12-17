@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -10,6 +9,8 @@ import Piece05 from './components/piece05';
 import Loading from '@/src/components/Loading';
 import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
+
+import React, { useState } from 'react';
 
 export default function NewEvent() {
   const token = Cookies.get('token');

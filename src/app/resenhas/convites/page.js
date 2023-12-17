@@ -1,16 +1,12 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
-import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import MyParty from '@/src/components/MyParty';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-import { useState } from "react";
-import { useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function MyInvites() {
     const token = Cookies.get('token');
@@ -52,6 +48,7 @@ export default function MyInvites() {
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

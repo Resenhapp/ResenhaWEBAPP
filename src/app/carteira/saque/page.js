@@ -1,20 +1,18 @@
 'use client'
-import React, { useState, useRef } from 'react';
+
 import Button from '@/src/components/Button';
 import MoneyInput from '@/src/components/MoneyInput';
 import WithdrawError from '@/src/components/WithdrawError';
 import PageHeader from '@/src/components/PageHeader';
-import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
+
+import React, { useState, useRef } from 'react';
+
+import { useEffect } from 'react';
 
 export default function Withdraw() {
     const token = Cookies.get('token');
-
-    if (!token && typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -23,6 +21,10 @@ export default function Withdraw() {
     const [errorContent, setErrorContent] = useState(null);
     const [withdrawalAmount, setWithdrawalAmount] = useState(0.0);
     const inputRef = useRef(null);
+
+    if (!token && typeof window !== 'undefined') {
+        window.location.href = '/login';
+    }
 
     const handleWithdraw = async () => {
         const availableAmount = parseFloat(avaliableCash.replace(',', '.'));
@@ -96,6 +98,7 @@ export default function Withdraw() {
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -112,8 +115,7 @@ export default function Withdraw() {
     var avaliableCash = balances.available;
     
     var avaliableCashNumber = parseFloat(avaliableCash.replace('.', '').replace(',', '.'));
-const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= avaliableCashNumber;
-
+    const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= avaliableCashNumber;
 
     return (
         <div className='flex flex-col w-screen h-screen items-center content-center'>

@@ -1,4 +1,5 @@
 'use client'
+
 import React from 'react';
 import Button from '@/src/components/Button';
 import Vector from '@/src/components/Vector';
@@ -19,7 +20,9 @@ export default function WithdrawSuccess() {
             style: 'currency',
             currency: 'BRL'
         });
-    } else {
+    } 
+    
+    else {
         if (typeof window !== 'undefined') {
             window.location.href = '/carteira/';
         }

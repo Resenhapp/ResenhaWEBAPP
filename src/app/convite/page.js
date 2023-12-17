@@ -1,16 +1,17 @@
 'use client'
+
 import Image from "next/image";
 import Button from "@/src/components/Button";
 import RoundButton from "@/src/components/RoundButton";
-import { useState } from "react";
 import UserPortrait from "@/src/components/UserPortrait";
-import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
+
+import React, { useEffect, useState} from 'react';
+
 import { tagsData } from "@/src/components/tagsData";
-import Back from "@/src/components/Back";
 
 export default function Invite() {
     const axios = require('axios');
@@ -121,7 +122,7 @@ export default function Invite() {
             shortDescription = description.slice(0, 80) + '...';
         }
 
-        return (
+    return (
             <>
                 <h1>{shortDescription}</h1>
                 <div

@@ -3,11 +3,10 @@
 import MoneyDisplay from '@/src/components/MoneyDisplay';
 import Button from '@/src/components/Button';
 import PageHeader from '@/src/components/PageHeader';
-import axios from 'axios';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+
+import { useState, useEffect } from "react";
 
 export default function Wallet() {
     const token = Cookies.get('token');
@@ -57,6 +56,7 @@ export default function Wallet() {
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -2,12 +2,11 @@
 
 import PageHeader from "@/src/components/PageHeader"
 import Vector from "@/src/components/Vector"
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import React from 'react';
-import { useState } from "react";
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 
 export default function EventDetails() {
     var token = Cookies.get('token');

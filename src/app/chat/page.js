@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+
 import PageHeader from '@/src/components/PageHeader';
 import ChatInput from '@/src/components/ChatInput';
 import ChatBubble from '@/src/components/ChatBubble';
@@ -7,8 +7,15 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 
+import React, { useState, useEffect } from 'react';
+
 export default function Chat() {
     var token = Cookies.get('token');
+
+    const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const qs = require('qs');
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
@@ -26,11 +33,6 @@ export default function Chat() {
             var chatType = 'group';
         }
     }
-
-    const [messages, setMessages] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    const qs = require('qs');
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {

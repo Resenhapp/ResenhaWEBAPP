@@ -1,19 +1,15 @@
 'use client'
-import React, {useState} from 'react';
+
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 
+import React, {useState} from 'react';
+
 export default function PasswordConfig() {
     const token = Cookies.get('token');
-    
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -21,10 +17,13 @@ export default function PasswordConfig() {
     const options = ['Desabilitado']
     var initialPassword = '•••••••'
     
-    const [method, setMethod] = useState('');
     const [isEditPasswordPageOpen, setIsEditPasswordPageOpen] = useState(false);
     const [password, setPassword] = useState(initialPassword);
     const [tempPassword, setTempPassword] = useState(initialPassword);
+
+    if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+    }
 
     const handleSelectChange = (event) => {
         setMethod(event.target.value);

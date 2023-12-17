@@ -1,8 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
 import Vector from '@/src/components/Vector';
-import Link from 'next/link';
 import Scanner from './pieces/scanner';
 import TypeCode from './pieces/code';
 import Granted from './pieces/granted';
@@ -10,6 +8,8 @@ import Denied from './pieces/denied';
 import Used from './pieces/used';
 import Help from './pieces/help';
 import Cookies from 'js-cookie';
+
+import React, { useState } from 'react';
 
 export default function Concierge() {
     const [content, setContent] = useState('Scanner');
@@ -23,10 +23,6 @@ export default function Concierge() {
         if (concierge) {
             Cookies.set('concierge', concierge);
         }
-
-        // else {
-        //     returnToHome("Help");
-        // }
     }
 
     const axios = require('axios');
@@ -53,14 +49,10 @@ export default function Concierge() {
 
             if (response.status == "success") {
                 if (response.access == 'granted') {
-                    // soundx.play();
-                    // beep.play();
                     setContent('Granted');
                 }
 
                 else if (response.access == 'bill') {
-                    // soundx.play();
-                    // beep.play();
                     setContent('Cash');
                 }
             }

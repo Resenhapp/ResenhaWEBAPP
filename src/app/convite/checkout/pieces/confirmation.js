@@ -1,22 +1,12 @@
 import Button from '@/src/components/Button';
-import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Vector from '@/src/components/Vector';
 
-export default function Confirmation({
-  PartyImage,
-  PartyName,
-  PartyOwner,
-  PartyDateDay,
-  PartyMonth,
-  PartyHour,
-  PartyAddress,
-  InviteCode,
-  buttonsVisible,
-  InviteQrCodeUrl,
-  save,
-}) {
+import React, { useEffect, useState } from 'react';
+
+export default function Confirmation({ PartyImage, PartyName, PartyOwner, PartyDateDay, PartyMonth, PartyHour, PartyAddress, InviteCode, buttonsVisible, save,}) {
   const [visible, setVisible] = useState(true);
+
   useEffect(() => {
     setVisible(buttonsVisible);
   }, [buttonsVisible]);

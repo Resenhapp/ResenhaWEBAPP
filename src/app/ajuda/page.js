@@ -4,12 +4,14 @@ import Button from '@/src/components/Button';
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Accordion from '@/src/components/Accordion';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
-import Cookies from 'js-cookie';
+
+import { useState, useEffect } from "react";
 
 export default function Help() {
+    const axios = require('axios');
+    const qs = require('qs');
+
     const copyVector = () => {
         return (
             <div className='inline-flex bg-purpleT2 ring-purpleT3 mx-2 ring-inset rounded-full ring-1 w-6 h-6 align-center justify-center items-center'>
@@ -19,8 +21,6 @@ export default function Help() {
             </div>
         )
     }
-
-    const id = Cookies.get('user');
 
     const [data, setData] = useState(null);
     const fetchData = async () => {
@@ -33,14 +33,6 @@ export default function Help() {
             console.error(error);
         }
     };
-    
-    useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const axios = require('axios');
-    const qs = require('qs');
 
     const makeRequest = async (url, data) => {
         try {
@@ -58,6 +50,12 @@ export default function Help() {
         window.open("https://wa.me/5551998261235?text=Ol%C3%A1%2C+eu+preciso+de+ajuda+com+o+Resenha.app", "_blank")
       }
     }
+
+    useEffect(() => {
+      fetchData();
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!data) {
         return (

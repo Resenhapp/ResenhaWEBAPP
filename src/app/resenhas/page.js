@@ -8,11 +8,17 @@ import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import Loading from "@/src/components/Loading";
 import Button from '@/src/components/Button';
-import { useState } from "react";
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
     const token = Cookies.get('token');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
+    const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
 
     if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
@@ -23,12 +29,6 @@ export default function HomePage() {
             window.location.href = `/${pageToGo}`;
         }
     };
-
-    const axios = require('axios');
-    const qs = require('qs');
-
-    const [data, setData] = useState(null);
-    const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
 
     const handleDisplayToggle = () => {
         setIsDisplayingEvents(!isDisplayingEvents);
@@ -69,6 +69,7 @@ export default function HomePage() {
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

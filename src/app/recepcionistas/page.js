@@ -1,13 +1,13 @@
 'use client'
+
 import React from 'react';
 import ConciergePortrait from '@/src/components/ConciergePortrait';
-import PopUp from '@/src/components/popUp';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+
+import { useState, useEffect } from "react";
 
 export default function Concierges() {
     const axios = require('axios');
@@ -62,8 +62,6 @@ export default function Concierges() {
             });
 
             if (response.status == "success") {
-                // FAZER ALGO
-                
                 setShowDeleteModal(false);
             }
         }
