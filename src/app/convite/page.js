@@ -109,7 +109,7 @@ export default function Invite() {
             shortDescription = description.slice(0, 80) + '...';
         }
 
-    return (
+        return (
             <>
                 <h1>{shortDescription}</h1>
                 <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
