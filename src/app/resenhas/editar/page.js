@@ -695,10 +695,6 @@ export default function EditEvent() {
                             value={address}
                             Required={true}
                             placesService={placesService}
-                            options={{
-                                types: ['geocode'],
-                                componentRestrictions: { country: "BR" }
-                            }}
                         />
                     )}
                 </div>

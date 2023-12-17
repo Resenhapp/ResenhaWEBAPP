@@ -84,10 +84,6 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
           value={address}
           Required={true}
           placesService={placesService}
-          options={{
-            types: ['geocode'],
-            componentRestrictions: { country: "BR" }
-          }}
         />
       )}
       <Toggle

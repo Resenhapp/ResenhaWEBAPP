@@ -31,7 +31,14 @@ const PlacesAutocomplete_Edit = ({ setSelected }) => {
     setValue,
     suggestions: { status, data },
     clearSuggestions,
-  } = usePlacesAutocomplete({ placesService });
+  } = usePlacesAutocomplete({
+    placesService,
+    cacheKey: 'br',
+    requestOptions: {
+      componentRestrictions: { country: 'br' }, // Restrição para o Brasil (código de país ISO 3166-1 alfa-2)
+      types: ['address']
+    },
+  });
   
   const handleSelect = async (address) => {
     setValue(address, false);

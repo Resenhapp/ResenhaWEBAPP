@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Vector from './Vector';
 import usePlacesAutocomplete, {
-    getGeocode
-  } from "use-places-autocomplete";
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
 import {
   Combobox,
   ComboboxInput,
@@ -31,7 +32,14 @@ const PlacesAutocomplete = ({ setSelected }) => {
     setValue,
     suggestions: { status, data },
     clearSuggestions,
-  } = usePlacesAutocomplete({ placesService });
+  } = usePlacesAutocomplete({
+    placesService,
+    cacheKey: 'br',
+    requestOptions: {
+      componentRestrictions: { country: 'br' }, // Restrição para o Brasil (código de país ISO 3166-1 alfa-2)
+      types: ['address']
+    },
+  });
   
   const handleSelect = async (address) => {
     setValue(address, false);
@@ -53,9 +61,6 @@ const PlacesAutocomplete = ({ setSelected }) => {
           disabled={!ready}
           className="pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5"
           placeholder="Endereço da resenha"
-          options={{
-            componentRestrictions: { country: "BR" }
-          }}
         />
         <ComboboxPopover style={{zIndex:999}}>
           <ComboboxList>
