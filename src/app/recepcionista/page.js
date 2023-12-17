@@ -24,9 +24,9 @@ export default function Concierge() {
             Cookies.set('concierge', concierge);
         }
 
-        else {
-            returnToHome("Help");
-        }
+        // else {
+        //     returnToHome("Help");
+        // }
     }
 
     const axios = require('axios');
