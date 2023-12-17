@@ -12,7 +12,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
-const PlacesAutocomplete = ({ setSelected }) => {
+const PlacesAutocomplete_Edit = ({ setSelected }) => {
   const [placesService, setPlacesService] = useState(null);
 
   useEffect(() => {
@@ -42,16 +42,16 @@ const PlacesAutocomplete = ({ setSelected }) => {
   };
 
   return (
-    <div className="relative h-14 ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
-      <div className="absolute left-0 pl-3 flex">
+    <div className="relative h-14 text-white border-b-2  border-purpleT2 flex items-center">
+      <div className="absolute left-0 pl-3  flex">
         <Vector vectorname={'pin01'} />
       </div>
-      <Combobox onSelect={handleSelect}>
+      <Combobox onSelect={handleSelect} className="w-[90%]">
         <ComboboxInput 
           value={value}
           onChange={(e) => setValue(e.target.value)}
           disabled={!ready}
-          className="pl-3 pr-2 block w-full bg-transparent sm:text-sm rounded-xl ml-7 outline-none text-blackT1 placeholder-purpleT5"
+          className="pl-3 pr-2 block w-full  bg-transparent sm:text-sm ml-7 outline-none text-white placeholder-purpleT5"
           placeholder="Endereço da resenha"
           options={{
             componentRestrictions: { country: "BR" }
@@ -74,4 +74,4 @@ const PlacesAutocomplete = ({ setSelected }) => {
   );
 };
 
-export default PlacesAutocomplete;
+export default PlacesAutocomplete_Edit;
