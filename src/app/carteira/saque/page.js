@@ -21,7 +21,7 @@ export default function Withdraw() {
 
     const [data, setData] = useState(null);
     const [errorContent, setErrorContent] = useState(null);
-    const [withdrawalAmount, setWithdrawalAmount] = useState(0);
+    const [withdrawalAmount, setWithdrawalAmount] = useState(0.0);
     const inputRef = useRef(null);
 
     const handleWithdraw = async () => {
@@ -111,7 +111,9 @@ export default function Withdraw() {
 
     var avaliableCash = balances.available;
     
-    const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
+    var avaliableCashNumber = parseFloat(avaliableCash.replace('.', '').replace(',', '.'));
+const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= avaliableCashNumber;
+
 
     return (
         <div className='flex flex-col w-screen h-screen items-center content-center'>

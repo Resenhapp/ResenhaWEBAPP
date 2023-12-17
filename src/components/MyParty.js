@@ -19,15 +19,15 @@ const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imag
                     <p className={h3Classes}>{partyDate}, às {partyHour}</p>
                 </div>
                 <div className={baseFlexClasses}>
-                    <Vector vectorname={'exclamation01'} />
+                    <Vector vectorname={partyPaid == 0 ? 'pending1' : partyPaid == 1 ? 'done1' : ''} />
                     <p className={h3Classes}>
                         {partyPaid == 0 ? 'Pagamento pendente' : partyPaid == 1 ? 'Pago' : ''}
                     </p>
                 </div>
-                <div className={baseFlexClasses}>
+                {/* <div className={baseFlexClasses}>
                 <Vector vectorname={'user04'} />
                     <p className={h3Classes}>{partyGuests} confirmados</p>
-                </div>
+                </div> */}
                 <div className={baseFlexClasses}>
                 <Vector vectorname={'qr01'} />
                     <p className={h3Classes}>{partyCode}</p>
