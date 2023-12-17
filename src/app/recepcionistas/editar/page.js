@@ -134,7 +134,7 @@ export default function EditConcierge() {
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
                             <h1 className='text-2xl font-bold'>Editando recepcionista...</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
+                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={() => handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
                             <InputField
