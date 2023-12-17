@@ -45,7 +45,7 @@ const PartyBanner = ({ imageUrl, eventCode, eventName, eventGuests, eventMax, ev
                                         />
                                     </div>
                                 ))}
-                        <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>
+                        {imageUrl.length < 2 ? (<h2 className="text-sm translate-x-2 font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>) : <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>}
                             </div>
                         ) : <h2 className="text-sm font-thin text-white">{eventGuests}/{eventMax} confirmados</h2>}
                         
