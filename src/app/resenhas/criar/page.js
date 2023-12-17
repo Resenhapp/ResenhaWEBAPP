@@ -122,7 +122,6 @@ export default function NewEvent() {
 
     const formattedStartHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setStart(formattedStartHour);
-    console.log(formattedStartHour);
 };
 
 const handlePiece02EndHourSelect = (endHour) => {
@@ -136,7 +135,6 @@ const handlePiece02EndHourSelect = (endHour) => {
 
     const formattedEndHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     setEnd(formattedEndHour);
-    console.log(formattedEndHour);
 };
 
   const handlePiece02DateSelect = (dateSelected) => {

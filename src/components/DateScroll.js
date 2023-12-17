@@ -5,7 +5,6 @@ const DateScroll = ({ onDateSelect }) => {
   const [selected, setSelected] = useState(null);
 
   const handleDateSelect = (date) => {
-    console.log(date)
     setSelected(date);
     onDateSelect(date);
   };

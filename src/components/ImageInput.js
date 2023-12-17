@@ -46,7 +46,7 @@ const ImageInput = ({ image, onChange, partyCode}) => {
       formData.append('image', file);
 
       try {
-        console.log(await sendImageRequest(formData));
+        await sendImageRequest(formData);
       } 
       
       catch (error) {

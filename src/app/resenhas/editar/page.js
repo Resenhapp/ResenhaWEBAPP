@@ -318,7 +318,7 @@ export default function EditEvent() {
             formData.append('image', file);
 
             try {
-                console.log(await sendImageRequest(formData));
+                await sendImageRequest(formData);
             }
 
             catch (error) {
@@ -405,10 +405,6 @@ export default function EditEvent() {
         catch (error) {
             console.error(error);
         }
-
-        console.log(acceptsPix);
-        console.log(acceptsCard);
-        console.log(acceptsCash);
     };
 
     const saveDate = async () => {
@@ -501,8 +497,6 @@ export default function EditEvent() {
         catch (error) {
             console.error(error);
         }
-
-        console.log(vipLimit);
     };
 
     const saveAddress = async () => {
