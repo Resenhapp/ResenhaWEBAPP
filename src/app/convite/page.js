@@ -115,7 +115,6 @@ export default function Invite() {
             );
         }
 
-        let text = ''
         let shortDescription = description;
 
         if (description.length > 80) {
@@ -125,10 +124,7 @@ export default function Invite() {
     return (
             <>
                 <h1>{shortDescription}</h1>
-                <div
-                    className="flex items-center cursor-pointer text-purpleT5"
-                    onClick={handleToggleDescription}
-                >
+                <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
                     <span>Mostrar mais</span>
                     <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
                         <Vector vectorname={'verticalArrow02'} />
