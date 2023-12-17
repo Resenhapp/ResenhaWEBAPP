@@ -1102,9 +1102,15 @@ function getSpecificData($userId, $item) {
     
             if (mysqli_num_rows($conciergesResults) > 0) {
                 foreach ($conciergesResults as $concierge) {
+                    $conciergeParty = $concierge["party"];
+
+                    $query = "SELECT name FROM parties WHERE code = '$conciergeParty'";
+                    $conciergePartyName = queryDB($query)[0];
+
                     $temp = [
                         "name" => $concierge["name"],
                         "token" => $concierge["token"],
+                        "party" => $conciergePartyName
                     ];
     
                     array_push($concierges, $temp);
@@ -2025,6 +2031,60 @@ function getTransactionInfo()
     
     else {
         returnError("invalid_transaction");
+    }
+}
+
+function getConciergeData()
+{
+    $conciergeToken = sanitize($_POST['concierge']);
+
+    $query = "SELECT * FROM concierges WHERE token = '$conciergeToken'";
+    $conciergeInfo = queryDBRows($query);
+
+    foreach ($conciergeInfo as $info) {
+        $conciergeName = $info["name"];
+        $conciergeParty = $info["party"];
+
+        $data = [
+            'name' => $conciergeName,
+            'party' => $conciergeParty
+        ];
+
+        returnData($data);
+    }
+}
+
+function editConciergeData()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeToken = sanitize($_POST['concierge']);
+    $editData = $_POST['data'];
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $query = "SELECT * FROM concierges WHERE token = '$conciergeToken' AND host = '$userId'";
+        $conciergeInfo = queryDBRows($query);
+    
+        foreach ($conciergeInfo as $info) {
+            $conciergeName = $info["name"];
+            $conciergeParty = $info["party"];
+
+            $editName = $editData["name"];
+            $editParty = $editData["party"];
+
+            if ($editName != $conciergeName) {
+                $query = "UPDATE concierges SET name = '$editName' WHERE token = '$conciergeToken'";
+                queryNR($query);
+            }
+
+            if ($editParty != $conciergeParty) {
+                $query = "UPDATE concierges SET party = '$editParty' WHERE token = '$conciergeToken'";
+                queryNR($query);
+            }
+    
+            returnSuccess("concierge_edited");
+        }
     }
 }
 

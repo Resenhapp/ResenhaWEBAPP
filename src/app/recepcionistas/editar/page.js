@@ -6,15 +6,31 @@ import InputField from '@/src/components/InputField';
 import Dropdown from '@/src/components/Dropdown';
 import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
+import Cookies from 'js-cookie';
+import Loading from '@/src/components/Loading';
+import { data } from 'autoprefixer';
 
 export default function EditConcierge() {
+    const axios = require('axios');
+    const qs = require('qs');
 
     const [selectedOption, setSelectedOption] = useState('');
-    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const [options, setOptions] = useState([]);
+    const [values, setValues] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const conciergeCurrentName = 'Claudinho bochecha';
-    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName); // initialize new name as current name
+    const [conciergeName, setConciergeName] = useState('');
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeName); // initialize new name as current name
+
+    var conciergeToken = '';
+
+    var token = Cookies.get('token');
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        conciergeToken = urlParams.get('r');
+    }
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -22,6 +38,60 @@ export default function EditConcierge() {
 
     const handleModalClose = () => {
         setModalOpen(false);
+    };
+
+    const makeRequest = async (url, data) => {
+        try {
+            const response = await axios.post(url, qs.stringify(data));
+            return response.data;
+        }
+    
+        catch (error) {
+            throw new Error(`Request failed: ${error}`);
+        }
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+
+        setLoading(true);
+    
+        try {
+            const requested = ["parties"];
+          
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+              request: 'getUserData',
+              token: token,
+              requested: requested
+            });
+          
+            const namesArray = response.parties.made.map(item => item.name);
+            const valuesArray = response.parties.made.map(item => item.code);
+          
+            setOptions(namesArray);
+            setValues(valuesArray);
+        }
+        
+        catch (error) {
+            console.error(error);
+        }
+
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+                request: 'getConciergeData',
+                concierge: conciergeToken
+            });
+
+            setConciergeName(response.name);
+            setConciergeNewName(response.name);
+            setSelectedOption(response.party);
+
+            setLoading(false);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
     };
 
     const handleNavigation = (pageToGo) => {
@@ -36,13 +106,49 @@ export default function EditConcierge() {
         }
     }
 
+    const handleSaveButton = async () => {
+        try {
+            const data = {
+                name: conciergeNewName,
+                party: selectedOption
+            };
+
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+                request: 'editConciergeData',
+                token: token,
+                concierge: conciergeToken,
+                data: data
+            });
+            
+            if (!response.error) {
+                handleNavigation("recepcionistas");
+            }
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     const handleInputChange = (e) => {
         setConciergeNewName(e.target.value); // update new name as the user types
     };
 
+    useEffect(() => {
+        fetchData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
+
     const isFilled = conciergeNewName !== '';  // Check if the field is filled or not
-
-
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -71,6 +177,7 @@ export default function EditConcierge() {
                                     options={options}
                                     selectedOption={selectedOption}
                                     setSelectedOption={setSelectedOption}
+                                    values={values}
                                 />
                             </div>
                         </div>
@@ -81,7 +188,7 @@ export default function EditConcierge() {
                             label={'Salvar'}
                             active={isFilled}
                             icon={'check'}
-                            action={() => handleNavigation('recepcionistas')}
+                            action={handleSaveButton}
                             iconSide='right'
                             height={1}
                             width={3}

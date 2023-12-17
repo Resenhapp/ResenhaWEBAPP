@@ -96,9 +96,9 @@ export default function Concierges() {
                                             imgUrl={defaultProfileImage}
                                             conciergeName={concierge.name}
                                             conciergeToken={concierge.token}
-                                            relativeEvent={'Resenha de Los Manos'}
+                                            relativeEvent={concierge.party}
                                             deleteAction={showPopUp}
-                                            editAction={() => handleNavigation('recepcionistas/editar')}
+                                            editAction={() => handleNavigation('recepcionistas/editar?r='+concierge.token)}
                                         />
                                     </div>
                                 ))}
