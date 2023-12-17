@@ -23,11 +23,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
         const service = new window.google.maps.places.PlacesService(document.createElement('div'));
         setPlacesService(service);
         setIsMapsLoaded(true);
-      })
-      .catch((error) => {
-        console.error('Erro ao carregar a API do Google Maps:', error);
-        setIsMapsLoaded(false);
-      });
+      }) .catch(() => { setIsMapsLoaded(false); });
   }, []);
 
   const handleNameFieldChange = (event) => {

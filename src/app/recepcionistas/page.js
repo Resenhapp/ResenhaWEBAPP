@@ -28,46 +28,28 @@ export default function Concierges() {
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'getUserData', 
-                token: token 
-            });
-            
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'getUserData', 
+            token: token 
+        });
+        
+        setData(response);
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const removeConcierge = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'tryToDeleteConcierge', 
-                token: token,
-                concierge: selectedConcierge
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'tryToDeleteConcierge', 
+            token: token,
+            concierge: selectedConcierge
+        });
 
-            if (response.status == "success") {
-                setShowDeleteModal(false);
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (response.status == "success") {
+            setShowDeleteModal(false);
         }
     }
 

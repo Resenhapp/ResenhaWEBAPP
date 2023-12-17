@@ -45,62 +45,44 @@ export default function NewConcierge() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-    
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
         setLoading(true);
 
-        try {
-            const requested = ["parties"];
-          
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getUserData',
-              token: token,
-              requested: requested
-            });
-          
-            const namesArray = response.parties.made.map(item => item.name);
-            const valuesArray = response.parties.made.map(item => item.code);
-          
-            setOptions(namesArray);
-            setValues(valuesArray);
-
-            setLoading(false);
-        }
+        const requested = ["parties"];
         
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+        
+        const namesArray = response.parties.made.map(item => item.name);
+        const valuesArray = response.parties.made.map(item => item.code);
+        
+        setOptions(namesArray);
+        setValues(valuesArray);
+
+        setLoading(false);
     };
 
     const handleCreateButton = async () => {
-        try {
-            const data = {
-                name: conciergeName,
-                party: selectedOption
-            };
+        const data = {
+            name: conciergeName,
+            party: selectedOption
+        };
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'tryToCreateConcierge',
-                token: token,
-                data: data
-            });
-            
-            if (!response.error) {
-                handleNavigation("recepcionistas");
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'tryToCreateConcierge',
+            token: token,
+            data: data
+        });
+        
+        if (!response.error) {
+            handleNavigation("recepcionistas");
         }
     }
 

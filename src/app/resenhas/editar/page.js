@@ -60,20 +60,14 @@ export default function EditEvent() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     
     const handleTrashClick = async (party) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToDeleteEvent',
-                token: token,
-                code: partyCode
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToDeleteEvent',
+            token: token,
+            code: partyCode
+        });
 
-            if (response.status == "success") {
-                handleNavigation("resenhas/todas");
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (response.status == "success") {
+            handleNavigation("resenhas/todas");
         }
     };
 
@@ -89,11 +83,7 @@ export default function EditEvent() {
                 const service = new window.google.maps.places.PlacesService(document.createElement('div'));
                 setPlacesService(service);
                 setIsMapsLoaded(true);
-            })
-            .catch((error) => {
-                console.error('Erro ao carregar a API do Google Maps:', error);
-                setIsMapsLoaded(false);
-            });
+            }).catch(() => { setIsMapsLoaded(false); });
     }, []);
     
     const handleAddressSelect = (location) => {
@@ -278,31 +268,19 @@ export default function EditEvent() {
     };
 
     const makeImageRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
 
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        return response.data;
     };
 
     const sendImageRequest = async (data) => {
-        try {
-            const response = await makeImageRequest(process.env.NEXT_PUBLIC_API_URL, data);
+        const response = await makeImageRequest(process.env.NEXT_PUBLIC_API_URL, data);
 
-            return response;
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        return response;
     };
 
     const handleImageChange = async (event) => {
@@ -318,13 +296,7 @@ export default function EditEvent() {
             formData.append('code', partyCode);
             formData.append('image', file);
 
-            try {
-                await sendImageRequest(formData);
-            }
-
-            catch (error) {
-                console.error('Error while uploading image: ', error);
-            }
+            await sendImageRequest(formData);
         };
 
         if (file) {
@@ -352,20 +324,14 @@ export default function EditEvent() {
     };
 
     const sendEditRequest = async (data) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'editEventData',
-                token: token,
-                code: partyCode,
-                data: data
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'editEventData',
+            token: token,
+            code: partyCode,
+            data: data
+        });
 
-            return response;
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        return response;
     };
 
     const saveName = async () => {
@@ -373,16 +339,10 @@ export default function EditEvent() {
             name: name
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditNamePageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditNamePageOpen();
         }
     };
 
@@ -395,16 +355,10 @@ export default function EditEvent() {
             price: priceAsFloat
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditPricePageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditPricePageOpen();
         }
     };
 
@@ -437,16 +391,10 @@ export default function EditEvent() {
                 date: day + "/" + month + "/" + year
             };
 
-            try {
-                const response = await sendEditRequest(data);
+            const response = await sendEditRequest(data);
 
-                if (!response.error) {
-                    toggleEditDatePageOpen();
-                }
-            }
-
-            catch (error) {
-                console.error(error);
+            if (!response.error) {
+                toggleEditDatePageOpen();
             }
         }
     };
@@ -457,16 +405,10 @@ export default function EditEvent() {
             end: endHour
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditHourPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditHourPageOpen();
         }
     };
 
@@ -487,16 +429,10 @@ export default function EditEvent() {
             capacity: limit
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditMaxGuestsPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditMaxGuestsPageOpen();
         }
     };
 
@@ -505,17 +441,10 @@ export default function EditEvent() {
             address: address
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditAddressPageOpen();
-
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditAddressPageOpen();
         }
     };
 
@@ -524,16 +453,10 @@ export default function EditEvent() {
             description: description
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditDescriptionPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditDescriptionPageOpen();
         }
     };
 
@@ -544,73 +467,55 @@ export default function EditEvent() {
             tags: tempEventTags
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditTagsPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditTagsPageOpen();
         }
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                token: token,
-                code: partyCode
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            token: token,
+            code: partyCode
+        });
 
-            setData(response);
+        setData(response);
 
-            setName(response.title);
-            setDate(response.date.day + "/" + response.date.month + "/" + response.date.year);
-            setStartHour(response.hour.start);
+        setName(response.title);
+        setDate(response.date.day + "/" + response.date.month + "/" + response.date.year);
+        setStartHour(response.hour.start);
 
-            setEndHour(response.hour.end);
+        setEndHour(response.hour.end);
 
-            if (response.hour.end != "none") {
-                setIsEndTime(true);
-            }
-
-            setLimit(response.guests.capacity);
-            setVipLimit('0');
-            setAddress(response.address);
-            setDescription(response.description);
-
-            response.tags = response.tags.map(tag => parseInt(tag));
-
-            setEventTags(response.tags);
-
-            const onlyNumbers = response.ticket.replace(/\D/g, "");
-
-            const formattedPrice = (parseInt(onlyNumbers)).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-                minimumFractionDigits: 2
-            });
-
-            setPrice(formattedPrice);
+        if (response.hour.end != "none") {
+            setIsEndTime(true);
         }
 
-        catch (error) {
-            console.error(error);
-        }
+        setLimit(response.guests.capacity);
+        setVipLimit('0');
+        setAddress(response.address);
+        setDescription(response.description);
+
+        response.tags = response.tags.map(tag => parseInt(tag));
+
+        setEventTags(response.tags);
+
+        const onlyNumbers = response.ticket.replace(/\D/g, "");
+
+        const formattedPrice = (parseInt(onlyNumbers)).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2
+        });
+
+        setPrice(formattedPrice);
     };
 
     useEffect(() => {

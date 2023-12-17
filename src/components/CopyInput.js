@@ -17,9 +17,6 @@ const CopyInput = ({ placeholder, showIcon = false, Icon, value }) => {
   const handleCopy = () => {
     if (inputRef.current) {
       navigator.clipboard.writeText(inputRef.current.value)
-        .catch(err => {
-          console.error('Error copying text: ', err);
-        });
     }
   };
 

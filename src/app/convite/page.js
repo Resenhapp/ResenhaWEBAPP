@@ -43,31 +43,19 @@ export default function Invite() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            code: code
+        });
 
-            setData(response);
+        setData(response);
 
-            return response.tags;
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        return response.tags;
     };
 
     useEffect(() => {
@@ -157,10 +145,6 @@ export default function Invite() {
 
         if (navigator.share) {
             navigator.share(shareData)
-            .then(() => {
-            })
-            .catch((error) => {
-            });
         }
 
         else {

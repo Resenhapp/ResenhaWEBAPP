@@ -24,14 +24,8 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
     var updateInterval = 3;
   
     const makeRequest = async (url, data) => {
-      try {
         const response = await axios.post(url, qs.stringify(data));
         return response.data;
-      } 
-      
-      catch (error) {
-        throw new Error(`Request failed: ${error}`);
-      }
     };
   
     const fetchData = async () => {
@@ -40,19 +34,13 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
         "notifications"
       ];
 
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'getUserData',
-          token: token,
-          requested: requested
-        });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'getUserData',
+        token: token,
+        requested: requested
+      });
 
-        setData(response);
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
+      setData(response);
     };
   
     const checkIfUserNotified = async () => {
@@ -61,19 +49,13 @@ const PageHeader = ({ pageTitle, isBack = false, checker, userData, destination 
         "notifications"
       ];
 
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'getUserData',
-          token: token,
-          requested: requested
-        });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'getUserData',
+        token: token,
+        requested: requested
+      });
 
-        setNotified(response.notifications.notified);
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
+      setNotified(response.notifications.notified);
     };
   
     const toggleMenu = () => {

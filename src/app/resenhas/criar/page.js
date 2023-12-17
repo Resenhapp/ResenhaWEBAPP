@@ -30,14 +30,8 @@ export default function NewEvent() {
   const [partyCode, setPartyCode] = useState("");
 
   const makeRequest = async (url, data) => {
-    try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-    }
-
-    catch (error) {
-        throw new Error(`Request failed: ${error}`);
-    }
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
   };
 
   const handleNextStep = async () => {
@@ -56,22 +50,16 @@ export default function NewEvent() {
         tagsContent
       };
 
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-          request: 'tryToCreateEvent',
-          token: token,
-          details: details
-        });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'tryToCreateEvent',
+        token: token,
+        details: details
+      });
 
-        if (!response.error && typeof window !== 'undefined') {
-          setPartyCode(response.code);
+      if (!response.error && typeof window !== 'undefined') {
+        setPartyCode(response.code);
 
-          setProgress(progress + 1);
-        }
-      }
-      
-      catch (error) {
-        console.error(error);
+        setProgress(progress + 1);
       }
     } 
 

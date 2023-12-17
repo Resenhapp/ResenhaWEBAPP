@@ -42,33 +42,21 @@ export default function Withdraw() {
         else {
             setErrorContent(null);
 
-            try {
-                const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                    request: 'tryToWithdraw', 
-                    token: token,
-                    amount: withdrawalAmount
-                });
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+                request: 'tryToWithdraw', 
+                token: token,
+                amount: withdrawalAmount
+            });
 
-                if (!response.error && typeof window !== 'undefined') {
-                    window.location.href = `/carteira/saque/sucesso?a=${withdrawalAmount}`;
-                }
-            }
-    
-            catch (error) {
-                console.error(error);
+            if (!response.error && typeof window !== 'undefined') {
+                window.location.href = `/carteira/saque/sucesso?a=${withdrawalAmount}`;
             }
         }
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
@@ -81,19 +69,13 @@ export default function Withdraw() {
             "notifications"
         ];
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'getUserData', 
-                token: token,
-                requested: requested
-            });
-            
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'getUserData', 
+            token: token,
+            requested: requested
+        });
+        
+        setData(response);
     };
 
     useEffect(() => {

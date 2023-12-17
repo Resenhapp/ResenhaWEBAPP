@@ -9,30 +9,18 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
     const qs = require('qs');
 
     const makeRequest = async (url, data) => {
-      try {
         const response = await axios.post(url, qs.stringify(data));
         return response.data;
-      } 
-      
-      catch (error) {
-        throw new Error(`Request failed: ${error}`);
-      }
     };
   
     const getPaymentInfo = async () => {
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'getTransactionInfo',
-          charge: transactionCharge
-        });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'getTransactionInfo',
+        charge: transactionCharge
+      });
 
-        if (response.paid == 1) {
-          setIsFilled(true);
-        }
-      } 
-      
-      catch (error) {
-        console.error(error);
+      if (response.paid == 1) {
+        setIsFilled(true);
       }
     };
   

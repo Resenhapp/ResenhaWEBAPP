@@ -22,48 +22,30 @@ export default function AccountPartySaved() {
     }
 
     const handleSaveButton = async (party) => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-            request: 'switchSaveEvent',
-            party: party.code,
-            token: token,
-          });
-        }
-    
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'switchSaveEvent',
+        party: party.code,
+        token: token,
+        });
     };
     
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-  
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
   
     const fetchData = async () => {
-        try {
-            const requested = [
-                "saved"
-            ];
+        const requested = [
+            "saved"
+        ];
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {

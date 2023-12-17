@@ -42,55 +42,37 @@ export default function EditConcierge() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-    
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
         setLoading(true);
 
-        try {
-            const requested = ["parties"];
-          
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getUserData',
-              token: token,
-              requested: requested
-            });
-          
-            const namesArray = response.parties.made.map(item => item.name);
-            const valuesArray = response.parties.made.map(item => item.code);
-          
-            setOptions(namesArray);
-            setValues(valuesArray);
-        }
+        const requested = ["parties"];
         
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+        
+        const namesArray = response.parties.made.map(item => item.name);
+        const valuesArray = response.parties.made.map(item => item.code);
+        
+        setOptions(namesArray);
+        setValues(valuesArray);
+    
+        const res = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'getConciergeData',
+            concierge: conciergeToken
+        });
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'getConciergeData',
-                concierge: conciergeToken
-            });
+        setConciergeName(res.name);
+        setConciergeNewName(res.name);
+        setSelectedOption(res.party);
 
-            setConciergeName(response.name);
-            setConciergeNewName(response.name);
-            setSelectedOption(response.party);
-
-            setLoading(false);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        setLoading(false);
     };
 
     const handleNavigation = (pageToGo) => {
@@ -106,26 +88,20 @@ export default function EditConcierge() {
     }
 
     const handleSaveButton = async () => {
-        try {
-            const data = {
-                name: conciergeNewName,
-                party: selectedOption
-            };
+        const data = {
+            name: conciergeNewName,
+            party: selectedOption
+        };
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-                request: 'editConciergeData',
-                token: token,
-                concierge: conciergeToken,
-                data: data
-            });
-            
-            if (!response.error) {
-                handleNavigation("recepcionistas");
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'editConciergeData',
+            token: token,
+            concierge: conciergeToken,
+            data: data
+        });
+        
+        if (!response.error) {
+            handleNavigation("recepcionistas");
         }
     }
 

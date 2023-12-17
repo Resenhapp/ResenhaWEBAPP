@@ -73,66 +73,48 @@ export default function Checkout() {
     }
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        } 
-        
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchPartyData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            code: code
+        });
 
-            setData(response);
-            setPartyName(response.title);
-            setPartyPrice(response.ticket)
-            setPartyOwner(response.host)
-            setPartyAddress(response.address)
-            setPartyHour(response.hour.start)
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
+        setPartyName(response.title);
+        setPartyPrice(response.ticket)
+        setPartyOwner(response.host)
+        setPartyAddress(response.address)
+        setPartyHour(response.hour.start)
     };
 
     const fetchData = async () => {
         setLoading(true);
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToCreateGuest',
-                token: token,
-                name: customerName,
-                email: customerEmail,
-                maiority: customerIsEighteen,
-                method: paymentMethod,
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToCreateGuest',
+            token: token,
+            name: customerName,
+            email: customerEmail,
+            maiority: customerIsEighteen,
+            method: paymentMethod,
+            code: code
+        });
 
-            if (response.error) {
-                window.history.back();
-            }
-
-            var data = [
-                response.code,
-                response.qrcode,
-                response.charge
-            ];
-            
-            return data;
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.error) {
+            window.history.back();
         }
+
+        var data = [
+            response.code,
+            response.qrcode,
+            response.charge
+        ];
+        
+        return data;
     };
 
     const printRef = useRef();
@@ -282,27 +264,21 @@ export default function Checkout() {
 
     const fetchUserData = async () => {
         setLoading(true);
-    
-        try {
-            const requested = [
-                "name",
-                "email"
-            ];
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const requested = [
+            "name",
+            "email"
+        ];
 
-            if (response.name && response.email) {
-                setCustomerName(response.name);
-                setCustomerEmail(response.email);
-            }
-        }
-        
-        catch (error) {
-            console.error(error);
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+
+        if (response.name && response.email) {
+            setCustomerName(response.name);
+            setCustomerEmail(response.email);
         }
 
         setLoading(false);

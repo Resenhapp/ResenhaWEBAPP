@@ -46,36 +46,24 @@ export default function Profile() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                profile: profile
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            profile: profile
+        });
 
-            setData(response);
+        setData(response);
 
-            setIsFollowing(response.mutual.follower);
-            setFollowersCount(response.followers.followed);
+        setIsFollowing(response.mutual.follower);
+        setFollowersCount(response.followers.followed);
 
-            if (response.mutual.follower == true && response.mutual.following == true) {
-                setIsMutual(true);
-            }
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.mutual.follower == true && response.mutual.following == true) {
+            setIsMutual(true);
         }
     };
 
@@ -88,17 +76,11 @@ export default function Profile() {
 
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'switchFollowUser',
-                token: token,
-                profile: profile
-            });
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'switchFollowUser',
+            token: token,
+            profile: profile
+        });
     };
 
     useEffect(() => {

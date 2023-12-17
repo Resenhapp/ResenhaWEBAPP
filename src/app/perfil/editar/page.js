@@ -64,63 +64,45 @@ export default function EditProfile() {
     }
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
 
-            setData(response);
+        setData(response);
 
-            setNewTempName(response.name);
-            setTempName(response.name);
-            setNewTempUsername(response.username);
-            setTempUsername(response.username);
-            setAbout(response.about);
-            setNewTempAbout(response.about);
-            setTempAbout(response.about);
+        setNewTempName(response.name);
+        setTempName(response.name);
+        setNewTempUsername(response.username);
+        setTempUsername(response.username);
+        setAbout(response.about);
+        setNewTempAbout(response.about);
+        setTempAbout(response.about);
 
-            const interests = response.interests;
-            const interestsAsIntegers = [];
+        const interests = response.interests;
+        const interestsAsIntegers = [];
 
-            for (let i = 0; i < interests.length; i++) {
-                const interest = parseInt(interests[i], 10);
-                interestsAsIntegers.push(interest);
-            }
-
-            setUserInterests(interestsAsIntegers);
+        for (let i = 0; i < interests.length; i++) {
+            const interest = parseInt(interests[i], 10);
+            interestsAsIntegers.push(interest);
         }
 
-        catch (error) {
-            console.error(error);
-        }
+        setUserInterests(interestsAsIntegers);
     };
 
     const sendEditRequest = async (data) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'editUserData',
-                token: token,
-                data: data
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'editUserData',
+            token: token,
+            data: data
+        });
 
-            return response;
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        return response;
     };
 
     const toggleEditInterestsPageOpen = () => {
@@ -145,16 +127,10 @@ export default function EditProfile() {
             interests: tempUserInterests
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditInterestsPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditInterestsPageOpen();
         }
     };
 
@@ -211,38 +187,31 @@ export default function EditProfile() {
                 data.name = newTempName;
             }
 
-            try {
-                const response = await sendEditRequest(data);
-                if (response.status = 'success'){toggleEditUsernamePageOpen};
-                if (response.error) {
-                  switch (response.error) {
-                    case "used_username":
-                      setErrorIndex(3);
-                      break;
-                    case "empty_username":
-                      setErrorIndex(4);
-                      break;
-                    case "short_username":
-                      setErrorIndex(1);
-                      break;
-                    case "invalid_username":
-                      setErrorIndex(2);
-                      break;
-                    default:
-                      console.error('Unhandled error type:', response.error);
-                      break;
-                  }
-                  setIsUsernameErrorVisible(true);
-                } 
-                
-                else {
-                    setIsUsernameErrorVisible(false);
-            toggleEditUsernamePageOpen();
+            const response = await sendEditRequest(data);
+            if (response.status = 'success'){toggleEditUsernamePageOpen};
+            if (response.error) {
+                switch (response.error) {
+                case "used_username":
+                    setErrorIndex(3);
+                    break;
+                case "empty_username":
+                    setErrorIndex(4);
+                    break;
+                case "short_username":
+                    setErrorIndex(1);
+                    break;
+                case "invalid_username":
+                    setErrorIndex(2);
+                    break;
+                default:
+                    break;
                 }
-              } 
-              
-            catch (error) {
-                console.error(error);
+                setIsUsernameErrorVisible(true);
+            } 
+            
+            else {
+                setIsUsernameErrorVisible(false);
+                toggleEditUsernamePageOpen();
             }
         }
 
@@ -285,16 +254,10 @@ export default function EditProfile() {
                 about: newTempAbout
             };
 
-            try {
-                const response = await sendEditRequest(data);
+            const response = await sendEditRequest(data);
 
-                if (!response.error) {
-                    toggleEditAboutPageOpen();
-                }
-            }
-
-            catch (error) {
-                console.error(error);
+            if (!response.error) {
+                toggleEditAboutPageOpen();
             }
         }
 

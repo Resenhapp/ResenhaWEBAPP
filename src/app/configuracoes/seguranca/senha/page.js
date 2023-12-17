@@ -45,49 +45,31 @@ export default function PasswordConfig() {
             password: tempPassword
         };
     
-        try {
-            const response = await sendEditRequest(data);
-      
-            if (response.token) {
-                Cookies.set('token', response.token);
-            }
+        const response = await sendEditRequest(data);
     
-            if (!response.error) {
-                toggleEditPasswordPageOpen();
-            }
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.token) {
+            Cookies.set('token', response.token);
+        }
+
+        if (!response.error) {
+            toggleEditPasswordPageOpen();
         }
     };
 
     const [data, setData] = useState(null);
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const sendEditRequest = async (data) => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'editUserData',
-            token: token,
-            data: data
-          });
-      
-          return response;
-        } 
-        
-        catch (error) {
-          console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'editUserData',
+        token: token,
+        data: data
+        });
+    
+        return response;
     };
 
     return (

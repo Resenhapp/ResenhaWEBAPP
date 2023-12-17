@@ -55,95 +55,65 @@ export default function Feed() {
   }
 
   const handleSaveButton = async (party) => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-        request: 'switchSaveEvent',
-        party: party.code,
-        token: token,
-      });
-    }
-
-    catch (error) {
-        console.error(error);
-    }
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+      request: 'switchSaveEvent',
+      party: party.code,
+      token: token,
+    });
   };
 
   const setImpressionCount = async (party) => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-        request: 'tryToClickOnEvent',
-        party: party.code,
-        token: token
-      });
-    }
-
-    catch (error) {
-      console.error(error);
-    }
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+      request: 'tryToClickOnEvent',
+      party: party.code,
+      token: token
+    });
   };
 
   const makeRequest = async (url, data) => {
-    try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-    }
-
-    catch (error) {
-        throw new Error(`Request failed: ${error}`);
-    }
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
   };
 
   const fetchData = async () => {
     setLoading(true);
   
-    try {
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-      
-          var newPosition = [position.coords.latitude, position.coords.longitude];
-      
-          const address = await reverseGeocode(newPosition[0], newPosition[1]);
-      
-          setInputValue(address);
-      
-          var filterParameters = {
-            "coordinates": newPosition,
-            "radius": inputRadiusValue
-          };
-      
-          try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getFeedData',
-              token: token,
-              filterParameters: filterParameters
-            });
-      
-            setData(response);
-          } 
-          
-          catch (error) {
-            console.error("Error while fetching feed data:", error);
-          }
-        } 
-        
-        catch (error) {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getFeedData',
-            token: token
-          });
-      
-          setData(response);
-        }
-      }
-    } 
+    if (navigator.geolocation) {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
     
-    catch (error) {
-      console.error(error);
-    }
+        var newPosition = [position.coords.latitude, position.coords.longitude];
+    
+        const address = await reverseGeocode(newPosition[0], newPosition[1]);
+    
+        setInputValue(address);
+    
+        var filterParameters = {
+          "coordinates": newPosition,
+          "radius": inputRadiusValue
+        };
+    
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getFeedData',
+          token: token,
+          filterParameters: filterParameters
+        });
   
+        setData(response);
+      } 
+      
+      catch (error) {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getFeedData',
+          token: token
+        });
+    
+        setData(response);
+      }
+    }
+
     setLoading(false);
   };
 
@@ -152,26 +122,20 @@ export default function Feed() {
 
     setLoading(true);
 
-    try {
-      var filterParameters = {
-        "address": inputValue,
-        "radius": inputRadiusValue,
-        "tags": tempEventTags,
-        "vibe": tempUserInterests,
-      };
+    var filterParameters = {
+      "address": inputValue,
+      "radius": inputRadiusValue,
+      "tags": tempEventTags,
+      "vibe": tempUserInterests,
+    };
 
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        filterParameters: filterParameters
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      filterParameters: filterParameters
+    });
 
-      setData(response);
-    }
-
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };
@@ -183,19 +147,13 @@ export default function Feed() {
   const searchFeedData = async searchTerm => {
     setLoading(true);
 
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        searchTerm: searchTerm
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      searchTerm: searchTerm
+    });
 
-      setData(response);
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };
@@ -203,19 +161,13 @@ export default function Feed() {
   const fetchHypedParties = async searchTerm => {
     setLoading(true);
 
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        hype: true
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      hype: true
+    });
 
-      setData(response);
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };

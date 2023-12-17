@@ -41,39 +41,27 @@ export default function Chat() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getMessages',
-                token: token,
-                code: chatCode,
-                type: chatType
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getMessages',
+            token: token,
+            code: chatCode,
+            type: chatType
+        });
 
-            if (response.error) {
-                window.history.back();
-            }
-
-            if (response && Array.isArray(response.messages)) {
-                setMessages(response.messages);
-            }
-
-            setIsLoading(false);
+        if (response.error) {
+            window.history.back();
         }
 
-        catch (error) {
-            console.error(error);
+        if (response && Array.isArray(response.messages)) {
+            setMessages(response.messages);
         }
+
+        setIsLoading(false);
     };
 
     const sendMessage = async (message) => {
@@ -89,19 +77,13 @@ export default function Chat() {
 
         setMessages((oldMessages) => [...oldMessages, newMessage]);
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToSendMessage',
-                token: token,
-                destination: chatCode,
-                type: chatType,
-                content: message
-            });
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToSendMessage',
+            token: token,
+            destination: chatCode,
+            type: chatType,
+            content: message
+        });
     };
 
     const messagesEndRef = React.useRef(null);

@@ -29,45 +29,33 @@ export default function Concierge() {
     const qs = require('qs');
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const tryToAllow = async (scannedCode) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToAllowGuest',
-                token: concierge,
-                code: scannedCode
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToAllowGuest',
+            token: concierge,
+            code: scannedCode
+        });
 
-            if (response.status == "success") {
-                if (response.access == 'granted') {
-                    setContent('Granted');
-                }
-
-                else if (response.access == 'bill') {
-                    setContent('Cash');
-                }
+        if (response.status == "success") {
+            if (response.access == 'granted') {
+                setContent('Granted');
             }
 
-            else {
-                if (response.error == 'used') {
-                    setContent('Used');
-                }
-
-                setContent('Denied');
+            else if (response.access == 'bill') {
+                setContent('Cash');
             }
-        } 
-        
-        catch (error) {
-            console.error(error);
+        }
+
+        else {
+            if (response.error == 'used') {
+                setContent('Used');
+            }
+
+            setContent('Denied');
         }
     }
     

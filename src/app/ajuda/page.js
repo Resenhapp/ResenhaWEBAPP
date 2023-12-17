@@ -24,25 +24,16 @@ export default function Help() {
 
     const [data, setData] = useState(null);
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'getHelpData'});
-            setData(response);
-        }
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'getHelpData'
+      });
 
-        catch (error) {
-            console.error(error);
-        }
+      setData(response);
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const handleHelpButton = () => {

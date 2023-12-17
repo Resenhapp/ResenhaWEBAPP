@@ -38,30 +38,18 @@ export default function EventDetails() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                token: token,
-                code: partyCode
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            token: token,
+            code: partyCode
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
 

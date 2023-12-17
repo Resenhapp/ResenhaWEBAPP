@@ -86,39 +86,32 @@ export default function Login() {
   };
 
   const handleClick = async () => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'tryToAuthenticate', 
-        email: email, 
-        password: password 
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'tryToAuthenticate', 
+      email: email, 
+      password: password 
+    });
 
-      if (response.token) {
-        const expirationDate = new Date();
+    if (response.token) {
+      const expirationDate = new Date();
 
-        if (remember) {
-          expirationDate.setDate(expirationDate.getDate() + 30);
-        } 
-        
-        else {
-          expirationDate.setDate(expirationDate.getDate() + 3);
-        }
-
-        Cookies.set('token', response.token, { expires: expirationDate });
-
-        if (typeof window !== 'undefined') {
-          window.location.href = '/feed/';
-        }
+      if (remember) {
+        expirationDate.setDate(expirationDate.getDate() + 30);
+      } 
+      
+      else {
+        expirationDate.setDate(expirationDate.getDate() + 3);
       }
-    }
-    
-    catch (error) {
-      console.error(error);
+
+      Cookies.set('token', response.token, { expires: expirationDate });
+
+      if (typeof window !== 'undefined') {
+        window.location.href = '/feed/';
+      }
     }
   };
 
   const makeRequest = async (url, data) => {
-    try {
       const response = await axios.post(url, qs.stringify(data));
 
       if (response.data && response.data.error) {
@@ -143,11 +136,6 @@ export default function Login() {
       }
 
       else {return response.data;}
-    } 
-    
-    catch (error) {
-      throw new Error(`Request failed: ${error}`);
-    }
   };
   
   useEffect(() => {

@@ -102,7 +102,8 @@ function getDayOfWeek($dateString)
     return $dayNames[$dayOfWeek] ?? $dayOfWeek;
 }
 
-function redirect($url = GLOBAL_REDIRECT) {
+function redirect($url = GLOBAL_REDIRECT) 
+{
     header("Location: $url");
 }
 
@@ -180,9 +181,9 @@ function randomKey()
     return $key;
 }
 
-function registerLog($user, $type, $action, $description = "none")
+function registerLog($user, $type, $title, $description = "none", $hash = "none")
 {
-    $variables = [ &$user, &$type, &$action, &$description];
+    $variables = [&$user, &$type, &$title, &$description];
 
     foreach ($variables as &$var) {
         $var = sanitize($var);
@@ -191,7 +192,7 @@ function registerLog($user, $type, $action, $description = "none")
     date_default_timezone_set('America/Sao_Paulo');
     $date = date('d/m/Y H:i');
 
-    $query = "INSERT INTO activities (user, type, action, description, date) VALUES ('$user', '$type', '$action', '$description', '$date')";
+    $query = "INSERT INTO activities (user, type, title, description, hash, date) VALUES ('$user', '$type', '$title', '$description', '$hash', '$date')";
     queryNR($query);
 }
 
@@ -335,7 +336,8 @@ function getHelpData()
     echo json_encode($response);
 }
 
-function checkUsername($username) {
+function checkUsername($username) 
+{
     if (empty($username)) {
         return "empty_username";
     }
@@ -358,7 +360,8 @@ function checkUsername($username) {
     return null;
 }
 
-function checkName($name) {
+function checkName($name) 
+{
     if (empty($name)) {
         return "empty_username";
     }
@@ -386,7 +389,8 @@ function checkSession($token)
     }
 }
 
-function getHash($userHash, $urlType) {
+function getHash($userHash, $urlType) 
+{
     $userHash = hash256($userHash);
 
     if ($urlType == "event") {
@@ -981,6 +985,7 @@ function getSingleDataDiscord()
             echo json_encode($errorData);
         }
 }
+
 function getUsersFromParty()
 {
     header('Content-Type: application/json');
@@ -1065,7 +1070,8 @@ function getUserActivityDiscord()
     }
 }
 
-function getSpecificData($userId, $item) {
+function getSpecificData($userId, $item) 
+{
     switch ($item) {
         case 'interests':
             $query = "SELECT * FROM interests WHERE user = '$userId'";
@@ -1493,7 +1499,6 @@ function getUserData()
                 "phone",
                 "address",
                 "birth",
-                "email",
                 "balances",
                 "notifications",
                 "saved",
@@ -1502,14 +1507,7 @@ function getUserData()
                 "activities",
                 "purchases",
                 "interests",
-                "balances",
-                "concierges",
-                "mutual",
                 "parties",
-                "notifications",
-                "activities",
-                "purchases",
-                "saved",
                 "followers",
                 "comments"
             ];
@@ -2699,10 +2697,17 @@ function tryToCreateEvent()
             ],
         ];
 
+        registerLog(
+            $host,
+            "user",
+            "Resenha criada!",
+            "$name foi criada com sucesso."
+        );
+
         createNotification(
             $host, 
             "Resenha criada!", 
-            "A $name foi criada com sucesso."
+            "$name foi criada com sucesso."
         );
 
         sendMessage($embed, $webhook);
@@ -2885,7 +2890,8 @@ function tryToClickOnEvent()
     }
 }
 
-function generateRandomUsername($fullName) {
+function generateRandomUsername($fullName) 
+{
     $randomNumber = rand(1, 9999);
 
     $cleanedFullName = strtolower(str_replace(' ', '', $fullName));
@@ -2910,7 +2916,8 @@ function generateRandomUsername($fullName) {
     return $username;
 }
 
-function stripAccents($str) {
+function stripAccents($str) 
+{
     $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
     $str = preg_replace('/[^a-zA-Z0-9]/', '', $str);
 
