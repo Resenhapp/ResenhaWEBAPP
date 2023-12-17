@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
 
-const PartyPortrait = ({ viewOnClick, editOnClick, copyOnClick, trashOnClick, canBeDeleted = true, partyCode, partyName, partyImage, partyDate, partyHour, partyGuests, partyMaxGuests }) => {
+const PartyPortrait = ({ viewOnClick, editOnClick, editConcierge, copyOnClick, trashOnClick, canBeDeleted = true, partyCode, partyName, partyImage, partyDate, partyHour, partyGuests, partyMaxGuests }) => {
 
     const baseFlexClasses = 'flex flex-row items-center gap-1';
     const h3Classes = 'text-[12px]';
@@ -34,6 +34,9 @@ const PartyPortrait = ({ viewOnClick, editOnClick, copyOnClick, trashOnClick, ca
                         </button> {/* copy */}
                         <button onClick={copyOnClick} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
+                        </button> {/* copy link */}
+                        <button onClick={editConcierge} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
+                            <Vector vectorname={'user05'} />
                         </button> {/* copy link */}
                     </div>
                     {canBeDeleted && 

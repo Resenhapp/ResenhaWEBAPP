@@ -1,17 +1,17 @@
 'use client'
 
-import Button from "@/src/components/Button"
-import Image from "next/image"
-import Vector from "@/src/components/Vector"
+import Image from "next/image";
+import Vector from "@/src/components/Vector";
 import EditInfoPage from "@/src/components/EditInfoPage"
 import React, { useState, useEffect } from 'react';
-import Tag from "@/src/components/Tag"
-import { tagsData } from "@/src/components/tagsData"
-import Toggle from "@/src/components/Toggle"
+import Tag from "@/src/components/Tag";
+import { tagsData } from "@/src/components/tagsData";
+import Toggle from "@/src/components/Toggle";
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
-import PageHeader from "@/src/components/PageHeader"
-import { setHours } from "date-fns"
+import PageHeader from "@/src/components/PageHeader";
+import { Loader } from '@googlemaps/js-api-loader';
+import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 
 export default function EditEvent() {
     var token = Cookies.get('token');
@@ -53,6 +53,35 @@ export default function EditEvent() {
     const [acceptsPix, setAcceptsPix] = useState(true);
     const [acceptsCard, setAcceptsCard] = useState(true);
     const [acceptsCash, setAcceptsCash] = useState(true);
+    const [placesService, setPlacesService] = useState(null);
+    const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+
+    useEffect(() => {
+        const loader = new Loader({
+          apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+          version: 'weekly',
+          libraries: ['places'],
+        });
+    
+        loader.importLibrary('places')
+          .then(() => {
+            const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+            setPlacesService(service);
+            setIsMapsLoaded(true);
+          })
+          .catch((error) => {
+            console.error('Erro ao carregar a API do Google Maps:', error);
+            setIsMapsLoaded(false);
+          });
+      }, []);
+      const handleAddressSelect = (location) => {
+        setAddress(location.address);
+      };
+
+      const handleAddressChange = (value) => {
+        setAddress(value);
+      };
+
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -146,10 +175,6 @@ export default function EditEvent() {
         setDescription(event.target.value);
     };
 
-    const handleAddressChange = (event) => {
-        setAddress(event.target.value);
-    };
-
     const handleDateChange = (event) => {
         let input = event.target.value.replace(/\D/g, "");
         input = input.replace(/(\d{2})(\d)/, "$1/$2");
@@ -174,7 +199,6 @@ export default function EditEvent() {
         const parts = dateString.split("/");
         const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
         const dayOfWeek = days[dateObject.getDay()];
-
         return dayOfWeek;
     }
 
@@ -212,7 +236,6 @@ export default function EditEvent() {
         setEndHour(inputHour);
     };
 
-    
     useEffect(() => {
         if (!isVip) {
             setVipLimit(0);
@@ -604,6 +627,10 @@ export default function EditEvent() {
 
     var { guests } = data
 
+    if (!isMapsLoaded) {
+        return <div>Carregando...</div>;
+      }
+
     return (
         <div className="bg-purpleT1 h-screen min-h-fit">
             <EditInfoPage
@@ -720,23 +747,37 @@ export default function EditEvent() {
                 </div>
             </EditInfoPage>
 
-            <EditInfoPage isOpen={isEditAddressPageOpen} pageTitle={'Endereço da resenha'} saveAction={saveAddress} togglePage={toggleEditAddressPageOpen}>
-                <div className='w-full'>
-                    <input
-                        value={address}
-                        onChange={handleAddressChange}
-                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Rua ramiro barcelos, 1450'
-                    ></input>
-                </div>
-                <div className="w-full flex flex-row justify-start">
-                </div>
-                <div>
-                    <p className='text-sm'>
-                        O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
-                    </p>
-                </div>
-            </EditInfoPage>
+            <EditInfoPage
+      isOpen={isEditAddressPageOpen}
+      togglePage={toggleEditAddressPageOpen}
+      pageTitle={'Endereço da resenha'}
+      saveAction={saveAddress}
+    >
+      <div className='w-full'>
+      {placesService && isMapsLoaded && (
+        <PlacesAutocomplete_Edit
+          setSelected={handleAddressSelect}
+          action={handleAddressChange}
+          Icon='pin'
+          showIcon={true}
+          placeholder='Endereço'
+          value={address}
+          Required={true}
+          placesService={placesService}
+          options={{
+            types: ['geocode'],
+            componentRestrictions: { country: "BR" }
+          }}
+        />
+      )}
+      </div>
+      <div className="w-full flex flex-row justify-start"></div>
+      <div>
+        <p className='text-sm'>
+          O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
+        </p>
+      </div>
+    </EditInfoPage>
 
             <EditInfoPage isOpen={isEditDescriptionPageOpen} saveAction={saveDescription} pageTitle={'Descrição da resenha'} togglePage={toggleEditDescriptionPageOpen}>
                 <div className='w-full'>
@@ -810,47 +851,54 @@ export default function EditEvent() {
 
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
-
-                    <div className="relative w-full">
-                        {!image && (
-                            <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
-                                <input
-                                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
-                                    type="file"
-                                    accept=".gif, .png, .jpg, .jpeg"
-                                    onChange={handleImageChange}
-                                />
-                                <div className='flex flex-col gap-2 justify-center items-center content-center'>
-                                    <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
-                                </div>
-                            </label>
-                        )}
-                        {image && (
-                            <>
-                                <Image
-                                    src={image}
-                                    alt="Selected Image"
-                                    width={400}
-                                    height={270}
-                                    className="object-cover w-full h-[260px]"
-                                />
-                                <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
-                                    <input
-                                        style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
-                                        type="file"
-                                        accept=".gif, .png, .jpg, .jpeg"
-                                        onChange={handleImageChange}
-                                    />
-                                    <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
-                                        <Vector vectorname={"edit02"} />
-                                    </div>
-                                </label>
-                            </>
-                        )}
-                        <div className="absolute inset-0">
-                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
-                        </div>
-                    </div>
+                <div className="absolute z-[9] top-4 left-4">
+    <button onClick={(event) => {
+        event.stopPropagation();
+        window.history.back();
+    }} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+        <Vector vectorname={'arrowLeft01'} />
+    </button>
+</div>
+<div className="relative w-full">
+    {!image && (
+        <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
+            <input
+                style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
+                type="file"
+                accept=".gif, .png, .jpg, .jpeg"
+                onChange={handleImageChange}
+            />
+            <div className='flex flex-col gap-2 justify-center items-center content-center'>
+                <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
+            </div>
+        </label>
+    )}
+    {image && (
+        <>
+            <Image
+                src={image}
+                alt="Selected Image"
+                width={400}
+                height={270}
+                className="object-cover w-full h-[260px]"
+            />
+            <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
+                <input
+                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
+                    type="file"
+                    accept=".gif, .png, .jpg, .jpeg"
+                    onChange={handleImageChange}
+                />
+                <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
+                    <Vector vectorname={"edit02"} />
+                </div>
+            </label>
+        </>
+    )}
+    <div className="absolute inset-0">
+        <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
+    </div>
+</div>
 
 
                     <div className="w-full gap-2 flex flex-col p-5">
