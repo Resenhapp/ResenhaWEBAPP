@@ -18,6 +18,19 @@ export default function Login() {
   const qs = require('qs');
 
   const [loading, setLoading] = useState(false);
+  const [errorIndex, setErrorIndex] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
+
+  const errors = [
+    "Ocorreu um erro desconhecido.",
+    "Nome de usuário muito curto.",
+    "Nome de usuário inválido.",
+    "Credenciais inválidas.",
+    "Nome de usuário não pode ser vazio."
+  ];
 
   const handleNavigation = (pageToGo) => {
     if (typeof window !== 'undefined') {
@@ -58,20 +71,6 @@ export default function Login() {
       setLoading(false);
     }
   };
-
-  const [errorIndex, setErrorIndex] = useState(null);
-  const errors = [
-    "Ocorreu um erro desconhecido.",
-    "Nome de usuário muito curto.",
-    "Nome de usuário inválido.",
-    "Credenciais inválidas.",
-    "Nome de usuário não pode ser vazio."
-  ];
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
-  const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -135,7 +134,9 @@ export default function Login() {
         setIsLoginErrorVisible(true);
       }
 
-      else {return response.data;}
+      else {
+        return response.data
+      }
   };
   
   useEffect(() => {
