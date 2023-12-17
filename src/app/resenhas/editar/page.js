@@ -57,6 +57,7 @@ export default function EditEvent() {
     const [isMapsLoaded, setIsMapsLoaded] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    
     const handleTrashClick = async (party) => {
         try {
             const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
@@ -653,10 +654,9 @@ export default function EditEvent() {
                 <div className="w-[90%] bg-purpleT0 ring-1 ring-inset ring-purpleT3 rounded-xl p-5">
                     <p className="text-center text-xl font-bold">Você tem certeza de que deseja excluir esta resenha?</p>
                     <p className="text-center text-sm text-redT3"> (Esta ação não poderá ser desefeita.)</p>
-
                     <div className="flex flex-col mt-4 items-center content-center justify-center">
                         <button onClick={()=>{setShowDeleteModal(!showDeleteModal)}} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
-                        <button className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
+                        <button onClick={()=>{handleTrashClick(partyCode)}} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
                     </div>
                     </div>
             </div>}

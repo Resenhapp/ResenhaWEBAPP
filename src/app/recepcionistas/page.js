@@ -10,9 +10,12 @@ import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
 export default function Concierges() {
-    function RemoveConcierge() {
+    
+    function removeConcierge() {
 
     }
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -56,11 +59,6 @@ export default function Concierges() {
         }
     };
 
-    const [show, setShow] = useState(false);
-    const showPopUp = () => {
-        setShow(true);
-    };
-
 
     if (!data) {
         return (
@@ -74,17 +72,18 @@ export default function Concierges() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
+            {showDeleteModal && <div className="w-screen h-screen z-[9999] bg-[#00000093] flex backdrop-blur-md absolute items-center content-center justify-center">
+                <div className="w-[90%] bg-purpleT0 ring-1 ring-inset ring-purpleT3 rounded-xl p-5">
+                    <p className="text-center text-xl font-bold">Você tem certeza de que deseja excluir este recepcionista?</p>
+                    <p className="text-center text-sm text-redT3"> (Esta ação não poderá ser desefeita.)</p>
+                    <div className="flex flex-col mt-4 items-center content-center justify-center">
+                        <button onClick={()=>{setShowDeleteModal(!showDeleteModal)}} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
+                        <button onClick={()=>{removeConcierge}} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
+                    </div>
+                    </div>
+            </div>}
             <PageHeader pageTitle={'Recepcionistas'} />
-            <PopUp
-                icon={'question'}
-                iconColor={'purple'}
-                onActionClick={RemoveConcierge}
-                title={'Excluir recepcionista?'}
-                text={`Você tem certeza de que quer excluir TESTE da lista de Recepcionistas? `}
-                actionTitle={'Excluir'}
-                buttonColor={'red'}
-                showStatus={show}
-            />
+           
             <div className="flex flex-col items-centser justify-center h-screen px-4 ">
                 <section className="flex flex-col w-full max-w-md p-4 ">
                     <div className='h3 w-full flex '>
@@ -96,8 +95,9 @@ export default function Concierges() {
                                             imgUrl={defaultProfileImage}
                                             conciergeName={concierge.name}
                                             conciergeToken={concierge.token}
+                                            copyAction={()=>{navigator.clipboard.writeText("https://resenha.app/recepcionista?t="+concierge.token)}}
                                             relativeEvent={concierge.party}
-                                            deleteAction={showPopUp}
+                                            deleteAction={()=>{setShowDeleteModal(!showDeleteModal)}}
                                             editAction={() => handleNavigation('recepcionistas/editar?r='+concierge.token)}
                                         />
                                     </div>
