@@ -84,7 +84,7 @@ export default function Concierges() {
             </div>}
             <PageHeader pageTitle={'Recepcionistas'} />
            
-            <div className="flex flex-col items-centser justify-center h-screen px-4 ">
+            <div className="flex flex-col items-center justify-center h-screen px-4 ">
                 <section className="flex flex-col w-full max-w-md p-4 ">
                     <div className='h3 w-full flex '>
                         <div className='w-full flex flex-col '>
