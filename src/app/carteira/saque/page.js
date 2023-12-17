@@ -114,9 +114,9 @@ export default function Withdraw() {
     const isWithdrawalValid = withdrawalAmount >= 50 && withdrawalAmount <= parseFloat(avaliableCash.replace(',', '.'));
 
     return (
-        <div className='flex flex-col w-screen h-screen '>
+        <div className='flex flex-col w-screen h-screen items-center content-center'>
             <PageHeader pageTitle={'Saque'} userData={data} />
-            <div className="flex flex-col  justify-start h-screen px-4 ">
+            <div className="flex flex-col w-full justify-start h-screen px-4 items-center content-center">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
                         <div className='w-full flex flex-col items-center gap-4'>

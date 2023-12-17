@@ -10,7 +10,7 @@ import Modal from '@/src/components/Modal';
 export default function NewConcierge() {
 
     const [selectedOption, setSelectedOption] = useState('');
-    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const [options, setOptions] = useState (['Option 1', 'Option 2', 'Option 3']);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
 
@@ -48,7 +48,7 @@ export default function NewConcierge() {
                                 Icon={'user'}
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
-                                action={handleInputChange} // Update state on input change
+                                action={handleInputChange} 
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
@@ -63,7 +63,7 @@ export default function NewConcierge() {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-10 w-full'>
+                    <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
                         <Button
                             label={'Criar recepcionista'}
                             active={isFilled}

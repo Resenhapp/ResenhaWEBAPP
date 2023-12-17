@@ -12,7 +12,7 @@ import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader";
 import { Loader } from '@googlemaps/js-api-loader';
 import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
-
+import Button from "@/src/components/Button";
 export default function EditEvent() {
     var token = Cookies.get('token');
 
@@ -55,32 +55,47 @@ export default function EditEvent() {
     const [acceptsCash, setAcceptsCash] = useState(true);
     const [placesService, setPlacesService] = useState(null);
     const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+    const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const handleTrashClick = async (party) => {
+        try {
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'tryToDeleteEvent',
+                token: token,
+                code: party.code
+            });
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         const loader = new Loader({
-          apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
-          version: 'weekly',
-          libraries: ['places'],
+            apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+            version: 'weekly',
+            libraries: ['places'],
         });
-    
-        loader.importLibrary('places')
-          .then(() => {
-            const service = new window.google.maps.places.PlacesService(document.createElement('div'));
-            setPlacesService(service);
-            setIsMapsLoaded(true);
-          })
-          .catch((error) => {
-            console.error('Erro ao carregar a API do Google Maps:', error);
-            setIsMapsLoaded(false);
-          });
-      }, []);
-      const handleAddressSelect = (location) => {
-        setAddress(location.address);
-      };
 
-      const handleAddressChange = (value) => {
+        loader.importLibrary('places')
+            .then(() => {
+                const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+                setPlacesService(service);
+                setIsMapsLoaded(true);
+            })
+            .catch((error) => {
+                console.error('Erro ao carregar a API do Google Maps:', error);
+                setIsMapsLoaded(false);
+            });
+    }, []);
+    const handleAddressSelect = (location) => {
+        setAddress(location.address);
+    };
+
+    const handleAddressChange = (value) => {
         setAddress(value);
-      };
+    };
 
 
     const handleNavigation = (pageToGo) => {
@@ -266,7 +281,7 @@ export default function EditEvent() {
 
             return response.data;
         }
-    
+
         catch (error) {
             throw new Error(`Request failed: ${error}`);
         }
@@ -275,15 +290,15 @@ export default function EditEvent() {
     const sendImageRequest = async (data) => {
         try {
             const response = await makeImageRequest(process.env.NEXT_PUBLIC_API_URL, data);
-    
+
             return response;
         }
-    
+
         catch (error) {
             console.error(error);
         }
     };
-    
+
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -299,8 +314,8 @@ export default function EditEvent() {
 
             try {
                 console.log(await sendImageRequest(formData));
-            } 
-            
+            }
+
             catch (error) {
                 console.error('Error while uploading image: ', error);
             }
@@ -332,18 +347,18 @@ export default function EditEvent() {
 
     const sendEditRequest = async (data) => {
         try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'editEventData',
-            token: token,
-            code: partyCode,
-            data: data
-          });
-      
-          return response;
-        } 
-        
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+                request: 'editEventData',
+                token: token,
+                code: partyCode,
+                data: data
+            });
+
+            return response;
+        }
+
         catch (error) {
-          console.error(error);
+            console.error(error);
         }
     };
 
@@ -351,15 +366,15 @@ export default function EditEvent() {
         const data = {
             name: name
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditNamePageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -373,15 +388,15 @@ export default function EditEvent() {
         const data = {
             price: priceAsFloat
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditPricePageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -403,31 +418,31 @@ export default function EditEvent() {
 
         if (year < currentYear) {
             setDateError('O ano inserido é inválido. Por favor, insira um ano atual ou futuro.');
-        } 
-        
+        }
+
         else if (month < 1 || month > 12) {
             setDateError('O mês inserido é inválido. Por favor, insira um mês entre 01 e 12.');
-        } 
-        
+        }
+
         else if (day < 1 || day > maxDaysInMonth[month - 1]) {
             setDateError('O dia inserido é inválido. Por favor, insira um dia entre 01 e ' + maxDaysInMonth[month - 1] + '.');
-        } 
-        
+        }
+
         else {
             setDateError('');
 
             const data = {
-                date: day+"/"+month+"/"+year
+                date: day + "/" + month + "/" + year
             };
-        
+
             try {
                 const response = await sendEditRequest(data);
-          
+
                 if (!response.error) {
                     toggleEditDatePageOpen();
                 }
-            } 
-            
+            }
+
             catch (error) {
                 console.error(error);
             }
@@ -439,15 +454,15 @@ export default function EditEvent() {
             start: startHour,
             end: endHour
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditHourPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -469,15 +484,15 @@ export default function EditEvent() {
         const data = {
             capacity: limit
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditMaxGuestsPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -489,16 +504,16 @@ export default function EditEvent() {
         const data = {
             address: address
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditAddressPageOpen();
 
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -508,19 +523,19 @@ export default function EditEvent() {
         const data = {
             description: description
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditDescriptionPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
-    };    
+    };
 
     const saveTags = async () => {
         setEventTags(tempEventTags);
@@ -528,15 +543,15 @@ export default function EditEvent() {
         const data = {
             tags: tempEventTags
         };
-    
+
         try {
             const response = await sendEditRequest(data);
-      
+
             if (!response.error) {
                 toggleEditTagsPageOpen();
             }
-        } 
-        
+        }
+
         catch (error) {
             console.error(error);
         }
@@ -583,13 +598,13 @@ export default function EditEvent() {
             setEventTags(response.tags);
 
             const onlyNumbers = response.ticket.replace(/\D/g, "");
-            
+
             const formattedPrice = (parseInt(onlyNumbers)).toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
                 minimumFractionDigits: 2
             });
-    
+
             setPrice(formattedPrice);
         }
 
@@ -629,10 +644,22 @@ export default function EditEvent() {
 
     if (!isMapsLoaded) {
         return <div>Carregando...</div>;
-      }
+    }
 
     return (
+        
         <div className="bg-purpleT1 h-screen min-h-fit">
+            {showDeleteModal && <div className="w-screen h-screen z-[9999] bg-[#00000093] flex backdrop-blur-md absolute items-center content-center justify-center">
+                <div className="w-[90%] bg-purpleT0 ring-1 ring-inset ring-purpleT3 rounded-xl p-5">
+                    <p className="text-center text-xl font-bold">Você tem certeza de que deseja excluir esta resenha?</p>
+                    <p className="text-center text-sm text-redT3"> (Esta ação não poderá ser desefeita.)</p>
+
+                    <div className="flex flex-col mt-4 items-center content-center justify-center">
+                        <button onClick={()=>{setShowDeleteModal(!showDeleteModal)}} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
+                        <button className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
+                    </div>
+                    </div>
+            </div>}
             <EditInfoPage
                 isOpen={isEditNamePageOpen}
                 pageTitle={'Nome da resenha'}
@@ -748,36 +775,36 @@ export default function EditEvent() {
             </EditInfoPage>
 
             <EditInfoPage
-      isOpen={isEditAddressPageOpen}
-      togglePage={toggleEditAddressPageOpen}
-      pageTitle={'Endereço da resenha'}
-      saveAction={saveAddress}
-    >
-      <div className='w-full'>
-      {placesService && isMapsLoaded && (
-        <PlacesAutocomplete_Edit
-          setSelected={handleAddressSelect}
-          action={handleAddressChange}
-          Icon='pin'
-          showIcon={true}
-          placeholder='Endereço'
-          value={address}
-          Required={true}
-          placesService={placesService}
-          options={{
-            types: ['geocode'],
-            componentRestrictions: { country: "BR" }
-          }}
-        />
-      )}
-      </div>
-      <div className="w-full flex flex-row justify-start"></div>
-      <div>
-        <p className='text-sm'>
-          O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
-        </p>
-      </div>
-    </EditInfoPage>
+                isOpen={isEditAddressPageOpen}
+                togglePage={toggleEditAddressPageOpen}
+                pageTitle={'Endereço da resenha'}
+                saveAction={saveAddress}
+            >
+                <div className='w-full'>
+                    {placesService && isMapsLoaded && (
+                        <PlacesAutocomplete_Edit
+                            setSelected={handleAddressSelect}
+                            action={handleAddressChange}
+                            Icon='pin'
+                            showIcon={true}
+                            placeholder='Endereço'
+                            value={address}
+                            Required={true}
+                            placesService={placesService}
+                            options={{
+                                types: ['geocode'],
+                                componentRestrictions: { country: "BR" }
+                            }}
+                        />
+                    )}
+                </div>
+                <div className="w-full flex flex-row justify-start"></div>
+                <div>
+                    <p className='text-sm'>
+                        O endereço da resenha é uma informação crucial que seus convidados verão quando acessarem o convite. É importante que esteja completo e correto para que os convidados possam encontrar o local do evento com facilidade. Lembre-se de incluir detalhes como o número do prédio, o nome da rua e qualquer ponto de referência útil.
+                    </p>
+                </div>
+            </EditInfoPage>
 
             <EditInfoPage isOpen={isEditDescriptionPageOpen} saveAction={saveDescription} pageTitle={'Descrição da resenha'} togglePage={toggleEditDescriptionPageOpen}>
                 <div className='w-full'>
@@ -851,54 +878,54 @@ export default function EditEvent() {
 
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
-                <div className="absolute z-[9] top-4 left-4">
-    <button onClick={(event) => {
-        event.stopPropagation();
-        window.history.back();
-    }} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
-        <Vector vectorname={'arrowLeft01'} />
-    </button>
-</div>
-<div className="relative w-full">
-    {!image && (
-        <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
-            <input
-                style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
-                type="file"
-                accept=".gif, .png, .jpg, .jpeg"
-                onChange={handleImageChange}
-            />
-            <div className='flex flex-col gap-2 justify-center items-center content-center'>
-                <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
-            </div>
-        </label>
-    )}
-    {image && (
-        <>
-            <Image
-                src={image}
-                alt="Selected Image"
-                width={400}
-                height={270}
-                className="object-cover w-full h-[260px]"
-            />
-            <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
-                <input
-                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
-                    type="file"
-                    accept=".gif, .png, .jpg, .jpeg"
-                    onChange={handleImageChange}
-                />
-                <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
-                    <Vector vectorname={"edit02"} />
-                </div>
-            </label>
-        </>
-    )}
-    <div className="absolute inset-0">
-        <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
-    </div>
-</div>
+                    <div className="absolute z-[9] top-4 left-4">
+                        <button onClick={(event) => {
+                            event.stopPropagation();
+                            window.history.back();
+                        }} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                            <Vector vectorname={'arrowLeft01'} />
+                        </button>
+                    </div>
+                    <div className="relative w-full">
+                        {!image && (
+                            <label className="absolute inset-0 flex items-center justify-center cursor-pointer">
+                                <input
+                                    style={{ position: 'absolute', width: '100%', height: '100%', opacity: 100 }}
+                                    type="file"
+                                    accept=".gif, .png, .jpg, .jpeg"
+                                    onChange={handleImageChange}
+                                />
+                                <div className='flex flex-col gap-2 justify-center items-center content-center'>
+                                    <h1 className='text-center text-sm px-3'>Toque aqui para escolher uma imagem</h1>
+                                </div>
+                            </label>
+                        )}
+                        {image && (
+                            <>
+                                <Image
+                                    src={image}
+                                    alt="Selected Image"
+                                    width={400}
+                                    height={270}
+                                    className="object-cover w-full h-[260px]"
+                                />
+                                <label className="absolute inset-0 flex items-center z-[5] justify-center cursor-pointer">
+                                    <input
+                                        style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0 }}
+                                        type="file"
+                                        accept=".gif, .png, .jpg, .jpeg"
+                                        onChange={handleImageChange}
+                                    />
+                                    <div className="bg-purpleT1 p-3 rounded-full ring-1 ring-whiteT1">
+                                        <Vector vectorname={"edit02"} />
+                                    </div>
+                                </label>
+                            </>
+                        )}
+                        <div className="absolute inset-0">
+                            <div className="absolute bottom-[-1px] bg-gradient-to-t from-purpleT1 opacity-100 w-full h-2/5" />
+                        </div>
+                    </div>
 
 
                     <div className="w-full gap-2 flex flex-col p-5">
@@ -993,10 +1020,17 @@ export default function EditEvent() {
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-row justify-around w-full">
-                            {/* <button className="py-4 w-2/3 px-8">Voltar</button>
-                            <Button label={'Salvar'} icon={'check'} action={() => logthecontent()} iconSide='right' height={1} width={1} textAlign='center' /> */}
-                        </div>
+                        <button onClick={toggleEditDescriptionPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                            <div className="flex flex-row gap-2 items-center">
+                                <p>Visibilidade</p>
+                                <Vector vectorname={'edit02'} />
+                            </div>
+                            <p className="text-left">{"Publico"}</p>
+                        </button>
+                        {!canBeDeleted &&
+                            <Button label={'Excluir resenha'} icon={'trash'} action={() => setShowDeleteModal(!showDeleteModal)} iconSide='right' height={1} width={1} textAlign='center' />
+                            
+                        }
                     </div>
                 </section>
             </div>
