@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+
 export default function Concierges() {
     function RemoveConcierge() {
 
@@ -19,15 +20,15 @@ export default function Concierges() {
         }
     };
 
-    const defaultProfileImage = "https://resenha.app/publico/recursos/imagens/concierge_default.png";
+    const defaultProfileImage = "https://media.resenha.app/s/ui/concierge_default.jpg";
 
-    const id = Cookies.get('user');
+    const token = Cookies.get('token');
 
     const [data, setData] = useState(null);
 
     const fetchData = async () => {
         try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'getUserData', id: id });
+            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { request: 'getUserData', token: token });
             setData(response);
         }
 

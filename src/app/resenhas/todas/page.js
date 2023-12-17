@@ -87,19 +87,7 @@ export default function MyParties() {
     };
     
 
-    const handleTrashClick = async (party) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToDeleteEvent',
-                token: token,
-                code: party.code
-            });
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
-    };
+
 
     useEffect(() => {
         fetchData();
@@ -136,14 +124,12 @@ export default function MyParties() {
                                 partyGuests={party.confirmed} 
                                 partyHour={party.start} 
                                 partyMaxGuests={party.capacity} 
-                                editConcierge={()=>{console.log('cu')}}
+                                editConcierge={()=>{window.location.href=("/recepcionistas")}}
                                 partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
                                 partyName={party.name}
                                 viewOnClick={() => handleViewClick(party)}
                                 editOnClick={() => handleEditClick(party)}
                                 copyOnClick={() => handleCopyClick(party)}
-                                trashOnClick={() => handleTrashClick(party)}
-                                canBeDeleted={party.confirmed == 0}
                                 />
                                 ))}
                                 </div>
