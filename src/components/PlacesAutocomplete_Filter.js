@@ -12,7 +12,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
-const PlacesAutocomplete_Filter = ({ setSelected }) => {
+const PlacesAutocomplete_Filter = ({ setSelected, defaultValue }) => {
   const [placesService, setPlacesService] = useState(null);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const PlacesAutocomplete_Filter = ({ setSelected }) => {
     placesService,
     cacheKey: 'br',
     requestOptions: {
-      componentRestrictions: { country: 'br' }, // Restrição para o Brasil (código de país ISO 3166-1 alfa-2)
+      componentRestrictions: { country: 'br' },
       types: ['address']
     },
   });
@@ -50,16 +50,16 @@ const PlacesAutocomplete_Filter = ({ setSelected }) => {
 
   return (
     <div className="relative h-14 text-white border-b-2  border-purpleT2 flex items-center">
-      <div className="absolute left-0 pl-3  flex">
+      <div className="absolute left-0 pl-3 flex">
         <Vector vectorname={'pin01'} />
       </div>
       <Combobox onSelect={handleSelect} className="w-[90%]">
         <ComboboxInput 
-          value={value}
+          value={defaultValue}
           onChange={(e) => setValue(e.target.value)}
           disabled={!ready}
           className="pl-3 pr-2 block w-full  bg-transparent sm:text-sm ml-7 outline-none text-white placeholder-purpleT5"
-          placeholder="Endereço da resenha"
+          placeholder="Onde você está"
           options={{
             componentRestrictions: { country: "BR" }
           }}
