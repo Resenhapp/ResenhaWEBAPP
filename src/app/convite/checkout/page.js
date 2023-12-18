@@ -235,6 +235,7 @@ export default function Checkout() {
             setProgress(progress + 1);
             setIsFilled(!isFilled)
         }
+        
     };
 
     let title, subtitle, button, action;
@@ -309,6 +310,7 @@ export default function Checkout() {
 
         else {
             setProgress(progress - 1);
+            setPaymentMethod(0)
         }
     };
 

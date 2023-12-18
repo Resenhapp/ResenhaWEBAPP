@@ -113,10 +113,11 @@ export default function Invite() {
             <>
                 <h1>{shortDescription}</h1>
                 <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
-                    <span>Mostrar mais</span>
-                    <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
+                    {data.description.length>100 && <span>Mostrar mais</span>}
+                   
+                   {data.description.length>100 && <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
                         <Vector vectorname={'verticalArrow02'} />
-                    </div>
+                    </div>}
                 </div>
             </>
         );

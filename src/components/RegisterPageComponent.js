@@ -69,7 +69,7 @@ const RegisterPageComponent = ({}) => {
       password: password
     });
 
-    window.location.href = 'https://www.resenha.app/login';
+    window.location.href = 'https://www.resenha.app/cadastro/confirmacao';
 
     if (response.token && typeof window !== 'undefined') {
       expirationDate.setDate(expirationDate.getDate() + 30);

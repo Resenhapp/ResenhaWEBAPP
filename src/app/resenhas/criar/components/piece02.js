@@ -67,10 +67,10 @@ const Piece02 = ({ onDateSelect, onStartHourSelect, onEndHourSelect, onToggleCha
     const handleToggleChange = (isChecked) => {
         onToggleChange(isChecked);
         setHasEnd(isChecked);
-        if (!isChecked) {
+        if (isChecked) {
             setEndHourSelected(false);
-            setHasEnd(!isChecked);
-            onToggleChange(!isChecked);
+            setHasEnd(isChecked);
+            onToggleChange(isChecked);
         }
     };
 
