@@ -321,7 +321,7 @@ useEffect(() => {
     );
   }
   else {
-    
+    document.documentElement.requestFullscreen();
   }
 
   return (
