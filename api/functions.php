@@ -1819,9 +1819,21 @@ function tryToCreateGuest()
     if ($method == "Pix") {
         $data = [
             'status' => "success",
-            'code' => $qrcode,
-            'qrcode' => $qrcodeurl,
+            'code' => $code,
+            'qrcode' => [
+                'text' => $qrcode,
+                'url' => $qrcodeurl
+            ],
             'charge' => $charge,
+        ];
+
+        returnData($data);
+    }
+
+    else if ($method == "Dinheiro") {
+        $data = [
+            'status' => "success",
+            'code' => $code
         ];
 
         returnData($data);
