@@ -66,16 +66,20 @@ export default function Checkout() {
     }
 
     const generateCash = () => {
-        fetchData().then(data => {
-            setLoading(false);
-        });
+        const response = fetchData();
     }
 
     const generatePix = () => {
-        fetchData().then(data => {
-            setPixData(data);
-            setLoading(false);
-        });
+        const response = fetchData();
+
+        var data = {
+            text: response.qrcode.text,
+            url: response.qrcode.url,
+            charge: response.charge
+        };
+
+        setPixData(data);
+        setLoading(false);
     }
 
     const makeRequest = async (url, data) => {
@@ -117,15 +121,11 @@ export default function Checkout() {
             window.history.back();
         }
 
-        var data = {
-            text: response.qrcode.text,
-            url: response.qrcode.url,
-            charge: response.charge
-        };
-
         setInviteCode(response.code);
+
+        setLoading(false);
         
-        return data;
+        return response;
     };
 
     const printRef = useRef();
