@@ -33,12 +33,12 @@ export default function Checkout() {
     const [partyName, setPartyName] = useState('');
     const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
     const [partyOwner, setPartyOwner] = useState('');
-    const [partyDateDay, setPartyDateDay] = useState('26');
-    const [partyDay, setPartyDay] = useState('Quinta');
-    const [partyMonth, setPartyMonth] = useState('Maio');
+    const [partyDateDay, setPartyDateDay] = useState('');
+    const [partyDay, setPartyDay] = useState('');
+    const [partyMonth, setPartyMonth] = useState('');
     const [partyHour, setPartyHour] = useState('');
     const [partyAddress, setPartyAddress] = useState('');
-    const [inviteCode, setInviteCode] = useState('1352');
+    const [inviteCode, setInviteCode] = useState('');
     const [inviteQrCodeUrl, setInviteQrCodeUrl] = useState('https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfd30qfik0KF)-t23t-23tg-32g-2-g&chld=L|1&choe=UTF-8');
 
     const [partyPrice, setPartyPrice] = useState('');
@@ -65,6 +65,12 @@ export default function Checkout() {
     const payRequest = () => {
     }
 
+    const generateCash = () => {
+        fetchData().then(data => {
+            setLoading(false);
+        });
+    }
+
     const generatePix = () => {
         fetchData().then(data => {
             setPixData(data);
@@ -89,6 +95,9 @@ export default function Checkout() {
         setPartyOwner(response.host)
         setPartyAddress(response.address)
         setPartyHour(response.hour.start)
+        setPartyDateDay(response.date.day)
+        setPartyDay(response.date.dayString)
+        setPartyMonth(response.date.monthString)
     };
 
     const fetchData = async () => {
@@ -108,11 +117,13 @@ export default function Checkout() {
             window.history.back();
         }
 
-        var data = [
-            response.code,
-            response.qrcode,
-            response.charge
-        ];
+        var data = {
+            text: response.qrcode.text,
+            url: response.qrcode.url,
+            charge: response.charge
+        };
+
+        setInviteCode(response.code);
         
         return data;
     };
@@ -141,7 +152,9 @@ export default function Checkout() {
                         setTimeout(() => {
                             setHideStyle(true);
                         }, 500);
-                    } else {
+                    }
+                    
+                    else {
                         window.open(data);
                     }
                 }, 3);
@@ -170,7 +183,7 @@ export default function Checkout() {
                 break;
             case 2:
                 if (paymentMethod === 'Pix' && pixData) {
-                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} transactionCharge={pixData[2]} setIsFilled={setIsFilled} />
+                    return <Pix setPixKey={pixData["text"]} setPixQrCodeUrl={pixData["url"]} transactionCharge={pixData["charge"]} setIsFilled={setIsFilled} />
                 }
 
                 else if (paymentMethod === 'Dinheiro') {
@@ -207,20 +220,26 @@ export default function Checkout() {
         if (paymentMethod === "Pix"){
             generatePix();
         }
-        
+
+        if (progress == 2) {
+            if (paymentMethod == "Dinheiro") {
+                generateCash();
+            }
+        }
+
         if (progress + 1 > maxProgress) {
-            const details = {
-                content,
-            };
+
         }
 
         else {
             setProgress(progress + 1);
             setIsFilled(!isFilled)
         }
+        
     };
 
     let title, subtitle, button, action;
+
     switch (progress) {
         case 0:
             if (typeof window !== 'undefined') {
@@ -291,6 +310,7 @@ export default function Checkout() {
 
         else {
             setProgress(progress - 1);
+            setPaymentMethod(0)
         }
     };
 

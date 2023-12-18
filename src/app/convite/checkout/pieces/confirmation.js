@@ -31,7 +31,7 @@ export default function Confirmation({ PartyImage, PartyName, PartyOwner, PartyD
                     </div>
                     <div className="ml-3">
                       <h1 className="font-bold text-xl h-fit text-blackT1">{PartyName}</h1>
-                      <h3 className="font-bold text-sm h-fit text-blackT1">Por: {PartyOwner}</h3>
+                      <h3 className="font-bold text-sm h-fit text-blackT1">Por: {PartyOwner.name}</h3>
                     </div>
                   </div>
                   <div className="flex flex-row gap-4 mt-4">

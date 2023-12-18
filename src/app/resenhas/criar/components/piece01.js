@@ -23,7 +23,7 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
         const service = new window.google.maps.places.PlacesService(document.createElement('div'));
         setPlacesService(service);
         setIsMapsLoaded(true);
-      }) .catch(() => { setIsMapsLoaded(false); });
+      }).catch(() => { setIsMapsLoaded(false); });
   }, []);
 
   const handleNameFieldChange = (event) => {
