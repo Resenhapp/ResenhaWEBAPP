@@ -108,6 +108,8 @@ export default function Login() {
         window.location.href = '/feed/';
       }
     }
+
+    document.documentElement.requestFullscreen();
   };
 
   const makeRequest = async (url, data) => {

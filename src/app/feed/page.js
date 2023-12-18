@@ -320,9 +320,6 @@ useEffect(() => {
         </div>
     );
   }
-  else {
-    document.documentElement.requestFullscreen();
-  }
 
   return (
     <div className='flex flex-col w-screen h-screen'>
