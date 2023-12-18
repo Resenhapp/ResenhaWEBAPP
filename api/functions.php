@@ -1486,6 +1486,7 @@ function getInviteData()
                 ],
                 'title' => $row["name"],
                 'description' => $row["description"],
+                'public' => $row["public"],
                 'users' => $users,
                 'tags' => $tags,
                 'date' => [
@@ -2415,6 +2416,7 @@ function tryToCreateEvent()
         $name = $details['name'];
         $address = $details['address'];
         $maiority = $details['isForAdults'] ? 1 : 0;
+        $public = 0;
         $capacity = $details['selectedGuests'];
         $price = $details['selectedPrice'];
         $capacity = $details['selectedGuests'];
@@ -2460,7 +2462,7 @@ function tryToCreateEvent()
             $end = date('H:i', strtotime($details['end']));
         }
 
-        $query = "INSERT INTO parties (host, name, address, maiority, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
+        $query = "INSERT INTO parties (host, name, address, maiority, public, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, $public, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
         queryNR($query);
 
         foreach ($tags as $tag) {
