@@ -1,6 +1,6 @@
 'use client'
+
 import Vector from "@/src/components/Vector"
-import { useState } from "react"
 
 export default function TypeCode({ useCamera, codeResponse, tryToAllow }) {
     const [code, setCode] = useState('');
@@ -21,7 +21,7 @@ export default function TypeCode({ useCamera, codeResponse, tryToAllow }) {
             </div>
             <p>Prefere usar a câmera?</p>
             <button onClick={useCamera} className='px-8 font bold rounded-xl text-whiteT1 mb-16 text-xl'>Usar câmera</button>
-            <button onClick={() => tryToAllow()} className="bg-whiteT1 px-5 py-5 rounded-full justify-between w-[60vw] mb-16 max-w-[640px] text-purpleT0 text-xl flex flex-row items-center gap-2">
+            <button onClick={() => tryToAllow(code)} className="bg-whiteT1 px-5 py-5 rounded-full justify-between w-[60vw] mb-16 max-w-[640px] text-purpleT0 text-xl flex flex-row items-center gap-2">
                 <p className=" w-full">Liberar</p>
                 <Vector vectorname={'check03'} />
             </button>

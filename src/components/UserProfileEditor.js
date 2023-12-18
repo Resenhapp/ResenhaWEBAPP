@@ -12,31 +12,19 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
     var token = Cookies.get('token');
 
     const sendImageRequest = async (data) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, data);
-    
-            return response;
-        }
-    
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, data);
+
+        return response;
     };
     
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
 
-            return response.data;
-        }
-    
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        return response.data;
     };
 
     const handleImageChange = async (event) => {
@@ -52,16 +40,7 @@ const UserProfileEditor = ({currentProfile, onChange}) => {
             formData.append('token', token);
             formData.append('image', file);
 
-            // Add extra data as needed
-            // formData.append('key', 'value');
-
-            try {
-                console.log(await sendImageRequest(formData));
-            } 
-            
-            catch (error) {
-                console.error('Error while uploading image: ', error);
-            }
+            await sendImageRequest(formData);
         };
 
         if (file) {

@@ -22,60 +22,36 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     var updateInterval = 3;
   
     const makeRequest = async (url, data) => {
-      try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-      } 
-      
-      catch (error) {
-        throw new Error(`Request failed: ${error}`);
-      }
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
     };
   
     const clearUserNotifications = async () => {
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'clearUserNotifications',
-          token: token
-        });
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'clearUserNotifications',
+        token: token
+      });
     };
   
     const seeUserNotifications = async () => {
-      try {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'seeUserNotifications',
           token: token
         });
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
     };
 
     const getUserData = async () => {
-        try {
-          const requested = [
-            "notifications"
-          ];
+        const requested = [
+          "notifications"
+        ];
 
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getUserData',
-            token: token,
-            requested: requested
-          });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getUserData',
+          token: token,
+          requested: requested
+        });
 
-          setNotifications(response.notifications.notifications);
-        }
-        
-        catch (error) {
-          console.error(error);
-        }
+        setNotifications(response.notifications.notifications);
     };
 
     useEffect(() => {
@@ -97,6 +73,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             clearInterval(interval);
         };
       }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, getUserData, seeUserNotifications, updateInterval]);
   

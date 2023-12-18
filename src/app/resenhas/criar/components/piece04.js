@@ -108,7 +108,6 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
                     </div>
                 </div>
             </div>
-            {/* TAGS */}
             <EditInfoPage isOpen={isEditTagsPageOpen} pageTitle={'Tags da resenha'} saveAction={saveTags} togglePage={toggleEditTagsPageOpen}>
                 <div className='w-full'>
                     <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>

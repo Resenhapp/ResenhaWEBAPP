@@ -1,16 +1,12 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
-import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import MyParty from '@/src/components/MyParty';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-import { useState } from "react";
-import { useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function MyInvites() {
     const token = Cookies.get('token');
@@ -25,33 +21,22 @@ export default function MyInvites() {
     const [data, setData] = useState(null);
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-  
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
   
     const fetchData = async () => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getUserData',
-              token: token
-          });
-          
-          setData(response);
-        } 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
         
-        catch (error) {
-          console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -82,9 +67,10 @@ export default function MyInvites() {
                             partyCode={party.token}
                             partyGuests={party.confirmed}
                             partyDate={party.date}
-                            partyHour={party.time}
+                            partyHour={party.start}
                             partyName={party.name}
-                            viewReceipt={()=>(window.location.href = "http://localhost:3000/comprovante")}
+                            partyPaid={party.paid}
+                            viewReceipt={()=>(window.location.href = '/comprovante')}
                           />
                         </div>
                       ))}

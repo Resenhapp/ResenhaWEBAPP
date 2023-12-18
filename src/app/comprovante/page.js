@@ -1,14 +1,13 @@
 'use client'
-import Button from '@/src/components/Button';
-import React, { useEffect, useState } from 'react';
+
 import Image from 'next/image';
 import Vector from '@/src/components/Vector';
 import html2canvas from 'html2canvas';
 import PageHeader from '@/src/components/PageHeader';
 
+import React, { useEffect, useState } from 'react';
 
 export default function Receipt({}) {
-
   const saveInvite = async () => {
     setTimeout(() => {
         setHideStyle(false);

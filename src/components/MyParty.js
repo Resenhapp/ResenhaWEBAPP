@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
 
-const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imageUrl, viewReceipt }) => {
+const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imageUrl, viewReceipt, partyPaid }) => {
 
     const h3Classes = 'text-[12px]';
     const baseFlexClasses = 'flex flex-row items-center gap-1';
@@ -19,9 +19,15 @@ const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imag
                     <p className={h3Classes}>{partyDate}, às {partyHour}</p>
                 </div>
                 <div className={baseFlexClasses}>
+                    <Vector vectorname={partyPaid == 0 ? 'pending1' : partyPaid == 1 ? 'done1' : ''} />
+                    <p className={h3Classes}>
+                        {partyPaid == 0 ? 'Pagamento pendente' : partyPaid == 1 ? 'Pago' : ''}
+                    </p>
+                </div>
+                {/* <div className={baseFlexClasses}>
                 <Vector vectorname={'user04'} />
                     <p className={h3Classes}>{partyGuests} confirmados</p>
-                </div>
+                </div> */}
                 <div className={baseFlexClasses}>
                 <Vector vectorname={'qr01'} />
                     <p className={h3Classes}>{partyCode}</p>

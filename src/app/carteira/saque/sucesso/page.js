@@ -1,29 +1,31 @@
 'use client'
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Button from '@/src/components/Button';
 import Vector from '@/src/components/Vector';
 import PageHeader from '@/src/components/PageHeader';
+import Loading from '@/src/components/Loading';
 
 export default function WithdrawSuccess() {
-    let urlParams = null;
-    let withdrawValue = '';
-    let formattedWithdrawValue = '';
+    const [withdrawValue, setWithdrawValue] = useState(null);
+    const [formattedWithdrawValue, setFormattedWithdrawValue] = useState('');
 
-    if (typeof window !== 'undefined') {
-        urlParams = new URLSearchParams(window.location.search);
-        withdrawValue = urlParams.get('a');
-    }
-
-    if (withdrawValue) {
-        formattedWithdrawValue = parseFloat(withdrawValue).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        });
-    } else {
+    useEffect(() => {
+        let urlParams = null;
         if (typeof window !== 'undefined') {
-            window.location.href = '/carteira/';
+            urlParams = new URLSearchParams(window.location.search);
+            const value = urlParams.get('a');
+            setWithdrawValue(value);
+            if (value) {
+                setFormattedWithdrawValue(parseFloat(value).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }));
+            } else {
+                window.location.href = '/carteira/';
+            }
         }
-    }
+    }, []);
 
     const handleNavigation = () => {
         if (typeof window !== 'undefined') {
@@ -31,10 +33,18 @@ export default function WithdrawSuccess() {
         }
     };
 
+    if (!withdrawValue) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading />
+            </div>
+        );
+    }
+
     return (
         <div className='flex flex-col w-screen h-screen '>
             <PageHeader pageTitle={'Saque solicitado'} isBack={true} checker={() => { null }} />
-            <div className="flex flex-col justify-around h-full px-4">
+            <div className="flex flex-col justify-around items-center h-full px-4">
                 <section className="flex flex-col w-full max-w-md p-4 justify-around h-full">
                         <div className='w-full flex flex-col items-center gap-4'>
                             <Vector vectorname={'clock02'} />

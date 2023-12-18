@@ -5,7 +5,6 @@ const Piece05 = ({ filled = true, partyCode }) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    // Assuming filled is a function, calling it with the image value
     filled(image);
   }, [filled, image]);
 

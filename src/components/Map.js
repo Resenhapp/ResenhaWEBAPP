@@ -101,7 +101,6 @@ export default function Map({ onLocationSelect, displayPartiesAround, partyData 
         </Marker>
     )}
     {partyData.map((party, index) => {
-        console.log(party); 
         return (
             <Marker key={index} position={[party.coordinates.lat, party.coordinates.lon]}>
                 <Popup>

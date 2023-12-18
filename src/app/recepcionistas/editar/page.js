@@ -1,20 +1,38 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
 import InputField from '@/src/components/InputField';
 import Dropdown from '@/src/components/Dropdown';
 import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
+import Cookies from 'js-cookie';
+import Loading from '@/src/components/Loading';
+
+import { useState, useEffect } from 'react';
 
 export default function EditConcierge() {
+    const axios = require('axios');
+    const qs = require('qs');
 
     const [selectedOption, setSelectedOption] = useState('');
-    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const [options, setOptions] = useState([]);
+    const [values, setValues] = useState([]);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const conciergeCurrentName = 'Claudinho bochecha';
-    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName);
+    const [conciergeName, setConciergeName] = useState('');
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeName);
+
+    var conciergeToken = '';
+
+    var token = Cookies.get('token');
+
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        conciergeToken = urlParams.get('r');
+    }
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -22,6 +40,40 @@ export default function EditConcierge() {
 
     const handleModalClose = () => {
         setModalOpen(false);
+    };
+
+    const makeRequest = async (url, data) => {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+
+        const requested = ["parties"];
+        
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+        
+        const namesArray = response.parties.made.map(item => item.name);
+        const valuesArray = response.parties.made.map(item => item.code);
+        
+        setOptions(namesArray);
+        setValues(valuesArray);
+    
+        const res = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'getConciergeData',
+            concierge: conciergeToken
+        });
+
+        setConciergeName(res.name);
+        setConciergeNewName(res.name);
+        setSelectedOption(res.party);
+
+        setLoading(false);
     };
 
     const handleNavigation = (pageToGo) => {
@@ -36,9 +88,41 @@ export default function EditConcierge() {
         }
     }
 
+    const handleSaveButton = async () => {
+        const data = {
+            name: conciergeNewName,
+            party: selectedOption
+        };
+
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'editConciergeData',
+            token: token,
+            concierge: conciergeToken,
+            data: data
+        });
+        
+        if (!response.error) {
+            handleNavigation("recepcionistas");
+        }
+    }
+
     const handleInputChange = (e) => {
         setConciergeNewName(e.target.value);
     };
+
+    useEffect(() => {
+        fetchData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
 
     const isFilled = conciergeNewName !== '';
 
@@ -50,7 +134,7 @@ export default function EditConcierge() {
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
                             <h1 className='text-2xl font-bold'>Editando recepcionista...</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
+                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={() => handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
                             <InputField
@@ -69,6 +153,7 @@ export default function EditConcierge() {
                                     options={options}
                                     selectedOption={selectedOption}
                                     setSelectedOption={setSelectedOption}
+                                    values={values}
                                 />
                             </div>
                         </div>
@@ -79,7 +164,7 @@ export default function EditConcierge() {
                             label={'Salvar'}
                             active={isFilled}
                             icon={'check'}
-                            action={() => handleNavigation('recepcionistas')}
+                            action={handleSaveButton}
                             iconSide='right'
                             height={1}
                             width={3}

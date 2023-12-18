@@ -42,14 +42,8 @@ const RegisterPageComponent = ({}) => {
   }
 
   const makeRequest = async (url, data) => {
-    try {
       const response = await axios.post(url, qs.stringify(data));
       return response.data;
-    } 
-    
-    catch (error) {
-      throw new Error(`Request failed: ${error}`);
-    }
   };
 
   const handleNextClick = async () => {
@@ -68,24 +62,18 @@ const RegisterPageComponent = ({}) => {
       return;
     }
 
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-        request: 'tryToCreateUser', 
-        name: name,
-        email: email, 
-        password: password
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+      request: 'tryToCreateUser', 
+      name: name,
+      email: email, 
+      password: password
+    });
 
-      window.location.href = 'https://www.resenha.app/login';
+    window.location.href = 'https://www.resenha.app/cadastro/confirmacao';
 
-      if (response.token && typeof window !== 'undefined') {
-        expirationDate.setDate(expirationDate.getDate() + 30);
-        Cookies.set('token', response.token, { expires: expirationDate });
-      }
-    } 
-    
-    catch (error) {
-      console.error(error);
+    if (response.token && typeof window !== 'undefined') {
+      expirationDate.setDate(expirationDate.getDate() + 30);
+      Cookies.set('token', response.token, { expires: expirationDate });
     }
   };
 

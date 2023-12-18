@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import RegisterPageComponent from '@/src/components/RegisterPageComponent';
 
 export default function Cadastro() {

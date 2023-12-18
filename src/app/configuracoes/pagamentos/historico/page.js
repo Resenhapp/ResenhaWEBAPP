@@ -1,56 +1,43 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
+import React, { useState, useEffect } from 'react';
+
 export default function BuyHistory() {
-
     const token = Cookies.get('token');
-
-    useEffect(() => {
-        if (!token) {
-            if (typeof window !== 'undefined') { 
-                window.location.href = '/login';
-            }
-        }
-    }, [token]);
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [data, setData] = useState(null);
 
-    const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
+    if (!token) {
+        if (typeof window !== 'undefined') { 
+            window.location.href = '/login';
         }
+    }
 
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+    const makeRequest = async (url, data) => {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

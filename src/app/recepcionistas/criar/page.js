@@ -1,18 +1,29 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+
 import PageHeader from '@/src/components/PageHeader';
 import Button from '@/src/components/Button';
 import InputField from '@/src/components/InputField';
 import Dropdown from '@/src/components/Dropdown';
 import Vector from '@/src/components/Vector';
 import Modal from '@/src/components/Modal';
+import Cookies from 'js-cookie';
+import Loading from '@/src/components/Loading';
+
+import React, { useState, useEffect } from 'react';
 
 export default function NewConcierge() {
+    const axios = require('axios');
+    const qs = require('qs');
+
+    var token = Cookies.get('token');
 
     const [selectedOption, setSelectedOption] = useState('');
-    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const [options, setOptions] = useState([]);
+    const [values, setValues] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
+    const [conciergeName, setConciergeName] = useState(false);
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -30,8 +41,64 @@ export default function NewConcierge() {
 
     const handleInputChange = (e) => {
         setIsFilled(e.target.value !== '');
+        setConciergeName(e.target.value);   
     };
 
+    const makeRequest = async (url, data) => {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+
+        const requested = ["parties"];
+        
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+        
+        const namesArray = response.parties.made.map(item => item.name);
+        const valuesArray = response.parties.made.map(item => item.code);
+        
+        setOptions(namesArray);
+        setValues(valuesArray);
+
+        setLoading(false);
+    };
+
+    const handleCreateButton = async () => {
+        const data = {
+            name: conciergeName,
+            party: selectedOption
+        };
+
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'tryToCreateConcierge',
+            token: token,
+            data: data
+        });
+        
+        if (!response.error) {
+            handleNavigation("recepcionistas");
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex justify-center content-center items-center">
+                <Loading/>
+            </div>
+        );
+    }
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -41,14 +108,14 @@ export default function NewConcierge() {
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
                             <h1 className='text-2xl font-bold'>Adicione um novo recepcionista!</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a href='https://resenha.app/aprenda/recepcionistas'><b>toque aqui</b>.</a></p>
+                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={() => handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
                             <InputField
                                 Icon={'user'}
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
-                                action={handleInputChange} // Update state on input change
+                                action={handleInputChange}
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
@@ -59,16 +126,17 @@ export default function NewConcierge() {
                                     options={options}
                                     selectedOption={selectedOption}
                                     setSelectedOption={setSelectedOption}
+                                    values={values}
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className='mt-10 w-full'>
+                    <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
                         <Button
                             label={'Criar recepcionista'}
                             active={isFilled}
                             icon={'plus'}
-                            action={() => handleNavigation('recepcionistas')}
+                            action={handleCreateButton}
                             iconSide='right'
                             height={1}
                             width={1}

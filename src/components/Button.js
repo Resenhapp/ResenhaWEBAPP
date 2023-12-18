@@ -89,6 +89,12 @@ const Button = ({ label, icon, action, iconSide = 'left', height = 1, width = 1,
             
         )
     }
+     else if (icon === 'trash') {
+        iconSvg = (
+            <Vector vectorname={'trash02'} />
+            
+        )
+    }
 
     const containerStyles = `bg-whiteT1 shadow-lg shadow-[#ffffff26] text-purpleT3 hover:bg-white font-bold py-5 px-5 rounded-full flex justify-center items-center ${sizes[width]} h-${sizes[height]} ${active ? "bg-whiteT1" : "deactivated"} max-w-[500px]`;
 

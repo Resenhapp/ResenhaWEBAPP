@@ -15,6 +15,7 @@ const Modal = ({ children, show, close }) => {
                 justifyContent: 'center',
                 background: 'rgba(0, 0, 0, 0.7)',
                 zIndex: 9999,
+
             }}
             onClick={close}
         >

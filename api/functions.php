@@ -11,20 +11,10 @@ function queryDB($query)
     return $row;
 }
 
-function queryDBDiscord($query)
-{
-    global $link;
-    $result = $link->query($query);
-    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-
-    return $row;
-}
-
 function queryNR($query)
 {
     global $link;
     mysqli_query($link, $query);
-
 }
 
 function queryDBRows($query)
@@ -84,6 +74,12 @@ function convertMonth($month)
     return $months[$month];
 }
 
+function updateBalance($user, $amount)
+{
+    $query = "UPDATE balances SET available = available - $amount WHERE user = '$user'";
+    queryNR($query);
+}
+
 function getDayOfWeek($dateString)
 {
     $date = DateTime::createFromFormat('d/m/Y', $dateString);
@@ -102,7 +98,8 @@ function getDayOfWeek($dateString)
     return $dayNames[$dayOfWeek] ?? $dayOfWeek;
 }
 
-function redirect($url = GLOBAL_REDIRECT) {
+function redirect($url = GLOBAL_REDIRECT) 
+{
     header("Location: $url");
 }
 
@@ -180,9 +177,9 @@ function randomKey()
     return $key;
 }
 
-function registerLog($user, $type, $action, $description = "none")
+function registerLog($user, $type, $title, $description = "none", $hash = "none")
 {
-    $variables = [ &$user, &$type, &$action, &$description];
+    $variables = [&$user, &$type, &$title, &$description];
 
     foreach ($variables as &$var) {
         $var = sanitize($var);
@@ -191,19 +188,20 @@ function registerLog($user, $type, $action, $description = "none")
     date_default_timezone_set('America/Sao_Paulo');
     $date = date('d/m/Y H:i');
 
-    $query = "INSERT INTO activities (user, type, action, description, date) VALUES ('$user', '$type', '$action', '$description', '$date')";
+    $query = "INSERT INTO activities (user, type, title, description, hash, date) VALUES ('$user', '$type', '$title', '$description', '$hash', '$date')";
     queryNR($query);
 }
 
-function sendMessage($embed, $webhook)
+function sendMessage($embed)
 {
     $payload = json_encode(['content' => '', 'embeds' => [$embed]]);
 
-    $ch = curl_init($webhook);
+    $ch = curl_init(GLOBAL_WEBHOOK);
+
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
+    curl_exec($ch);
     curl_close($ch);
 }
 
@@ -223,7 +221,7 @@ function requestPagarMe($data)
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Basic ' . GLOBAL_PAGARMEKEY,
+        'Authorization: Basic ' . GLOBAL_PAGARME,
         'Accept: application/json']
     );
 
@@ -335,7 +333,8 @@ function getHelpData()
     echo json_encode($response);
 }
 
-function checkUsername($username) {
+function checkUsername($username) 
+{
     if (empty($username)) {
         return "empty_username";
     }
@@ -358,7 +357,8 @@ function checkUsername($username) {
     return null;
 }
 
-function checkName($name) {
+function checkName($name) 
+{
     if (empty($name)) {
         return "empty_username";
     }
@@ -372,7 +372,7 @@ function checkName($name) {
 
 function checkSession($token)
 {
-    $api = decrypt($token, GLOBAL_ENCKEY);
+    $api = decrypt($token, GLOBAL_ENC);
 
     $userQuery = "SELECT * FROM users WHERE api = '$api'";
     $userData = queryDBRows($userQuery);
@@ -386,7 +386,8 @@ function checkSession($token)
     }
 }
 
-function getHash($userHash, $urlType) {
+function getHash($userHash, $urlType) 
+{
     $userHash = hash256($userHash);
 
     if ($urlType == "event") {
@@ -804,12 +805,12 @@ function tryToAllowGuest()
         $party = $conciergeResults[0];
 
         $query = "SELECT * FROM guests WHERE code = '$code' AND party = '$party'";
-        $guestsResults = queryDB($query);
+        $guestsResults = queryDBRows($query);
 
         if ($guestsResults) {
             foreach ($guestsResults as $column) {
                 $paid = $column["paid"];
-                $method = $column["paid"];
+                $method = $column["method"];
                 $used = $column["used"];
 
                 if ($used == "0") {
@@ -921,7 +922,7 @@ function editUserData()
                 $newPassword = $data['password'];
     
                 $data['password'] = hash256($newPassword);
-                $responseData['token'] = encrypt($newToken, GLOBAL_ENCKEY);
+                $responseData['token'] = encrypt($newToken, GLOBAL_ENC);
             }
         }
 
@@ -952,120 +953,8 @@ function editUserData()
     }
 }
 
-function getSingleDataDiscord()
+function getSpecificData($userId, $item) 
 {
-    header('Content-Type: application/json');
-
-    if (isset($_GET['userid'])) {
-        $userId = sanitize($_GET['userid']);
-        $query = "SELECT * FROM users WHERE id = $userId";
-    } elseif (isset($_GET['user@'])) {
-        $userName = sanitize($_GET['user@']);
-        $query = "SELECT * FROM users WHERE username = '$userName'";
-    } elseif (isset($_GET['useremail'])) {
-        $userEmail = sanitize($_GET['useremail']);
-        $query = "SELECT * FROM users WHERE email = '$userEmail'";
-    } elseif (isset($_GET['userbalanceid'])) {
-        $userId = sanitize($_GET['userbalanceid']);
-        $query = "SELECT * FROM balances WHERE user = $userId";
-    } elseif (isset($_GET['party'])) {
-        $partyCode = sanitize($_GET['party']);
-        $query = "SELECT * FROM parties WHERE code = '$partyCode'";
-    }
-        $result = queryDBDiscord($query);
-
-        if ($result) {
-            echo json_encode($result);
-        } else {
-            $errorData = array('error' => 'Data not found');
-            echo json_encode($errorData);
-        }
-}
-function getUsersFromParty()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    if (isset($_GET['usersfromparty'])) {
-        $partyCode = sanitize($_GET['usersfromparty']);
-
-        $query = "SELECT * FROM guests WHERE party = ?";
-        $stmt = $link->prepare($query);
-        $stmt->bind_param("s", $partyCode);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $usersData = array();
-            while ($row = $result->fetch_assoc()) {
-                $usersData[] = $row;
-            }
-
-            echo json_encode($usersData);
-        } else {
-            $errorData = array('error' => 'Party does not exist or does not contain guests');
-            echo json_encode($errorData);
-        }
-    }
-}
-
-function getConciergesFromParty()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    if (isset($_GET['conciergesfromparty'])) {
-        $partyCode = sanitize($_GET['conciergesfromparty']);
-        $query = "SELECT * FROM concierges WHERE party = ?";
-    }
-    $stmt = $link->prepare($query);
-    $stmt->bind_param("s", $partyCode);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usersData = array();
-        while ($row = $result->fetch_assoc()) {
-            $usersData[] = $row;
-        }
-
-        echo json_encode($usersData);
-    } else {
-            $errorData = array('error' => 'Party does not exist or does not contain concierges');
-            echo json_encode($errorData);
-        }
-}
-
-function getUserActivityDiscord()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    if (isset($_GET['useractivityid'])) {
-        $userid = sanitize($_GET['useractivityid']);
-        $query = "SELECT * FROM activities WHERE user = ?";
-    }
-    $stmt = $link->prepare($query);
-    $stmt->bind_param("s", $userid);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usersData = array();
-        while ($row = $result->fetch_assoc()) {
-            $usersData[] = $row;
-        }
-
-        echo json_encode($usersData);
-    } 
-    
-    else {
-        $errorData = array('error' => 'User does not exist or does not contain activity');
-        echo json_encode($errorData);
-    }
-}
-
-function getSpecificData($userId, $item) {
     switch ($item) {
         case 'interests':
             $query = "SELECT * FROM interests WHERE user = '$userId'";
@@ -1102,9 +991,15 @@ function getSpecificData($userId, $item) {
     
             if (mysqli_num_rows($conciergesResults) > 0) {
                 foreach ($conciergesResults as $concierge) {
+                    $conciergeParty = $concierge["party"];
+
+                    $query = "SELECT name FROM parties WHERE code = '$conciergeParty'";
+                    $conciergePartyName = queryDB($query)[0];
+
                     $temp = [
                         "name" => $concierge["name"],
                         "token" => $concierge["token"],
+                        "party" => $conciergePartyName
                     ];
     
                     array_push($concierges, $temp);
@@ -1157,6 +1052,7 @@ function getSpecificData($userId, $item) {
                 foreach ($guestsResults as $guest) {
                     $partyCode = $guest["party"];
                     $userCode = $guest["code"];
+                    $userPaid = $guest["paid"];
                     $codeUsed = $guest["used"];
 
                     $query = "SELECT id, name, date, start, end FROM parties WHERE code = '$partyCode'";
@@ -1178,6 +1074,7 @@ function getSpecificData($userId, $item) {
                                 "start" => $party["start"],
                                 "end" => $party["end"],
                                 "confirmed" => $partyConfirmed,
+                                "paid" => $userPaid,
                                 "used" => $codeUsed,
                                 "token" => $userCode,
                                 "code" => $partyCode
@@ -1371,84 +1268,6 @@ function getSpecificData($userId, $item) {
     }
 }
 
-function getPartiesFromUser()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    if (isset($_GET['partiesfromuserid'])) {
-        $userid = sanitize($_GET['partiesfromuserid']);
-        $query = "SELECT * FROM parties WHERE host = ?";
-    }
-    $stmt = $link->prepare($query);
-    $stmt->bind_param("s", $userid);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usersData = array();
-        while ($row = $result->fetch_assoc()) {
-            $usersData[] = $row;
-        }
-
-        echo json_encode($usersData);
-    } else {
-            $errorData = array('error' => 'User does not exist or does not contain a party');
-            echo json_encode($errorData);
-        }
-}
-
-function getAllParties()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    $userid = sanitize($_GET['allparties']);
-    $query = "SELECT * FROM parties";
-
-    $stmt = $link->prepare($query);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usersData = array();
-        while ($row = $result->fetch_assoc()) {
-            $usersData[] = $row;
-        }
-
-        echo json_encode($usersData);
-    } else {
-        $errorData = array('error' => 'DB does not contain any party');
-        echo json_encode($errorData);
-    }
-}
-
-function getAllUsers()
-{
-    header('Content-Type: application/json');
-    global $link;
-
-    $userid = sanitize($_GET['allusers']);
-    $query = "SELECT * FROM users";
-
-    $stmt = $link->prepare($query);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usersData = array();
-        while ($row = $result->fetch_assoc()) {
-            $usersData[] = $row;
-        }
-
-        echo json_encode($usersData);
-    } else {
-        $errorData = array('error' => 'DB does not contain any user');
-        echo json_encode($errorData);
-    }
-}
-
-
 function getUserData()
 {
     $userData = checkSession($_POST['token']);
@@ -1485,7 +1304,6 @@ function getUserData()
                 "phone",
                 "address",
                 "birth",
-                "email",
                 "balances",
                 "notifications",
                 "saved",
@@ -1494,14 +1312,7 @@ function getUserData()
                 "activities",
                 "purchases",
                 "interests",
-                "balances",
-                "concierges",
-                "mutual",
                 "parties",
-                "notifications",
-                "activities",
-                "purchases",
-                "saved",
                 "followers",
                 "comments"
             ];
@@ -1574,7 +1385,7 @@ function getUserData()
                 }
 
                 if (in_array($item, $privateData)) {
-                    if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
+                    if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENC)) {
                         $data[$item] = $specificData;
                     } 
                 }
@@ -1585,7 +1396,7 @@ function getUserData()
             }
         } 
 
-        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENCKEY)) {
+        if ($column["api"] == decrypt(sanitize($_POST["token"]), GLOBAL_ENC)) {
             $data["mine"] = true;
         }
 
@@ -1675,6 +1486,7 @@ function getInviteData()
                 ],
                 'title' => $row["name"],
                 'description' => $row["description"],
+                'public' => $row["public"],
                 'users' => $users,
                 'tags' => $tags,
                 'date' => [
@@ -1768,6 +1580,47 @@ function getInviteData()
     }
 }
 
+function tryToDeleteConcierge()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeToken = sanitize($_POST['concierge']);
+
+    if ($userData && $conciergeToken) {
+        foreach ($userData as $column) {
+            $userId = $column["id"];
+
+            $query = "SELECT host FROM concierges WHERE token = '$conciergeToken'";
+            $hostId = queryDB($query)[0];
+
+            if ($userId == $hostId) {
+                $deleteQuery = "DELETE FROM concierges WHERE token = '$conciergeToken'";
+                queryNR($deleteQuery);
+
+                returnSuccess("concierge_deleted");
+            }
+        }
+    }
+}
+
+function tryToCreateConcierge()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeData = $_POST['data'];
+
+    if ($userData) {
+        foreach ($userData as $column) {
+            $userId = $column["id"];
+    
+            $conciergeParty = $conciergeData["party"];
+            $conciergeName = $conciergeData["name"];
+            $conciergeToken = randomCode(6);
+    
+            $query = "INSERT INTO `concierges` (`id`, `host`, `party`, `name`, `token`) VALUES (NULL, '$userId', '$conciergeParty', '$conciergeName', '$conciergeToken');";
+            queryNR($query);
+        }
+    }
+}
+
 function tryToCreateGuest()
 {
     $party = sanitize($_POST['code']);
@@ -1845,7 +1698,7 @@ function tryToCreateGuest()
         $charge = $array["charges"][0]["id"];
     } 
 
-    if ($method == "Cartão"){
+    else if ($method == "Cartão"){
         $req = [
             "items" => [
                 [
@@ -1908,8 +1761,6 @@ function tryToCreateGuest()
 
     $price = number_format($price, 2, ',', '.');
 
-    $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
-
     $embed = [
         'title' => 'Novo visitante registrado!',
         'color' => hexdec('7d00ff'),
@@ -1947,7 +1798,7 @@ function tryToCreateGuest()
         ],
     ];
 
-    sendMessage($embed, $webhook);
+    sendMessage($embed);
 
     if ($user != "none") {
         $query = "SELECT username FROM users WHERE id = '$user'";
@@ -1969,8 +1820,21 @@ function tryToCreateGuest()
     if ($method == "Pix") {
         $data = [
             'status' => "success",
-            'code' => $qrcode,
-            'qrcode' => $qrcodeurl,
+            'code' => $code,
+            'qrcode' => [
+                'text' => $qrcode,
+                'url' => $qrcodeurl
+            ],
+            'charge' => $charge,
+        ];
+
+        returnData($data);
+    }
+
+    else if ($method == "Dinheiro") {
+        $data = [
+            'status' => "success",
+            'code' => $code
         ];
 
         returnData($data);
@@ -1986,7 +1850,7 @@ function tryToAuthenticate()
     $token = queryDB($query);
 
     if ($token) {
-        $response = encrypt($token[0], GLOBAL_ENCKEY);
+        $response = encrypt($token[0], GLOBAL_ENC);
 
         $data = [
             'token' => $response,
@@ -1997,6 +1861,85 @@ function tryToAuthenticate()
     
     else {
         returnError("invalid_credentials");
+    }
+}
+
+function getTransactionInfo()
+{
+    $charge = sanitize($_POST['charge']);
+
+    $query = "SELECT * FROM guests WHERE charge = '$charge'";
+    $transactionInfo = queryDBRows($query);
+
+    if ($transactionInfo) {
+        foreach ($transactionInfo as $column) {
+            $transactionPaid = $column["paid"];
+    
+            $data = [
+                'charge' => $charge,
+                'paid' => $transactionPaid
+            ];
+
+            returnData($data);
+        }
+    } 
+    
+    else {
+        returnError("invalid_transaction");
+    }
+}
+
+function getConciergeData()
+{
+    $conciergeToken = sanitize($_POST['concierge']);
+
+    $query = "SELECT * FROM concierges WHERE token = '$conciergeToken'";
+    $conciergeInfo = queryDBRows($query);
+
+    foreach ($conciergeInfo as $info) {
+        $conciergeName = $info["name"];
+        $conciergeParty = $info["party"];
+
+        $data = [
+            'name' => $conciergeName,
+            'party' => $conciergeParty
+        ];
+
+        returnData($data);
+    }
+}
+
+function editConciergeData()
+{
+    $userData = checkSession($_POST['token']);
+    $conciergeToken = sanitize($_POST['concierge']);
+    $editData = $_POST['data'];
+
+    foreach ($userData as $column) {
+        $userId = $column["id"];
+
+        $query = "SELECT * FROM concierges WHERE token = '$conciergeToken' AND host = '$userId'";
+        $conciergeInfo = queryDBRows($query);
+    
+        foreach ($conciergeInfo as $info) {
+            $conciergeName = $info["name"];
+            $conciergeParty = $info["party"];
+
+            $editName = $editData["name"];
+            $editParty = $editData["party"];
+
+            if ($editName != $conciergeName) {
+                $query = "UPDATE concierges SET name = '$editName' WHERE token = '$conciergeToken'";
+                queryNR($query);
+            }
+
+            if ($editParty != $conciergeParty) {
+                $query = "UPDATE concierges SET party = '$editParty' WHERE token = '$conciergeToken'";
+                queryNR($query);
+            }
+    
+            returnSuccess("concierge_edited");
+        }
     }
 }
 
@@ -2212,9 +2155,7 @@ function tryToWithdraw()
                 ],
             ];
 
-            $webhook = "https://discord.com/api/webhooks/1116575716646068254/xAmqlhC3WpinvTw-HI5hdbom6-FA94YuY1v5NEUONTSXwroXTwA3PgaqTazIxezTFGn7";
-
-            sendMessage($embed, $webhook);
+            sendMessage($embed);
         } 
         
         else {
@@ -2410,6 +2351,7 @@ function getMessages()
             $sent = $row['sender'] == $id;
             $content = $row['content'];
             $dateString = $row["date"];
+            
             list($datePart, $timePart) = explode(' ', $dateString);
             list($day, $month, $year) = explode('/', $datePart);
             list($hour, $minute, $second) = explode(':', $timePart);
@@ -2474,6 +2416,7 @@ function tryToCreateEvent()
         $name = $details['name'];
         $address = $details['address'];
         $maiority = $details['isForAdults'] ? 1 : 0;
+        $public = 0;
         $capacity = $details['selectedGuests'];
         $price = $details['selectedPrice'];
         $capacity = $details['selectedGuests'];
@@ -2519,15 +2462,13 @@ function tryToCreateEvent()
             $end = date('H:i', strtotime($details['end']));
         }
 
-        $query = "INSERT INTO parties (host, name, address, maiority, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
+        $query = "INSERT INTO parties (host, name, address, maiority, public, start, end, date, creation, lat, lon, capacity, price, description, code) VALUES ('$host', '$name', '$address', $maiority, $public, '$start', '$end', '$date', '$creation', '$lat', '$lon', '$capacity', '$price', '$description', '$code')";
         queryNR($query);
 
         foreach ($tags as $tag) {
             $query = "INSERT INTO tags (tag, party) VALUES ('$tag', '$code')";
             queryNR($query);
         }
-
-        $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
 
         $returnData = [
             'code' => $code
@@ -2570,13 +2511,20 @@ function tryToCreateEvent()
             ],
         ];
 
+        registerLog(
+            $host,
+            "user",
+            "Resenha criada!",
+            "$name foi criada com sucesso."
+        );
+
         createNotification(
             $host, 
             "Resenha criada!", 
-            "A $name foi criada com sucesso."
+            "$name foi criada com sucesso."
         );
 
-        sendMessage($embed, $webhook);
+        sendMessage($embed);
     }
 }
 
@@ -2756,7 +2704,8 @@ function tryToClickOnEvent()
     }
 }
 
-function generateRandomUsername($fullName) {
+function generateRandomUsername($fullName) 
+{
     $randomNumber = rand(1, 9999);
 
     $cleanedFullName = strtolower(str_replace(' ', '', $fullName));
@@ -2781,7 +2730,8 @@ function generateRandomUsername($fullName) {
     return $username;
 }
 
-function stripAccents($str) {
+function stripAccents($str) 
+{
     $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
     $str = preg_replace('/[^a-zA-Z0-9]/', '', $str);
 
@@ -2797,7 +2747,7 @@ function tryToCreateUser()
     $error = checkEmail($email) or checkPassword($password);
 
     if (!isset($error)) {
-        $token = "ec-" . encrypt($email, GLOBAL_ENCKEY);
+        $token = "ec-" . encrypt($email, GLOBAL_ENC);
         $api = randomKey();
         $date = date('d/m/Y H:i');
         $registration = getIp();
@@ -2832,8 +2782,6 @@ function tryToCreateUser()
             $query = "INSERT INTO balances (user, available, processing, retained, requested) VALUES ($user, '0', '0', '0', '0')";
             queryNR($query);
 
-            $webhook = "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4";
-
             $embed = [
                 'title' => 'Novo usuário criado!',
                 'color' => hexdec('7d00ff'),
@@ -2853,10 +2801,10 @@ function tryToCreateUser()
                 ],
             ];
 
-            sendMessage($embed, $webhook);
+            sendMessage($embed);
 
             $data = [
-                'token' => encrypt($api, GLOBAL_ENCKEY)
+                'token' => encrypt($api, GLOBAL_ENC)
             ];
 
             returnData($data);

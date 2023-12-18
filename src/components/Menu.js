@@ -22,9 +22,7 @@ const Menu = ({ isOpen, toggleMenu, userData }) => {
                     </svg>
                 </button>
             </div>
-            <section className="flex flex-col flex-start items-center w-full max-w-md p-4 gap-4">
-                {/* Content */}
-            </section>
+            <section className="flex flex-col flex-start items-center w-full max-w-md p-4 gap-4"></section>
             <div className="flex flex-col items-center justify-center px-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>

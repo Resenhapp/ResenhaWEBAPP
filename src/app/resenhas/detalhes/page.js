@@ -2,12 +2,11 @@
 
 import PageHeader from "@/src/components/PageHeader"
 import Vector from "@/src/components/Vector"
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import React from 'react';
-import { useState } from "react";
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 
 export default function EventDetails() {
     var token = Cookies.get('token');
@@ -39,30 +38,18 @@ export default function EventDetails() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                token: token,
-                code: partyCode
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            token: token,
+            code: partyCode
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
 
@@ -107,7 +94,7 @@ export default function EventDetails() {
                 <div className="mt-8">
                     <p className="font-bold text-lg">Geral</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
-                        <p className="text-2xl font-bold">Resenha no terraço</p>
+                        <p className="text-2xl font-bold">{data.title}</p>
                         <div className="flex flex-row gap-4">
                             <div className="flex flex-col">
                                 <p className="flex flex-row items-center gap-1"><Vector vectorname={'calendar04'} />Data: </p>
@@ -146,7 +133,6 @@ export default function EventDetails() {
                 <div className="mt-4">
                     <p className="font-bold text-lg">Impressões</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
-                        <p className="text-2xl font-bold">Resenha no terraço</p>
                         <div className="flex flex-col gap-1">
                             <p className="flex flex-row items-center gap-1"><Vector vectorname={'eye01'} />
                             {impressions.views} impressões</p>

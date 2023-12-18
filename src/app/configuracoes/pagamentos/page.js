@@ -1,7 +1,7 @@
 'use client'
+
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Payments() {

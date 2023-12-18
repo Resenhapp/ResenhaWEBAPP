@@ -1,9 +1,7 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
 import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
@@ -29,36 +27,24 @@ export default function MyParties() {
     const [data, setData] = useState(null);
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-  
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
   
     const fetchData = async () => {
-        try {
-            const requested = [
-                "username",
-                "notifications",
-                "parties"
-            ];
+        const requested = [
+            "username",
+            "notifications",
+            "parties"
+        ];
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     const handleViewClick = async (party) => {
@@ -86,23 +72,9 @@ export default function MyParties() {
         await navigator.clipboard.writeText(fullTextToCopy);
     };
     
-
-    const handleTrashClick = async (party) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToDeleteEvent',
-                token: token,
-                code: party.code
-            });
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -130,20 +102,18 @@ export default function MyParties() {
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
                                 {parties.made.map((party) => (
                                 <PartyPortrait
-                                key={party.code} // Chave única para cada PartyPortrait
+                                key={party.code}
                                 partyCode={party.code} 
                                 partyDate={party.date} 
                                 partyGuests={party.confirmed} 
                                 partyHour={party.start} 
                                 partyMaxGuests={party.capacity} 
-                                editConcierge={()=>{console.log('cu')}}
+                                editConcierge={()=>{window.location.href=("/recepcionistas")}}
                                 partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
                                 partyName={party.name}
                                 viewOnClick={() => handleViewClick(party)}
                                 editOnClick={() => handleEditClick(party)}
                                 copyOnClick={() => handleCopyClick(party)}
-                                trashOnClick={() => handleTrashClick(party)}
-                                canBeDeleted={party.confirmed == 0}
                                 />
                                 ))}
                                 </div>

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useRef, useEffect } from "react";
 import Button from "@/src/components/Button";
 import Link from "next/link";
 import Vector from "@/src/components/Vector";
@@ -12,6 +11,9 @@ import Cash from "./pieces/cash";
 import Confirmation from "./pieces/confirmation";
 import Cookies from 'js-cookie';
 import html2canvas from 'html2canvas';
+
+import { useState, useRef, useEffect } from "react";
+
 export default function Checkout() {
     var token = Cookies.get('token');
 
@@ -31,12 +33,12 @@ export default function Checkout() {
     const [partyName, setPartyName] = useState('');
     const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
     const [partyOwner, setPartyOwner] = useState('');
-    const [partyDateDay, setPartyDateDay] = useState('26');
-    const [partyDay, setPartyDay] = useState('Quinta');
-    const [partyMonth, setPartyMonth] = useState('Maio');
+    const [partyDateDay, setPartyDateDay] = useState('');
+    const [partyDay, setPartyDay] = useState('');
+    const [partyMonth, setPartyMonth] = useState('');
     const [partyHour, setPartyHour] = useState('');
     const [partyAddress, setPartyAddress] = useState('');
-    const [inviteCode, setInviteCode] = useState('1352');
+    const [inviteCode, setInviteCode] = useState('');
     const [inviteQrCodeUrl, setInviteQrCodeUrl] = useState('https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=ODFKFDkfd30qfik0KF)-t23t-23tg-32g-2-g&chld=L|1&choe=UTF-8');
 
     const [partyPrice, setPartyPrice] = useState('');
@@ -60,81 +62,70 @@ export default function Checkout() {
     const axios = require('axios');
     const qs = require('qs');
 
-    // const payRequest = () => {
-    //     console.log(`Credit card holder: ${cardHolder}`);
-    //     console.log(`Credit card number: ${cardNumber}`);
-    //     console.log(`Credit card expiration: ${cardExpiration}`);
-    //     console.log(`Credit card cvv: ${cardCvv}`);
-    //     console.log(`Credit card cpf: ${cardCpf}`);
-    // }
+    const payRequest = () => {
+    }
+
+    const generateCash = () => {
+        fetchData().then(data => {
+            setLoading(false);
+        });
+    }
 
     const generatePix = () => {
-            fetchData().then(data => {
-                setPixData(data);
-                setLoading(false);
-            });
+        fetchData().then(data => {
+            setPixData(data);
+            setLoading(false);
+        });
     }
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        } 
-        
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchPartyData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            code: code
+        });
 
-            setData(response);
-            setPartyName(response.title);
-            setPartyPrice(response.ticket)
-            setPartyOwner(response.host)
-            setPartyAddress(response.address)
-            setPartyHour(response.hour.start)
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
+        setPartyName(response.title);
+        setPartyPrice(response.ticket)
+        setPartyOwner(response.host)
+        setPartyAddress(response.address)
+        setPartyHour(response.hour.start)
+        setPartyDateDay(response.date.day)
+        setPartyDay(response.date.dayString)
+        setPartyMonth(response.date.monthString)
     };
 
     const fetchData = async () => {
         setLoading(true);
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'tryToCreateGuest',
-                token: token,
-                name: customerName,
-                email: customerEmail,
-                maiority: customerIsEighteen,
-                method: paymentMethod,
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToCreateGuest',
+            token: token,
+            name: customerName,
+            email: customerEmail,
+            maiority: customerIsEighteen,
+            method: paymentMethod,
+            code: code
+        });
 
-            if (response.error) {
-                window.history.back();
-            }
-
-            var data = [
-                response.code,
-                response.qrcode
-            ];
-            
-            return data;
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.error) {
+            window.history.back();
         }
+
+        var data = {
+            text: response.qrcode.text,
+            url: response.qrcode.url,
+            charge: response.charge
+        };
+
+        setInviteCode(response.code);
+        
+        return data;
     };
 
     const printRef = useRef();
@@ -161,7 +152,9 @@ export default function Checkout() {
                         setTimeout(() => {
                             setHideStyle(true);
                         }, 500);
-                    } else {
+                    }
+                    
+                    else {
                         window.open(data);
                     }
                 }, 3);
@@ -169,7 +162,6 @@ export default function Checkout() {
         }, 3);
     }
     
-    var method = 'pix';
     const renderPiece = () => {
         switch (progress) {
             case 0:
@@ -191,7 +183,7 @@ export default function Checkout() {
                 break;
             case 2:
                 if (paymentMethod === 'Pix' && pixData) {
-                    return <Pix setPixKey={pixData[0]} setPixQrCodeUrl={pixData[1]} />
+                    return <Pix setPixKey={pixData["text"]} setPixQrCodeUrl={pixData["url"]} transactionCharge={pixData["charge"]} setIsFilled={setIsFilled} />
                 }
 
                 else if (paymentMethod === 'Dinheiro') {
@@ -228,26 +220,30 @@ export default function Checkout() {
         if (paymentMethod === "Pix"){
             generatePix();
         }
-        
+
+        if (progress == 2) {
+            if (paymentMethod == "Dinheiro") {
+                generateCash();
+            }
+        }
+
         if (progress + 1 > maxProgress) {
-            const details = {
-                content,
-            };
+
         }
 
         else {
             setProgress(progress + 1);
             setIsFilled(!isFilled)
         }
+        
     };
 
     let title, subtitle, button, action;
+
     switch (progress) {
         case 0:
-            title = '';
-            subtitle = '';
             if (typeof window !== 'undefined') {
-                window.location.href = '/resenhas/';
+                window.history.back();
             }
         case 1:
             title = 'Informações';
@@ -287,30 +283,35 @@ export default function Checkout() {
 
     const fetchUserData = async () => {
         setLoading(true);
-    
-        try {
-            const requested = [
-                "name",
-                "email"
-            ];
 
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const requested = [
+            "name",
+            "email"
+        ];
 
-            if (response.name && response.email) {
-                setCustomerName(response.name);
-                setCustomerEmail(response.email);
-            }
-        }
-        
-        catch (error) {
-            console.error(error);
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
+
+        if (response.name && response.email) {
+            setCustomerName(response.name);
+            setCustomerEmail(response.email);
         }
 
         setLoading(false);
+    };
+
+    const handleButtonClick = () => {
+        if (progress == 1) {
+            window.history.back();
+        }
+
+        else {
+            setProgress(progress - 1);
+            setPaymentMethod(0)
+        }
     };
 
     useEffect(() => {
@@ -331,7 +332,7 @@ export default function Checkout() {
         fetchPartyData();
     }, []);
 
-    if (!data) {
+    if (!data || loading) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
                 <Loading />
@@ -355,8 +356,10 @@ export default function Checkout() {
                 progress < 3 ? (
                     <footer className="flex flex-col gap-12 w-full justify-center content-center items-center" >
                         <div className="flex flex-row w-full justify-center max-w-md">
-                            <button className="px-12" onClick={() => setProgress(progress - 1)}>Voltar</button>
-                            <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
+                        <button className="px-12" onClick={handleButtonClick}>
+                            Voltar
+                        </button>
+                        <Button label={button} icon={'arrow'} action={action} iconSide='right' height={1} width={1} textAlign='center' active={isFilled} />
                         </div>
                         <div className="flex items-center justify-center">
                             <p className="mr-1">Tem uma conta?</p>

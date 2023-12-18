@@ -8,11 +8,17 @@ import MyEventsDisplay from '@/src/components/MyEventsDisplay';
 import MyInvitesDisplay from '@/src/components/MyInvitesDisplay';
 import Loading from "@/src/components/Loading";
 import Button from '@/src/components/Button';
-import { useState } from "react";
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
     const token = Cookies.get('token');
+
+    const axios = require('axios');
+    const qs = require('qs');
+
+    const [data, setData] = useState(null);
+    const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
 
     if (!token && typeof window !== 'undefined') {
         window.location.href = '/login';
@@ -24,25 +30,13 @@ export default function HomePage() {
         }
     };
 
-    const axios = require('axios');
-    const qs = require('qs');
-
-    const [data, setData] = useState(null);
-    const [isDisplayingEvents, setIsDisplayingEvents] = useState(true);
-
     const handleDisplayToggle = () => {
         setIsDisplayingEvents(!isDisplayingEvents);
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
@@ -52,23 +46,18 @@ export default function HomePage() {
             "parties",
         ];
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
 
-            setData(response);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -84,7 +73,7 @@ export default function HomePage() {
         <div className='flex flex-col w-screen h-screen'>
             <PageHeader pageTitle={'Resenhas'} userData={data} />
             <div className="flex flex-col items-center justify-center h-fit px-4">
-                <div className='w-[90%] max-w-[640px] align-center mt-12 justify-between items-center flex flex-row'>
+                <div className='w-[90%] max-w-[420px] align-center mt-12 justify-between items-center flex flex-row'>
                     <DualButton leftButtonText={'Seus convites'} rightButtonText={'Suas resenhas'} onLeftClick={handleDisplayToggle} onRightClick={handleDisplayToggle} />
                 </div>
                 {isDisplayingEvents ?

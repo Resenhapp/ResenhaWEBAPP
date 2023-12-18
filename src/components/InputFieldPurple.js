@@ -25,7 +25,7 @@ const InputFieldPurple = ({ placeholder, value, onChange, showIcon = false, Icon
                 placeholder={placeholder}
                 value={value}
                 onChange={handleInputChange}
-                readOnly={readOnly} // Adicione esta linha
+                readOnly={readOnly}
             />
         </div>
     );

@@ -1,8 +1,9 @@
 import InputField from '@/src/components/InputField';
 import OptionsList from '@/src/components/OptionsList';
 import AmountSelector from '@/src/components/AmountSelector';
-import { useState, useEffect } from 'react';
 import Toggle from '@/src/components/Toggle';
+
+import { useState, useEffect } from 'react';
 
 export default function Info({ setSelectionAmout, setPaymentMethod, loadName, loadEmail, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
     const [name, setName] = useState(loadName);

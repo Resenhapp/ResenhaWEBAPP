@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import EditInfoPage from '@/src/components/EditInfoPage';
@@ -8,16 +7,11 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Confirmed from '@/src/components/Confirmed';
 import ReactInputMask from 'react-input-mask';
-import { te } from 'date-fns/locale';
+
+import React, { useState, useEffect } from 'react';
 
 export default function AccountInfo() {
     const token = Cookies.get('token');
-
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -39,6 +33,12 @@ export default function AccountInfo() {
     const [cpf, setCpf] = useState('');
     const [tempCpf, setTempCpf] = useState('');
     const [data, setData] = useState(null);
+
+    if (!token) {
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+    }
 
     const toggleEditNamePageOpen = () => {
         setTempName(name);
@@ -92,16 +92,10 @@ export default function AccountInfo() {
             name: tempName
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditNamePageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditNamePageOpen();
         }
     };
 
@@ -112,17 +106,11 @@ export default function AccountInfo() {
             birth: tempBirthday
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditBirthdayPageOpen();
+        if (!response.error) {
+            toggleEditBirthdayPageOpen();
 
-            }
-        }
-
-        catch (error) {
-            console.error(error);
         }
     };
 
@@ -133,16 +121,10 @@ export default function AccountInfo() {
             phone: tempPhone
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditPhonePageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditPhonePageOpen();
         }
     };
 
@@ -153,16 +135,10 @@ export default function AccountInfo() {
             address: tempAddress
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditAddressPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditAddressPageOpen();
         }
     };
 
@@ -173,16 +149,10 @@ export default function AccountInfo() {
             address: tempAddress
         };
 
-        try {
-            const response = await sendEditRequest(data);
+        const response = await sendEditRequest(data);
 
-            if (!response.error) {
-                toggleEditCpfPageOpen();
-            }
-        }
-
-        catch (error) {
-            console.error(error);
+        if (!response.error) {
+            toggleEditCpfPageOpen();
         }
     };
 
@@ -212,51 +182,33 @@ export default function AccountInfo() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const sendEditRequest = async (data) => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'editUserData',
-                token: token,
-                data: data
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'editUserData',
+            token: token,
+            data: data
+        });
 
-            return response;
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        return response;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
 
-            setData(response);
+        setData(response);
 
-            setName(response.name);
-            setAddress(response.address);
-            setBirthday(response.birth);
-            setPhone(response.phone);
-            setCpf(response.cpf);
-        }
-
-        catch (error) {
-            console.error(error);
-        }
+        setName(response.name);
+        setAddress(response.address);
+        setBirthday(response.birth);
+        setPhone(response.phone);
+        setCpf(response.cpf);
     };
 
     useEffect(() => {

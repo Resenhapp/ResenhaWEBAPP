@@ -8,8 +8,8 @@ const WithdrawError = ({ errorContent }) => {
       setIsVisible(false);
     }, 3000); 
 
-    return () => clearTimeout(timer); // Clear the timer when component is unmounted or re-rendered
-  }, []); // Empty array means this effect runs once when component mounts
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     isVisible && (
