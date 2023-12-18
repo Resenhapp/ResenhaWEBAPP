@@ -331,10 +331,14 @@ useEffect(() => {
           <p>Filtre a resenha ideal para você!</p>
           <div className='flex flex-col gap-2 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
             Local:
-            <PlacesAutocomplete_Filter
+            {placesService && isMapsLoaded && (
+              <PlacesAutocomplete_Filter
               placeholder='Região'
               className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-               setSelected={handleAddressSelect}  defaultValue={inputValue}/>
+              setSelected={handleAddressSelect}
+              defaultValue={inputValue}
+              placesService={placesService}/>
+            )}
             <div className='flex flex-col'>
               Num raio de:
               <div className='flex flex-row'>
