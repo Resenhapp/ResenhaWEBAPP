@@ -34,7 +34,7 @@ export default function Withdraw() {
             setTimeout(() => setErrorContent('O valor mínimo de saque é de R$ 50,00.'), 0);
         } 
         
-        else if (withdrawalAmount > availableAmount) {
+        else if (withdrawalAmount > avaliableCash) {
             setErrorContent(null);
             setTimeout(() => setErrorContent('Saldo insuficiente.'), 0);
         } 
