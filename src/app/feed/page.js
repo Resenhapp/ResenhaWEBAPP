@@ -320,6 +320,9 @@ useEffect(() => {
         </div>
     );
   }
+  else {
+    
+  }
 
   return (
     <div className='flex flex-col w-screen h-screen'>
@@ -331,7 +334,7 @@ useEffect(() => {
             <PlacesAutocomplete_Filter
               placeholder='Região'
               className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-              value={inputValue} onChange={(e) => setInputValue(e.target.value)} setSelected={handleAddressSelect}  />
+               setSelected={handleAddressSelect}  defaultValue={inputValue}/>
             <div className='flex flex-col'>
               Num raio de:
               <div className='flex flex-row'>
