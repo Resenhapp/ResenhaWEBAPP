@@ -332,7 +332,7 @@ useEffect(() => {
             <PlacesAutocomplete_Filter
               placeholder='Região'
               className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-              defaultValue={inputValue} onChange={(e) => setInputValue(e.target.value)} setSelected={handleAddressSelect}  />
+              value={inputValue} onChange={(e) => setInputValue(e.target.value)} setSelected={handleAddressSelect}  />
             <div className='flex flex-col'>
               Num raio de:
               <div className='flex flex-row'>
