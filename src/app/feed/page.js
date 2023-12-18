@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import Loading from "@/src/components/Loading";
 import EditInfoPage from '@/src/components/EditInfoPage';
@@ -8,12 +9,11 @@ import FeedDualButton from '@/src/components/FeedDualButton';
 import PartyBanner from '@/src/components/PartyBanner';
 import Map from '@/src/components/Map';
 import Modal from '@/src/components/Modal';
+import PlacesAutocomplete_Filter from '@/src/components/PlacesAutocomplete_Filter';
 import Tag from '@/src/components/Tag';
 import Cookies from 'js-cookie';
-
-import React, { useState, useEffect } from 'react';
-
-import { tagsData } from "@/src/components/tagsData"
+import { Loader } from '@googlemaps/js-api-loader';
+import { tagsData } from "@/src/components/tagsData";
 import { interestsData } from '@/src/components/interestsData';
 
 export default function Feed() {
@@ -39,6 +39,8 @@ export default function Feed() {
 
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
+  const [placesService, setPlacesService] = useState(null);
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
 
   const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
 
@@ -74,6 +76,26 @@ export default function Feed() {
       const response = await axios.post(url, qs.stringify(data));
       return response.data;
   };
+
+  const handleAddressSelect = (location) => {
+    setInputValue(location.address);
+};
+
+
+useEffect(() => {
+  const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+      version: 'weekly',
+      libraries: ['places'],
+  });
+
+  loader.importLibrary('places')
+      .then(() => {
+          const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+          setPlacesService(service);
+          setIsMapsLoaded(true);
+      }).catch(() => { setIsMapsLoaded(false); });
+}, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -231,6 +253,7 @@ export default function Feed() {
           return { ...interest, selected: isSelected };
       }).sort((a, b) => b.selected - a.selected)
   );
+  
 
   const toggleEditInterestsPageOpen = () => {
       if (isEditInterestsPageOpen) {
@@ -305,10 +328,10 @@ export default function Feed() {
           <p>Filtre a resenha ideal para você!</p>
           <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
             Local:
-            <input
+            <PlacesAutocomplete_Filter
               placeholder='Região'
               className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-              value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+              value={inputValue} onChange={(e) => setInputValue(e.target.value)} setSelected={handleAddressSelect}  />
             <div className='flex flex-col'>
               Num raio de:
               <div className='flex flex-row'>

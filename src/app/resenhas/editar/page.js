@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Vector from "@/src/components/Vector";
 import EditInfoPage from "@/src/components/EditInfoPage"
@@ -10,9 +11,6 @@ import Loading from "@/src/components/Loading";
 import PageHeader from "@/src/components/PageHeader";
 import PlacesAutocomplete_Edit from "@/src/components/PlacesAutocomplete_Edit";
 import Button from "@/src/components/Button";
-
-import React, { useState, useEffect } from 'react';
-
 import { Loader } from '@googlemaps/js-api-loader';
 import { tagsData } from "@/src/components/tagsData";
 
@@ -40,6 +38,7 @@ export default function EditEvent() {
     const [startHour, setStartHour] = useState('');
     const [limit, setLimit] = useState('');
     const [isVip, setIsVip] = useState(false);
+    const [isPublic, setIsPublic] = useState(true);
     const [vipLimit, setVipLimit] = useState('');
     const [limitError, setLimitError] = useState('');
     const [address, setAddress] = useState('');
@@ -58,7 +57,7 @@ export default function EditEvent() {
     const [isMapsLoaded, setIsMapsLoaded] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    
+
     const handleTrashClick = async (party) => {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'tryToDeleteEvent',
@@ -85,7 +84,7 @@ export default function EditEvent() {
                 setIsMapsLoaded(true);
             }).catch(() => { setIsMapsLoaded(false); });
     }, []);
-    
+
     const handleAddressSelect = (location) => {
         setAddress(location.address);
     };
@@ -138,6 +137,12 @@ export default function EditEvent() {
     const [isEditPricePageOpen, setIsEditPricePageOpen] = useState(false);
     const toggleEditPricePageOpen = () => {
         setIsEditPricePageOpen(!isEditPricePageOpen);
+    };
+
+
+    const [isEditPublicPageOpen, setIsEditPublicPageOpen] = useState(false);
+    const toggleEditPublicPageOpen = () => {
+        setIsEditPublicPageOpen(!isEditPublicPageOpen);
     };
 
     const [eventTags, setEventTags] = useState([]);
@@ -253,8 +258,14 @@ export default function EditEvent() {
         }
     }, [isVip]);
 
+    const visibilityLabel = isPublic ? 'Público' : 'Privado'; // Lógica para exibir o rótulo adequado
+
     const handleToggleVip = () => {
         setIsVip(!isVip);
+    };
+
+    const handleTogglePublic = (isChecked) => {
+        setIsPublic(isChecked);
     };
 
     const handleLimitChange = (event) => {
@@ -448,6 +459,12 @@ export default function EditEvent() {
         }
     };
 
+    const saveVisibility = async () => {
+        const data = {
+            visibility: isPublic ? 'Público' : 'Privado'
+        };
+    };
+
     const saveDescription = async () => {
         const data = {
             description: description
@@ -459,6 +476,7 @@ export default function EditEvent() {
             toggleEditDescriptionPageOpen();
         }
     };
+
 
     const saveTags = async () => {
         setEventTags(tempEventTags);
@@ -552,17 +570,17 @@ export default function EditEvent() {
     }
 
     return (
-        
+
         <div className="bg-purpleT1 h-screen min-h-fit">
             {showDeleteModal && <div className="w-screen h-screen z-[9999] bg-[#00000093] flex backdrop-blur-md absolute items-center content-center justify-center">
                 <div className="w-[90%] bg-purpleT0 ring-1 ring-inset ring-purpleT3 rounded-xl p-5">
                     <p className="text-center text-xl font-bold">Você tem certeza de que deseja excluir esta resenha?</p>
                     <p className="text-center text-sm text-redT3"> (Esta ação não poderá ser desefeita.)</p>
                     <div className="flex flex-col mt-4 items-center content-center justify-center">
-                        <button onClick={()=>{setShowDeleteModal(!showDeleteModal)}} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
-                        <button onClick={()=>{handleTrashClick(partyCode)}} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
+                        <button onClick={() => { setShowDeleteModal(!showDeleteModal) }} className="bg-whiteT1 text-purpleT0 w-fit px-4 py-2 rounded-full font-medium">Não, cancelar.</button>
+                        <button onClick={() => { handleTrashClick(partyCode) }} className="bg-transparent text-whiteT1 w-fit px-4 py-2 rounded-full font-medium">Sim, excluir.</button>
                     </div>
-                    </div>
+                </div>
             </div>}
             <EditInfoPage
                 isOpen={isEditNamePageOpen}
@@ -679,6 +697,39 @@ export default function EditEvent() {
             </EditInfoPage>
 
             <EditInfoPage
+                isOpen={isEditPublicPageOpen}
+                pageTitle={'Visibilidade da Resenha'}
+                togglePage={toggleEditPublicPageOpen}
+                saveAction={saveVisibility}
+            >
+
+                <div className='w-full'>
+                    <input
+                        className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
+                        value={visibilityLabel}
+                        onChange={handleVipLimitChange}
+                        type="text"
+                        readOnly // Impede que o usuário edite diretamente o campo
+                    />
+
+
+
+                </div>
+
+                <Toggle
+                    labelText={'Visibilidade'}
+                    showLabel={true}
+                    showQuestion={false}
+                    onToggle={handleTogglePublic}
+                    startToggled={isPublic}
+                />
+                <p className='text-sm'>
+                    A visibilidade da sua resenha define se ela vai ou não aparecer no feed para todos os usuários do app.
+                </p>
+            </EditInfoPage>
+
+
+            <EditInfoPage
                 isOpen={isEditAddressPageOpen}
                 togglePage={toggleEditAddressPageOpen}
                 pageTitle={'Endereço da resenha'}
@@ -775,7 +826,6 @@ export default function EditEvent() {
                     </p>
                 </div>
             </EditInfoPage>
-
             <div className="flex flex-col items-center justify-start h-fit bg-purpleT1">
                 <section className="flex flex-col items-center w-full max-w-md">
                     <div className="absolute z-[9] top-4 left-4">
@@ -920,12 +970,12 @@ export default function EditEvent() {
                                 ))}
                             </div>
                         </div>
-                        <button onClick={toggleEditDescriptionPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
+                        <button onClick={toggleEditPublicPageOpen} className="bg-transparent ring-1 ring-inset ring-whiteT1 flex flex-col w-full h-fit p-2 rounded-2xl">
                             <div className="flex flex-row gap-2 items-center">
-                                <p>Visibilidade</p>
+                                <p className="font-bold">Visibilidade</p>
                                 <Vector vectorname={'edit02'} />
                             </div>
-                            <p className="text-left">{"Publico"}</p>
+                            <p>{visibilityLabel}</p>
                         </button>
                         {!canBeDeleted &&
                             <Button label={'Excluir resenha'} icon={'trash'} action={() => setShowDeleteModal(!showDeleteModal)} iconSide='right' height={1} width={1} textAlign='center' />
