@@ -65,12 +65,14 @@ export default function Checkout() {
     const payRequest = () => {
     }
 
-    const generateCash = () => {
-        const response = fetchData();
+    const generateCash = async () => {
+        const response = await fetchData();
     }
 
-    const generatePix = () => {
-        const response = fetchData();
+    const generatePix = async () => {
+        const response = await fetchData();
+
+        console.log(response)
 
         var data = {
             text: response.qrcode.text,
