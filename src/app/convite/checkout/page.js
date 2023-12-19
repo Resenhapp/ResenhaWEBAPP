@@ -65,17 +65,23 @@ export default function Checkout() {
     const payRequest = () => {
     }
 
-    const generateCash = () => {
-        fetchData().then(data => {
-            setLoading(false);
-        });
+    const generateCash = async () => {
+        const response = await fetchData();
     }
 
-    const generatePix = () => {
-        fetchData().then(data => {
-            setPixData(data);
-            setLoading(false);
-        });
+    const generatePix = async () => {
+        const response = await fetchData();
+
+        console.log(response)
+
+        var data = {
+            text: response.qrcode.text,
+            url: response.qrcode.url,
+            charge: response.charge
+        };
+
+        setPixData(data);
+        setLoading(false);
     }
 
     const makeRequest = async (url, data) => {
@@ -117,15 +123,11 @@ export default function Checkout() {
             window.history.back();
         }
 
-        var data = {
-            text: response.qrcode.text,
-            url: response.qrcode.url,
-            charge: response.charge
-        };
-
         setInviteCode(response.code);
+
+        setLoading(false);
         
-        return data;
+        return response;
     };
 
     const printRef = useRef();

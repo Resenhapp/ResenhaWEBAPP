@@ -164,6 +164,13 @@ export default function Invite() {
                         </button>
                     </div>
                 )}
+                {token && (
+                    <div className="absolute z-[4] top-4 right-4">
+                        <button onClick={() => {window.location.href = `https://www.resenha.app/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                        <Vector vectorname={'bookmarkOutlined02'} />
+                        </button>
+                    </div>
+                )}
                 <div className="relative">
                     <Image
                         src={`https://media.resenha.app/r/${hash}.png`}

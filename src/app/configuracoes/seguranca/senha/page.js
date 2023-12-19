@@ -21,7 +21,7 @@ export default function PasswordConfig() {
     const [password, setPassword] = useState(initialPassword);
     const [tempPassword, setTempPassword] = useState(initialPassword);
 
-    if (typeof window !== 'undefined') {
+    if (!token) {
         window.location.href = '/login';
     }
 
@@ -64,9 +64,9 @@ export default function PasswordConfig() {
 
     const sendEditRequest = async (data) => {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'editUserData',
-        token: token,
-        data: data
+            request: 'editUserData',
+            token: token,
+            data: data
         });
     
         return response;
