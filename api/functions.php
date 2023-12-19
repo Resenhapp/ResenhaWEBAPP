@@ -2042,7 +2042,7 @@ function switchFollowUser()
                     ];
 
                     createNotification(
-                        $followingId,
+                        $followedId,
                         "Novo seguidor!",
                         "@".$userName." acaba de te seguir.",
                     );
