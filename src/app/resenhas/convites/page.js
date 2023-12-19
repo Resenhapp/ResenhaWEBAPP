@@ -65,12 +65,12 @@ export default function MyInvites() {
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                             partyCode={party.token}
-                            viewChat={()=>(window.location.href = `https://resenha.app/chat?r=${party.code}`)}
+                            viewChat={()=>(window.location.href = `/chat?r=${party.code}`)}
                             partyDate={party.date}
                             partyHour={party.start}
                             partyName={party.name}
                             partyPaid={party.paid}
-                            viewReceipt={()=>(window.location.href = '/comprovante')}
+                            viewReceipt={()=>(window.location.href = `/resenhas/comprovante?r=${party.code}&c=${party.token}`)}
                           />
                         </div>
                       ))}
