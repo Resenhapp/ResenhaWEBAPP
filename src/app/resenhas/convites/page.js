@@ -70,7 +70,7 @@ export default function MyInvites() {
                             partyHour={party.start}
                             partyName={party.name}
                             partyPaid={party.paid}
-                            viewReceipt={()=>(window.location.href = '/comprovante')}
+                            viewReceipt={()=>(window.location.href = `/resenhas/comprovante?r=${party.code}&c=${party.token}`)}
                           />
                         </div>
                       ))}
