@@ -37,7 +37,7 @@ const MyParty = ({ partyName, partyDate, partyHour, viewChat, partyCode, imageUr
                         <Vector vectorname={'chat02'} />
                     </button>
                     <button onClick={viewReceipt} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
-                        <Vector vectorname={'eye01'} />
+                        <Vector vectorname={'eye02'} />
                     </button>
                 </div>
             </div>
