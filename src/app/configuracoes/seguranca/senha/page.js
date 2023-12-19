@@ -1,12 +1,11 @@
 'use client'
-
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 export default function PasswordConfig() {
     const token = Cookies.get('token');
@@ -21,9 +20,12 @@ export default function PasswordConfig() {
     const [password, setPassword] = useState(initialPassword);
     const [tempPassword, setTempPassword] = useState(initialPassword);
 
-    if (!token) {
-        window.location.href = '/login';
-    }
+    useEffect(() => {
+        if (!token) {
+            // Redirect to login page on the client side
+            window.location.href = '/login';
+        }
+    }, [token]);
 
     const handleSelectChange = (event) => {
         setMethod(event.target.value);
