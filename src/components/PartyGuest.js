@@ -6,7 +6,7 @@ const PartyGuest = ({ guestName, isFirst, isLast, paidStatus, username, onRemove
             {!isFirst && <hr className="w-full mt-1 border-purpleT3 mb-1"/>}
             <div className="flex flex-row w-full h-full items-end">
                 <div className="flex flex-col justify-between w-full h-full">
-                    <div className="flex flex-row items-center gap-1" onClick={()=>{window.location.href="https://resenha.app/perfil?u="+username}}>
+                    <div className="flex flex-row items-center gap-1">
                      <p className="text-md font-bold">{guestName}</p>
                    <p>·</p>
                         <p className="text-sm text-purpleT5">@{username}</p>
@@ -26,17 +26,16 @@ const PartyGuest = ({ guestName, isFirst, isLast, paidStatus, username, onRemove
                     </div>
                 </div>
                 <div className="flex flex-row gap-2 h-full justify-end items-end">
-                    <button onClick={()=>{window.location.href="https://resenha.app/chat?u="+username}} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
-                        <Vector vectorname={'chat03'} />
+                    <button onClick={()=>{window.location.href="/perfil?u="+username}} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
+                        <Vector vectorname={'eye02'} />
                     </button>
                     {!paidStatus && <button onClick={onRemove} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                         <Vector vectorname={'block01'} />
                     </button>}
                 </div>
             </div>
-            { isLast && <hr className="w-full mt-2 border-purpleT3 "/>}
+            {isLast && <hr className="w-full mt-2 border-purpleT3 "/>}
         </div>
-
     )
 }
 

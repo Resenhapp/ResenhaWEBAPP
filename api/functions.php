@@ -33,7 +33,9 @@ function hash256($string)
 
 function sanitize($s)
 {
-    return filter_var($s, FILTER_SANITIZE_STRING);
+    $s = htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+
+    return $s;
 }
 
 function decrypt($text, $pkey)
@@ -517,7 +519,7 @@ function getParties($result, $userId, $type)
                 $saved = false;
             }
 
-            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
             $confirmed = queryDB($guests_query)['total_guests'];
 
             $todayDate = date("d/m/Y");
@@ -1064,7 +1066,7 @@ function getSpecificData($userId, $item)
 
                             $partyIdHash = getHash($partyId, "event");
 
-                            $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                            $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND (paid = '1' OR method = 'dinheiro')";
                             $partyConfirmed = queryDB($query)[0];
 
                             $temp = [
@@ -1098,7 +1100,7 @@ function getSpecificData($userId, $item)
     
                     $partyIdHashUser = getHash($partyId, "event");
     
-                    $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND paid = '1' OR method = 'dinheiro' AND party = '$partyCode'";
+                    $query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$partyCode' AND (paid = '1' OR method = 'dinheiro')";
                     $partyConfirmed = queryDB($query)['total_guests'];
     
                     $temp = [
@@ -1428,7 +1430,7 @@ function getInviteData()
             $query = "SELECT name FROM users WHERE id = '$host'";
             $host = queryDB($query)[0];
 
-            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' AND party = '$code'";
+            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
             $confirmed = queryDB($guests_query)['total_guests'];
 
             $dateString = $row["date"];
@@ -1442,7 +1444,7 @@ function getInviteData()
             $dayOfWeek = getDayOfWeek($dateString);
 
             $users = [];
-            $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro' GROUP BY user";
+            $query = "SELECT * FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro') GROUP BY user";
             $dba = queryDBRows($query);
 
             if (mysqli_num_rows($dba) > 0) {
@@ -1457,8 +1459,9 @@ function getInviteData()
 
                         $userHash = getHash($dsa['user'], "user");
 
-                        $user['hash'] = $userHash;
+                        $user['name'] = $dsa['name'];
                         $user['username'] = $uname;
+                        $user['hash'] = $userHash;
                     }
 
                     $users[] = $user;
@@ -1546,12 +1549,8 @@ function getInviteData()
     
                         $views_query = "SELECT COUNT(*) AS clicks_count FROM impressions WHERE party = '$code'";
                         $views_count = queryDB($views_query)[0];
-
    
-                        $purchases_query = "SELECT COUNT(DISTINCT user) AS user_count 
-                        FROM impressions 
-                        WHERE party = '$code' 
-                        AND user IN (SELECT DISTINCT user FROM guests)";
+                        $purchases_query = "SELECT COUNT(DISTINCT user) AS user_count FROM impressions  WHERE party = '$code' AND user IN (SELECT DISTINCT user FROM guests)";
 
                         $purchases_count = queryDB($purchases_query)[0];
     
@@ -2181,7 +2180,7 @@ function tryToDeleteEvent()
 
         $code = sanitize($_POST['code']);
 
-        $query = "SELECT * FROM guests WHERE party = '$code' AND paid = '1' OR method = 'dinheiro'";
+        $query = "SELECT * FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
         $confirmed = queryDB($query);
 
         if (!$confirmed) {
@@ -2327,8 +2326,11 @@ function getMessages()
                 $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$code'";
                 $isUserAGuest = queryDB($query);
 
-                if (empty($isUserAGuest)) {
-                    returnError("not_guest");
+                $query = "SELECT id FROM parties WHERE host = '$id' AND code = '$code'";
+                $isUserHosting = queryDB($query);
+
+                if (empty($isUserAGuest) && empty($isUserHosting)) {
+                    returnError("not_participating");
                 }
             }
         }

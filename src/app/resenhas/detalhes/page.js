@@ -108,7 +108,7 @@ export default function EventDetails() {
         )
     }
 
-    var { guests, date, income, impressions } = data
+    var { guests, date, income, impressions, users } = data
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -183,12 +183,11 @@ export default function EventDetails() {
                     </div>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <div className="flex flex-col gap-1 overflow-auto h-60">
-                            <PartyGuest isFirst={true} paidStatus={true} guestName={'Joao Davi'} username={'joaodavisn'} />
-                            <PartyGuest isFirst={false} paidStatus={true} isLast={false} guestName={'Joao Davi'} username={'joaodavisn'} onRemove={() => { setShowRemoveGuestModal(!showRemoveGuestModal) }} />
-                            <PartyGuest isFirst={false} paidStatus={false} isLast={false} guestName={'Joao Davi'} username={'joaodavisn'} onRemove={() => { setShowRemoveGuestModal(!showRemoveGuestModal) }} />
-                            <PartyGuest isFirst={false} paidStatus={true} isLast={false} guestName={'Joao Davi'} username={'joaodavisn'} onRemove={() => { setShowRemoveGuestModal(!showRemoveGuestModal) }} />
-                            <PartyGuest isFirst={false} paidStatus={true} isLast={false} guestName={'Joao Davi'} username={'joaodavisn'} onRemove={() => { setShowRemoveGuestModal(!showRemoveGuestModal) }} />
-                            <PartyGuest isFirst={false} paidStatus={true} isLast={true} guestName={'Joao Davi'} username={'joaodavisn'} onRemove={() => { setShowRemoveGuestModal(!showRemoveGuestModal) }} />
+                            {users.map((user, index) => (
+                                <div key={user.id}>
+                                    <PartyGuest isFirst={true} paidStatus={true} guestName={user.name} username={user.username} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

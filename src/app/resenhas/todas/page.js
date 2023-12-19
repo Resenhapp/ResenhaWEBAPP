@@ -114,7 +114,7 @@ export default function MyParties() {
                                             viewOnClick={() => handleViewClick(party)}
                                             editOnClick={() => handleEditClick(party)}
                                             copyOnClick={() => handleCopyClick(party)}
-                                            viewChat={() => { window.location.href = "https://resenha.app/chat?r=" + party.code }}
+                                            viewChat={() => { window.location.href = "/chat?r=" + party.code }}
                                         />
                                     ))}
                                 </div>

@@ -35,10 +35,10 @@ export default function MyInvites() {
     };
 
     const handleOpenClick = async (party) => {
-      window.location.href = `https://resenha.app/convite?c=${party}`;
-  };
+      window.location.href = `/convite?c=${party}`;
+    };
 
-const handleCopyClick = async (party) => {
+    const handleCopyClick = async (party) => {
       const partyUrl = `https://resenha.app/convite?c=${party.code}`;
 
       const copyData = {
@@ -49,7 +49,7 @@ const handleCopyClick = async (party) => {
       const fullTextToCopy = `${copyData.text}${copyData.url}`;
 
       await navigator.clipboard.writeText(fullTextToCopy);
-  };
+    };
 
     useEffect(() => {
         fetchData();
@@ -81,13 +81,13 @@ const handleCopyClick = async (party) => {
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                             partyCode={party.token}
-                            viewChat={()=>(window.location.href = `https://resenha.app/chat?r=${party.code}`)}
+                            viewChat={()=>(window.location.href = `/chat?r=${party.code}`)}
                             partyDate={party.date}
                             partyHour={party.start}
                             partyName={party.name}
                             partyPaid={party.paid}
-                            shareParty={()=>{handleCopyClick(party.code)}}
-                            viewParty={()=>{handleOpenClick(party.code)}}
+                            shareParty={()=>{handleCopyClick(party)}}
+                            viewParty={()=>{handleOpenClick(party)}}
                             viewReceipt={()=>(window.location.href = `/resenhas/comprovante?r=${party.code}&c=${party.token}`)}
                           />
                         </div>
@@ -98,7 +98,7 @@ const handleCopyClick = async (party) => {
               </div>
             </section>
             <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => {window.location.href="https://resenha.app/feed"}} iconSide='right' height={1} width={1} textAlign='center' />
+              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => {window.location.href="/feed"}} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
           </div>
         </div>
