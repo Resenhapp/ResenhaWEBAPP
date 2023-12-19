@@ -88,7 +88,7 @@ const handleCopyClick = async (party) => {
                             partyPaid={party.paid}
                             shareParty={()=>{handleCopyClick(party.code)}}
                             viewParty={()=>{handleOpenClick(party.code)}}
-                            viewReceipt={()=>(window.location.href = '/comprovante')}
+                            viewReceipt={()=>(window.location.href = `/comprovante?r=${party.code}&c=${party.token}`)}
                           />
                         </div>
                       ))}
