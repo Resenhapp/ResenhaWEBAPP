@@ -4,10 +4,63 @@ import Image from 'next/image';
 import Vector from '@/src/components/Vector';
 import html2canvas from 'html2canvas';
 import PageHeader from '@/src/components/PageHeader';
+import Loading from '@/src/components/Loading';
 
 import React, { useEffect, useState } from 'react';
 
 export default function Receipt({}) {
+  const axios = require('axios');
+  const qs = require('qs');
+
+  const [data, setData] = useState(null);
+
+  let invite = '';
+  let code = '';
+
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    invite = urlParams.get('r');
+    code = urlParams.get('c');
+  }
+
+  const [visible, setVisible] = useState(true);
+  const [buttonsVisible, setButtonsVisible] = useState(true);
+
+  const [PartyName, setPartyName] = useState('');
+  const [PartyOwner, setPartyOwner] = useState('');
+  const [PartyDateDay, setPartyDateDay] = useState('');
+  const [PartyMonth, setPartyMonth] = useState('');
+  const [PartyHour, setPartyHour] = useState('');
+  const [PartyAddress, setPartyAddress] = useState('');
+  const [InviteCode, setInviteCode] = useState('');
+
+  const [PartyImage, setPartyImage] = useState('https://media.resenha.app/r/8df66f64b57424391d363fd6b811fed3c430c77597da265025728bd637bad804.png')
+  
+  const [hidestyle, setHideStyle] = useState(!false);
+
+  const makeRequest = async (url, data) => {
+    const response = await axios.post(url, qs.stringify(data));
+    return response.data;
+  };
+
+  const fetchData = async () => {
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getInviteData',
+      code: invite
+    });
+
+    setData(response);
+
+    setPartyName(response.title);
+    setPartyOwner(response.host.name);
+    setPartyDateDay(response.date.day);
+    setPartyMonth(response.date.monthString);
+    setPartyHour(response.hour.start);
+    setPartyAddress(response.address);
+    setInviteCode(code);
+  };
+
   const saveInvite = async () => {
     setTimeout(() => {
         setHideStyle(false);
@@ -37,26 +90,21 @@ export default function Receipt({}) {
             }, 3);
         }, 3);
     }, 3);
-}
-
-  const [visible, setVisible] = useState(true);
-  const [buttonsVisible, setButtonsVisible] = useState(true);
-
-  const [PartyName, setPartyName] = useState('');
-  const [PartyOwner, setPartyOwner] = useState('');
-  const [PartyDateDay, setPartyDateDay] = useState('');
-  const [PartyMonth, setPartyMonth] = useState('');
-  const [PartyHour, setPartyHour] = useState('');
-  const [PartyAddress, setPartyAddress] = useState('');
-  const [InviteCode, setInviteCode] = useState('');
-
-  const [PartyImage, setPartyImage] = useState('https://media.resenha.app/r/8df66f64b57424391d363fd6b811fed3c430c77597da265025728bd637bad804.png')
-  
-  const [hidestyle, setHideStyle] = useState(!false);
+  }
   
   useEffect(() => {
+    fetchData();
+
     setVisible(buttonsVisible);
   }, [buttonsVisible]);
+
+  if (!data) {
+    return (
+        <div className="h-screen w-full flex justify-center content-center items-center">
+            <Loading />
+        </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center px-4 h-full">
