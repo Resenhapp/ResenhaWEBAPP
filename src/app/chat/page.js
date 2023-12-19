@@ -127,8 +127,8 @@ export default function Chat() {
                                             [...messages].map((message, index) => (
                                                 <ChatBubble
                                                     key={index}
-                                                    showImage={false}
-                                                    imageUrl={message.imageUrl}
+                                                    showImage={true}
+                                                    imageUrl={'https://media.resenha.app/u/'+message.hash+'.png'}
                                                     message={message.content}
                                                     timestamp={message.date.hour + ":" + message.date.minute}
                                                     sent={message.sent}
