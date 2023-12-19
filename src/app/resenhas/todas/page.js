@@ -30,7 +30,7 @@ export default function MyParties() {
         const response = await axios.post(url, qs.stringify(data));
         return response.data;
     };
-  
+
     const fetchData = async () => {
         const requested = [
             "username",
@@ -61,17 +61,17 @@ export default function MyParties() {
 
     const handleCopyClick = async (party) => {
         const partyUrl = `https://resenha.app/convite?c=${party.code}`;
-    
+
         const copyData = {
             text: `Que tal colar na minha resenha? Só confirmar pelo link: `,
             url: `${partyUrl}`,
         };
-    
+
         const fullTextToCopy = `${copyData.text}${copyData.url}`;
-        
+
         await navigator.clipboard.writeText(fullTextToCopy);
     };
-    
+
     useEffect(() => {
         fetchData();
 
@@ -90,7 +90,7 @@ export default function MyParties() {
 
     return (
         <div className='flex flex-col w-screen h-screen'>
-            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={()=>{null}} userData={data}/>
+            <PageHeader pageTitle={'Suas resenhas'} isBack={true} checker={() => { null }} userData={data} />
             <div className="flex flex-col items-center justify-center h-screen px-4">
                 <section className="flex flex-start items-center w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
@@ -100,30 +100,30 @@ export default function MyParties() {
                             </div>
                             <div className='w-full h-full flex flex-col'>
                                 <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                {parties.made.map((party) => (
-                                <PartyPortrait
-                                key={party.code}
-                                partyCode={party.code} 
-                                partyDate={party.date} 
-                                partyGuests={party.confirmed} 
-                                partyHour={party.start} 
-                                partyMaxGuests={party.capacity} 
-                                editConcierge={()=>{window.location.href=("/recepcionistas")}}
-                                partyImage={`https://media.resenha.app/r/${party.hash}.png`} 
-                                partyName={party.name}
-                                viewOnClick={() => handleViewClick(party)}
-                                editOnClick={() => handleEditClick(party)}
-                                copyOnClick={() => handleCopyClick(party)}
-                                viewChat={()=>{window.location.href="https://resenha.app/chat?r="+party.code}}
-                                />
-                                ))}
+                                    {parties.made.map((party) => (
+                                        <PartyPortrait
+                                            key={party.code}
+                                            partyCode={party.code}
+                                            partyDate={party.date}
+                                            partyGuests={party.confirmed}
+                                            partyHour={party.start}
+                                            partyMaxGuests={party.capacity}
+                                            editConcierge={() => { window.location.href = ("/recepcionistas") }}
+                                            partyImage={`https://media.resenha.app/r/${party.hash}.png`}
+                                            partyName={party.name}
+                                            viewOnClick={() => handleViewClick(party)}
+                                            editOnClick={() => handleEditClick(party)}
+                                            copyOnClick={() => handleCopyClick(party)}
+                                            viewChat={() => { window.location.href = "https://resenha.app/chat?r=" + party.code }}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
                 <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-                <Button label={'Criar resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
+                    <Button label={'Criar resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
                 </div>
             </div>
         </div>
