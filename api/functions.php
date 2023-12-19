@@ -2030,7 +2030,9 @@ function switchFollowUser()
                         'status' => "success",
                         'action' => "unfollowed",
                     ];
-                } else {
+                } 
+                
+                else {
                     $insertQuery = "INSERT INTO followers (`id`, `follower`, `followed`, `date`) VALUES (NULL, '$followingId', '$followedId', '$currentDate')";
                     queryNR($insertQuery);
 
@@ -2038,6 +2040,12 @@ function switchFollowUser()
                         'status' => "success",
                         'action' => "followed",
                     ];
+
+                    createNotification(
+                        $followingId,
+                        "Novo seguidor!",
+                        "@".$userName." acaba de te seguir.",
+                    );
                 }
 
                 header('Content-Type: application/json');
