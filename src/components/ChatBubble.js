@@ -15,7 +15,7 @@ const ChatBubble = ({ imageUrl, message, timestamp: incomingTimestamp, sent, sho
 
     return (
         <div className={`flex ${containerStyle} gap-1`}>
-            {(showImage && !sent) && <img className=' w-8 h-8 rounded-full' src={imageUrl} alt='chat bubble' />}
+            {(showImage && !sent) && <img className=' w-4 h-4 rounded-full' src={imageUrl} alt='chat bubble' />}
             <div className={`min-w-0 ${bubbleStyle} px-2 py-1 flex flex-col max-w-full break-words`}>
                 <p className='overflow-wrap break-word whitespace-pre-wrap'>
                     {message}
