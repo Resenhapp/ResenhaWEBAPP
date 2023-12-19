@@ -2359,6 +2359,15 @@ function getMessages()
             $sent = $row['sender'] == $id;
             $content = $row['content'];
             $dateString = $row["date"];
+            $senderId = $row['sender'];
+            $senderHash = getHash($senderId, "user");
+            $destination = $row['destination'];
+
+            $query = "SELECT username FROM users WHERE id = '$senderId'";
+            $senderUsername = queryDB($query)[0];
+
+            $query = "SELECT name FROM users WHERE id = '$senderId'";
+            $senderName = queryDB($query)[0];
             
             list($datePart, $timePart) = explode(' ', $dateString);
             list($day, $month, $year) = explode('/', $datePart);
@@ -2372,8 +2381,11 @@ function getMessages()
             $second = (int) $second;
 
             $temp = [
-                'sent' => $sent,
+                'name' => $senderName,
+                'username' => $senderUsername,
+                'hash' => $senderHash,
                 'content' => $content,
+                'sent' => $sent,
                 'date' => [
                     'day' => $day,
                     'month' => $month,
@@ -2382,8 +2394,21 @@ function getMessages()
                     'minute' => sprintf('%02d', $minute),
                     'second' => sprintf('%02d', $second),
                 ],
-                'destination' => $row['destination'],
+                'destination' => $destination,
             ];
+
+            if ($type != 'dm') {
+                $query = "SELECT host FROM parties WHERE id = '$destination'";
+                $partyHost = queryDB($query)[0];
+
+                if ($partyHost == $senderId) {
+                    $temp['host'] = true;
+                }
+
+                else {
+                    $temp['host'] = false;
+                }
+            }
 
             array_push($messagesArray, $temp);
         }
