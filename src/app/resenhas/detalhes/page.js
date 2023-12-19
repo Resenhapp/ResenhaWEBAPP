@@ -143,6 +143,17 @@ export default function EventDetails() {
                         </div>
                     </div>
                 </div>
+                <div className="mt-4">
+                    <p className="font-bold text-lg">Participantes</p>
+                    <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
+                        <div className="flex flex-col gap-1">
+                           <div>
+                            <p>Nome do participante</p>
+                            <p></p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
