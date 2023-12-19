@@ -56,10 +56,7 @@ const PlacesAutocomplete_Filter = ({ setSelected, placeholder, defaultValue }) =
   };
 
   return (
-    <div className="relative h-14 text-white border-b-2  border-purpleT2 flex items-center">
-      <div className="absolute left-0 pl-3  flex">
-        <Vector vectorname={'pin01'} />
-      </div>
+    <div className="relative h-6 text-white border-b-2  border-purpleT2 flex items-center">
       <Combobox onSelect={handleSelect} className="w-[90%]">
         <ComboboxInput 
           value={value}
@@ -73,7 +70,7 @@ const PlacesAutocomplete_Filter = ({ setSelected, placeholder, defaultValue }) =
             }
           }} // Defina isInteracting como false quando o usuário sair do campo de entrada
           disabled={!ready}
-          className="pl-3 pr-2 block w-full  bg-transparent sm:text-sm ml-7 outline-none text-white placeholder-purpleT5"
+          className="pl-0 pr-0 block w-full  bg-transparent sm:text-sm ml-0 outline-none text-white placeholder-purpleT5"
           placeholder={placeholder}
           options={{
             componentRestrictions: { country: "BR" }

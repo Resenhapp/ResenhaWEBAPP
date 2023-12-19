@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
 
-const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imageUrl, viewReceipt, partyPaid }) => {
+const MyParty = ({ partyName, partyDate, partyHour, viewChat, partyCode, imageUrl, viewReceipt, partyPaid }) => {
 
     const h3Classes = 'text-[12px]';
     const baseFlexClasses = 'flex flex-row items-center gap-1';
@@ -29,16 +29,19 @@ const MyParty = ({ partyName, partyDate, partyHour, partyGuests, partyCode, imag
                     <p className={h3Classes}>{partyGuests} confirmados</p>
                 </div> */}
                 <div className={baseFlexClasses}>
-                <Vector vectorname={'qr01'} />
+                    <Vector vectorname={'qr01'} />
                     <p className={h3Classes}>{partyCode}</p>
                 </div>
                 <div className='w-full h-full flex flex-row justify-end items-end content-end'>
-                <button onClick={viewReceipt} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
-                            <Vector vectorname={'eye01'} />
-                        </button>
+                    <button onClick={viewChat} className='bg-purpleT2 flex ring-purpleT3 mr-2 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
+                        <Vector vectorname={'chat02'} />
+                    </button>
+                    <button onClick={viewReceipt} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
+                        <Vector vectorname={'eye01'} />
+                    </button>
                 </div>
             </div>
-            
+
         </div>
     )
 }
