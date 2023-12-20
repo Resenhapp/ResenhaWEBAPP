@@ -22,6 +22,7 @@ export default function Invite() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [data, setData] = useState(null);
     const [renderedTags, setRenderedTags] = useState([]);
+    const [saved, setSaved] = useState(false);
 
     let code = '';
 
@@ -64,6 +65,7 @@ export default function Invite() {
             party: code,
             token: token,
         });
+        setSaved(!saved);
     };
 
     useEffect(() => {
@@ -175,7 +177,8 @@ export default function Invite() {
                 {token && (
                     <div className="absolute z-[4] top-4 right-4">
                         <button onClick={handleSaveButton} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
-                        <Vector vectorname={'bookmarkOutlined02'} />
+                        { saved && <Vector vectorname={'bookmarkOutlined02'} /> }
+                        { !saved && <Vector vectorname={'bookmarkFill02'} /> }
                         </button>
                     </div>
                 )}
