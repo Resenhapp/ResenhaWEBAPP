@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
-import Head from 'next/head';
 import { tagsData } from "@/src/components/tagsData";
 
 export default function Invite() {
@@ -165,15 +164,6 @@ export default function Invite() {
 
     return (
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
-            <Head>
-                <title>{title}</title>
-                <meta name="description" content={description} />
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={`https://media.resenha.app/r/${hash}.png`} />
-                <meta property="og:url" content={`https://resenha.app/convite?c=${code}`} />
-                <meta property="og:type" content="website" />
-            </Head>
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
                     <div className="absolute z-[4] top-4 left-4">
