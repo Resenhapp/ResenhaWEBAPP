@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Vector from './Vector';
 
-const ChatBubble = ({ imageUrl, message, timestamp: incomingTimestamp, sent, showImage = true }) => {
+const ChatBubble = ({name, username, owner, imageUrl, message, timestamp: incomingTimestamp, sent, showImage = true }) => {
     const [timestamp, setTimestamp] = useState('Enviando...');
-    
+
     useEffect(() => {
         if (incomingTimestamp !== 'undefined:undefined') {
             setTimestamp(incomingTimestamp);
@@ -15,8 +16,15 @@ const ChatBubble = ({ imageUrl, message, timestamp: incomingTimestamp, sent, sho
 
     return (
         <div className={`flex ${containerStyle} gap-1`}>
-            {(showImage && !sent) && <img className=' w-4 h-4 rounded-full' src={imageUrl} alt='chat bubble' />}
+            {(showImage && !sent) && <div className='items-center flex flex-col'>{owner&&<span  className='absolute translate-y-[-10px]'><Vector vectorname={"crown01"} /></span>}<img className='w-6 h-6 rounded-full' src={imageUrl} alt='chat bubble' /></div>}
             <div className={`min-w-0 ${bubbleStyle} px-2 py-1 flex flex-col max-w-full break-words`}>
+            {(showImage && !sent) && 
+                <div onClick={()=>{window.location.href="https://resenha.app/perfil?u="+username}} className='flex flex-row items-center gap-1'>
+                    <p className='text-[12px]'>{name}</p>
+                    <p>·</p>
+                    <p className='text-[12px] text-purpleT5'>@{username}</p>
+                </div>
+            }
                 <p className='overflow-wrap break-word whitespace-pre-wrap'>
                     {message}
                 </p>

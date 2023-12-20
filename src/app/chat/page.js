@@ -128,6 +128,9 @@ export default function Chat() {
                                                 <ChatBubble
                                                     key={index}
                                                     showImage={true}
+                                                    name={message.name}
+                                                    username={message.username}
+                                                    owner={message.host}
                                                     imageUrl={'https://media.resenha.app/u/'+message.hash+'.png'}
                                                     message={message.content}
                                                     timestamp={message.date.hour + ":" + message.date.minute}

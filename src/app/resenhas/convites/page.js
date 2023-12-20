@@ -34,8 +34,8 @@ export default function MyInvites() {
         setData(response);
     };
 
-    const handleOpenClick = async (party) => {
-      window.location.href = `/convite?c=${party}`;
+    const handleOpenClick = (party) => {
+      window.location.href = `/convite?c=${party.code}`;
     };
 
     const handleCopyClick = async (party) => {
