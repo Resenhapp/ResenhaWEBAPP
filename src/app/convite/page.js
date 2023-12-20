@@ -156,7 +156,9 @@ export default function Invite() {
                 if (typeof window !== 'undefined') {
                     window.location.href = shareUrl;
                 }
-            } else {
+            } 
+            
+            else {
                 alert("Web Share API not supported on this device");
             }
         }
