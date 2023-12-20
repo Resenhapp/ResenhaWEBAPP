@@ -50,7 +50,7 @@ const CreditCardSelection = ({ ccFlag, ccName, ccFinal, ccUsage, ccType, startSe
             />
             <img 
                 className={`rounded-lg`} 
-                src={`https://resenha.app/publico/recursos/imagens/ui/cc/${cardFlag}.png`} 
+                src={`https://media.resenha.app/s/ui/${cardFlag}.png`} 
                 alt='credit card selection'
             />
             <div>

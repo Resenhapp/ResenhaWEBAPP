@@ -2,17 +2,6 @@ import '@/styles/globals.css';
 
 export const metadata = {
   title: 'Resenha.app',
-  description: 'Venha fazer suas resenhas!',
-//   <Head>
-//   <title>{title}</title>
-//   <meta name="description" content={description} />
-//   <meta property="og:title" content={title} />
-//   <meta property="og:description" content={description} />
-//   <meta property="og:image" content={`https://media.resenha.app/r/${hash}.png`} />
-//   <meta property="og:url" content={`https://resenha.app/convite?c=${code}`} />
-//   <meta property="og:type" content="website" />
-// </Head>
-  
 }
 
 export default function RootLayout({ children }) {
