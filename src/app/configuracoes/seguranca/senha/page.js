@@ -13,7 +13,7 @@ export default function PasswordConfig() {
     const axios = require('axios');
     const qs = require('qs');
 
-    const options = ['Desabilitado']
+    const options = ['Desabilitado' , 'Habilitado']
     var initialPassword = '•••••••'
     
     const [isEditPasswordPageOpen, setIsEditPasswordPageOpen] = useState(false);
