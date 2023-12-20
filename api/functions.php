@@ -2629,6 +2629,8 @@ function tryToUploadUserImage()
                 
                 imagedestroy($src);
                 imagedestroy($dst);
+
+                unlink($targetFile);
                 
                 returnSuccess("image_uploaded");
             } 
