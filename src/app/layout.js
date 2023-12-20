@@ -3,9 +3,6 @@ import '@/styles/globals.css';
 export const metadata = {
   title: 'Resenha.app',
   description: 'Venha fazer suas resenhas!',
-  image: 'https://media.resenha.app/u/d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35.png'
-
-
 //   <Head>
 //   <title>{title}</title>
 //   <meta name="description" content={description} />

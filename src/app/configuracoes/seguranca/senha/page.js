@@ -79,13 +79,13 @@ export default function PasswordConfig() {
             <PageHeader isBack={true} checker={() => { null }} pageTitle="Config. de senha" />
             <EditInfoPage
                 isOpen={isEditPasswordPageOpen}
-                pageTitle={'Nome de usuário'}
+                pageTitle={'Alterar a senha'}
                 togglePage={toggleEditPasswordPageOpen}
                 saveAction={savePassword}>
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Nome de usuário'
+                        placeholder='Nova senha'
                         value={tempPassword}
                         onChange={handlePasswordChange}
                     />
