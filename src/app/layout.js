@@ -1,3 +1,5 @@
+// import React from 'react';
+// import { Helmet } from 'react-helmet';
 import '@/styles/globals.css';
 
 export const metadata = {
@@ -11,9 +13,18 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  const { title, date, guests, hour, address, host, ticket } = metadata;
+  // const { title, date, guests, hour, address, host, ticket } = metadata;
   return (
     <html lang="en" className='h-full'>
+      {/* <Helmet>
+        <title>{title}</title>
+        <meta name="date" content={date} />
+        <meta name="guests" content={guests} />
+        <meta name="hour" content={hour} />
+        <meta name="address" content={address} />
+        <meta name="host" content={host} />
+        <meta name="ticket" content={ticket} />
+      </Helmet> */}
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
