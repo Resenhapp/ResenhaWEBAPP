@@ -2247,8 +2247,11 @@ function tryToSendMessage()
                 $query = "SELECT id FROM guests WHERE user = '$id' AND party = '$destination'";
                 $isUserAGuest = queryDB($query);
 
-                if (empty($isUserAGuest)) {
-                    returnError("not_guest");
+                $query = "SELECT id FROM parties WHERE host = '$id' AND code = '$destination'";
+                $isUserHosting = queryDB($query);
+
+                if (empty($isUserAGuest) && empty($isUserHosting)) {
+                    returnError("not_participating");
                 }
             }
         }
