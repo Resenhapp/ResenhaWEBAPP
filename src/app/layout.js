@@ -2,9 +2,16 @@ import '@/styles/globals.css';
 
 export const metadata = {
   title: 'Resenha.app',
+  date: '2023-12-25', // exemplo de data
+  guests: '100', // exemplo de número de convidados
+  hour: '18:00', // exemplo de hora
+  address: '123 Main Street, City', // exemplo de endereço
+  host: 'Anfitrião', // exemplo de nome do anfitrião
+  ticket: '25.00',
 }
 
 export default function RootLayout({ children }) {
+  const { title, date, guests, hour, address, host, ticket } = metadata;
   return (
     <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
