@@ -1,17 +1,23 @@
-import React from 'react';
+import '@/styles/globals.css';
 
-export default function RootLayout({ children}) {
+export const metadata = {
+  title: 'Resenha.app',
+  description: 'Venha fazer suas resenhas!',
+//   <Head>
+//   <title>{title}</title>
+//   <meta name="description" content={description} />
+//   <meta property="og:title" content={title} />
+//   <meta property="og:description" content={description} />
+//   <meta property="og:image" content={`https://media.resenha.app/r/${hash}.png`} />
+//   <meta property="og:url" content={`https://resenha.app/convite?c=${code}`} />
+//   <meta property="og:type" content="website" />
+// </Head>
+  
+}
+
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className='h-full'>
-      <head>
-        <meta name="date" content={date} />
-        <meta name="guests" content={guests} />
-        <meta name="hour" content={hour} />
-        <meta name="address" content={address} />
-        <meta name="host" content={host} />
-        <meta name="ticket" content={ticket} />
-      </head>
-  
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
@@ -72,5 +78,5 @@ export default function RootLayout({ children}) {
         {children}
       </body>
     </html>
-  );
+  )
 }
