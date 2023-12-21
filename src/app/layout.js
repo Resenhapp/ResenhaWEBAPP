@@ -2,9 +2,6 @@ import React from 'react';
 
 export default function RootLayout({ children}) {
   return (
-<<<<<<< HEAD
-      <html lang="en" className='h-full'>
-=======
     <html lang="en" className='h-full'>
       <head>
         <meta name="date" content={date} />
@@ -14,7 +11,7 @@ export default function RootLayout({ children}) {
         <meta name="host" content={host} />
         <meta name="ticket" content={ticket} />
       </head>
->>>>>>> parent of 97053e6 (up)
+  
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
