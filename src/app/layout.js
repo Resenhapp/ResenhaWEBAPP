@@ -1,4 +1,13 @@
 import '@/styles/globals.css';
+import Head from 'next/head';
+import React, { useEffect, useState } from 'react';
+
+const fetchInviteData = async () => {
+  // Lógica para buscar os dados do convite
+  // Substitua por sua lógica real de obtenção de dados do convite
+  const inviteData = await fetchData(); 
+  return inviteData;
+};
 
 export const metadata = {
   title: 'Resenha.app',
@@ -6,8 +15,38 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  const [inviteData, setInviteData] = useState(null);
+
+  useEffect(() => {
+    const checkInvite = async () => {
+      // Lógica para verificar se há um convite ativo
+      const hasInvite = checkInvite(); // Substitua por sua lógica de verificação
+
+      if (hasInvite) {
+        // Se houver um convite ativo, busca os dados do convite
+        const data = await fetchInviteData();
+        setInviteData(data);
+      }
+    };
+
+    checkInvite();
+  }, []);
+
   return (
-    <html lang="en" className='h-full'>
+    <>
+      {inviteData && (
+        <Head>
+          <title>{inviteData.title}</title>
+          <meta property="og:title" content={inviteData.title} />
+          <meta name="description" content={inviteData.description} />
+          <meta property="og:description" content={inviteData.description} />
+          <meta name="guests-confirmed" content={inviteData.guests.confirmed} />
+          <meta name="ticket-price" content={inviteData.ticket} />
+          <meta name="host-name" content={inviteData.host.name} />
+          {/* Outros metadados conforme necessário */}
+        </Head>
+      )}
+      <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
@@ -68,5 +107,8 @@ export default function RootLayout({ children }) {
         {children}
       </body>
     </html>
-  )
+    
+    </>
+    
+  );
 }
