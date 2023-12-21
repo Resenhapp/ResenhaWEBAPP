@@ -9,24 +9,10 @@ import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
-import RootLayout from '@/src/layout.js'; // Importe seu RootLayout
 import { tagsData } from "@/src/components/tagsData";
+import RootLayout, { metadata } from "@/src/layout.js";
 
 export default function Invite() {
-    
-    const metadata = {
-        title: 'Resenha.app - Convite', // Defina o título específico para a página de convite
-        // Defina outros metadados dinamicamente com base nos dados do convite
-        date: date,
-        guests: guests,
-        hour: hour,
-        address: address,
-        host: host,
-        ticket: ticket,
-        // ...
-      };
-
-
     const axios = require('axios');
     const qs = require('qs');
 
@@ -180,7 +166,7 @@ export default function Invite() {
     
 
     return (
-        <RootLayout metadata={metadata}>
+    <RootLayout data={data}>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
@@ -346,7 +332,7 @@ export default function Invite() {
                     </div>
                 </div>
             </section>
-        </div >
-    </RootLayout>  
+        </div>
+    </RootLayout> 
     );
 }

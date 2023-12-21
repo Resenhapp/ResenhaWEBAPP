@@ -1,30 +1,32 @@
-// import React from 'react';
-// import { Helmet } from 'react-helmet';
-import '@/styles/globals.css';
+import Head from 'next/head';
+import React from 'react';
 
-export const metadata = {
-  title: 'Resenha.app',
-  date: '2023-12-25', // exemplo de data
-  guests: '100', // exemplo de número de convidados
-  hour: '18:00', // exemplo de hora
-  address: '123 Main Street, City', // exemplo de endereço
-  host: 'Anfitrião', // exemplo de nome do anfitrião
-  ticket: '25.00',
-}
+export const metadata = (data) => ({
+  date: data.date.dayString,
+  guests: `${data.guests.confirmed}/${data.guests.capacity}`,
+  hour: `às ${data.hour.start}`,
+  address: data.address,
+  host: data.host.name,
+  ticket: data.ticket,
+});
 
-export default function RootLayout({ children }) {
-  // const { title, date, guests, hour, address, host, ticket } = metadata;
+
+
+export default function RootLayout({ children, data }) {
+  const { date, guests, hour, address, host, ticket } = metadata(data);
+
   return (
-    <html lang="en" className='h-full'>
-      {/* <Helmet>
-        <title>{title}</title>
+    <> 
+      <Head>
+        <title>{`Evento de ${host}`}</title>
         <meta name="date" content={date} />
         <meta name="guests" content={guests} />
         <meta name="hour" content={hour} />
         <meta name="address" content={address} />
         <meta name="host" content={host} />
         <meta name="ticket" content={ticket} />
-      </Helmet> */}
+      </Head>
+      <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
@@ -85,5 +87,6 @@ export default function RootLayout({ children }) {
         {children}
       </body>
     </html>
-  )
+  </>
+  );
 }
