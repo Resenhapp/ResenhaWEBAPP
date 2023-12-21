@@ -1,9 +1,8 @@
 import '@/styles/globals.css';
 
 export const metadata = {
-  title: 'HUMBERTO SEU GORILA',
-  description: 'TEM QUE MUDAR O BGL EM LAYOUT.JS',
-
+  title: 'Resenha.app',
+  description: 'Venha fazer suas resenhas!',
 }
 
 export default function RootLayout({ children }) {
