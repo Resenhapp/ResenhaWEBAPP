@@ -182,7 +182,7 @@ export default function EventDetails() {
                         {/* <input className="w-full bg-transparent ring-1 ring-white rounded-full mb-2 py-1 px-3" placeholder="buscar participante"/> */}
                     </div>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
-                        <div className="flex flex-col gap-1 overflow-auto h-60">
+                        <div className="flex flex-col gap-1 overflow-auto max-h-60">
                             {users.map((user, index) => (
                                 <div key={user.id}>
                                     <PartyGuest isFirst={true} paidStatus={true} guestName={user.name} username={user.username} />
