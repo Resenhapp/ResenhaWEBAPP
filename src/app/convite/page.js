@@ -154,9 +154,7 @@ export default function Invite() {
                 if (typeof window !== 'undefined') {
                     window.location.href = shareUrl;
                 }
-            } 
-            
-            else {
+            } else {
                 alert("Web Share API not supported on this device");
             }
         }
@@ -305,13 +303,13 @@ export default function Invite() {
                                 </div>
                                 <div className="flex flex-col mb-4 w-full">
                                     <Button
-                                        label={guests.capacity == guests.confirmed ? "Esgotou!" : "Tô dentro!"}
+                                        label="Tô dentro!"
                                         icon="arrow"
+                                        action={handleNextClick}
                                         iconSide='right'
                                         height={1}
                                         width={1}
                                         textAlign='center'
-                                        {...(guests.capacity != guests.confirmed && { action: handleNextClick })}
                                     />
                                 </div>
                             </div>
