@@ -166,7 +166,7 @@ export default function Invite() {
     
 
     return (
-    <RootLayout data={data}>
+        <RootLayout data={data}>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (

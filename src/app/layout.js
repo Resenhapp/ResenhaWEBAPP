@@ -10,10 +10,11 @@ export const metadata = (data) => ({
   ticket: data.ticket,
 });
 
-
-
 export default function RootLayout({ children, data }) {
   const { date, guests, hour, address, host, ticket } = metadata(data);
+
+  const ogTitle = `Evento de ${host}`;
+  const ogDescription = `Venha participar do evento de ${host} no dia ${date}, às ${hour}. Localizado em ${address}. Confirmados: ${guests}. Ingressos: ${ticket}.`;
 
   return (
     <> 
@@ -25,6 +26,10 @@ export default function RootLayout({ children, data }) {
         <meta name="address" content={address} />
         <meta name="host" content={host} />
         <meta name="ticket" content={ticket} />
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:type" content="website" />
+        {/* Adicione mais metatags Open Graph conforme necessário */}
       </Head>
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
