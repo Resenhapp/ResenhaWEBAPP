@@ -11,11 +11,21 @@ import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import RootLayout from '@/src/layout.js'; // Importe seu RootLayout
 import { tagsData } from "@/src/components/tagsData";
-import RootLayout from '@/src/layout.js'; // Importe seu RootLayout
 
 export default function Invite() {
     
-    const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
+    const metadata = {
+        title: 'Resenha.app - Convite', // Defina o título específico para a página de convite
+        // Defina outros metadados dinamicamente com base nos dados do convite
+        date: date,
+        guests: guests,
+        hour: hour,
+        address: address,
+        host: host,
+        ticket: ticket,
+        // ...
+      };
+
 
     const axios = require('axios');
     const qs = require('qs');
@@ -93,6 +103,9 @@ export default function Invite() {
             </div>
         );
     }
+
+    const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
+
     const renderDescription = () => {
         if (isExpanded) {
             return (
@@ -167,17 +180,7 @@ export default function Invite() {
     
 
     return (
-        <>
-    <Head>
-        <title>{`Evento de ${host.name}`}</title>
-        <meta name="date" content={date.dayString} />
-        <meta name="guests" content={guests.confirmed / guests.capacity} />
-        <meta name="hour" content={hour.start} />
-        <meta name="address" content={address} />
-        <meta name="host" content={host.name} />
-        <meta name="ticket" content={ticket} />
-        {/* Adicione outros metadados aqui */}
-    </Head>
+        <RootLayout metadata={metadata}>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
@@ -343,8 +346,7 @@ export default function Invite() {
                     </div>
                 </div>
             </section>
-        </div>
-        </>
-      
+        </div >
+    </RootLayout>  
     );
 }
