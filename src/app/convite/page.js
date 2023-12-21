@@ -14,19 +14,18 @@ import { tagsData } from "@/src/components/tagsData";
 
 export default function Invite() {
     
+    const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
+
     const metadata = {
-        title: 'Resenha.app - Convite', // Defina o título específico para a página de convite
-        // Defina outros metadados dinamicamente com base nos dados do convite
-        date: date,
-        guests: guests,
-        hour: hour,
-        address: address,
-        host: host,
-        ticket: ticket,
-        // ...
-      };
-
-
+      title: title,
+      date: date,
+      guests: guests,
+      hour: hour,
+      address: address,
+      host: host,
+      ticket: ticket,
+      // ... outros metadados
+    };
     const axios = require('axios');
     const qs = require('qs');
 
@@ -103,9 +102,6 @@ export default function Invite() {
             </div>
         );
     }
-
-    const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
-
     const renderDescription = () => {
         if (isExpanded) {
             return (
