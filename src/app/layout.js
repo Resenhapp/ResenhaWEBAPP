@@ -23,6 +23,8 @@ export default function RootLayout({ children }) {
         <meta name="address" content={address} />
         <meta name="host" content={host} />
         <meta name="ticket" content={ticket} />
+        {/* Adicionando título com base no nome do host */}
+        <title>{`Evento de ${host}`}</title>
       </head>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
