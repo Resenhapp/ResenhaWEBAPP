@@ -342,6 +342,10 @@ export default function Checkout() {
         );
     }
 
+    if (data.guests.confirmed == data.guests.capacity) {
+        window.history.back();
+    }
+
     return (
         <div className="flex flex-col justify-around h-screen p-4" >
             <div className='w-full flex flex-col gap-2'>
