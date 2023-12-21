@@ -1,4 +1,5 @@
 'use client'
+import Head from 'next/head';
 import React, { useEffect, useState} from 'react';
 import Image from "next/image";
 import Button from "@/src/components/Button";
