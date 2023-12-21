@@ -1,36 +1,8 @@
-import Head from 'next/head';
 import React from 'react';
 
-export const metadata = (data) => ({
-  date: data.date.dayString,
-  guests: `${data.guests.confirmed}/${data.guests.capacity}`,
-  hour: `às ${data.hour.start}`,
-  address: data.address,
-  host: data.host.name,
-  ticket: data.ticket,
-});
-
-export default function RootLayout({ children, data }) {
-  const { date, guests, hour, address, host, ticket } = metadata(data);
-
-  const ogTitle = `Evento de ${host}`;
-  const ogDescription = `Venha participar do evento de ${host} no dia ${date}, às ${hour}. Localizado em ${address}. Confirmados: ${guests}. Ingressos: ${ticket}.`;
-
+export default function RootLayout({ children}) {
   return (
     <> 
-      <Head>
-        <title>{`Evento de ${host}`}</title>
-        <meta name="date" content={date} />
-        <meta name="guests" content={guests} />
-        <meta name="hour" content={hour} />
-        <meta name="address" content={address} />
-        <meta name="host" content={host} />
-        <meta name="ticket" content={ticket} />
-        <meta property="og:title" content={ogTitle} />
-        <meta property="og:description" content={ogDescription} />
-        <meta property="og:type" content="website" />
-        {/* Adicione mais metatags Open Graph conforme necessário */}
-      </Head>
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>

@@ -10,9 +10,13 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
-import RootLayout, { metadata } from "@/src/layout.js";
+
 
 export default function Invite() {
+    const ogTitle = title;
+    const ogDescription = description;
+    const ogURL = `https://resenha.app/convite?c=${code}`;
+
     const axios = require('axios');
     const qs = require('qs');
 
@@ -167,6 +171,20 @@ export default function Invite() {
 
     return (
         <RootLayout data={data}>
+            <Head>
+                <meta name="date" content={date} />
+                <meta name="guests" content={guests} />
+                <meta name="hour" content={hour} />
+                <meta name="address" content={address} />
+                <meta name="host" content={host} />
+                <meta name="ticket" content={ticket} />
+                <title>{ogTitle}</title>
+                <meta property="og:title" content={ogTitle} />
+                <meta property="og:description" content={ogDescription} />
+                <meta property="og:url" content={ogURL} />
+                <meta property="og:type" content="website" />
+
+            </Head>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
