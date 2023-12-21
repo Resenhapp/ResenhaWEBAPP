@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useEffect, useState} from 'react';
 import Image from "next/image";
 import Button from "@/src/components/Button";
@@ -11,12 +10,7 @@ import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
 
-
 export default function Invite() {
-    const ogTitle = title;
-    const ogDescription = description;
-    const ogURL = `https://resenha.app/convite?c=${code}`;
-
     const axios = require('axios');
     const qs = require('qs');
 
@@ -167,10 +161,12 @@ export default function Invite() {
         }
     };
 
-    
+    const ogTitle = title;
+    const ogDescription = description;
+    const ogURL = `https://resenha.app/convite?c=${code}`;
 
     return (
-        <RootLayout data={data}>
+        <>
             <Head>
                 <meta name="date" content={date} />
                 <meta name="guests" content={guests} />
@@ -350,6 +346,6 @@ export default function Invite() {
                 </div>
             </section>
         </div>
-    </RootLayout> 
+    </> 
     );
 }
