@@ -167,26 +167,17 @@ export default function Invite() {
     
 
     return (
-        <RootLayout metadata={metadata}>
-        metadata={{
-        title: title,
-        date: date.dayString,
-        guests: guests.confirmed / guests.capacity,
-        hour: hour.start,
-        address: address,
-        host: host.name,
-        ticket: ticket,
-      }}
-      <head>
-        <meta name="date" content={date} />
-        <meta name="guests" content={guests} />
-        <meta name="hour" content={hour} />
+        <>
+    <Head>
+        <title>{`Evento de ${host.name}`}</title>
+        <meta name="date" content={date.dayString} />
+        <meta name="guests" content={guests.confirmed / guests.capacity} />
+        <meta name="hour" content={hour.start} />
         <meta name="address" content={address} />
-        <meta name="host" content={host} />
+        <meta name="host" content={host.name} />
         <meta name="ticket" content={ticket} />
-        {/* Adicionando título com base no nome do host */}
-        <title>{`Evento de ${host}`}</title>
-      </head>
+        {/* Adicione outros metadados aqui */}
+    </Head>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
@@ -352,7 +343,8 @@ export default function Invite() {
                     </div>
                 </div>
             </section>
-        </div >
-    </RootLayout>  
+        </div>
+        </>
+      
     );
 }
