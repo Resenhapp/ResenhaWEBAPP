@@ -177,6 +177,16 @@ export default function Invite() {
         host: host.name,
         ticket: ticket,
       }}
+      <head>
+        <meta name="date" content={date} />
+        <meta name="guests" content={guests} />
+        <meta name="hour" content={hour} />
+        <meta name="address" content={address} />
+        <meta name="host" content={host} />
+        <meta name="ticket" content={ticket} />
+        {/* Adicionando título com base no nome do host */}
+        <title>{`Evento de ${host}`}</title>
+      </head>
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
