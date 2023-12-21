@@ -18,11 +18,11 @@ export default function Invite() {
 
     const metadata = {
       title: title,
-      date: date,
-      guests: guests,
-      hour: hour,
+      date: date.dayString,
+      guests: guests.confirmed/guests.capacity,
+      hour: hour.start,
       address: address,
-      host: host,
+      host: host.name,
       ticket: ticket,
       // ... outros metadados
     };

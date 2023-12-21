@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import React from 'react';
 
 export const metadata = {
+  title: 'Resenha',
   date: '2023-12-25', // exemplo de data
   guests: '100', // exemplo de número de convidados
   hour: '18:00', // exemplo de hora
