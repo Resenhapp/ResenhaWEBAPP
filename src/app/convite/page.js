@@ -11,21 +11,12 @@ import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import RootLayout from '@/src/layout.js'; // Importe seu RootLayout
 import { tagsData } from "@/src/components/tagsData";
+import RootLayout from '@/src/layout.js'; // Importe seu RootLayout
 
 export default function Invite() {
     
     const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
 
-    const metadata = {
-      title: title,
-      date: date.dayString,
-      guests: guests.confirmed/guests.capacity,
-      hour: hour.start,
-      address: address,
-      host: host.name,
-      ticket: ticket,
-      // ... outros metadados
-    };
     const axios = require('axios');
     const qs = require('qs');
 
@@ -177,6 +168,15 @@ export default function Invite() {
 
     return (
         <RootLayout metadata={metadata}>
+        metadata={{
+        title: title,
+        date: date.dayString,
+        guests: guests.confirmed / guests.capacity,
+        hour: hour.start,
+        address: address,
+        host: host.name,
+        ticket: ticket,
+      }}
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (

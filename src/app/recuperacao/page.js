@@ -3,11 +3,6 @@ import Button from '@/src/components/Button';
 import GoogleButton from '@/src/components/GoogleButton';
 import Link from 'next/link';
 
-export const metadata = {
-  title: 'Resenha.app • Recuperar senha',
-  description: 'Venha fazer suas resenhas!',
-}
-
 export default function Recovery() {
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4">
