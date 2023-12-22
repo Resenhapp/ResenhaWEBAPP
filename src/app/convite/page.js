@@ -9,8 +9,34 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
+import { metadata } from '@src/app/layout.js'; 
 
 export default function Invite() {
+
+    useEffect(() => {
+        const updateMetadata = () => {
+          if (data) {
+            const { title, description, guests, ticket, host } = data;
+    
+            const updatedMetadata = {
+              title: title || 'Resenha.app',
+              description: description || '',
+              ogTitle: title || 'Resenha.app',
+              ogDescription: description || '',
+              ogURL: window.location.href, // Você pode definir a URL dinamicamente se necessário
+              guestsConfirmed: guests.confirmed || '',
+              ticketPrice: ticket || '',
+              hostName: host.name || '',
+            };
+    
+            // Atualiza o estado dos metadados com os novos valores
+            Object.assign(metadata, updatedMetadata);
+          }
+        };
+    
+        updateMetadata();
+      }, [data]);
+
     const axios = require('axios');
     const qs = require('qs');
 

@@ -13,42 +13,43 @@ export default function RootLayout({ children }) {
   const [inviteData, setInviteData] = useState(null);
 
   useEffect(() => {
-    const checkInvite = async () => {
-      // Lógica para verificar se há um convite ativo
-      const hasInvite = checkInvite(); 
+    const fetchInviteData = async () => {
+      // Lógica para buscar os dados do convite
+      const data = await fetchData(); // Substitua por sua lógica de obtenção de dados
 
-      if (hasInvite) {
-        // Se houver um convite ativo, busca os dados do convite
-        const data = await fetchData();
-        setInviteData(data);
+      // Define os dados do convite
+      setInviteData(data);
 
-        // Atualiza as metadatas dinâmicas
-        updateMetadata(data);
-      }
+      // Atualiza os metadados com base nos dados do convite
+      updateMetadata(data);
     };
 
-    checkInvite();
+    // Verifica se há convite ativo e faz o fetch dos dados
+    const hasInvite = checkForInvite(); // Substitua pela sua lógica de verificação
+    if (hasInvite) {
+      fetchInviteData();
+    }
   }, []);
 
   const updateMetadata = (data) => {
     if (data) {
       const { title, description, guests, ticket, host } = data;
       const updatedMetadata = {
-        title: title || 'Resenha.app', // Valor padrão caso o título não esteja disponível
-        description: description || '', // Valor padrão para a descrição caso não esteja disponível
-        ogTitle: title || 'Resenha.app', // Atualiza também o OG Title
-        ogDescription: description || '', // Atualiza o OG Description
-        ogURL: window.location.href, // URL da página
-        guestsConfirmed: guests.confirmed || '', // Confirmados
-        ticketPrice: ticket || '', // Preço do ingresso
-        hostName: host.name || '', // Nome do anfitrião
+        title: title || 'Resenha.app',
+        description: description || '',
+        ogTitle: title || 'Resenha.app',
+        ogDescription: description || '',
+        ogURL: window.location.href, // Você pode definir a URL dinamicamente se necessário
+        guestsConfirmed: guests.confirmed || '',
+        ticketPrice: ticket || '',
+        hostName: host.name || '',
       };
 
       // Atualiza o estado dos metadados com os novos valores
       Object.assign(metadata, updatedMetadata);
     }
   };
-  
+
   return (
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
