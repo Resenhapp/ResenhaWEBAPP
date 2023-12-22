@@ -1,13 +1,16 @@
 import '@/styles/globals.css';
 import React, { useEffect, useState } from 'react';
 
+export const metadata = {
+  title: title,
+  description: description,
+  host: host,
+  ticket: ticket, 
+  guests: guests,
+};
+
 export default function RootLayout({ children }) {
-  const [data, setData] = useState(null);({
-    description: 'Teste 123',
-    hostname: 'Teste 123',
-    ticket: 'Teste123',
-    date: 'Teste123',
-  });
+  const [dynamicMetadata, setDynamicMetadata] = useState({ ...metadata });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,23 +18,23 @@ export default function RootLayout({ children }) {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'getInviteData',
           code: code
-      });
+        });
         if (!response.ok) {
           throw new Error('Erro ao buscar dados do convite');
         }
 
         const data = await response.json();
-        const { ticket, guestsConfirmed, hostName, date } = data;
+        const { guests, host, date, ticket } = data;
 
-        setData({
-          description: `Confirmados: ${guestsConfirmed}, Host: ${hostName}, Data: ${date}, Convite: ${ticket}`,
+        // Atualizando os dados do convite como metadados
+        setDynamicMetadata({
+          title: `Convite: ${ticket}`,
+          description: `Confirmados: ${guests.confirmed}/${guests.capacity}, Host: ${host.name}, Data: ${date.dayString}, Convite: ${ticket}`,
+          // Outros dados conforme necessário
         });
       } catch (error) {
         console.error('Erro ao buscar dados do convite:', error);
       }
-
-      setData(response);
-
     };
 
     fetchData();
