@@ -10,34 +10,6 @@ export default function RootLayout({ children }) {
     date: 'Teste123',
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'getInviteData',
-          code: code
-      });
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados do convite');
-        }
-
-        const data = await response.json();
-        const { ticket, guestsConfirmed, hostName, date } = data;
-
-        setData({
-          title: `Convite: ${title}`,
-          description: `Confirmados: ${guestsConfirmed}, Host: ${hostName}, Data: ${date}, Convite: ${ticket}`,
-        });
-      } catch (error) {
-        console.error('Erro ao buscar dados do convite:', error);
-      }
-
-      setData(response);
-
-    };
-
-    fetchData();
-  }, []);
 
   return (
       <html lang="en" className='h-full'>
