@@ -2,36 +2,49 @@ import '@/styles/globals.css';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-const fetchInviteData = async () => {
-  // Lógica para buscar os dados do convite
-  // Substitua por sua lógica real de obtenção de dados do convite
-  const inviteData = await fetchData(); 
-  return inviteData;
-};
-
 export const metadata = {
   title: 'Resenha.app',
-  description: 'Venha fazer suas resenhas!',
-}
-
+  description: '', // Inicialmente vazio, será atualizado dinamicamente
+  guestsConfirmed: '', // Inicialmente vazio, será atualizado dinamicamente
+  ticketPrice: '', // Inicialmente vazio, será atualizado dinamicamente
+  hostName: '', // Inicialmente vazio, será atualizado dinamicamente
+};
 export default function RootLayout({ children }) {
   const [inviteData, setInviteData] = useState(null);
 
   useEffect(() => {
     const checkInvite = async () => {
       // Lógica para verificar se há um convite ativo
-      const hasInvite = checkInvite(); // Substitua por sua lógica de verificação
+      const hasInvite = checkForInvite(); // Substitua por sua lógica de verificação
 
       if (hasInvite) {
         // Se houver um convite ativo, busca os dados do convite
         const data = await fetchInviteData();
         setInviteData(data);
+
+        // Atualiza as metadatas dinâmicas
+        updateMetadata(data);
       }
     };
 
     checkInvite();
   }, []);
 
+  const updateMetadata = (data) => {
+    if (data) {
+      const { title, description, guests, ticket, host } = data;
+      const updatedMetadata = {
+        title: title || 'Resenha.app', // Valor padrão caso o título não esteja disponível
+        description: description || '', // Valor padrão para a descrição caso não esteja disponível
+        guestsConfirmed: guests.confirmed || '', // Confirmados
+        ticketPrice: ticket || '', // Preço do ingresso
+        hostName: host.name || '', // Nome do anfitrião
+      };
+
+      // Atualiza o estado da metadados com os novos valores
+      setMetadata(updatedMetadata);
+    }
+  };
   return (
     <>
       {inviteData && (
