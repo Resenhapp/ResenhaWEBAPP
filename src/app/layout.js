@@ -1,5 +1,4 @@
 import '@/styles/globals.css';
-import React, { useEffect, useState } from 'react';
 
 export const metadata = {
   title: title,
