@@ -2,12 +2,9 @@ import '@/styles/globals.css';
 import React, { useEffect, useState } from 'react';
 
 export const metadata = {
-  title: 'Resenha.app',
-  description: '', // Inicialmente vazio, será atualizado dinamicamente
-  ogTitle: '', // Inicialmente vazio, será atualizado dinamicamente
-  ogDescription: '', // Inicialmente vazio, será atualizado dinamicamente
-  ogURL: '', // Inicialmente vazio, será atualizado dinamicamente
-};
+  title: 'Teste 123',
+  description: 'Teste 123',
+}
 
 export default function RootLayout({ children }) {
   const [inviteData, setInviteData] = useState(null);
