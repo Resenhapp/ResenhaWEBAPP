@@ -1,5 +1,4 @@
 import '@/styles/globals.css';
-import React, { useEffect, useState } from 'react';
 
 export const metadata = {
   title: 'Teste 123',
@@ -7,48 +6,8 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  const [inviteData, setInviteData] = useState(null);
-
-  useEffect(() => {
-    const fetchInviteData = async () => {
-      // Lógica para buscar os dados do convite
-      const data = await fetchData(); // Substitua por sua lógica de obtenção de dados
-
-      // Define os dados do convite
-      setInviteData(data);
-
-      // Atualiza os metadados com base nos dados do convite
-      updateMetadata(data);
-    };
-
-    // Verifica se há convite ativo e faz o fetch dos dados
-    const hasInvite = checkForInvite(); // Substitua pela sua lógica de verificação
-    if (hasInvite) {
-      fetchInviteData();
-    }
-  }, []);
-
-  const updateMetadata = (data) => {
-    if (data) {
-      const { title, description, guests, ticket, host } = data;
-      const updatedMetadata = {
-        title: title || 'Resenha.app',
-        description: description || '',
-        ogTitle: title || 'Resenha.app',
-        ogDescription: description || '',
-        ogURL: window.location.href, // Você pode definir a URL dinamicamente se necessário
-        guestsConfirmed: guests.confirmed || '',
-        ticketPrice: ticket || '',
-        hostName: host.name || '',
-      };
-
-      // Atualiza o estado dos metadados com os novos valores
-      Object.assign(metadata, updatedMetadata);
-    }
-  };
-
   return (
-      <html lang="en" className='h-full'>
+    <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
           <div className="bg-blackT1" />
@@ -108,6 +67,6 @@ export default function RootLayout({ children }) {
         <div className='w-80 h-80 animate-left-right bg-transparent rounded-full moreffect fixed z-[-1] left-[-600px] top-[656px]' />
         {children}
       </body>
-    </html>    
-  );
+    </html>
+  )
 }
