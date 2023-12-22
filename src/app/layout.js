@@ -4,10 +4,11 @@ import React, { useEffect, useState } from 'react';
 export const metadata = {
   title: 'Resenha.app',
   description: '', // Inicialmente vazio, será atualizado dinamicamente
-  guestsConfirmed: '', // Inicialmente vazio, será atualizado dinamicamente
-  ticket: '', // Inicialmente vazio, será atualizado dinamicamente
-  hostName: '', // Inicialmente vazio, será atualizado dinamicamente
+  ogTitle: '', // Inicialmente vazio, será atualizado dinamicamente
+  ogDescription: '', // Inicialmente vazio, será atualizado dinamicamente
+  ogURL: '', // Inicialmente vazio, será atualizado dinamicamente
 };
+
 export default function RootLayout({ children }) {
   const [inviteData, setInviteData] = useState(null);
 
@@ -35,17 +36,20 @@ export default function RootLayout({ children }) {
       const updatedMetadata = {
         title: title || 'Resenha.app', // Valor padrão caso o título não esteja disponível
         description: description || '', // Valor padrão para a descrição caso não esteja disponível
+        ogTitle: title || 'Resenha.app', // Atualiza também o OG Title
+        ogDescription: description || '', // Atualiza o OG Description
+        ogURL: window.location.href, // URL da página
         guestsConfirmed: guests.confirmed || '', // Confirmados
         ticketPrice: ticket || '', // Preço do ingresso
         hostName: host.name || '', // Nome do anfitrião
       };
 
-      // Atualiza o estado da metadados com os novos valores
-      metadata(updatedMetadata);
+      // Atualiza o estado dos metadados com os novos valores
+      Object.assign(metadata, updatedMetadata);
     }
   };
+  
   return (
-    <>
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
@@ -106,9 +110,6 @@ export default function RootLayout({ children }) {
         <div className='w-80 h-80 animate-left-right bg-transparent rounded-full moreffect fixed z-[-1] left-[-600px] top-[656px]' />
         {children}
       </body>
-    </html>
-    
-    </>
-    
+    </html>    
   );
 }
