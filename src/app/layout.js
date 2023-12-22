@@ -5,9 +5,6 @@ export default function RootLayout({ children }) {
   const [data, setData] = useState(null);({
     title: 'Resenha',
     description: 'Teste 123',
-    hostname: 'Teste 123',
-    ticket: 'Teste123',
-    date: 'Teste123',
   });
 
 
