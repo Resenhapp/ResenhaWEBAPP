@@ -1,13 +1,45 @@
 import '@/styles/globals.css';
-
-export const metadata = {
-  title: 'Teste 123',
-  description: 'Teste 123',
-}
+import React, { useEffect, useState } from 'react';
 
 export default function RootLayout({ children }) {
+  const [data, setData] = useState(null);({
+    title: 'Resenha',
+    description: 'Teste 123',
+    hostname: 'Teste 123',
+    ticket: 'Teste123',
+    date: 'Teste123',
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getInviteData',
+          code: code
+      });
+        if (!response.ok) {
+          throw new Error('Erro ao buscar dados do convite');
+        }
+
+        const data = await response.json();
+        const { ticket, guestsConfirmed, hostName, date } = data;
+
+        setData({
+          title: `Convite: ${title}`,
+          description: `Confirmados: ${guestsConfirmed}, Host: ${hostName}, Data: ${date}, Convite: ${ticket}`,
+        });
+      } catch (error) {
+        console.error('Erro ao buscar dados do convite:', error);
+      }
+
+      setData(response);
+
+    };
+
+    fetchData();
+  }, []);
+
   return (
-  <>
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
         <div className='opacity-100 scale-0 absolute'>
@@ -69,6 +101,5 @@ export default function RootLayout({ children }) {
         {children}
       </body>
     </html>  
-  </>
   )
 }
