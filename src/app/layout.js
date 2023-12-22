@@ -24,13 +24,12 @@ export default function RootLayout({ children }) {
         }
 
         const data = await response.json();
-        const { guests, host, date, ticket } = data;
+        const { guests, host, date, ticket, title } = data;
 
         // Atualizando os dados do convite como metadados
         setDynamicMetadata({
-          title: `Convite: ${ticket}`,
+          title: `Convite: ${shereData.title}`,
           description: `Confirmados: ${guests.confirmed}/${guests.capacity}, Host: ${host.name}, Data: ${date.dayString}, Convite: ${ticket}`,
-          // Outros dados conforme necessário
         });
       } catch (error) {
         console.error('Erro ao buscar dados do convite:', error);
