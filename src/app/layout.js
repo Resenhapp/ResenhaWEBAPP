@@ -2,12 +2,6 @@ import '@/styles/globals.css';
 import React, { useEffect, useState } from 'react';
 
 export default function RootLayout({ children }) {
-  const [data, setData] = useState(null);({
-    title: 'Resenha',
-    description: 'Teste 123',
-  });
-
-
   return (
       <html lang="en" className='h-full'>
       <body className='bg-purpleT0 overflow-x-hidden w-screen min-h-screenh-fit text-whiteT1'>
