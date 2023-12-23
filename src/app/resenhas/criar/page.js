@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState } from 'react';
 import ProgressBar from '@/src/components/ProgressBar';
 import Piece01 from './components/piece01';
 import Piece02 from './components/piece02';
@@ -10,6 +9,8 @@ import Piece05 from './components/piece05';
 import Loading from '@/src/components/Loading';
 import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
+
+import React, { useState } from 'react';
 
 export default function NewEvent() {
   const token = Cookies.get('token');
@@ -26,19 +27,15 @@ export default function NewEvent() {
   const [progress, setProgress] = useState(1);
   const maxProgress = 5;
 
-  const makeRequest = async (url, data) => {
-    try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-    }
+  const [partyCode, setPartyCode] = useState("");
 
-    catch (error) {
-        throw new Error(`Request failed: ${error}`);
-    }
+  const makeRequest = async (url, data) => {
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
   };
 
   const handleNextStep = async () => {
-    if (progress + 1 > maxProgress) {  
+    if (progress + 1 == maxProgress) {  
       const details = {
         name,
         address,
@@ -53,21 +50,21 @@ export default function NewEvent() {
         tagsContent
       };
 
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-          request: 'tryToCreateEvent',
-          token: token,
-          details: details
-        });
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        request: 'tryToCreateEvent',
+        token: token,
+        details: details
+      });
 
-        if (!response.error && typeof window !== 'undefined') {
-          window.location.href = '/resenhas/';
-        }
-      } 
-      
-      catch (error) {
-        console.error(error);
+      if (!response.error && typeof window !== 'undefined') {
+        setPartyCode(response.code);
+
+        setProgress(progress + 1);
       }
+    } 
+
+    if (progress + 1 > maxProgress) {  
+      window.location.href = '/resenhas/';
     } 
     
     else {
@@ -103,34 +100,45 @@ export default function NewEvent() {
     setIsForAdults(isChecked);
   };
 
-  const handlePiece02ToggleChange = (isChecked) => {
-    setHasTimeToEnd(!isChecked);
-  };
-
   const handlePiece02StartHourSelect = (startHour) => {
-    setStart(startHour);
-  };
+    const date = new Date(startHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-  const handlePiece02EndHourSelect = (endHour) => {
-    setEnd(endHour);
-  };
+    const formattedStartHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    setStart(formattedStartHour);
+};
+
+const handlePiece02EndHourSelect = (endHour) => {
+    const date = new Date(endHour);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    const formattedEndHour = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    setEnd(formattedEndHour);
+};
 
   const handlePiece02DateSelect = (dateSelected) => {
     if (!(dateSelected instanceof Date && !isNaN(dateSelected))) {
         return;
     }
+
     const date = new Date(dateSelected);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
-  
-    setDateSelected(formattedDate);
-    console.log(formattedDate);
-    console.log(typeof formattedDate);
-};
-  
 
+    setDateSelected(formattedDate);
+};
 
   const handlePiece03GuestsSelect = (guests) => {
     setSelectedGuests(guests);
@@ -149,29 +157,32 @@ export default function NewEvent() {
     setTagsContent(content);
   };
 
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   const renderPiece = () => {
     switch (progress) {
       case 0:
         return <Loading />;
       case 1:
         return (
-            <Piece01
+          <Piece01
             onNameFieldChange={handlePiece01NameChange}
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
           />
-          
         );
       case 2:
         return (
           <Piece02
-          onToggleChange={handlePiece02ToggleChange}
-          onStartHourSelect={handlePiece02StartHourSelect}
-          onEndHourSelect={handlePiece02EndHourSelect}
-          onDateSelect={handlePiece02DateSelect}
-          filled={setIsFilled}
-        />
+            onToggleChange={setHasTimeToEnd}
+            onStartHourSelect={handlePiece02StartHourSelect}
+            onEndHourSelect={handlePiece02EndHourSelect}
+            onDateSelect={handlePiece02DateSelect}
+            filled={setIsFilled}
+          />
         );
       case 3:
         return (<Piece03 
@@ -185,7 +196,7 @@ export default function NewEvent() {
         selectedTags={handlePiece04TagsChange}/>);
       case 5:
         return (<Piece05
-        filled={setIsFilled}
+        filled={setIsFilled} partyCode={partyCode}
         />);
       default:
         return null;
@@ -193,6 +204,7 @@ export default function NewEvent() {
   };
 
   let title, subtitle, buttonText;
+  
   switch (progress) {
     case 0:
       title = '';
@@ -218,12 +230,12 @@ export default function NewEvent() {
     case 4:
       title = 'Algo a acrescentar?';
       subtitle = 'E por fim, adicione uma <b>descrição</b> (como regras, brincadeiras e tals) e <b>tags</b> para sua resenha:';
-      buttonText = 'Próximo';
+      buttonText = 'Criar!';
       break;
     case 5:
       title = 'E que tal uma foto?';
-      subtitle = 'Pronto! Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
-      buttonText = 'Criar!';
+      subtitle = 'Agora é só escolher uma <b>imagem</b> pra ser a cara da sua resenha! (este passo é opcional):';
+      buttonText = 'Concluir!';
       break;
     default:
       title = '';
@@ -233,7 +245,7 @@ export default function NewEvent() {
 
   return (
     <div className='flex flex-col justify-around w-screen h-screen'>
-      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-4'>
+      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-8'>
         <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
           {title}
         </h1>
@@ -244,9 +256,21 @@ export default function NewEvent() {
         <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
           {renderPiece()}
           <div className='flex flex-row justify-between w-full'>
-            {progress > 0 && (
+            {progress > 1 && progress !== 5 && (
               <button className='py-4 px-8' onClick={() => setProgress(progress - 1)}>
                 Voltar
+              </button>
+            )}
+            
+            {progress == 1 && (
+              <button className='py-4 px-8' onClick={handleCancel}>
+                Cancelar
+              </button>
+            )}
+
+            {progress == 5 && (
+              <button className='py-4 px-8' onClick={handleNextStep}>
+               Pular
               </button>
             )}
             <Button

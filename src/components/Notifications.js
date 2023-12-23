@@ -17,62 +17,48 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
     const qs = require('qs');
 
     const [showNotifications, setShowNotifications] = useState(true);
-    const [notifications, setNotifications] = useState(userData.notifications.notifications);
+    const [notifications, setNotifications] = useState([]);
 
-    var updateInterval = 150;
+    var updateInterval = 3;
   
     const makeRequest = async (url, data) => {
-      try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-      } 
-      
-      catch (error) {
-        throw new Error(`Request failed: ${error}`);
-      }
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
     };
   
     const clearUserNotifications = async () => {
-      try {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-          request: 'clearUserNotifications',
-          token: token
-        });
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'clearUserNotifications',
+        token: token
+      });
     };
   
     const seeUserNotifications = async () => {
-      try {
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
           request: 'seeUserNotifications',
           token: token
         });
-      } 
-      
-      catch (error) {
-        console.error(error);
-      }
     };
 
     const getUserData = async () => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getUserData',
-            token: token,
-            requested: 'notifications'
-          });
-          
-          setNotifications(response.notifications);
-        } 
-        
-        catch (error) {
-          console.error(error);
-        }
+        const requested = [
+          "notifications"
+        ];
+
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getUserData',
+          token: token,
+          requested: requested
+        });
+
+        setNotifications(response.notifications.notifications);
     };
+
+    useEffect(() => {
+      if (userData.notifications.notifications.length > 0) {
+        setNotifications(userData.notifications.notifications);
+      } 
+    }, [userData.notifications.notifications]);
   
     useEffect(() => {
       if (isOpen) {
@@ -87,6 +73,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
             clearInterval(interval);
         };
       }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, getUserData, seeUserNotifications, updateInterval]);
   
@@ -115,7 +102,7 @@ const Notifications = ({ isOpen, toggleNotifications, userData }) => {
                             <div className='h-fit w-full gap-4 mt-4 flex flex-col'>
                                 <p>Abaixo você pode conferir todas as suas notificações!</p>
                                 <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                    {showNotifications && notifications.length > 0 ? (
+                                    {showNotifications && notifications && notifications.length > 0 ? (
                                         notifications.map((notification) => (
                                           <div key={notification.id}>
                                               <Notification

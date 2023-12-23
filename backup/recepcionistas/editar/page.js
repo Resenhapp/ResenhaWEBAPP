@@ -14,7 +14,7 @@ export default function EditConcierge() {
     const [isModalOpen, setModalOpen] = useState(false);
 
     const conciergeCurrentName = 'Claudinho bochecha';
-    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName); // initialize new name as current name
+    const [conciergeNewName, setConciergeNewName] = useState(conciergeCurrentName);
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -37,12 +37,10 @@ export default function EditConcierge() {
     }
 
     const handleInputChange = (e) => {
-        setConciergeNewName(e.target.value); // update new name as the user types
+        setConciergeNewName(e.target.value);
     };
 
-    const isFilled = conciergeNewName !== '';  // Check if the field is filled or not
-
-
+    const isFilled = conciergeNewName !== '';
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -52,7 +50,7 @@ export default function EditConcierge() {
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
                             <h1 className='text-2xl font-bold'>Editando recepcionista...</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a href='https://resenha.app/aprenda/recepcionistas'><b>toque aqui</b>.</a></p>
+                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
                             <InputField
@@ -60,7 +58,7 @@ export default function EditConcierge() {
                                 showIcon={true}
                                 placeholder={'Nome do recepcionista'}
                                 action={handleInputChange}
-                                value={conciergeNewName}  // change this line
+                                value={conciergeNewName}
                             />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>

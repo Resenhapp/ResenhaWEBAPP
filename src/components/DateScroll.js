@@ -12,6 +12,7 @@ const DateScroll = ({ onDateSelect }) => {
   const currentDate = new Date();
 
   const dateComponents = [];
+
   for (let i = 0; i < 30; i++) {
     const date = new Date();
     date.setDate(currentDate.getDate() + i);

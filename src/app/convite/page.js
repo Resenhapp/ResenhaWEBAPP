@@ -1,24 +1,25 @@
 'use client'
+import React, { useEffect, useState} from 'react';
 import Image from "next/image";
 import Button from "@/src/components/Button";
 import RoundButton from "@/src/components/RoundButton";
-import { useState } from "react";
 import UserPortrait from "@/src/components/UserPortrait";
-import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
-import Back from "@/src/components/Back";
 
 export default function Invite() {
     const axios = require('axios');
     const qs = require('qs');
 
+    var token = Cookies.get('token');
+
     const [isExpanded, setIsExpanded] = useState(false);
     const [data, setData] = useState(null);
     const [renderedTags, setRenderedTags] = useState([]);
+    const [saved, setSaved] = useState(false);
 
     let code = '';
 
@@ -40,31 +41,28 @@ export default function Invite() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getInviteData',
-                code: code
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getInviteData',
+            code: code
+        });
 
-            setData(response);
+        setData(response);
 
-            return response.tags;
-        }
+        return response.tags;
+    };
 
-        catch (error) {
-            console.error(error);
-        }
+    const handleSaveButton = async () => {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+            request: 'switchSaveEvent',
+            party: code,
+            token: token,
+        });
+        setSaved(!saved);
     };
 
     useEffect(() => {
@@ -112,7 +110,6 @@ export default function Invite() {
             );
         }
 
-        let text = ''
         let shortDescription = description;
 
         if (description.length > 80) {
@@ -122,30 +119,20 @@ export default function Invite() {
         return (
             <>
                 <h1>{shortDescription}</h1>
-                <div
-                    className="flex items-center cursor-pointer text-purpleT5"
-                    onClick={handleToggleDescription}
-                >
-                    <span>Mostrar mais</span>
-                    <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
+                <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
+                    {data.description.length>100 && <span>Mostrar mais</span>}
+                   
+                   {data.description.length>100 && <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
                         <Vector vectorname={'verticalArrow02'} />
-                    </div>
+                    </div>}
                 </div>
             </>
         );
     };
 
-    const isIOS = () => {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
-    };
-
-    const getAppleMapsURL = (address) => {
-        var newAddress = encodeURIComponent(address);
-        return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
-    };
-
     const getGoogleMapsURL = (address) => {
         var newAddress = encodeURIComponent(address);
+
         return `https://www.google.com/maps/search/?api=1&query=${newAddress}`;
     };
 
@@ -158,10 +145,6 @@ export default function Invite() {
 
         if (navigator.share) {
             navigator.share(shareData)
-                .then(() => {
-                })
-                .catch((error) => {
-                });
         }
 
         else {
@@ -178,14 +161,28 @@ export default function Invite() {
         }
     };
 
+    const ogTitle = title;
+    const ogDescription = description;
+    const ogURL = `https://resenha.app/convite?c=${code}`;
+
     return (
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
-                <div className="absolute z-[4] top-4 left-4">
-                    <button onClick={() => {window.location.href = `https://www.resenha.app/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                {token && (
+                    <div className="absolute z-[4] top-4 left-4">
+                        <button onClick={() => {window.location.href = `https://www.resenha.app/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
                         <Vector vectorname={'arrowLeft01'} />
-                    </button>
-                </div>
+                        </button>
+                    </div>
+                )}
+                {token && (
+                    <div className="absolute z-[4] top-4 right-4">
+                        <button onClick={handleSaveButton} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                        { saved && <Vector vectorname={'bookmarkOutlined02'} /> }
+                        { !saved && <Vector vectorname={'bookmarkFill02'} /> }
+                        </button>
+                    </div>
+                )}
                 <div className="relative">
                     <Image
                         src={`https://media.resenha.app/r/${hash}.png`}
@@ -207,7 +204,7 @@ export default function Invite() {
                                 {title}
                             </h1>
                             <p className="text-sm mb-4 text-purpleT5">
-                                Por: <b>{host}</b>
+                                Por: <b>{host.name}</b>
                             </p>
                         </div>
                         <div className="p-2 bg-whiteT1 flex justify-center items-center rounded-full px-4">
@@ -250,7 +247,7 @@ export default function Invite() {
                                 </h1>
                                 <h1>
                                     <a
-                                        href={isIOS() ? getAppleMapsURL() : getGoogleMapsURL()}
+                                        href={getGoogleMapsURL(address)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
@@ -304,6 +301,7 @@ export default function Invite() {
                                     />
                                 </div>
                             </div>
+                            
                             <div className="flex flex-col mb-4 w-full">
                                 {users.length > 0 && (
                                     <div>
@@ -334,6 +332,6 @@ export default function Invite() {
                     </div>
                 </div>
             </section>
-        </div >
+        </div> 
     );
 }

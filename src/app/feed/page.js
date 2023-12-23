@@ -9,10 +9,11 @@ import FeedDualButton from '@/src/components/FeedDualButton';
 import PartyBanner from '@/src/components/PartyBanner';
 import Map from '@/src/components/Map';
 import Modal from '@/src/components/Modal';
+import PlacesAutocomplete_Filter from '@/src/components/PlacesAutocomplete_Filter';
 import Tag from '@/src/components/Tag';
 import Cookies from 'js-cookie';
-
-import { tagsData } from "@/src/components/tagsData"
+import { Loader } from '@googlemaps/js-api-loader';
+import { tagsData } from "@/src/components/tagsData";
 import { interestsData } from '@/src/components/interestsData';
 
 export default function Feed() {
@@ -38,6 +39,8 @@ export default function Feed() {
 
   const [eventTags, setEventTags] = useState([]);
   const [tempEventTags, setTempEventTags] = useState(eventTags);
+  const [placesService, setPlacesService] = useState(null);
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
 
   const [userPosition, setUserPosition] = useState([-15.7801, -47.9292]);
 
@@ -54,95 +57,85 @@ export default function Feed() {
   }
 
   const handleSaveButton = async (party) => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-        request: 'switchSaveEvent',
-        party: party.code,
-        token: token,
-      });
-    }
-
-    catch (error) {
-        console.error(error);
-    }
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+      request: 'switchSaveEvent',
+      party: party.code,
+      token: token,
+    });
   };
 
   const setImpressionCount = async (party) => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-        request: 'tryToClickOnEvent',
-        party: party.code,
-        token: token
-      });
-    }
-
-    catch (error) {
-      console.error(error);
-    }
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+      request: 'tryToClickOnEvent',
+      party: party.code,
+      token: token
+    });
   };
 
   const makeRequest = async (url, data) => {
-    try {
-        const response = await axios.post(url, qs.stringify(data));
-        return response.data;
-    }
-
-    catch (error) {
-        throw new Error(`Request failed: ${error}`);
-    }
+      const response = await axios.post(url, qs.stringify(data));
+      return response.data;
   };
+
+  const handleAddressSelect = (location) => {
+    setInputValue(location.address);
+};
+
+
+useEffect(() => {
+  const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+      version: 'weekly',
+      libraries: ['places'],
+  });
+
+  loader.importLibrary('places')
+      .then(() => {
+          const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+          setPlacesService(service);
+          setIsMapsLoaded(true);
+      }).catch(() => { setIsMapsLoaded(false); });
+}, []);
 
   const fetchData = async () => {
     setLoading(true);
   
-    try {
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-      
-          var newPosition = [position.coords.latitude, position.coords.longitude];
-      
-          const address = await reverseGeocode(newPosition[0], newPosition[1]);
-      
-          setInputValue(address);
-      
-          var filterParameters = {
-            "coordinates": newPosition,
-            "radius": inputRadiusValue
-          };
-      
-          try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getFeedData',
-              token: token,
-              filterParameters: filterParameters
-            });
-      
-            setData(response);
-          } 
-          
-          catch (error) {
-            console.error("Error while fetching feed data:", error);
-          }
-        } 
-        
-        catch (error) {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-            request: 'getFeedData',
-            token: token
-          });
-      
-          setData(response);
-        }
-      }
-    } 
+    if (navigator.geolocation) {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
     
-    catch (error) {
-      console.error(error);
-    }
+        var newPosition = [position.coords.latitude, position.coords.longitude];
+    
+        const address = await reverseGeocode(newPosition[0], newPosition[1]);
+    
+        setInputValue(address);
+    
+        var filterParameters = {
+          "coordinates": newPosition,
+          "radius": inputRadiusValue
+        };
+    
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getFeedData',
+          token: token,
+          filterParameters: filterParameters
+        });
   
+        setData(response);
+      } 
+      
+      catch (error) {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+          request: 'getFeedData',
+          token: token
+        });
+    
+        setData(response);
+      }
+    }
+
     setLoading(false);
   };
 
@@ -151,26 +144,20 @@ export default function Feed() {
 
     setLoading(true);
 
-    try {
-      var filterParameters = {
-        "address": inputValue,
-        "radius": inputRadiusValue,
-        "tags": tempEventTags,
-        "vibe": tempUserInterests,
-      };
+    var filterParameters = {
+      "address": inputValue,
+      "radius": inputRadiusValue,
+      "tags": tempEventTags,
+      "vibe": tempUserInterests,
+    };
 
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        filterParameters: filterParameters
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      filterParameters: filterParameters
+    });
 
-      setData(response);
-    }
-
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };
@@ -182,19 +169,13 @@ export default function Feed() {
   const searchFeedData = async searchTerm => {
     setLoading(true);
 
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        searchTerm: searchTerm
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      searchTerm: searchTerm
+    });
 
-      setData(response);
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };
@@ -202,19 +183,13 @@ export default function Feed() {
   const fetchHypedParties = async searchTerm => {
     setLoading(true);
 
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'getFeedData',
-        token: token,
-        hype: true
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'getFeedData',
+      token: token,
+      hype: true
+    });
 
-      setData(response);
-    } 
-    
-    catch (error) {
-      console.error(error);
-    }
+    setData(response);
 
     setLoading(false);
   };
@@ -260,10 +235,14 @@ export default function Feed() {
         return tag;
       }
     });
+    
     setAllTags(updatedTags);
+
     if (updatedTags.find(tag => tag.id === tagId).selected) {
       setTempEventTags([...tempEventTags, tagId]);
-    } else {
+    } 
+    
+    else {
       setTempEventTags(tempEventTags.filter(tagIdTemp => tagIdTemp !== tagId));
     }
   };
@@ -274,6 +253,7 @@ export default function Feed() {
           return { ...interest, selected: isSelected };
       }).sort((a, b) => b.selected - a.selected)
   );
+  
 
   const toggleEditInterestsPageOpen = () => {
       if (isEditInterestsPageOpen) {
@@ -324,7 +304,6 @@ export default function Feed() {
 
   useEffect(() => {
     fetchData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -345,14 +324,18 @@ export default function Feed() {
   return (
     <div className='flex flex-col w-screen h-screen'>
       <EditInfoPage isOpen={isEditFilterPageOpen} pageTitle={'Filtros'} togglePage={toggleEditFilterPageOpen} saveAction={filterFeedData}>
-        <div className='w-full flex flex-col gap-2'>
+        <div className='w-full flex flex-col max-w-md gap-2'>
           <p>Filtre a resenha ideal para você!</p>
-          <div className='flex flex-col gap-4 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
+          <div className='flex flex-col gap-2 bg-purpleT1 bg-opacity-30 px-4 py-4 rounded-2xl'>
             Local:
-            <input
+            {placesService && isMapsLoaded && (
+              <PlacesAutocomplete_Filter
               placeholder='Região'
               className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-              value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+              setSelected={handleAddressSelect}
+              defaultValue={inputValue}
+              placesService={placesService}/>
+            )}
             <div className='flex flex-col'>
               Num raio de:
               <div className='flex flex-row'>
@@ -422,7 +405,7 @@ export default function Feed() {
             <div className='w-full flex flex-col'>
               <div className='w-full align-center justify-between items-center mb-4 flex flex-row'>
                 <div className="flex flex-col mb-4 gap-4 w-full">
-                  <SearchInput placeholder="Busque por nome ou tag" onDelayedChange={searchFeedData} />
+                  <SearchInput placeholder="Busque pelo nome" onDelayedChange={searchFeedData} />
                   <FeedDualButton leftButtonText={"Todas"} rightButtonText={"Em alta"}
                     onRightClick={handleHypedParties} onLeftClick={handleAllParties}
                     onFilterClick={toggleEditFilterPageOpen} />

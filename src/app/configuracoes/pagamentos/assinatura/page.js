@@ -1,9 +1,12 @@
 'use client'
-import React, { useState } from 'react';
+
 import PageHeader from '@/src/components/PageHeader';
 import SignatureSelection from '@/src/components/SignatureSelection';
 
+import React, { useState } from 'react';
+
 export default function Signature() {
+    const [selectedCard, setSelectedCard] = useState(0);
 
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
@@ -11,14 +14,11 @@ export default function Signature() {
         }
     };
 
-    const [selectedCard, setSelectedCard] = useState(0);
-
     const handleCheck = (index) => (isChecked) => {
         if (isChecked) {
             setSelectedCard(index);
             return true;
         } else if (index === selectedCard) {
-            alert("Você precisa ter ao menos uma assinatura selecionada");
             return false;
         }
         return true;
@@ -32,10 +32,8 @@ export default function Signature() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                <SignatureSelection signatureType={1}
-                                    startSelected={selectedCard === 0} onCheck={handleCheck(0)} />
-                                {/* <SignatureSelection signatureType={2}
-                                    startSelected={selectedCard === 1} onCheck={handleCheck(1)} /> */}
+                                <SignatureSelection signatureType={1} startSelected={selectedCard === 0} onCheck={handleCheck(0)} />
+                                {/* <SignatureSelection signatureType={2} startSelected={selectedCard === 1} onCheck={handleCheck(1)} /> */}
                             </div>
                         </div>
                     </div>

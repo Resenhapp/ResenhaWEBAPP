@@ -1,23 +1,12 @@
 import Button from '@/src/components/Button';
-import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Vector from '@/src/components/Vector';
 
-export default function Confirmation({
-  PartyImage,
-  PartyName,
-  PartyOwner,
-  PartyDateDay,
-  PartyDay,
-  PartyMonth,
-  PartyHour,
-  PartyAddress,
-  InviteCode,
-  buttonsVisible,
-  InviteQrCodeUrl,
-  save,
-}) {
+import React, { useEffect, useState } from 'react';
+
+export default function Confirmation({ PartyImage, PartyName, PartyOwner, PartyDateDay, PartyMonth, PartyHour, PartyAddress, InviteCode, buttonsVisible, save,}) {
   const [visible, setVisible] = useState(true);
+
   useEffect(() => {
     setVisible(buttonsVisible);
   }, [buttonsVisible]);
@@ -42,7 +31,7 @@ export default function Confirmation({
                     </div>
                     <div className="ml-3">
                       <h1 className="font-bold text-xl h-fit text-blackT1">{PartyName}</h1>
-                      <h3 className="font-bold text-sm h-fit text-blackT1">Por: {PartyOwner}</h3>
+                      <h3 className="font-bold text-sm h-fit text-blackT1">Por: {PartyOwner.name}</h3>
                     </div>
                   </div>
                   <div className="flex flex-row gap-4 mt-4">
@@ -73,7 +62,7 @@ export default function Confirmation({
                 </div>
                 <div className="flex items-center mt-8 mb-4 justify-center">
                   <img
-                    src={InviteQrCodeUrl}
+                    src={"https://chart.googleapis.com/chart?chs=220x220&cht=qr&chl="+InviteCode}
                     width={210}
                     height={210}
                     alt="QR Code"

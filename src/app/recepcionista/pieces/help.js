@@ -1,8 +1,6 @@
 'use client'
-import Vector from "@/src/components/Vector"
-import { useState } from "react"
-import Accordion from "@/src/components/Accordion"
 
+import Accordion from "@/src/components/Accordion"
 
 export default function Help({ returnToHome }) {
     const goBack = () => {

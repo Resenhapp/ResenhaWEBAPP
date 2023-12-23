@@ -1,56 +1,43 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import NotificationBase from '@/src/components/NotificationBase';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
+import React, { useState, useEffect } from 'react';
+
 export default function BuyHistory() {
-
     const token = Cookies.get('token');
-
-    useEffect(() => {
-        if (!token) {
-            if (typeof window !== 'undefined') { 
-                window.location.href = '/login';
-            }
-        }
-    }, [token]);
 
     const axios = require('axios');
     const qs = require('qs');
 
     const [data, setData] = useState(null);
 
-    const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
+    if (!token) {
+        if (typeof window !== 'undefined') { 
+            window.location.href = '/login';
         }
+    }
 
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+    const makeRequest = async (url, data) => {
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -72,15 +59,19 @@ export default function BuyHistory() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                {purchases.map((purchase) => 
+                            {purchases.length > 0 ? (
+                                purchases.map((purchase) => (
                                     <NotificationBase
-                                        key={purchase.id}
-                                        imageUrl={purchase.hash ? `https://media.resenha.app/r/${purchase.hash}.png` : undefined}
-                                        title={'Compra de entrada'}
-                                        description={`Você pagou R$ ${purchase.price} pela entrada da ${purchase.name}. Seu código é ${purchase.code}`}
-                                        date={purchase.date}
+                                    key={purchase.id}
+                                    imageUrl={purchase.hash ? `https://media.resenha.app/r/${purchase.hash}.png` : undefined}
+                                    title={'Compra de entrada'}
+                                    description={`Você pagou R$ ${purchase.price} pela entrada da ${purchase.name}. Seu código é ${purchase.code}`}
+                                    date={purchase.date}
                                     />
-                                )}
+                                ))
+                                ) : (
+                                <p>Você ainda não realizou pagamentos 😔</p>
+                            )}
                             </div>
                         </div>
                     </div>

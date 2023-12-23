@@ -7,7 +7,6 @@ const SessionNotification = ({ title, description, hour, date }) => {
     const baseFlexClasses = 'flex flex-row items-center gap-1';
 
     const handleButton = () => {
-        // Lógica do botão
     };
 
     return (

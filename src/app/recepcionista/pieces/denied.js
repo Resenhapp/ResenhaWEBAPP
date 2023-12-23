@@ -1,6 +1,6 @@
 'use client'
+
 import Vector from "@/src/components/Vector"
-import { useState } from "react"
 
 export default function Denied({ returnToHome }) {
     const goBack = () => {

@@ -1,30 +1,31 @@
 'use client'
-import React, {useState} from 'react';
 import PageHeader from '@/src/components/PageHeader';
 import InputFieldPurple from '@/src/components/InputFieldPurple';
 import ConfigDropDown from '@/src/components/ConfigDropDown';
 import EditInfoPage from '@/src/components/EditInfoPage';
 import Cookies from 'js-cookie';
 
+import React, {useEffect, useState} from 'react';
+
 export default function PasswordConfig() {
     const token = Cookies.get('token');
-    
-    if (!token) {
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
 
     const axios = require('axios');
     const qs = require('qs');
 
-    const options = ['Desabilitado']
+    const options = ['Desabilitado', 'Habilitado']
     var initialPassword = '•••••••'
     
-    const [method, setMethod] = useState('');
     const [isEditPasswordPageOpen, setIsEditPasswordPageOpen] = useState(false);
     const [password, setPassword] = useState(initialPassword);
     const [tempPassword, setTempPassword] = useState(initialPassword);
+
+    useEffect(() => {
+        if (!token) {
+            // Redirect to login page on the client side
+            window.location.href = '/login';
+        }
+    }, [token]);
 
     const handleSelectChange = (event) => {
         setMethod(event.target.value);
@@ -46,49 +47,31 @@ export default function PasswordConfig() {
             password: tempPassword
         };
     
-        try {
-            const response = await sendEditRequest(data);
-      
-            if (response.token) {
-                Cookies.set('token', response.token);
-            }
+        const response = await sendEditRequest(data);
     
-            if (!response.error) {
-                toggleEditPasswordPageOpen();
-            }
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.token) {
+            Cookies.set('token', response.token);
+        }
+
+        if (!response.error) {
+            toggleEditPasswordPageOpen();
         }
     };
 
     const [data, setData] = useState(null);
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const sendEditRequest = async (data) => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'editUserData',
             token: token,
             data: data
-          });
-      
-          return response;
-        } 
-        
-        catch (error) {
-          console.error(error);
-        }
+        });
+    
+        return response;
     };
 
     return (
@@ -96,13 +79,13 @@ export default function PasswordConfig() {
             <PageHeader isBack={true} checker={() => { null }} pageTitle="Config. de senha" />
             <EditInfoPage
                 isOpen={isEditPasswordPageOpen}
-                pageTitle={'Nome de usuário'}
+                pageTitle={'Alterar a senha'}
                 togglePage={toggleEditPasswordPageOpen}
                 saveAction={savePassword}>
                 <div className='w-full'>
                     <input
                         className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                        placeholder='Nome de usuário'
+                        placeholder='Nova senha'
                         value={tempPassword}
                         onChange={handlePasswordChange}
                     />

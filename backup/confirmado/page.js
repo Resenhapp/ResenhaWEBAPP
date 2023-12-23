@@ -1,10 +1,5 @@
 import Button from '@/src/components/Button';
 
-export const metadata = {
-    title: 'Resenha.app • E-mail confirmado',
-    description: 'Venha fazer suas resenhas!',
-}
-
 export default function Confirmed() {
     return (
         <div className="flex flex-col items-center justify-center h-screen px-4">

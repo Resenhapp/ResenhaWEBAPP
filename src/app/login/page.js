@@ -5,10 +5,11 @@ import PasswordField from '@/src/components/PasswordField';
 import Button from '@/src/components/Button';
 import Toggle from '@/src/components/Toggle';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Vector from '@/src/components/Vector';
 import Loading from "@/src/components/Loading";
+
+import React, { useState, useEffect } from 'react';
 
 export default function Login() {
   var token = Cookies.get('token');
@@ -17,6 +18,19 @@ export default function Login() {
   const qs = require('qs');
 
   const [loading, setLoading] = useState(false);
+  const [errorIndex, setErrorIndex] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
+
+  const errors = [
+    "Ocorreu um erro desconhecido.",
+    "Nome de usuário muito curto.",
+    "Nome de usuário inválido.",
+    "Credenciais inválidas.",
+    "Nome de usuário não pode ser vazio."
+  ];
 
   const handleNavigation = (pageToGo) => {
     if (typeof window !== 'undefined') {
@@ -58,20 +72,6 @@ export default function Login() {
     }
   };
 
-  const [errorIndex, setErrorIndex] = useState(null);
-  const errors = [
-    "Ocorreu um erro desconhecido.", // 0
-    "Nome de usuário muito curto.", // 1
-    "Nome de usuário inválido.", // 2
-    "Credenciais inválidas.", // 3
-    "Nome de usuário não pode ser vazio.", // 4
-  ];
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
-  const [isLoginErrorVisible, setIsLoginErrorVisible] = useState(true);
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -85,39 +85,34 @@ export default function Login() {
   };
 
   const handleClick = async () => {
-    try {
-      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-        request: 'tryToAuthenticate', 
-        email: email, 
-        password: password 
-      });
+    const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+      request: 'tryToAuthenticate', 
+      email: email, 
+      password: password 
+    });
 
-      if (response.token) {
-        const expirationDate = new Date();
+    if (response.token) {
+      const expirationDate = new Date();
 
-        if (remember) {
-          expirationDate.setDate(expirationDate.getDate() + 30);
-        } 
-        
-        else {
-          expirationDate.setDate(expirationDate.getDate() + 3);
-        }
+      if (remember) {
+        expirationDate.setDate(expirationDate.getDate() + 30);
+      } 
+      
+      else {
+        expirationDate.setDate(expirationDate.getDate() + 3);
+      }
 
-        Cookies.set('token', response.token, { expires: expirationDate });
+      Cookies.set('token', response.token, { expires: expirationDate });
 
-        if (typeof window !== 'undefined') {
-          window.location.href = '/feed/';
-        }
+      if (typeof window !== 'undefined') {
+        window.location.href = '/feed/';
       }
     }
-    
-    catch (error) {
-      console.error(error);
-    }
+
+    document.documentElement.requestFullscreen();
   };
 
   const makeRequest = async (url, data) => {
-    try {
       const response = await axios.post(url, qs.stringify(data));
 
       if (response.data && response.data.error) {
@@ -135,18 +130,15 @@ export default function Login() {
             setErrorIndex(2);
             break;
           default:
-            setErrorIndex(0);  // Set to 0 for an unknown error
+            setErrorIndex(0);
             break;
         }
-        setIsLoginErrorVisible(true); // Set the error to visible when an error occurs
+        setIsLoginErrorVisible(true);
       }
 
-      else {return response.data;}
-    } 
-    
-    catch (error) {
-      throw new Error(`Request failed: ${error}`);
-    }
+      else {
+        return response.data
+      }
   };
   
   useEffect(() => {

@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
 import EditButton from '@/src/components/EditButton';
 import NumberDisplay from '@/src/components/NumberDisplay';
 import Tag from '@/src/components/Tag';
@@ -13,21 +12,14 @@ import SendMessageButton from '@/src/components/SendMessageButton';
 import ProfileEvent from '@/src/components/ProfileEvent';
 import Comment from '@/src/components/Comment';
 
+import React, { useState, useEffect } from 'react';
+
 import { interestsData } from '@/src/components/interestsData';
 
 export default function Profile() {
     var token = Cookies.get('token');
 
     let urlParams = new URLSearchParams();
-    
-    if (!token && typeof window !== 'undefined') {
-        window.location.href = '/login';
-    }
-    
-    if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        var profile = urlParams.get('u');
-    }
 
     const axios = require('axios');
     const qs = require('qs');
@@ -38,6 +30,15 @@ export default function Profile() {
     const [isMutual, setIsMutual] = useState(false);
     const [followersCount, setFollowersCount] = useState(data ? data.followers : 0);
 
+    if (!token && typeof window !== 'undefined') {
+        window.location.href = '/login';
+    }
+    
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        var profile = urlParams.get('u');
+    }
+
     const handleNavigation = (pageToGo) => {
         if (typeof window !== 'undefined') {
             window.location.href = `/${pageToGo}`;
@@ -45,36 +46,24 @@ export default function Profile() {
     };
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                profile: profile
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            profile: profile
+        });
 
-            setData(response);
+        setData(response);
 
-            setIsFollowing(response.mutual.follower);
-            setFollowersCount(response.followers.followed);
+        setIsFollowing(response.mutual.follower);
+        setFollowersCount(response.followers.followed);
 
-            if (response.mutual.follower == true && response.mutual.following == true) {
-                setIsMutual(true);
-            }
-        } 
-        
-        catch (error) {
-            console.error(error);
+        if (response.mutual.follower == true && response.mutual.following == true) {
+            setIsMutual(true);
         }
     };
 
@@ -87,17 +76,11 @@ export default function Profile() {
 
         setFollowersCount((prevCount) => parseInt(prevCount) + (follower ? 1 : -1));
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'switchFollowUser',
-                token: token,
-                profile: profile
-            });
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'switchFollowUser',
+            token: token,
+            profile: profile
+        });
     };
 
     useEffect(() => {
@@ -115,6 +98,8 @@ export default function Profile() {
     var { name, username, followers, about, interests, comments, verified, hash, mine, parties, mutual } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
+
+    const uniqueParties = Array.from(new Set(parties.went.map(party => party.code))).map(code => parties.went.find(party => party.code === code));
 
     return (
         <div className='flex flex-col w-screen h-screen'>
@@ -156,10 +141,14 @@ export default function Profile() {
                                 </div>
 
                                 {activeTab === 'Sobre' && (
-                                    <div> {/* CONTEUDO DE SOBRE */}
+                                    <div>
                                         <div className='w-full'>
-                                            <h1 className='font-bold text-lg'>Resumo</h1>
+                                        <h1 className='font-bold text-lg'>Resumo</h1>
+                                        {about && about.trim() !== "" ? (
                                             <p>{about}</p>
+                                        ) : (
+                                            <p>Ainda não decidi meu resumo 🥶</p>
+                                        )}
                                         </div>
                                         <div className='w-full mt-4'>
                                             {interests.length > 0 && (
@@ -189,67 +178,77 @@ export default function Profile() {
                                 )}
 
                                 {activeTab === 'Resenhas' && (
-                                    <div>
-                                        {/* CONTEUDO DE RESENHAS */}
-                                        <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                        {parties.went.some((party) => party.used !== 1) && (
-                                            <div className='text-purpleT5'>
-                                                Vou
-                                            </div>
-                                        )}
-                                        {parties.went.map((party) => (
-                                            party.used !== 1 ? (
-                                            <ProfileEvent
-                                                key={party.hash}
-                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                                                partyGuests={party.confirmed}
-                                                partyDate={party.date}
-                                                partyHour={party.start}
-                                                partyName={party.name}
-                                                eventCode={party.code}
-                                            />
-                                            ) : null
-                                        ))}
-                                        {parties.went.some((party) => party.used === 1) && (
-                                            <div className='text-purpleT5'>
-                                                Fui
-                                            </div>
-                                        )}
-                                        {parties.went.map((party) => (
-                                            party.used === 1 ? (
-                                            <ProfileEvent
-                                                key={party.hash}
-                                                imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                                                partyGuests={party.confirmed}
-                                                partyDate={party.date}
-                                                partyHour={party.time}
-                                                partyName={party.name}
-                                                eventCode={party.code}
-                                            />
-                                            ) : null
-                                        ))}
+                                <div>
+                                    <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
+                                    {uniqueParties.some(party => party.used !== 1) && (
+                                        <div className='text-purpleT5'>
+                                            Vou
                                         </div>
+                                        )}
+                                        {uniqueParties.map((party) => (
+                                        party.used !== 1 ? (
+                                            <ProfileEvent
+                                            key={party.hash}
+                                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                            partyGuests={party.confirmed}
+                                            partyDate={party.date}
+                                            partyHour={party.start}
+                                            partyName={party.name}
+                                            eventCode={party.code}
+                                            />
+                                        ) : null
+                                        ))}
+                                        {uniqueParties.some(party => party.used === 1) && (
+                                        <div className='text-purpleT5'>
+                                            Fui
+                                        </div>
+                                        )}
+                                        {uniqueParties.map((party) => (
+                                        party.used === 1 ? (
+                                            <ProfileEvent
+                                            key={party.hash}
+                                            imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
+                                            partyGuests={party.confirmed}
+                                            partyDate={party.date}
+                                            partyHour={party.time}
+                                            partyName={party.name}
+                                            eventCode={party.code}
+                                            />
+                                        ) : null
+                                    ))}
+                                    {!(parties.went.some((party) => party.used !== 1) || parties.went.some((party) => party.used === 1)) && (
+                                        <div className='text-base'>
+                                        Ainda não participei de resenhas 😢
+                                        </div>
+                                    )}
                                     </div>
+                                </div>
                                 )}
 
                                 {activeTab === 'Comentários' && (
                                     <div>
-                                        <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
-                                        {comments.map((comment) => (
-                                            <div key={comment.id}>
-                                                <Comment
-                                                    userName={comment.name}
-                                                    imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
-                                                    rate={parseInt(comment.rate)}
-                                                    comment={comment.content}
-                                                    day={parseInt(comment.date.split('/')[0])}
-                                                    month={parseInt(comment.date.split('/')[1])}
-                                                    userUrl={`https://resenha.app/perfil?u=${comment.username}`}
-                                                />
-                                            </div>
-                                        ))}
+                                    <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
+                                      {comments.length > 0 ? (
+                                        comments.map((comment) => (
+                                          <div key={comment.id}>
+                                            <Comment
+                                              userName={comment.name}
+                                              imageUrl={`https://media.resenha.app/u/${comment.hash}.png`}
+                                              rate={parseInt(comment.rate)}
+                                              comment={comment.content}
+                                              day={parseInt(comment.date.split('/')[0])}
+                                              month={parseInt(comment.date.split('/')[1])}
+                                              userUrl={`https://resenha.app/perfil?u=${comment.username}`}
+                                            />
+                                          </div>
+                                        ))
+                                      ) : (
+                                        <div className='text-base'>
+                                          Por enquanto ninguém comentou por aqui 😢
                                         </div>
+                                      )}
                                     </div>
+                                  </div>
                                 )}
                             </div>
                         </div>

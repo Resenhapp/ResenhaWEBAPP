@@ -1,9 +1,5 @@
 import Button from '@/src/components/Button';
 
-export const metadata = {
-    title: 'Resenha.app • E-mail enviado',
-    description: 'Venha fazer suas resenhas!',
-}
 
 export default function Sent() {
     return (

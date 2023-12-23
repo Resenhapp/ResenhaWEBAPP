@@ -9,6 +9,7 @@ const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax
             window.location.href = `/${pageToGo}`;
         }
     };
+    
     return (
         <section className="flex content-center justify-center flex-col items-center w-full h-fit max-w-md p-4">
             <div className=' h3 w-full flex'>
@@ -19,7 +20,7 @@ const MyEventsDisplay = ({eventName, eventDate, eventHour, eventGuests, eventMax
                 </div>
             </div>
             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
-                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
+                <Button label={'Nova resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
         </section>
     )

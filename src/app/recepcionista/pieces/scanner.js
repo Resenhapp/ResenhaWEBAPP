@@ -1,16 +1,11 @@
 'use client'
+
 import { useState } from 'react';
 import { QrReader } from 'react-qr-reader';
-// import { AudioHTMLAttributes } from 'react';
 
 export default function Scanner({typeCode, tryToAllow }) {
     const [data, setData] = useState('No result');  
     const [code, setCode] = useState('');
-
-    // const soundx = new Audio("https://media.resenha.app/s/entrada.mp3");
-    // const soundy = new Audio("https://media.resenha.app/s/invalido.mp3");
-    // const soundz = new Audio("https://media.resenha.app/s/proibida.mp3");
-    // const beep = new Audio("https://media.resenha.app/s/beep.mp3");
 
     return (
         <div className='flex flex-col justify-center items-center content-center my-4'>

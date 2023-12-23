@@ -22,9 +22,7 @@ const Menu = ({ isOpen, toggleMenu, userData }) => {
                     </svg>
                 </button>
             </div>
-            <section className="flex flex-col flex-start items-center w-full max-w-md p-4 gap-4">
-                {/* Content */}
-            </section>
+            <section className="flex flex-col flex-start items-center w-full max-w-md p-4 gap-4"></section>
             <div className="flex flex-col items-center justify-center px-4">
                 <section className="flex w-full max-w-md p-4">
                     <div className='h3 w-full flex'>
@@ -38,7 +36,7 @@ const Menu = ({ isOpen, toggleMenu, userData }) => {
                                 <Button label={'Perfil'} icon={'user'} action={() => handleNavigation(`perfil?u=${username}`)} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                             <div className='mt-10'>
-                                <Button label={'Nova Resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='left' height={1} width={1} textAlign='left' />
+                                <Button label={'Nova resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='left' height={1} width={1} textAlign='left' />
                             </div>
                         </div>
                     </div>

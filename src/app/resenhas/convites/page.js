@@ -1,16 +1,12 @@
 'use client'
 
 import Button from '@/src/components/Button';
-import Back from '@/src/components/Back';
-import PartyPortrait from '@/src/components/PartyPortrait';
-import DefaulEventImage from '@/assets/images/default.jpg'
 import PageHeader from '@/src/components/PageHeader';
 import MyParty from '@/src/components/MyParty';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
 
-import { useState } from "react";
-import { useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function MyInvites() {
     const token = Cookies.get('token');
@@ -25,29 +21,34 @@ export default function MyInvites() {
     const [data, setData] = useState(null);
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-  
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
   
     const fetchData = async () => {
-        try {
-          const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-              request: 'getUserData',
-              token: token
-          });
-          
-          setData(response);
-        } 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token
+        });
         
-        catch (error) {
-          console.error(error);
-        }
+        setData(response);
+    };
+
+    const handleOpenClick = (party) => {
+      window.location.href = `/convite?c=${party.code}`;
+    };
+
+    const handleCopyClick = async (party) => {
+      const partyUrl = `https://resenha.app/convite?c=${party.code}`;
+
+      const copyData = {
+          text: `Vou colar nessa resenha! Bora junto? `,
+          url: `${partyUrl}`,
+      };
+
+      const fullTextToCopy = `${copyData.text}${copyData.url}`;
+
+      await navigator.clipboard.writeText(fullTextToCopy);
     };
 
     useEffect(() => {
@@ -63,8 +64,6 @@ export default function MyInvites() {
         );
     }
 
-    var { partiesWent } = data
-
     return (
         <div className='flex flex-col w-screen h-screen'>
           <PageHeader pageTitle={'Seus convites'} isBack={true} checker={() => null} userData={data} />
@@ -77,15 +76,19 @@ export default function MyInvites() {
                   </div>
                   <div className='w-full h-full flex flex-col'>
                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                      {partiesWent.map((party) => (
+                      {data.parties.went.map((party) => (
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
                             partyCode={party.token}
-                            partyGuests={party.confirmed}
+                            viewChat={()=>(window.location.href = `/chat?r=${party.code}`)}
                             partyDate={party.date}
-                            partyHour={party.time}
+                            partyHour={party.start}
                             partyName={party.name}
+                            partyPaid={party.paid}
+                            shareParty={()=>{handleCopyClick(party)}}
+                            viewParty={()=>{handleOpenClick(party)}}
+                            viewReceipt={()=>(window.location.href = `/resenhas/comprovante?r=${party.code}&c=${party.token}`)}
                           />
                         </div>
                       ))}
@@ -95,7 +98,7 @@ export default function MyInvites() {
               </div>
             </section>
             <div className="flex flex-col mb-4 w-[90%] mt-8 items-center justify-center content-center">
-              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => { }} iconSide='right' height={1} width={1} textAlign='center' />
+              <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => {window.location.href="/feed"}} iconSide='right' height={1} width={1} textAlign='center' />
             </div>
           </div>
         </div>

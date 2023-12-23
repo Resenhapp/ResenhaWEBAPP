@@ -1,7 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
 import Vector from './Vector';
-import Link from 'next/link'; // Adicione esta linha
 
 const Comment = ({ userName, userUrl, rate, month, day, comment, imageUrl }) => {
     const h3Classes = 'text-[12px]';

@@ -3,11 +3,10 @@
 import MoneyDisplay from '@/src/components/MoneyDisplay';
 import Button from '@/src/components/Button';
 import PageHeader from '@/src/components/PageHeader';
-import axios from 'axios';
-import { useState } from "react";
-import { useEffect } from 'react';
 import Loading from "@/src/components/Loading";
 import Cookies from 'js-cookie';
+
+import { useState, useEffect } from "react";
 
 export default function Wallet() {
     const token = Cookies.get('token');
@@ -22,14 +21,8 @@ export default function Wallet() {
     const [data, setData] = useState(null);
 
     const makeRequest = async (url, data) => {
-        try {
-            const response = await axios.post(url, qs.stringify(data));
-            return response.data;
-        }
-
-        catch (error) {
-            throw new Error(`Request failed: ${error}`);
-        }
+        const response = await axios.post(url, qs.stringify(data));
+        return response.data;
     };
 
     const fetchData = async () => {
@@ -40,23 +33,18 @@ export default function Wallet() {
             "notifications"
         ];
 
-        try {
-            const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
-                request: 'getUserData',
-                token: token,
-                requested: requested
-            });
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'getUserData',
+            token: token,
+            requested: requested
+        });
 
-            setData(response);
-        } 
-        
-        catch (error) {
-            console.error(error);
-        }
+        setData(response);
     };
 
     useEffect(() => {
         fetchData();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -77,9 +65,9 @@ export default function Wallet() {
     var { balances } = data;
 
     return (
-        <div className='flex flex-col w-screen h-screen '>
+        <div className='flex flex-col w-screen h-screen  '>
             <PageHeader pageTitle={'Carteira'} userData={data} />
-            <div className="flex flex-col  justify-start h-screen px-4 ">
+            <div className="flex flex-col items-center justify-center px-4">
                 <section className="flex w-full max-w-md p-4 ">
                     <div className='w-full flex flex-col gap-16 mt-16'>
                         <div className='w-full flex flex-col items-center gap-4'>

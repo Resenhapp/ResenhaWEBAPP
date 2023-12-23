@@ -13,16 +13,14 @@ const MyEventsBanner = ({ eventCode, eventName, eventDate, eventHour, eventGuest
         const shareData = {
             title: eventName,
             text: `Confira essa incrível ${eventName}!`,
-            url: `https://resenha.app/u/${eventCode}!`,
+            url: `https://resenha.app/convite?c=${eventCode}`,
         };
 
         if (navigator.share) {
-            navigator.share(shareData)
-                .then(() => {
-                })
-                .catch((error) => {
-                });
-        } else {
+            navigator.share(shareData);
+        }
+
+        else {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
             if (isMobile) {

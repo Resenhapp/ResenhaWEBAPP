@@ -1,7 +1,7 @@
 'use client'
+
 import React from 'react';
 import PageHeader from '@/src/components/PageHeader';
-import Button from '@/src/components/Button';
 import ButtonConfig from '@/src/components/ButtonConfig';
 
 export default function Payments() {
@@ -19,12 +19,12 @@ export default function Payments() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                {/* <ButtonConfig
+                                <ButtonConfig
                                     label="Cartões salvos"
                                     action={() => handleNavigation('/cartoes')}
                                     rightIcon={'arrowRight06'}
                                     textAlign="left"
-                                /> */}
+                                />
                                 <ButtonConfig
                                     label="Histórico de compras"
                                     action={() => handleNavigation('/historico')}

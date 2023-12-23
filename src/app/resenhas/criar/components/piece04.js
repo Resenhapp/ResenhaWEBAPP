@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Vector from '@/src/components/Vector';
 import Tag from '@/src/components/Tag';
-import Modal from '@/src/components/Modal';
 import { tagsData } from '@/src/components/tagsData';
 import EditInfoPage from '@/src/components/EditInfoPage';
+import Modal from '@/src/components/Modal';
 
 const Piece04 = ({descriptionContent, selectedTags}) => {
     const [isEditTagsPageOpen, setIsEditTagsPageOpen] = useState(false);
@@ -78,7 +78,7 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
                 <div className="h-fit ring-1 p-3 ring-inset ring-purpleT4 bg-purpleT1 rounded-2xl">
                     <textarea
                         className={`w-full h-32 resize-none bg-transparent sm:text-sm outline-none text-whiteT1 placeholder-purpleT5`}
-                        placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra todo mundo, só não vai mijar no chão!'}
+                        placeholder={'Exemplo: Vai ter beerpong e bebida liberada pra GERAL, só não dá pra colar depois da meia noite.'}
                         value={eventDescription}
                         onChange={handleEventDescriptionChange}
                     />
@@ -86,14 +86,7 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
             </div>
             <div>
                 <p className='text-md font-bold mb-2'>Tags</p>
-                <div onClick={(e) => {
-                    e.stopPropagation();
-                    toggleEditTagsPageOpen();
-                }}
-                    className="flex flex-col w-full h-fit p-2 gap-2 rounded-2xl"
-                >
-                    <div className="flex flex-row gap-2 items-center">
-                    </div>
+                <div onClick={(e) => { e.stopPropagation(); toggleEditTagsPageOpen(); }} className="flex flex-col w-full h-fit gap-2 rounded-2xl" >
                     <div className="flex flex-wrap gap-2">
                         {renderTags.length > 0 ?
                             renderTags.map((tag) => (
@@ -115,7 +108,6 @@ const Piece04 = ({descriptionContent, selectedTags}) => {
                     </div>
                 </div>
             </div>
-            {/* TAGS */}
             <EditInfoPage isOpen={isEditTagsPageOpen} pageTitle={'Tags da resenha'} saveAction={saveTags} togglePage={toggleEditTagsPageOpen}>
                 <div className='w-full'>
                     <div className='flex flex-wrap gap-2 overflow-auto' style={{ maxHeight: '200px' }}>
