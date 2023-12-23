@@ -1,7 +1,7 @@
-'use client'
-
 import '@/styles/globals.css';
 import React, { useEffect, useState } from 'react';
+
+'use client'
 
 export const metadata = {
   title: title,
