@@ -2709,7 +2709,7 @@ function tryToUploadEventImage()
                     imagedestroy($src);
                     imagedestroy($dst);
                     
-                    if (file_exists($targetFile)){
+                    if (file_exists($targetFile) && $fileExtension != "png"){
                         unlink($targetFile);
                     }
                     

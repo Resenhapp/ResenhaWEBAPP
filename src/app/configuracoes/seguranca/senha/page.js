@@ -10,22 +10,20 @@ import React, {useEffect, useState} from 'react';
 export default function PasswordConfig() {
     const token = Cookies.get('token');
 
+    if (!token) {
+        // Redirect to login page on the client side
+        window.location.href = '/login';
+    }
+
     const axios = require('axios');
     const qs = require('qs');
 
-    const options = ['Desabilitado', 'Habilitado']
+    const options = ['Desabilitado']
     var initialPassword = '•••••••'
     
     const [isEditPasswordPageOpen, setIsEditPasswordPageOpen] = useState(false);
     const [password, setPassword] = useState(initialPassword);
     const [tempPassword, setTempPassword] = useState(initialPassword);
-
-    useEffect(() => {
-        if (!token) {
-            // Redirect to login page on the client side
-            window.location.href = '/login';
-        }
-    }, [token]);
 
     const handleSelectChange = (event) => {
         setMethod(event.target.value);
@@ -73,7 +71,7 @@ export default function PasswordConfig() {
     
         return response;
     };
-
+    
     return (
         <div className="flex flex-col w-screen h-screen">
             <PageHeader isBack={true} checker={() => { null }} pageTitle="Config. de senha" />
