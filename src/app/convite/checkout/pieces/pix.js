@@ -20,6 +20,8 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
       });
 
       if (response.paid == 1) {
+        
+
         setIsFilled(true);
       }
     };

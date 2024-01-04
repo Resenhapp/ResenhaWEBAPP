@@ -297,13 +297,13 @@ function getHelpData()
     $response = [];
 
     $query = "SELECT * FROM help";
-    $result = queryDBRows($query);
+    $helpResults = queryDBRows($query);
 
-    if (mysqli_num_rows($result) > 0) {
-        foreach ($result as $row) {
-            $category = $row["category"];
-            $question = $row["question"];
-            $answer = $row["answer"];
+    if (mysqli_num_rows($helpResults) > 0) {
+        foreach ($helpResults as $help) {
+            $category = $help["category"];
+            $question = $help["question"];
+            $answer = $help["answer"];
 
             $foundCategory = false;
 
@@ -313,7 +313,9 @@ function getHelpData()
                         "question" => $question,
                         "answer" => $answer,
                     ];
+
                     $foundCategory = true;
+
                     break;
                 }
             }
@@ -403,9 +405,12 @@ function getHash($userHash, $urlType)
     $imageUrl = "https://media.resenha.app/$urlPrefix/$userHash.png";
 
     $ch = curl_init($imageUrl);
+
     curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_exec($ch);
+
     $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
     curl_close($ch);
 
     if ($statusCode == 200) {
@@ -438,59 +443,59 @@ function createWithdraw($user, $amount)
     return $id;
 }
 
-function tryToEditWithdraw()
-{
-    $id = sanitize($_POST["id"]);
+// function tryToEditWithdraw()
+// {
+//     $id = sanitize($_POST["id"]);
 
-    $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
-    $isAlreadyApproved = queryDB($id)[0];
+//     $query = "SELECT approved FROM withdrawals WHERE id = '$id'";
+//     $isAlreadyApproved = queryDB($id)[0];
 
-    if ($isAlreadyApproved == "0") {
-        $moderator = sanitize($_POST["moderator"]);
-        $reason = sanitize($_POST["reason"]);
-        $approved = sanitize($_POST["approved"]);
+//     if ($isAlreadyApproved == "0") {
+//         $moderator = sanitize($_POST["moderator"]);
+//         $reason = sanitize($_POST["reason"]);
+//         $approved = sanitize($_POST["approved"]);
     
-        $query = "SELECT user FROM withdrawals WHERE id = '$id'";
-        $user = queryDB($id)[0];
+//         $query = "SELECT user FROM withdrawals WHERE id = '$id'";
+//         $user = queryDB($id)[0];
     
-        $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
-        $amount = queryDB($id)[0];
+//         $query = "SELECT amount FROM withdrawals WHERE id = '$id'";
+//         $amount = queryDB($id)[0];
 
-        $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
-        queryNR($query);
+//         $query = "UPDATE balances SET requested = requested - $amount WHERE user = '$user'";
+//         queryNR($query);
     
-        if ($approved == "0") {
-            $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
-            queryNR($query);
-        }
+//         if ($approved == "0") {
+//             $query = "UPDATE balances SET retained = retained - $amount WHERE user = '$user'";
+//             queryNR($query);
+//         }
     
-        $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
-        queryNR($query);
+//         $query = "UPDATE withdrawals SET moderator = '$moderator', reason = '$reason', approved = '$approved' WHERE id = '$id'";
+//         queryNR($query);
 
-        $responseData = [
-            'status' => 'success'
-        ];
+//         $responseData = [
+//             'status' => 'success'
+//         ];
 
-        returnData($responseData);
-    }
+//         returnData($responseData);
+//     }
 
-    else {
-        returnError("already_approved");
-    }
-}
+//     else {
+//         returnError("already_approved");
+//     }
+// }
 
-function getParties($result, $userId, $type)
+function getParties($partiesResults, $userId, $type)
 {
     $parties = [];
     $processedHosts = [];
 
-    if (mysqli_num_rows($result) > 0) {
-        foreach ($result as $row) {
+    if (mysqli_num_rows($partiesResults) > 0) {
+        foreach ($partiesResults as $column) {
             $headers = [];
 
-            $partyIdHash = getHash($row["id"], "event");
+            $partyIdHash = getHash($column["id"], "event");
 
-            $code = $row["code"];
+            $code = $column["code"];
             $timestamp = time();
 
             $dateTime = new DateTime("@" . $timestamp);
@@ -506,12 +511,12 @@ function getParties($result, $userId, $type)
                 queryNR($query);
             }
 
-            $capacity = $row["capacity"];
+            $capacity = $column["capacity"];
 
-            $savedQuery = "SELECT id FROM saved WHERE party = '$code' AND user = '$userId'";
-            $savedQ = queryDB($savedQuery);
+            $query = "SELECT id FROM saved WHERE party = '$code' AND user = '$userId'";
+            $savedResults = queryDB($query);
 
-            if ($savedQ) {
+            if ($savedResults) {
                 $saved = true;
             } 
             
@@ -519,12 +524,12 @@ function getParties($result, $userId, $type)
                 $saved = false;
             }
 
-            $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
-            $confirmed = queryDB($guests_query)['total_guests'];
+            $guestsQuery = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
+            $confirmed = queryDB($guestsQuery)['total_guests'];
 
             $todayDate = date("d/m/Y");
 
-            $date = DateTime::createFromFormat("d/m/Y", $row["date"]);
+            $date = DateTime::createFromFormat("d/m/Y", $column["date"]);
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
@@ -532,7 +537,7 @@ function getParties($result, $userId, $type)
                 array_push($headers, 0);
             }
 
-            $date = DateTime::createFromFormat("d/m/Y", $row["creation"]);
+            $date = DateTime::createFromFormat("d/m/Y", $column["creation"]);
             $diff = $date->diff(DateTime::createFromFormat("d/m/Y", $todayDate));
             $differenceInDays = intval($diff->format("%a"));
 
@@ -588,21 +593,21 @@ function getParties($result, $userId, $type)
             $data = [
                 'hash' => $partyIdHash,
                 'saved' => $saved,
-                'price' => $row["price"],
+                'price' => $column["price"],
                 'code' => $code,
-                'start' => $row["start"],
-                'end' => $row["end"],
+                'start' => $column["start"],
+                'end' => $column["end"],
                 'confirmed' => $confirmed,
                 'capacity' => $capacity,
                 'headers' => $headers,
-                'title' => $row["name"],
+                'title' => $column["name"],
                 'guests' => $guests,
             ];
 
-            if ($row["lat"] && $row["lon"]) {
+            if ($column["lat"] && $column["lon"]) {
                 $data["coordinates"] = [
-                    "lat" => $row["lat"],
-                    "lon" => $row["lon"]
+                    "lat" => $column["lat"],
+                    "lon" => $column["lon"]
                 ];
             }
 
@@ -727,10 +732,10 @@ function editEventData()
 {
     $userData = checkSession($_POST['token']);
 
-    $code = $_POST['code'];
-    $data = $_POST['data'];
+    if ($userData) {
+        $code = $_POST['code'];
+        $data = $_POST['data'];
 
-    foreach ($userData as $column) {
         $responseData = [
             'status' => 'success',
         ];
@@ -797,19 +802,20 @@ function editEventData()
 
 function tryToAllowGuest()
 {
-    $token = $_POST['token'];
-    $code = $_POST['code'];
+    $token = sanitize($_POST['token']);
 
     $query = "SELECT party FROM concierges WHERE token = '$token'";
     $conciergeResults = queryDB($query);
 
     if ($conciergeResults) {
+        $code = $_POST['code'];
+
         $party = $conciergeResults[0];
 
         $query = "SELECT * FROM guests WHERE code = '$code' AND party = '$party'";
         $guestsResults = queryDBRows($query);
 
-        if ($guestsResults) {
+        if (mysqli_num_rows($guestsResults) > 0) {
             foreach ($guestsResults as $column) {
                 $paid = $column["paid"];
                 $method = $column["method"];
@@ -876,9 +882,9 @@ function editUserData()
 {
     $userData = checkSession($_POST['token']);
 
-    $data = $_POST['data'];
-
     foreach ($userData as $column) {
+        $data = $_POST['data'];
+
         $userName = $column["username"];
 
         $responseData = [
@@ -1415,15 +1421,15 @@ function getInviteData()
     $code = sanitize($_POST['code']);
 
     $query = "SELECT * FROM parties WHERE code = '$code'";
-    $result = queryDBRows($query);
+    $partyResults = queryDBRows($query);
 
-    if (mysqli_num_rows($result) > 0) {
-        foreach ($result as $row) {
-            $host = $row["host"];
+    if (mysqli_num_rows($partyResults) > 0) {
+        foreach ($partyResults as $party) {
+            $host = $party["host"];
 
             $hostId = $host;
 
-            $id = $row["id"];
+            $id = $party["id"];
 
             $partyHash = getHash($id, "event");
 
@@ -1433,7 +1439,7 @@ function getInviteData()
             $guests_query = "SELECT COUNT(*) AS total_guests FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro')";
             $confirmed = queryDB($guests_query)['total_guests'];
 
-            $dateString = $row["date"];
+            $dateString = $party["date"];
             list($day, $month, $year) = explode('/', $dateString);
 
             $day = (int) $day;
@@ -1445,21 +1451,21 @@ function getInviteData()
 
             $users = [];
             $query = "SELECT * FROM guests WHERE party = '$code' AND (paid = '1' OR method = 'dinheiro') GROUP BY user";
-            $dba = queryDBRows($query);
+            $guestsResults = queryDBRows($query);
 
-            if (mysqli_num_rows($dba) > 0) {
-                foreach ($dba as $dsa) {
-                    if ($dsa['user'] != "NONE") {
-                        $id = $dsa['user'];
+            if (mysqli_num_rows($guestsResults) > 0) {
+                foreach ($guestsResults as $guestRow) {
+                    if ($guestRow['user'] != "NONE") {
+                        $id = $guestRow['user'];
 
                         $query = "SELECT username FROM users WHERE id = '$id'";
                         $uname = queryDB($query)[0];
 
                         $user['id'] = $id;
 
-                        $userHash = getHash($dsa['user'], "user");
+                        $userHash = getHash($guestRow['user'], "user");
 
-                        $user['name'] = $dsa['name'];
+                        $user['name'] = $guestRow['name'];
                         $user['username'] = $uname;
                         $user['hash'] = $userHash;
                     }
@@ -1471,25 +1477,25 @@ function getInviteData()
             $tags = [];
 
             $query = "SELECT * FROM tags WHERE party = '$code'";
-            $db = queryDBRows($query);
+            $tagsResults = queryDBRows($query);
 
-            if (mysqli_num_rows($db) > 0) {
-                foreach ($db as $is) {
-                    $tags[] = $is['tag'];
+            if (mysqli_num_rows($tagsResults) > 0) {
+                foreach ($tagsResults as $tagRow) {
+                    $tags[] = $tagRow['tag'];
                 }
             }
 
             $data = [
                 'hash' => $partyHash,
-                'ticket' => $row["price"],
-                'address' => $row["address"],
+                'ticket' => $party["price"],
+                'address' => $party["address"],
                 'host' => [
                     'id' => $hostId,
                     'name' => $host
                 ],
-                'title' => $row["name"],
-                'description' => $row["description"],
-                'public' => $row["public"],
+                'title' => $party["name"],
+                'description' => $party["description"],
+                'public' => $party["public"],
                 'users' => $users,
                 'tags' => $tags,
                 'date' => [
@@ -1500,11 +1506,11 @@ function getInviteData()
                     'dayString' => $dayOfWeek,
                 ],
                 'hour' => [
-                    'start' => $row["start"],
-                    'end' => $row["end"],
+                    'start' => $party["start"],
+                    'end' => $party["end"],
                 ],
                 'guests' => [
-                    'capacity' => $row["capacity"],
+                    'capacity' => $party["capacity"],
                     'confirmed' => $confirmed,
                 ]
             ];
@@ -1516,11 +1522,11 @@ function getInviteData()
                     $userId = $column["id"];
 
                     if ($userId == $hostId) {
-                        $party_price_query = "SELECT price FROM parties WHERE code = '$code'";
-                        $party_price = queryDB($party_price_query)[0];
+                        $query = "SELECT price FROM parties WHERE code = '$code'";
+                        $partyPrice = queryDB($query)[0];
     
-                        $guests_query = "SELECT method FROM guests WHERE party = '$code'";
-                        $payment_results = queryDBRows($guests_query);
+                        $query = "SELECT method FROM guests WHERE party = '$code'";
+                        $paymentsResults = queryDBRows($guests_query);
     
                         $income = [
                             "card" => 0,
@@ -1528,36 +1534,35 @@ function getInviteData()
                             "pix" => 0,
                         ];
 
-                        foreach ($payment_results as $payment_row) {
-                            $method = $payment_row['method'];
+                        foreach ($paymentsResults as $paymentRow) {
+                            $method = $paymentRow['method'];
     
                             if ($method == 'pix') {
-                                $income['pix'] += $party_price;
+                                $income['pix'] += $partyPrice;
                             } 
                             
                             elseif ($method == 'cartao') {
-                                $income['card'] += $party_price;
+                                $income['card'] += $partyPrice;
                             } 
                             
                             else {
-                                $income['cash'] += $party_price;
+                                $income['cash'] += $partyPrice;
                             }
                         }
     
-                        $impressions_query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code'";
-                        $impressions_count = queryDB($impressions_query)[0];
+                        $query = "SELECT COUNT(*) AS view_count FROM impressions WHERE party = '$code'";
+                        $impressionsCount = queryDB($query)[0];
     
-                        $views_query = "SELECT COUNT(*) AS clicks_count FROM impressions WHERE party = '$code'";
-                        $views_count = queryDB($views_query)[0];
+                        $query = "SELECT COUNT(*) AS clicks_count FROM impressions WHERE party = '$code'";
+                        $viewsCount = queryDB($query)[0];
    
-                        $purchases_query = "SELECT COUNT(DISTINCT user) AS user_count FROM impressions  WHERE party = '$code' AND user IN (SELECT DISTINCT user FROM guests)";
-
-                        $purchases_count = queryDB($purchases_query)[0];
+                        $query = "SELECT COUNT(DISTINCT user) AS user_count FROM impressions  WHERE party = '$code' AND user IN (SELECT DISTINCT user FROM guests)";
+                        $purchasesCount = queryDB($query)[0];
     
                         $impressions = [
-                            'views' => $impressions_count,
-                            'clicks' => $views_count,
-                            'purchases' => $purchases_count
+                            'views' => $impressionsCount,
+                            'clicks' => $viewsCount,
+                            'purchases' => $purchasesCount
                         ];
     
                         $data["income"] = $income;
@@ -1604,10 +1609,11 @@ function tryToDeleteConcierge()
 function tryToCreateConcierge()
 {
     $userData = checkSession($_POST['token']);
-    $conciergeData = $_POST['data'];
 
     if ($userData) {
         foreach ($userData as $column) {
+            $conciergeData = $_POST['data'];
+
             $userId = $column["id"];
     
             $conciergeParty = $conciergeData["party"];
@@ -1737,7 +1743,7 @@ function tryToCreateGuest()
     }
 
     if ($method != "Pix") {
-        //send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
+        // sendEmail('Resenha.app', 'noreply@resenha.app', $email, $name, 'VEM PRA RESENHA!', 'ynrw7gy67pnl2k8e', $code);
     }
 
     $used = "0";
@@ -1745,9 +1751,6 @@ function tryToCreateGuest()
 
     $query = "INSERT INTO guests (user, party, name, maiority, email, method, date, code, charge, paid, used, deleted) VALUES ('$user', '$party', '$name', '$maiority', '$email', '$method', '$date', '$code', '$charge', '$paid', '$used', '$deleted')";
     queryNR($query);
-
-    $query = "SELECT id FROM guests WHERE code = '$code' AND party = '$party'";
-    $guest = queryDB($query)[0];
 
     $query = "SELECT host FROM parties WHERE code = '$party'";
     $host = queryDB($query)[0];
@@ -1868,11 +1871,11 @@ function getTransactionInfo()
     $charge = sanitize($_POST['charge']);
 
     $query = "SELECT * FROM guests WHERE charge = '$charge'";
-    $transactionInfo = queryDBRows($query);
+    $transactionResults = queryDBRows($query);
 
-    if ($transactionInfo) {
-        foreach ($transactionInfo as $column) {
-            $transactionPaid = $column["paid"];
+    if (mysqli_num_rows($transactionResults) > 0) {
+        foreach ($transactionResults as $transaction) {
+            $transactionPaid = $transaction["paid"];
     
             $data = [
                 'charge' => $charge,
@@ -1893,11 +1896,11 @@ function getConciergeData()
     $conciergeToken = sanitize($_POST['concierge']);
 
     $query = "SELECT * FROM concierges WHERE token = '$conciergeToken'";
-    $conciergeInfo = queryDBRows($query);
+    $conciergeResults = queryDBRows($query);
 
-    foreach ($conciergeInfo as $info) {
-        $conciergeName = $info["name"];
-        $conciergeParty = $info["party"];
+    foreach ($conciergeResults as $concierge) {
+        $conciergeName = $concierge["name"];
+        $conciergeParty = $concierge["party"];
 
         $data = [
             'name' => $conciergeName,
@@ -1911,18 +1914,19 @@ function getConciergeData()
 function editConciergeData()
 {
     $userData = checkSession($_POST['token']);
-    $conciergeToken = sanitize($_POST['concierge']);
-    $editData = $_POST['data'];
 
     foreach ($userData as $column) {
+        $conciergeToken = sanitize($_POST['concierge']);
+        $editData = $_POST['data'];
+
         $userId = $column["id"];
 
         $query = "SELECT * FROM concierges WHERE token = '$conciergeToken' AND host = '$userId'";
-        $conciergeInfo = queryDBRows($query);
+        $conciergesResults = queryDBRows($query);
     
-        foreach ($conciergeInfo as $info) {
-            $conciergeName = $info["name"];
-            $conciergeParty = $info["party"];
+        foreach ($conciergesResults as $concierge) {
+            $conciergeName = $concierge["name"];
+            $conciergeParty = $concierge["party"];
 
             $editName = $editData["name"];
             $editParty = $editData["party"];
@@ -1958,11 +1962,11 @@ function clearUserNotifications()
 
 function switchSaveEvent()
 {
-    $partyCode = sanitize($_POST['party']);
-
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
+        $partyCode = sanitize($_POST['party']);
+
         $userId = $column["id"];
 
         $timestamp = time();
@@ -2062,7 +2066,6 @@ function seeUserNotifications()
         $userName = $column["username"];
 
         $query = "SELECT * FROM users WHERE username = '$userName'";
-
         $result = queryDBRows($query);
 
         if (mysqli_num_rows($result) > 0) {
@@ -2090,14 +2093,14 @@ function tryToWithdraw()
         $amount = floatval(sanitize($_POST['amount']));
 
         $query = "SELECT * FROM balances WHERE user = '$id'";
-        $result = queryDBRows($query);
+        $balanceResults = queryDBRows($query);
 
-        if (mysqli_num_rows($result) > 0) {
-            foreach ($result as $row) {
-                $available = floatval($row["available"]);
-                $requested = floatval($row["requested"]);
-                $retained = floatval($row["retained"]);
-                $processing = floatval($row["processing"]);
+        if (mysqli_num_rows($balanceResults) > 0) {
+            foreach ($balanceResults as $balance) {
+                $available = floatval($balance["available"]);
+                $requested = floatval($balance["requested"]);
+                $retained = floatval($balance["retained"]);
+                $processing = floatval($balance["processing"]);
             }
         }
 
@@ -2207,13 +2210,13 @@ function tryToDeleteEvent()
 
 function tryToSendMessage()
 {
-    $destination = sanitize($_POST['destination']);
-    $type = sanitize($_POST['type']);
-    $content = sanitize($_POST['content']);
-
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
+        $destination = sanitize($_POST['destination']);
+        $type = sanitize($_POST['type']);
+        $content = sanitize($_POST['content']);
+
         $id = $column["id"];
         $username = $column["username"];
 
@@ -2289,10 +2292,10 @@ function getMessages()
 {
     $userData = checkSession($_POST['token']);
 
-    $code = sanitize($_POST['code']);
-    $type = sanitize($_POST['type']);
-
     foreach ($userData as $column) {
+        $code = sanitize($_POST['code']);
+        $type = sanitize($_POST['type']);
+
         $id = $column["id"];
         $username = $column["username"];
 
@@ -2347,23 +2350,23 @@ function getMessages()
 
         if ($type == 'dm') {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND (sender = '$id' AND destination = '$chatId') OR (sender = '$chatId' AND destination = '$id') ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
-            $messages = queryDBRows($query);
+            $messagesResults = queryDBRows($query);
         } 
         
         else {
             $query = "SELECT * FROM messages WHERE chatType = '$type' AND destination = '$chatId' ORDER BY STR_TO_DATE(`date`, '%d/%m/%Y %H:%i:%s') DESC";
-            $messages = queryDBRows($query);
+            $messagesResults = queryDBRows($query);
         }
 
         $messagesArray = [];
 
-        foreach ($messages as $row) {
-            $sent = $row['sender'] == $id;
-            $content = $row['content'];
-            $dateString = $row["date"];
-            $senderId = $row['sender'];
+        foreach ($messagesResults as $message) {
+            $sent = $message['sender'] == $id;
+            $content = $message['content'];
+            $dateString = $message["date"];
+            $senderId = $message['sender'];
             $senderHash = getHash($senderId, "user");
-            $destination = $row['destination'];
+            $destination = $message['destination'];
 
             $query = "SELECT username FROM users WHERE id = '$senderId'";
             $senderUsername = queryDB($query)[0];
@@ -2639,10 +2642,11 @@ function tryToUploadUserImage()
 
 function tryToUploadEventImage() 
 {
-    $code = sanitize($_POST['code']);
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
+        $code = sanitize($_POST['code']);
+
         $userId = $column["id"];
 
         $query = "SELECT host FROM parties WHERE code = '$code'";
@@ -2727,11 +2731,11 @@ function tryToUploadEventImage()
 
 function tryToClickOnEvent() 
 {
-    $code = sanitize($_POST['party']);
-
     $userData = checkSession($_POST['token']);
 
     foreach ($userData as $column) {
+        $code = sanitize($_POST['party']);
+
         $id = $column["id"];
 
         $query = "UPDATE impressions SET clicked = '1' WHERE user = '$id' AND party = '$code'";
@@ -2750,14 +2754,14 @@ function generateRandomUsername($fullName)
     $firstName = $nameParts[0];
     $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
-    $username = $firstName . $lastName . $randomNumber;
+    $username = "{$firstName}{$lastName}{$randomNumber}";
 
     $query = "SELECT id FROM users WHERE username = '$username'";
     $usernameExists = queryDB($query);
 
     while ($usernameExists) {
         $randomNumber = rand(1, 9999);
-        $username = $firstName . $lastName . $randomNumber;
+        $username = "{$firstName}{$lastName}{$randomNumber}";
         $query = "SELECT id FROM users WHERE username = '$username'";
         $usernameExists = queryDB($query);
     }
@@ -2788,11 +2792,6 @@ function tryToCreateUser()
         $registration = getIp();
         $last = getIp();
 
-        $cpf = "";
-        $birth = "";
-        $address = "";
-        $phone = "";
-
         $tax = 10;
 
         $verified = "0";
@@ -2802,13 +2801,12 @@ function tryToCreateUser()
 
         $username = stripAccents(generateRandomUsername($name));
 
-        $confirmation_link = "https://resenha.app/api/?token=$token";
+        $confirmationLink = "https://api.resenha.app/?token=$token";
 
-        //$error = send_email('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmation_link);
+        //$error = sendEmail('Resenha.app', 'noreply@resenha.app', $email, $name, 'Confirme seu e-mail', 'pxkjn41zvrqlz781', $confirmationLink);
 
         if (!$error) {
-            $query = "INSERT INTO users (username, email, password, name, birth, phone, cpf, address, date, api, tax, verified, about, registration, last, token) VALUES
-            ('$username', '$email', '$password_hash', '$name', '$birth', '$phone', '$cpf', '$address', '$date', '$api', '$tax', '$verified', '$about', '$registration', '$last', '$token')";
+            $query = "INSERT INTO users (username, email, password, name, birth, phone, cpf, address, date, api, tax, verified, about, registration, last, token) VALUES ('$username', '$email', '$password_hash', '$name', '', '', '', '', '$date', '$api', '$tax', '$verified', '$about', '$registration', '$last', '$token')";
             queryNR($query);
 
             $query = "SELECT id FROM users WHERE username = '$username'";
