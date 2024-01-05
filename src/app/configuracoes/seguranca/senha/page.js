@@ -10,10 +10,10 @@ import React, {useEffect, useState} from 'react';
 export default function PasswordConfig() {
     const token = Cookies.get('token');
 
-    if (!token) {
-        // Redirect to login page on the client side
-        window.location.href = '/login';
-    }
+    // if (!token) {
+    //     // Redirect to login page on the client side
+    //     // window.location.href = '/login';
+    // }
 
     const axios = require('axios');
     const qs = require('qs');
