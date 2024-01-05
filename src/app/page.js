@@ -88,7 +88,7 @@ export default function Home() {
           />
           <button className='absolute z-4 bg-purpleT3 hover-bg-purpleT2 left-[15%] px-24 rounded-xl truncate py-8 bottom-72' onClick={() => window.location.href = 'https://resenha.app/cadastro'}>Criar conta</button>
           <footer className='absolute bottom-0 mb-12'>
-            <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® 2023 - Todos os direitos reservados.</p>
+            <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app® {new Date().getFullYear()} - Todos os direitos reservados.</p>
             <p className='absolute bottom-0 w-screen text-center text-sm'>Resenha.app - Resenha App LTDA 52.432.478/0001-94 - Avenida Dolores Alcaraz Caldas 90 Sala 801 Andar 7 Praia de Belas Porto Alegre RS 90110-180</p>
           </footer>
         </section>
