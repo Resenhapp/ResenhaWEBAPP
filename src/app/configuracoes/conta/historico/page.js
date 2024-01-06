@@ -59,7 +59,8 @@ export default function AccountHistory() {
                     <div className="h3 w-full flex">
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
-                                {activities.map((item, index) => 
+                            {activities.length > 0 ? (
+                                activities.map((item, index) => (
                                     <NotificationBase
                                         key={index}
                                         imageUrl={item.hash ? `https://media.resenha.app/r/${item.hash}.png` : undefined}
@@ -67,7 +68,10 @@ export default function AccountHistory() {
                                         description={item.description}
                                         date={item.date}
                                     />
-                                )}
+                                ))
+                            ) : (
+                                <p>Você ainda não realizou atividades 😔</p>
+                            )}
                             </div>
                         </div>
                     </div>

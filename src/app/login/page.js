@@ -170,7 +170,7 @@ export default function Login() {
           </div>
         </div>
         <div className="flex-row flex gap-3 items-center mb-4 w-full">
-          <Toggle labelText="Lembre-se de mim" showLabel={true} startToggled={true} onToggle={handleToggleChange}/>
+          <Toggle labelText="Lembre de mim" showLabel={true} startToggled={true} onToggle={handleToggleChange}/>
           <Link href="/recuperacao" className="ml-auto flex-none text-sm font-bold">Esqueceu a senha?</Link>
         </div>
 

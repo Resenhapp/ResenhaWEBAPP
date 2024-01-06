@@ -102,7 +102,7 @@ export default function AccountPartySaved() {
                                     );
                                 })
                                 ) : (
-                                <p>Você não salvou nenhuma resenha 🤐</p>
+                                <p>Você ainda não salvou nenhuma resenha 🤐</p>
                                 )}
                             </div>
                         </div>

@@ -59,21 +59,21 @@ function encrypt($text, $pkey)
 function convertMonth($month)
 {
     $months = [
-        '01' => 'Janeiro',
-        '02' => 'Fevereiro',
-        '03' => 'Março',
-        '04' => 'Abril',
-        '05' => 'Maio',
-        '06' => 'Junho',
-        '07' => 'Julho',
-        '08' => 'Agosto',
-        '09' => 'Setembro',
+        '1' => 'Janeiro',
+        '2' => 'Fevereiro',
+        '3' => 'Março',
+        '4' => 'Abril',
+        '5' => 'Maio',
+        '6' => 'Junho',
+        '7' => 'Julho',
+        '8' => 'Agosto',
+        '9' => 'Setembro',
         '10' => 'Outubro',
         '11' => 'Novembro',
         '12' => 'Dezembro',
     ];
 
-    return $months[$month];
+    return $months[(int)$month];
 }
 
 function updateBalance($user, $amount)
@@ -633,7 +633,7 @@ function getFeedData()
     foreach ($userData as $column) {
         $userId = $column["id"];
 
-        $query = "SELECT * FROM parties WHERE STR_TO_DATE(CONCAT(`date`, ' ', `start`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
+        $query = "SELECT * FROM parties WHERE public = '1' AND STR_TO_DATE(CONCAT(`date`, ' ', `start`), '%d/%m/%Y %H:%i') > CONVERT_TZ(NOW(), '+00:00', '-03:00') ";
 
         $startQuery = $query;
 
@@ -886,10 +886,17 @@ function editUserData()
         $data = $_POST['data'];
 
         $userName = $column["username"];
+        $userVerified = $column["verified"];
 
         $responseData = [
             'status' => 'success',
         ];
+
+        if (isset($data['cpf']) || isset($data['name']) || isset($data['birth'])) {
+            if ($userVerified == '1') {
+                returnError("permanent_data");
+            }
+        }
 
         if (isset($data['name'])) {
             $nameError = checkName($data['name']);
@@ -1495,7 +1502,7 @@ function getInviteData()
                 ],
                 'title' => $party["name"],
                 'description' => $party["description"],
-                'public' => $party["public"],
+                'visibility' => $party["public"],
                 'users' => $users,
                 'tags' => $tags,
                 'date' => [

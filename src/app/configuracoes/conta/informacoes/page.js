@@ -33,6 +33,7 @@ export default function AccountInfo() {
     const [cpf, setCpf] = useState('');
     const [tempCpf, setTempCpf] = useState('');
     const [data, setData] = useState(null);
+    const [verified, setVerified] = useState(false);
 
     if (!token) {
         if (typeof window !== 'undefined') {
@@ -41,13 +42,17 @@ export default function AccountInfo() {
     }
 
     const toggleEditNamePageOpen = () => {
-        setTempName(name);
-        setIsEditNamePageOpen(!isEditNamePageOpen);
+        if (!verified) {
+            setTempName(name);
+            setIsEditNamePageOpen(!isEditNamePageOpen);
+        }
     };
 
     const toggleEditBirthdayPageOpen = () => {
-        setIsEditBirthdayPageOpen(!isEditBirthdayPageOpen);
-        setTempBirthday(birthday);
+        if (!verified) {
+            setIsEditBirthdayPageOpen(!isEditBirthdayPageOpen);
+            setTempBirthday(birthday);
+        }
     };
 
     const toggleEditPhonePageOpen = () => {
@@ -61,8 +66,10 @@ export default function AccountInfo() {
     };
 
     const toggleEditCpfPageOpen = () => {
-        setIsEditCpfPageOpen(!isEditCpfPageOpen);
-        setTempCpf(cpf);
+        if (!verified) {
+            setIsEditCpfPageOpen(!isEditCpfPageOpen);
+            setTempCpf(cpf);
+        }
     };
 
     const handleNameChange = (event) => {
@@ -146,7 +153,7 @@ export default function AccountInfo() {
         setCpf(tempCpf);
 
         const data = {
-            address: tempAddress
+            cpf: tempCpf
         };
 
         const response = await sendEditRequest(data);
@@ -209,6 +216,7 @@ export default function AccountInfo() {
         setBirthday(response.birth);
         setPhone(response.phone);
         setCpf(response.cpf);
+        setVerified(response.verified);
     };
 
     useEffect(() => {
@@ -367,19 +375,24 @@ export default function AccountInfo() {
                         <div className="w-full flex flex-col">
                             <div className="h-fit w-full gap-2 flex flex-col">
                                 <div onClick={toggleEditNamePageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">Nome</p>
+                                    <div className='flex flex-row justify-between'>
+                                        <p className="text-whiteT1 text-sm font-semibold">Nome</p>
+                                        <Confirmed initialConfirmation={verified} />
+                                    </div>
                                     <InputFieldPurple value={name} readOnly={true} />
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditBirthdayPageOpen}>
-                                    <p className="text-whiteT1 text-sm font-semibold">Data de Nascimento</p>
-                                    <InputFieldPurple value={birthday} readOnly={true} />
+                                    <div className='flex flex-row justify-between'>
+                                        <p className="text-whiteT1 text-sm font-semibold">Data de Nascimento</p>
+                                        <Confirmed initialConfirmation={verified} />
+                                    </div>
+                                    <InputFieldPurple value={birthday} readOnly={true} placeholder={'14/05/1984'} />
                                 </div>
                                 <hr className="border-purpleT4" />
                                 <div onClick={toggleEditPhonePageOpen}>
                                     <div className='flex flex-row justify-between'>
                                         <p className="text-whiteT1 text-sm font-semibold">Telefone</p>
-                                        <Confirmed initialConfirmation={true} />
                                     </div>
                                     <InputFieldPurple value={phone} readOnly={true} placeholder={'(01) 9 2345-6789'} />
                                 </div>
@@ -392,9 +405,9 @@ export default function AccountInfo() {
                                 <div onClick={toggleEditCpfPageOpen}>
                                     <div className='flex flex-row justify-between'>
                                         <p className="text-whiteT1 text-sm font-semibold">CPF</p>
-                                        <Confirmed initialConfirmation={true} />
+                                        <Confirmed initialConfirmation={verified} />
                                     </div>
-                                    <InputFieldPurple value={cpf} readOnly={true} />
+                                    <InputFieldPurple value={cpf} readOnly={true} placeholder={'123.231.312-00'}/>
                                 </div>
                             </div>
                         </div>

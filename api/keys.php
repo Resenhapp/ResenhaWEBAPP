@@ -7,9 +7,9 @@ define("GLOBAL_PAGARME", "c2tfdGVzdF93WVFNZ3Z2aDU1VVBHSzV6Og=="); // testes c2tf
 define("GLOBAL_WEBHOOK", "https://discord.com/api/webhooks/1115112981055930458/4rpE9nlwOUukTkubSzsqk1kSTbLC7oJ5cIZ1NbiCFmIsaURpje_jdwFTGksaTMfYpEm4");
 
 define("DB_SERVER", "154.56.47.103");
-define("DB_NAME", "u878630845_resenhadb");
-define("DB_USERNAME", "u878630845_resenhadb");
-define("DB_PASSWORD", "kXiHdsMv7g$0");
+define("DB_NAME", "u878630845_sandbox");
+define("DB_USERNAME", "u878630845_sandbox");
+define("DB_PASSWORD", "dAW)*DU(@D@1");
 
 date_default_timezone_set('America/Sao_Paulo');
 

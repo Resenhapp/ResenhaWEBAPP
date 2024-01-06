@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Confirmed = ({ initialConfirmation = false }) => {
+const Confirmed = ({ initialConfirmation = false}) => {
     const [confirmed, setConfirmed] = useState(initialConfirmation);
 
     const toggleConfirmation = () => setConfirmed(!confirmed);
