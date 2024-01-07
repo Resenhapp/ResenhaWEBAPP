@@ -38,7 +38,7 @@ export default function EditEvent() {
     const [startHour, setStartHour] = useState('');
     const [limit, setLimit] = useState('');
     const [isVip, setIsVip] = useState(false);
-    const [isPublic, setIsPublic] = useState(true);
+    const [isPublic, setIsPublic] = useState(false);
     const [vipLimit, setVipLimit] = useState('');
     const [limitError, setLimitError] = useState('');
     const [address, setAddress] = useState('');
@@ -138,7 +138,6 @@ export default function EditEvent() {
     const toggleEditPricePageOpen = () => {
         setIsEditPricePageOpen(!isEditPricePageOpen);
     };
-
     
     const [isEditPublicPageOpen, setIsEditPublicPageOpen] = useState(false);
     const toggleEditPublicPageOpen = () => {
@@ -257,8 +256,6 @@ export default function EditEvent() {
             setVipLimit(0);
         }
     }, [isVip]);
-
-    const visibilityLabel = isPublic ? 'Público' : 'Privado'; // Lógica para exibir o rótulo adequado
 
     const handleToggleVip = () => {
         setIsVip(!isVip);
@@ -461,8 +458,14 @@ export default function EditEvent() {
 
     const saveVisibility = async () => {
         const data = {
-          visibility: isPublic ? 'Público' : 'Privado'
+            public: isPublic ? 1 : 0
         };
+
+        const response = await sendEditRequest(data);
+
+        if (!response.error) {
+            toggleEditPublicPageOpen();
+        }
     };      
 
     const saveDescription = async () => {
@@ -511,6 +514,8 @@ export default function EditEvent() {
         setStartHour(response.hour.start);
 
         setEndHour(response.hour.end);
+
+        setIsPublic(response.visibility == 1);
 
         if (response.hour.end != "none") {
             setIsEndTime(true);
@@ -706,7 +711,7 @@ export default function EditEvent() {
         <div className='w-full'>
             <input
                 className='w-full bg-transparent border-b-2 border-purpleT2 placeholder-purpleT4 text-whiteT1 font-bold'
-                value={visibilityLabel}
+                value={isPublic ? 'Público' : 'Privado'}
                 onChange={handleVipLimitChange}
                 type="text"
                 readOnly // Impede que o usuário edite diretamente o campo
@@ -971,7 +976,7 @@ export default function EditEvent() {
                                     <p className="font-bold">Visibilidade</p>
                                     <Vector vectorname={'edit02'} />
                                 </div>
-                                <p>{visibilityLabel}</p>
+                                <p>{isPublic ? 'Público' : 'Privado'}</p>
                             </button>
 
                         {!canBeDeleted &&

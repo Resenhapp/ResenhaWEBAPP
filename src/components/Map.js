@@ -42,11 +42,11 @@ export default function Map({ onLocationSelect, displayPartiesAround, partyData 
     useEffect(() => {
         setClientSide(true);
         getMyPosition();
-
+    
         if (partyData) {
             const newPartiesAround = partyData.map(item => {
                 return `${item.coordinates.lat}, ${item.coordinates.lon}`;
-            });
+            }).filter(item => item !== null);
     
             setPartiesAround(oldParties => [...oldParties, ...newPartiesAround]);
         }
@@ -88,31 +88,33 @@ export default function Map({ onLocationSelect, displayPartiesAround, partyData 
     return (
         <div>
             <MapContainer center={userPosition} zoom={13} className='rounded-xl' style={{ height: "75vh", width: "75vw" }}>
-    <ChangeView center={userPosition} zoom={13} />
-    <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    />
-    {marker && (
-        <Marker position={marker}>
-            <Popup>
-                Você tocou aqui: <br /> {marker.lat}, {marker.lng}
-            </Popup>
-        </Marker>
-    )}
-    {partyData.map((party, index) => {
-        return (
-            <Marker key={index} position={[party.coordinates.lat, party.coordinates.lon]}>
-                <Popup>
-                    {party.title} <br />
-                    <a href={`https://www.resenha.app/convite?c=${party.code}`} style={{color: '#8E00FF'}} className='pt-4 decoration-transparent font-bold rounded-full'>Ver resenha</a><br />
-                </Popup>
-            </Marker>
-        );
-    })}
-    <MapEvents />
-</MapContainer>
-
+                <ChangeView center={userPosition} zoom={13} />
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {marker && (
+                    <Marker position={marker}>
+                        <Popup>
+                            Você tocou aqui: <br /> {marker.lat}, {marker.lng}
+                        </Popup>
+                    </Marker>
+                )}
+                {partyData.map((party, index) => {
+                    if (party.coordinates.lat !== "none" && party.coordinates.lon !== "none") {
+                        return (
+                            <Marker key={index} position={[party.coordinates.lat, party.coordinates.lon]}>
+                                <Popup>
+                                    {party.title} <br />
+                                    <a href={`https://www.resenha.app/convite?c=${party.code}`} style={{color: '#8E00FF'}} className='pt-4 decoration-transparent font-bold rounded-full'>Ver resenha</a><br />
+                                </Popup>
+                            </Marker>
+                        );
+                    }
+                    return null; // or any other component or null if you don't want to render anything
+                })}
+                <MapEvents />
+            </MapContainer>
         </div>
     )
 }

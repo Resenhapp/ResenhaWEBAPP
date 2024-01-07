@@ -102,7 +102,7 @@ export default function Concierges() {
                         <div className='w-full flex flex-col '>
                             <div className="bg-scroll flex flex-col gap-4 h-[55vh] w-full overflow-y-auto">
                                 {concierges.length === 0 ? (
-                                    <p> Você ainda não possui nenhum recepcionista. Que tal adicionar um tocando abaixo? </p>
+                                    <p> Você ainda não adicionou nenhum recepcionista 😔 </p>
                                 ) : (
                                     concierges.map((concierge) => (
                                     <div key={concierge.id}>

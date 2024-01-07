@@ -88,7 +88,8 @@ export default function HomePage() {
                         />
                         :
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
-                            <p className='mt-3 text-xl'>Você ainda não confirmou presença em nenhuma resenha. Toque abaixo pra dar uma olhada no que tá rolando na sua região!</p>
+                            <p className='mt-3 text-xl'>Você ainda não confirmou presença em nenhuma resenha 😕</p>
+                            <p className='mt-6 text-x'>Toque abaixo pra dar uma olhada no que tá rolando na sua região!</p>
                             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
                                 <Button label={'Descobrir resenhas'} icon={'arrow'} action={() => handleNavigation('feed/')} iconSide='right' height={3} width={1} textAlign='center' />
                             </div>
@@ -106,7 +107,8 @@ export default function HomePage() {
                         />
                         :
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
-                            <p className='mt-3 text-xl'>Você ainda não criou nenhuma resenha! Bora juntar a galera pra curtir?! Toque abaixo pra criar uma nova resenha!</p>
+                            <p className='mt-3 text-xl'>Você ainda não criou nenhuma resenha 😕</p>
+                            <p className='mt-6 text-x'>Toque abaixo pra juntar a galera e curtir um momento único!</p>
                             <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
                             <Button label={'Nova resenha'} icon={'plus'} action={() => handleNavigation('resenhas/criar/')} iconSide='right' height={1} width={1} textAlign='center' />
                             </div>

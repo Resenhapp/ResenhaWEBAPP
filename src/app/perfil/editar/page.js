@@ -441,7 +441,10 @@ export default function EditProfile() {
                                     <Vector vectorname={'edit02'} />
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {renderInterests.map((interest) => (
+                                {renderInterests.length === 0 ? (
+                                    <p> Adicione seus interesses 😀 </p>
+                                ) : (
+                                    renderInterests.map((interest) => (
                                         <Tag
                                             key={interest.id}
                                             tagname={interest.name}
@@ -453,7 +456,8 @@ export default function EditProfile() {
                                             ringColor={interest.ringColor}
                                             weight={interest.weight}
                                         />
-                                    ))}
+                                    ))
+                                )}
                                 </div>
                             </div>
                         </div>
