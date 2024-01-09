@@ -2,9 +2,9 @@
 import { faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faBolt, faCircle, faCircleCheck, faCircleXmark, faClose, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image'
-export default function Home() {
+import { useEffect, useState } from 'react';
+
+export default function SaibaMaisProdutores() {
 
   const [rotationDeg, setRotationDeg] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
@@ -71,15 +71,6 @@ export default function Home() {
       document.body.style.overflow = 'unset';
     }
   }, [showMenu, showCreateAccount]);
-
-  const sec01Ref = useRef(null);
-
-  function scrollDown() {
-    if (sec01Ref.current) {
-      sec01Ref.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
 
   return (
     <main className="md:px-28 customShadow" style={{ overflow: 'hidden', }}>
@@ -150,7 +141,7 @@ export default function Home() {
         </div>
       </div>
 
-      <svg className=" text-white w-11 mt-1 h-11 fixed top-5 left-[5.5vw] md:left-[7.7vw] items-center justify-center flex"
+      <svg className=" text-white w-11 mt-1 h-11 fixed top-5 left-[5.5vw] md:left-[7.7vw] items-center justify-center flex" onClick={() => (window.location.href = 'https://resenha.app')}
         style={{ mixBlendMode: "difference", zIndex: 999 }} width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M26.5254 57.252C0 93.7612 0 145.841 0 250C0 354.159 0 406.239 26.5254 442.748C35.092 454.539 45.4611 464.908 57.252 473.475C93.7612 500 145.841 500 250 500C354.159 500 406.239 500 442.748 473.475C454.539 464.908 464.908 454.539 473.475 442.748C500 406.239 500 354.159 500 250C500 145.841 500 93.7612 473.475 57.252C464.908 45.4611 454.539 35.092 442.748 26.5254C406.239 0 354.159 0 250 0C145.841 0 93.7612 0 57.252 26.5254C45.4611 35.092 35.092 45.4611 26.5254 57.252ZM302.473 103.651L152.407 211.139C141.666 218.832 144.634 235.678 157.336 239.106L194.742 249.203C198.883 250.32 201.338 254.622 200.224 258.81L168.12 379.503C164.392 393.517 179.845 404.672 191.765 396.573L347.278 290.903C358.353 283.378 355.54 266.191 342.664 262.716L299.724 251.125C295.583 250.007 293.129 245.706 294.243 241.518L326.433 120.5C330.21 106.301 314.347 95.1454 302.473 103.651Z" fill="white" />
       </svg>
@@ -161,114 +152,88 @@ export default function Home() {
         {!showMenu && <FontAwesomeIcon icon={faBars} className="text-2xl" style={{ mixBlendMode: "difference", zIndex: 999 }} />}
         {showMenu && <FontAwesomeIcon icon={faClose} className="text-2xl" style={{ mixBlendMode: "difference", zIndex: 999 }} />}
       </button>
-      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[100vh] py-2 bg-white">
-        <Image src="https://media.resenha.app/s/lp/banner.jpg" width={1333} height={889} alt='girl vibing' about='girl vibing' className="absolute z-[0] w-full h-full object-cover"/>
-        <div className='flex gap-4 flex-col justify-center items-center max-w-[90%] z-[4]'>
-          <h1 className="text-4xl font-bold text-center text-[#ffffff]">
-            VIVA UMA NOVA EXPERIÊNCIA
+      <section className="flex flex-col relative w-[100%] items-center z-[1] justify-center min-h-[100vh] py-2 bg-white">
+        <img src='https://media.resenha.app/s/lp/producer.jpg' className="absolute z-[0] w-full h-full object-cover"/>
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] z-[4]'>
+          <h1 className="text-4xl text-center font-bold">
+            Feita para produtores.
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
-            <p className="text-md text-center font-medium text-[#ffffff]">
-              De uma forma igualmente nova.
-            </p>
-
-            <button className="bg-transparent my-6 ring-1 ring-[#ffffff] text-white px-4 py-2 rounded-full font-bold text-md" onClick={() => scrollDown()}>
-              Descubra...
-            </button>
+          <p className="text-md text-center font-medium text-[#ffffff]">
+            O Resenha.app é o lugar certo para quem produz festas, seja ela uma festa em casa ou uma rave com milhares de pessoas.
+          </p>
           </div>
         </div>
       </section>
-      <section ref={sec01Ref} className="flex flex-col relative w-[100%] items-center justify-center min-h-[140vh] p-4 py-2 bg-[#ff1088]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/phone.png' className="absolute z-[1] w-full h-full right-[30vw] top-[38vh] scale-[2.3] object-contain" />
+      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#170622]" style={{ overflowX: 'clip' }}>
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 8}deg)`, left: '5', top: `-100px`, zIndex: 1,
-          backgroundColor: '#ff1088',
-        }} />
-        <div className='mb-[60vh] flex gap-4 flex-col z-[5] justify-center items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-white">
-            A RESENHA QUE ESCOLHE VOCÊ
-          </h1>
-          <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
-            <p className="text-md text-center font-medium text-white">
-              A gente te conecta a festas de acordo com o seu gosto.
-            </p>
-            <p className="text-md text-center font-medium text-white">
-              É simples: Você escolhe <b>o que curte</b>, e o Resenha.app te mostra <b>onde curtir</b>.
-            </p>
-          </div>
-        </div>
-      </section>
-      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#c9ef20]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/chat.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
-        <div style={{
-          width: '150%', height: '300px', position: 'absolute',
-          transform: `rotate(${rotationDeg - 17}deg)`, left: '5', top: `-100px`, zIndex: 0,
-          backgroundColor: '#c9ef20',
+          backgroundColor: '#170622',
         }} />
         <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-[#323232]">
-            CRIE NOVAS CONEXÕES
+          <h1 className="text-4xl font-bold text-center text-[#f3f3f3]">
+            SEJA VISTO POR MILHARES DE PESSOAS
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
-            <p className="text-md text-center font-medium text-[#323232]">
-              Encontre pessoas com os mesmos gostos que você.
-            </p>
-            <p className="text-md text-center font-medium text-[#323232]">
-              E que curtem o mesmo rolê que você.
+            <p className="text-md text-center font-medium text-[#f3f3f3]">
+              O Resenha.app te deixa visível para milhares de pessoas que estão procurando por uma festa para ir.
             </p>
           </div>
         </div>
       </section>
-      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#792ca5]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/prod.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
-      <img src='https://media.resenha.app/s/lp/line.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#6911a9]" style={{ overflowX: 'clip' }}>
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
-          transform: `rotate(${rotationDeg - 25}deg)`, left: '5', top: `-100px`, zIndex: 0,
-          backgroundColor: '#792ca5',
+          transform: `rotate(${rotationDeg - 17}deg)`, left: '5', top: `-100px`, zIndex: 1,
+          backgroundColor: '#6911a9',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] z-[4]'>
-          <h1 className="text-4xl font-bold text-center text-[#ffffff]">
-            PARA PRODUTORES
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%]'>
+          <h1 className="text-4xl font-bold text-center text-[#f3f3f3]">
+            ENTENDA O SEU PÚBLICO
+          </h1>
+          <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
+            <p className="text-md text-center font-medium text-[#f3f3f3]">
+              O Resenha.app te permite filtrar o seu público por interesses, comumidade, localização e muito mais.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#34d16a]" style={{ overflowX: 'clip' }}>
+        <div style={{
+          width: '150%', height: '300px', position: 'absolute',
+          transform: `rotate(${rotationDeg - 25}deg)`, left: '5', top: `-100px`, zIndex: 1,
+          backgroundColor: '#34d16a',
+        }} />
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[100%]'>
+          <h1 className="text-4xl font-bold text-center text-[#252525]">
+            RECEBA PAGAMENTOS COM SEGURANÇA
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
-            <p className="text-md text-center font-medium text-[#ffffff]">
-              Se você é um produtor de eventos, o Resenha.app é o lugar certo para você.
+            <p className="text-md text-center font-medium text-[#252525]">
+              O Resenha.app te permite receber pagamentos online pelas suas festas, seja pagamento no pix ou no crédito, seu dinheiro está seguro.
             </p>
-            <p className="text-md text-center font-medium text-[#ffffff]">
-              O nosso algoritmo te conecta com pessoas que vão curtir o seu rolê.
-            </p>
-            <button className="bg-transparent my-6 ring-1 ring-[#ffffff] text-white px-4 py-2 rounded-full font-bold text-md" onClick={() => (window.location.href = '/saibamais/produtores')}>
-              Saiba mais
-            </button>
           </div>
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#2e7fc2]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/flamingos.png' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.6] object-contain" />
-
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 36}deg)`, left: '5', top: `-100px`, zIndex: 1,
           backgroundColor: '#2e7fc2',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center z-[3] items-center max-w-[90%]'>
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%]'>
           <h1 className="text-4xl font-bold text-center text-[#f3f3f3]">
-            UM NOVO JEITO DE CURTIR
+            ESCALE SUAS FESTAS
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
             <p className="text-md text-center font-medium text-[#f3f3f3]">
-              O Resenha.app é para quem quer desde uma festa em casa...
-            </p>
-            <p className="text-md text-center font-medium text-[#f3f3f3]">
-              ... até uma rave com milhares de pessoas.
+              Com o Resenha.app, você pode criar e gerenciar diversas festas ao mesmo tempo, sem se preocupar com nada.
             </p>
           </div>
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#f1f1f1]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/thunders.png' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 45}deg)`, left: '5', top: `-100px`, zIndex: 1,
@@ -280,7 +245,7 @@ export default function Home() {
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
             <p className="text-md text-center font-medium text-[#303030]">
-              Crie uma conta gratuitamente agora mesmo e viva novas experiências.
+              Crie uma conta gratuitamente agora mesmo e comece a criar suas festas.
             </p>
             <button className="my-6 ring-1 bg-[#8E00FF] ring-[] text-[#ffffff] px-12 py-6 rounded-full font-bold text-md" onClick={() => setShowCreateAccount(true)}>
               Criar conta!
