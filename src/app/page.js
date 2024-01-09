@@ -179,7 +179,7 @@ export default function Home() {
         </div>
       </section>
       <section ref={sec01Ref} className="flex flex-col relative w-[100%] items-center justify-center min-h-[140vh] p-4 py-2 bg-[#ff1088]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/phone.png' className="absolute z-[1] w-full h-full right-[30vw] top-[38vh] scale-[2.3] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/phone.png' width={1600} height={2059} alt='props' about='props' className="absolute z-[1] w-full h-full right-[30vw] top-[38vh] scale-[2.3] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 8}deg)`, left: '5', top: `-100px`, zIndex: 1,
@@ -200,7 +200,7 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#c9ef20]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/chat.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/chat.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 17}deg)`, left: '5', top: `-100px`, zIndex: 0,
@@ -221,8 +221,8 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#792ca5]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/prod.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
-      <img src='https://media.resenha.app/s/lp/line.png' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/prod.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/line.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 25}deg)`, left: '5', top: `-100px`, zIndex: 0,
@@ -246,7 +246,7 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#2e7fc2]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/flamingos.png' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.6] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/flamingos.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.6] object-contain" />
 
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
@@ -268,7 +268,7 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#f1f1f1]" style={{ overflowX: 'clip' }}>
-      <img src='https://media.resenha.app/s/lp/thunders.png' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/thunders.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 45}deg)`, left: '5', top: `-100px`, zIndex: 1,
