@@ -16,21 +16,48 @@ import page5_desktop from '@/assets/images/page5_desktop.png';
 import React, { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
+    const simulateInstallPrompt = () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          console.log(choiceResult.outcome);
+          setDeferredPrompt(null);
+        });
+      }
+    };
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Register the service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/serviceWorker.js')
         .then((registration) => {
           console.log('Service Worker registered with scope:', registration.scope);
+          
+          // Mimic the install prompt immediately after registration
+          simulateInstallPrompt();
         })
         .catch((error) => {
           console.error('Service Worker registration failed:', error);
         });
     }
-  }, []);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, [])
 
   useEffect(() => {
     setIsDesktop(window.innerWidth > 1024);
