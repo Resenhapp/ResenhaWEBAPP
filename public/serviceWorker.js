@@ -1,5 +1,5 @@
 const CACHE_NAME = 'resenhapp';
-const urlsToCache = ['/', '/index.html', '/manifest.json'];
+const urlsToCache = ['/', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
