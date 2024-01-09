@@ -20,6 +20,19 @@ export default function Home() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/serviceWorker.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
     setIsDesktop(window.innerWidth > 1024);
 
     const handleResize = () => {
