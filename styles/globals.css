@@ -272,7 +272,7 @@ body{
 }
 
 .customShadow, section, footer {
-  box-shadow: 0px 0px 47px 31px rgba(0,0,0,0.1);
+  /* box-shadow: 0px 0px 47px 31px rgba(0,0,0,0.1); */
 }
 
 .textGlow {
