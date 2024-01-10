@@ -196,12 +196,12 @@ export default function Home() {
       </button>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[100vh] py-2 bg-white">
         <Image src="https://media.resenha.app/s/lp/banner.jpg" width={1333} height={889} alt='girl vibing' about='girl vibing' className="absolute z-[0] w-full h-full object-cover"/>
-        <div className='flex gap-4 flex-col justify-center items-center max-w-[90%] z-[4]'>
+        <div className='flex gap-4 flex-col justify-center items-center max-w-[90%] md:max-w-[25%] z-[4]'>
           <h1 className="text-4xl font-bold text-center text-[#ffffff]">
             VIVA UMA NOVA EXPERIÊNCIA
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
-            <p className="text-md text-center font-medium text-[#ffffff]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#ffffff]">
               De uma forma igualmente nova.
             </p>
 
