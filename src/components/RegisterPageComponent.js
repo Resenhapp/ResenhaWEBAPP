@@ -46,11 +46,13 @@ const RegisterPageComponent = ({ }) => {
       password: password
     });
 
-    window.location.href = 'https://www.resenha.app/cadastro/confirmacao';
-
     if (response.token && typeof window !== 'undefined') {
+      const expirationDate = new Date();
+
       expirationDate.setDate(expirationDate.getDate() + 30);
       Cookies.set('token', response.token, { expires: expirationDate });
+
+      window.location.href = '/feed';
     }
   };
   

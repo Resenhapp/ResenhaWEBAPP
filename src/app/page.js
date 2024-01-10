@@ -4,7 +4,11 @@ import { faBars, faBolt, faCircle, faCircleCheck, faCircleXmark, faClose, faEye,
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image'
+import Cookies from 'js-cookie';
+
 export default function Home() {
+  const axios = require('axios');
+  const qs = require('qs');
 
   const [rotationDeg, setRotationDeg] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
@@ -39,6 +43,31 @@ export default function Home() {
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const makeRequest = async (url, data) => {
+    const response = await axios.post(url, qs.stringify(data));
+    return response.data;
+  };
+
+  const tryToCreateAccount = async () => {
+    if (strongPassword) {
+      const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+        request: 'tryToCreateUser',
+        name: username,
+        email: email,
+        password: password
+      });
+    
+      if (response.token && typeof window !== 'undefined') {
+        const expirationDate = new Date();
+
+        expirationDate.setDate(expirationDate.getDate() + 30);
+        Cookies.set('token', response.token, { expires: expirationDate });
+
+        window.location.href = '/feed';
+      }
+    }
   };
 
   useEffect(() => {
@@ -79,7 +108,6 @@ export default function Home() {
       sec01Ref.current.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
 
   return (
     <main className="md:px-28 customShadow" style={{ overflow: 'hidden', }}>
@@ -134,7 +162,7 @@ export default function Home() {
           <p className="text-md text-white text-center font-medium">Criar conta</p>
         </div>
         <div>
-          <form className="flex flex-col gap-4 w-full max-w-[400px]">
+          <div className="flex flex-col gap-4 w-full max-w-[400px]">
             <input required={true} type="text" placeholder="Nome" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" style={{color: "black"}} value={username} onChange={(e) => setUsername(e.target.value)} />
             <input required={true} type="text" placeholder="E-mail" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" style={{color: "black"}} value={email} onChange={(e) => setEmail(e.target.value)} />
             <div className="relative">
@@ -148,10 +176,10 @@ export default function Home() {
               {!strongPassword && <FontAwesomeIcon icon={faCircleXmark} className="text-md text-white" />}
               <p className="text-xs text-left font-light text-white">{passwordFeedback}</p>
             </div>}
-            <button className={`${(strongPassword && username && email.includes('@') && (email.endsWith('.com') || email.endsWith('.app') || email.endsWith('.co') || email.endsWith('.net'))) ? "bg-[#8E00FF]" : "bg-[#767676]"} text-white px-4 py-2 rounded-full font-bold text-md`} type="submit" disabled={!strongPassword}>
+            <button className={`${(strongPassword && username && email.includes('@') && (email.endsWith('.com') || email.endsWith('.app') || email.endsWith('.co') || email.endsWith('.net'))) ? "bg-[#8E00FF]" : "bg-[#767676]"} text-white px-4 py-2 rounded-full font-bold text-md`} onClick={tryToCreateAccount} disabled={!strongPassword}>
               Criar conta
             </button>
-          </form>
+          </div>
         </div>
       </div>
 
