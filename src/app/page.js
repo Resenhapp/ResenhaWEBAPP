@@ -97,13 +97,13 @@ export default function Home() {
             </p>
             <ul className="flex flex-col w-full items-start gap-3 justify-start">
               <li className="text-sm text-left font-light text-white">
-                <a href="#"><FontAwesomeIcon icon={faInstagram} className="mr-2" />Instagram</a>
+                <a href="https://instagram.com/app.resenha"><FontAwesomeIcon icon={faInstagram} className="mr-2" />Instagram</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a href="#"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
+                <a href="https://tiktok.com/resenha.app"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a href="#"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
+                <a href="https://resenha.app/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
               </li>
             </ul>
           </div>
@@ -111,6 +111,11 @@ export default function Home() {
       </div>
 
       <div className="fixed top-0 left-0 w-[100%] h-screen bg-[#0e0e0f] z-[3] flex flex-col items-center justify-center transition-transform duration-500 ease-in-out transform translate-y-0" style={{ zIndex: 99999, transform: showCreateAccount ? 'translateY(0)' : 'translateY(100%)' }}>
+      <button className="bg-white text-white w-12 h-12 fixed top-5 right-[5.5vw] md:right-[7vw] items-center justify-center flex rounded-full"
+        style={{ mixBlendMode: "difference", zIndex: 1 }}
+        onClick={() => setShowCreateAccount(!showCreateAccount)}>
+        <FontAwesomeIcon icon={faClose} className="text-2xl" style={{ mixBlendMode: "difference", zIndex: 999 }} />
+      </button>
         <div className="flex w-full flex-col items-center justify-start px-4 mb-8 gap-5">
           <svg className='w-[70vw] md:w-[13vw]' width="1055" viewBox="0 0 1055 142" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M6.11384 13.6032C0 22.0182 0 34.022 0 58.0297C0 82.0373 0 94.0411 6.11384 102.456C8.08836 105.174 10.4783 107.564 13.196 109.538C21.611 115.652 33.6148 115.652 57.6225 115.652C81.6301 115.652 93.6339 115.652 102.049 109.538C104.767 107.564 107.157 105.174 109.131 102.456C115.245 94.0411 115.245 82.0373 115.245 58.0297C115.245 34.022 115.245 22.0182 109.131 13.6032C107.157 10.8856 104.767 8.49558 102.049 6.52106C93.6339 0.407227 81.6301 0.407227 57.6225 0.407227C33.6148 0.407227 21.611 0.407227 13.196 6.52106C10.4783 8.49558 8.08836 10.8856 6.11384 13.6032ZM69.7169 24.2977L35.1283 49.0726C32.6525 50.8459 33.3368 54.7286 36.2644 55.5188L44.8861 57.846C45.8406 58.1036 46.4063 59.095 46.1495 60.0603L38.75 87.8789C37.8908 91.1089 41.4524 93.6801 44.1998 91.8132L80.044 67.4576C82.5967 65.723 81.9483 61.7616 78.9807 60.9606L69.0835 58.2891C68.1289 58.0315 67.5633 57.0401 67.82 56.0748L75.2395 28.1813C76.11 24.9085 72.4538 22.3373 69.7169 24.2977Z" fill="white" />
@@ -130,10 +135,10 @@ export default function Home() {
         </div>
         <div>
           <form className="flex flex-col gap-4 w-full max-w-[400px]">
-            <input required={true} type="text" placeholder="Nome" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input required={true} type="text" placeholder="E-mail" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input required={true} type="text" placeholder="Nome" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" style={{color: "black"}} value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input required={true} type="text" placeholder="E-mail" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md" style={{color: "black"}} value={email} onChange={(e) => setEmail(e.target.value)} />
             <div className="relative">
-              <input required={true} type={showPassword ? "text" : "password"} placeholder="Senha" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md pr-10" value={password} onChange={handlePasswordChange} />
+              <input required={true} type={showPassword ? "text" : "password"} placeholder="Senha" className="bg-[#f1f1f1] px-4 py-2 rounded-full font-bold text-md pr-10" style={{color: "black"}} value={password} onChange={handlePasswordChange} />
               <button type="button" onClick={toggleShowPassword} className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
               </button>
@@ -282,7 +287,7 @@ export default function Home() {
             <p className="text-md text-center font-medium text-[#303030]">
               Crie uma conta gratuitamente agora mesmo e viva novas experiências.
             </p>
-            <button className="my-6 ring-1 bg-[#8E00FF] ring-[] text-[#ffffff] px-12 py-6 rounded-full font-bold text-md" onClick={() => setShowCreateAccount(true)}>
+            <button className="my-6 ring-1 bg-[#8E00FF] ring-[] text-[#ffffff] z-[8] px-12 py-6 rounded-full font-bold text-md" onClick={() => setShowCreateAccount(true)}>
               Criar conta!
             </button>
           </div>
@@ -332,13 +337,13 @@ export default function Home() {
             </p>
             <ul className="flex flex-col w-full items-start gap-3 justify-start">
               <li className="text-sm text-left font-light text-white">
-                <a className='hover:underline underline-offset-4' href="#"><FontAwesomeIcon icon={faInstagram} className="mr-2" />Instagram</a>
+                <a className='hover:underline underline-offset-4' href="https://instagram.com/app.resenha"><FontAwesomeIcon icon={faInstagram} className="mr-2" />Instagram</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a className='hover:underline underline-offset-4' href="#"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
+                <a className='hover:underline underline-offset-4' href="https://tiktok.com/resenha.app"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a className='hover:underline underline-offset-4' href="#"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
+                <a className='hover:underline underline-offset-4' href="https://resenha.app/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
               </li>
             </ul>
           </div>
