@@ -184,42 +184,42 @@ export default function Home() {
         </div>
       </section>
       <section ref={sec01Ref} className="flex flex-col relative w-[100%] items-center justify-center min-h-[140vh] p-4 py-2 bg-[#ff1088]" style={{ overflowX: 'clip' }}>
-      <Image src='https://media.resenha.app/s/lp/phone.png' width={1600} height={2059} alt='props' about='props' className="absolute z-[1] w-full h-full right-[30vw] top-[38vh] scale-[2.3] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/phone.png' width={1600} height={2059} alt='props' about='props' className="absolute z-[1] w-full h-full right-[30vw] md:right-[-90px] top-[38vh] md:top-0 scale-[2.3] md:scale-[1.9] md:z-[2] object-contain md:items-center flex " />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 8}deg)`, left: '5', top: `-100px`, zIndex: 1,
           backgroundColor: '#ff1088',
         }} />
-        <div className='mb-[60vh] flex gap-4 flex-col z-[5] justify-center items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-white">
+        <div className='mb-[60vh] flex gap-4 flex-col z-[5] justify-center items-center max-w-[90%] md:max-w-[25%]'>
+          <h1 className="text-4xl md:text-[45px] font-bold text-center text-white">
             A RESENHA QUE ESCOLHE VOCÊ
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
-            <p className="text-md text-center font-medium text-white">
+            <p className="text-md md:text-2xl text-center font-medium text-white">
               A gente te conecta a festas de acordo com o seu gosto.
             </p>
-            <p className="text-md text-center font-medium text-white">
+            <p className="text-md md:text-2xl text-center font-medium text-white">
               É simples: Você escolhe <b>o que curte</b>, e o Resenha.app te mostra <b>onde curtir</b>.
             </p>
           </div>
         </div>
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#c9ef20]" style={{ overflowX: 'clip' }}>
-      <Image src='https://media.resenha.app/s/lp/chat.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/chat.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[2] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 17}deg)`, left: '5', top: `-100px`, zIndex: 0,
           backgroundColor: '#c9ef20',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-[#323232]">
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] md:max-w-[30%]'>
+          <h1 className="text-4xl md:text-[45px] font-bold text-center text-[#323232]">
             CRIE NOVAS CONEXÕES
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
-            <p className="text-md text-center font-medium text-[#323232]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#323232]">
               Encontre pessoas com os mesmos gostos que você.
             </p>
-            <p className="text-md text-center font-medium text-[#323232]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#323232]">
               E que curtem o mesmo rolê que você.
             </p>
           </div>
@@ -227,21 +227,21 @@ export default function Home() {
       </section>
       <section className="flex flex-col relative w-[100%] items-center justify-center min-h-[120vh] p-4 py-2 bg-[#792ca5]" style={{ overflowX: 'clip' }}>
       <Image src='https://media.resenha.app/s/lp/prod.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
-      <Image src='https://media.resenha.app/s/lp/line.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
+      <Image src='https://media.resenha.app/s/lp/line.png' width={1400} height={2471} alt='props' about='props' className="absolute z-[1] w-full md:hidden h-full right-[] bottom-[10vh] scale-[1.2] object-contain" />
         <div style={{
           width: '150%', height: '300px', position: 'absolute',
           transform: `rotate(${rotationDeg - 25}deg)`, left: '5', top: `-100px`, zIndex: 0,
           backgroundColor: '#792ca5',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] z-[4]'>
-          <h1 className="text-4xl font-bold text-center text-[#ffffff]">
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] md:max-w-[30%] z-[4]'>
+          <h1 className="text-4xl md:text-[45px] font-bold text-center text-[#ffffff]">
             PARA PRODUTORES
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
-            <p className="text-md text-center font-medium text-[#ffffff]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#ffffff]">
               Se você é um produtor de eventos, o Resenha.app é o lugar certo para você.
             </p>
-            <p className="text-md text-center font-medium text-[#ffffff]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#ffffff]">
               O nosso algoritmo te conecta com pessoas que vão curtir o seu rolê.
             </p>
             <button className="bg-transparent my-6 ring-1 ring-[#ffffff] text-white px-4 py-2 rounded-full font-bold text-md" onClick={() => (window.location.href = '/saibamais/produtores')}>
@@ -258,15 +258,15 @@ export default function Home() {
           transform: `rotate(${rotationDeg - 36}deg)`, left: '5', top: `-100px`, zIndex: 1,
           backgroundColor: '#2e7fc2',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center z-[3] items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-[#f3f3f3]">
+        <div className='mb-28 flex gap-4 flex-col justify-center z-[3] items-center max-w-[90%] md:max-w-[30%]'>
+          <h1 className="text-4xl md:text-[45px] font-bold text-center text-[#f3f3f3]">
             UM NOVO JEITO DE CURTIR
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[90%]'>
-            <p className="text-md text-center font-medium text-[#f3f3f3]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#f3f3f3]">
               O Resenha.app é para quem quer desde uma festa em casa...
             </p>
-            <p className="text-md text-center font-medium text-[#f3f3f3]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#f3f3f3]">
               ... até uma rave com milhares de pessoas.
             </p>
           </div>
@@ -279,15 +279,15 @@ export default function Home() {
           transform: `rotate(${rotationDeg - 45}deg)`, left: '5', top: `-100px`, zIndex: 1,
           backgroundColor: '#f1f1f1',
         }} />
-        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%]'>
-          <h1 className="text-4xl font-bold text-center text-[#303030]">
+        <div className='mb-28 flex gap-4 flex-col justify-center items-center max-w-[90%] md:max-w-[30%]'>
+          <h1 className="text-4xl md:text-[45px] font-bold text-center text-[#303030]">
             FAÇA ACONTECER!
           </h1>
           <div className='flex flex-col gap-3 items-center justify-center max-w-[100%]'>
-            <p className="text-md text-center font-medium text-[#303030]">
+            <p className="text-md md:text-2xl text-center font-medium text-[#303030]">
               Crie uma conta gratuitamente agora mesmo e viva novas experiências.
             </p>
-            <button className="my-6 ring-1 bg-[#8E00FF] ring-[] text-[#ffffff] z-[8] px-12 py-6 rounded-full font-bold text-md" onClick={() => setShowCreateAccount(true)}>
+            <button className="my-6 ring-1 md:text-2xl bg-[#8E00FF] ring-[] text-[#ffffff] z-[8] px-12 py-6 rounded-full font-bold text-md" onClick={() => setShowCreateAccount(true)}>
               Criar conta!
             </button>
           </div>
