@@ -135,7 +135,7 @@ export default function EventDetails() {
                         <div className="flex flex-row gap-4">
                             <div className="flex flex-col">
                                 <p className="flex flex-row items-center gap-1"><Vector vectorname={'calendar04'} />Data: </p>
-                                <p className="text-lg font-bold">{date.day}/{date.month}/{date.year}</p>
+                                <p className="text-lg font-bold">{date.day < 10 ? `0${date.day}` : date.day}/{date.month}/{date.year}</p>
                             </div>
                             <div className="flex flex-col">
                                 <p className="flex flex-row items-center gap-1"><Vector vectorname={'user04'} />Confirmados: </p>
@@ -176,21 +176,23 @@ export default function EventDetails() {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4">
-                    <div className="flex flex-col">
+                {users && users.length > 0 && (
+                    <div className="mt-4">
+                        <div className="flex flex-col">
                         <p className="font-bold text-lg">Participantes</p>
                         {/* <input className="w-full bg-transparent ring-1 ring-white rounded-full mb-2 py-1 px-3" placeholder="buscar participante"/> */}
-                    </div>
-                    <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
+                        </div>
+                        <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <div className="flex flex-col gap-1 overflow-auto max-h-60">
                             {users.map((user, index) => (
-                                <div key={user.id}>
-                                    <PartyGuest isFirst={true} paidStatus={true} guestName={user.name} username={user.username} />
-                                </div>
+                            <div key={user.id}>
+                                <PartyGuest isFirst={true} paidStatus={true} guestName={user.name} username={user.username} />
+                            </div>
                             ))}
                         </div>
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="mt-4">
                     <p className="font-bold text-lg">Impressões</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
