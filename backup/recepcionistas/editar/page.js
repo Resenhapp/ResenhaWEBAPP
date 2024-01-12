@@ -79,7 +79,7 @@ export default function EditConcierge() {
                             label={'Salvar'}
                             active={isFilled}
                             icon={'check'}
-                            action={() => handleNavigation('recepcionistas')}
+                            action={() => handleNavigation('equipe')}
                             iconSide='right'
                             height={1}
                             width={3}

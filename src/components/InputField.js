@@ -1,7 +1,7 @@
 import React from 'react';
 import Vector from './Vector';
 
-const InputField = ({ placeholder, value, action, showIcon = false, Icon, Required = false, type = 'default' }) => {
+const InputField = ({ placeholder, value, action, showIcon = false, Icon, Required = false, type = 'default', readOnly = false }) => {
   return (
     <div className="relative h-14 ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
       {showIcon && Icon && (
@@ -37,6 +37,7 @@ const InputField = ({ placeholder, value, action, showIcon = false, Icon, Requir
         value={value}
         onChange={action}
         required={Required}
+        readOnly={readOnly}
       />
     </div>
   );

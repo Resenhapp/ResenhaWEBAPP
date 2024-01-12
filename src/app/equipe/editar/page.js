@@ -102,7 +102,7 @@ export default function EditConcierge() {
         });
         
         if (!response.error) {
-            handleNavigation("recepcionistas");
+            handleNavigation("equipe");
         }
     }
 

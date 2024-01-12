@@ -108,7 +108,7 @@ export default function MyParties() {
                                             partyGuests={party.confirmed}
                                             partyHour={party.start}
                                             partyMaxGuests={party.capacity}
-                                            editConcierge={() => { window.location.href = ("/recepcionistas") }}
+                                            editConcierge={() => { window.location.href = ("/equipe") }}
                                             partyImage={`https://media.resenha.app/r/${party.hash}.png`}
                                             partyName={party.name}
                                             viewOnClick={() => handleViewClick(party)}

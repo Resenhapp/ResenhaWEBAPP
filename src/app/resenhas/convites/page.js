@@ -87,6 +87,7 @@ export default function MyInvites() {
                             partyHour={party.start}
                             partyName={party.name}
                             partyPaid={party.paid}
+                            expired={party.expired}
                             shareParty={()=>{handleCopyClick(party)}}
                             viewParty={()=>{handleOpenClick(party)}}
                             viewReceipt={()=>(window.location.href = `/resenhas/comprovante?r=${party.code}&c=${party.token}`)}

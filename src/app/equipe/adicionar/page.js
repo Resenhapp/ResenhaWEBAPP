@@ -10,20 +10,29 @@ import Cookies from 'js-cookie';
 import Loading from '@/src/components/Loading';
 
 import React, { useState, useEffect } from 'react';
+import CustomSelect from '@/src/components/CustomSelect';
 
-export default function NewConcierge() {
+export default function NewCrewMember() {
     const axios = require('axios');
     const qs = require('qs');
 
     var token = Cookies.get('token');
 
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedFunction, setSelectedFunction] = useState('');
+    const [selectedComission, setSelectedComission] = useState('');
     const [options, setOptions] = useState([]);
+    const [functions, setFunctions] = useState(['Promoter', 'Recepcionista']);
+    const [comissions, setComissions] = useState(['5%', '10%', '15%', '20%', '25%']);
+    const [comissionsValues, setComissionsValues] = useState([5, 10, 15, 20, 25]);
+    const [functionValues, setFunctionValues] = useState(['promoter', 'concierge']);
+    const [usersBeingSearched, setUsersBeingSearched] = useState([]);
     const [values, setValues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
-    const [conciergeName, setConciergeName] = useState(false);
+    const [crewMemberName, setCrewMemberName] = useState(false);
+    const [currentValue, setCurrentValue] = useState('');
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -39,9 +48,14 @@ export default function NewConcierge() {
         }
     };
 
-    const handleInputChange = (e) => {
+    const handleConciergeInputChange = (e) => {
         setIsFilled(e.target.value !== '');
-        setConciergeName(e.target.value);   
+        setCrewMemberName(e.target.value);   
+    };
+
+    const handlePromoterInputChange = (selectedOption) => {
+        setCurrentValue(selectedOption ? selectedOption.value : '');
+        setCrewMemberName(selectedOption.value);
     };
 
     const makeRequest = async (url, data) => {
@@ -71,18 +85,20 @@ export default function NewConcierge() {
 
     const handleCreateButton = async () => {
         const data = {
-            name: conciergeName,
-            party: selectedOption
+            name: crewMemberName,
+            party: selectedOption,
+            type: selectedFunction,
+            ...(selectedFunction == 'promoter' ? { comission: selectedComission } : {}),
         };
 
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
-            request: 'tryToCreateConcierge',
+            request: 'tryToCreateCrewMember',
             token: token,
             data: data
         });
         
         if (!response.error) {
-            handleNavigation("recepcionistas");
+            handleNavigation("equipe");
         }
     }
 
@@ -107,16 +123,10 @@ export default function NewConcierge() {
                 <section className="flex flex-col justify-around content-center align-center gap-4 h-full items-center w-full max-w-md p-4">
                     <div className='flex flex-col gap-8'>
                         <div className='flex flex-col gap-2'>
-                            <h1 className='text-2xl font-bold'>Adicione um novo recepcionista!</h1>
-                            <p className=''>Recepcionistas são as pessoas que vão cuidar da entrada dos seus convidados na sua resenha. Para saber mais <a onClick={() => handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
+                            <h1 className='text-2xl font-bold'>Adicione um membro para sua equipe!</h1>
+                            <p className=''>Membros de equipe são as pessoas que vão cuidar da sua resenha. Para saber mais <a onClick={() => handleNavigation("ajuda")}><b>toque aqui</b>.</a></p>
                         </div>
                         <div className='flex flex-col w-full gap-4'>
-                            <InputField
-                                Icon={'user'}
-                                showIcon={true}
-                                placeholder={'Nome do recepcionista'}
-                                action={handleInputChange}
-                            />
                             <div className='flex flex-col gap-1'>
                                 <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
                                     <span>Resenha atribuida</span>
@@ -128,13 +138,58 @@ export default function NewConcierge() {
                                     setSelectedOption={setSelectedOption}
                                     values={values}
                                 />
+                                <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
+                                    <span>Função atribuida</span>
+                                    <Vector vectorname={'question01'} />
+                                </button>
+                                <Dropdown
+                                    options={functions}
+                                    selectedOption={selectedFunction}
+                                    setSelectedOption={setSelectedFunction}
+                                    values={functionValues}
+                                />
+                                {selectedFunction == 'promoter' ? (
+                                    <>
+                                        <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
+                                        <span>Comissão por venda</span>
+                                        <Vector vectorname={'question01'} />
+                                        </button>
+                                        <Dropdown
+                                            options={comissions}
+                                            selectedOption={selectedComission}
+                                            setSelectedOption={setSelectedComission}
+                                            values={comissionsValues}
+                                        />
+                                    </>
+                                    ) : null
+                                }
                             </div>
+                            {selectedFunction == 'promoter' ? (
+                                <CustomSelect
+                                    Icon={'user'}
+                                    showIcon={true}
+                                    placeholder={'Usuário do promoter'}
+                                    readOnly={selectedFunction == ''}
+                                    action={handlePromoterInputChange}
+                                    token={token}
+                                    makeRequest={makeRequest}
+                                    currentValue={currentValue}
+                                />
+                                ) : (
+                                <InputField
+                                    Icon={'user'}
+                                    showIcon={true}
+                                    placeholder={selectedFunction ? 'Usuário do promoter' : 'Selecione uma função'}
+                                    action={handleConciergeInputChange}
+                                    readOnly={selectedFunction == ''}
+                                />
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">
                         <Button
-                            label={'Criar recepcionista'}
-                            active={isFilled}
+                            label={'Criar membro'}
+                            active={true}
                             icon={'plus'}
                             action={handleCreateButton}
                             iconSide='right'
@@ -147,7 +202,7 @@ export default function NewConcierge() {
             </div>
             <Modal show={isModalOpen} close={handleModalClose}>
                 <h1 className='text-2xl font-bold'>Resenha atribuída:</h1>
-                <p className='mb-4'>Um recepcionista atribuído é o responsável por administrar a entrada dos convidados no dia do evento. Isso significa que, durante a resenha, esse indivíduo cuidará do acesso e garantirá uma recepção suave para todos os participantes.</p>
+                <p className='mb-4'>Um membro de equipe é o responsável por administrar algo para o seu evento.</p>
                 <button className='bg-purpleT2 ring-1 ring-purpleT3 rounded-full w-full ring-inset py-2 px-4' onClick={handleModalClose}>Ok, entendi!</button>
             </Modal>
         </div>

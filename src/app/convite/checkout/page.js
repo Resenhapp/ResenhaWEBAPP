@@ -20,10 +20,15 @@ export default function Checkout() {
     const maxProgress = 5;
 
     let code = '';
+    let promoter = '';
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         code = urlParams.get('c');
+
+        if (urlParams.get('p')) {
+            promoter = urlParams.get('p');
+        }
     }
 
     const [progress, setProgress] = useState(1);
@@ -116,7 +121,8 @@ export default function Checkout() {
             email: customerEmail,
             maiority: customerIsEighteen,
             method: paymentMethod,
-            code: code
+            code: code,
+            promoter: promoter
         });
 
         if (response.error) {

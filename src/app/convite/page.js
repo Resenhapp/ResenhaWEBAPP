@@ -22,17 +22,26 @@ export default function Invite() {
     const [saved, setSaved] = useState(false);
 
     let code = '';
+    let promoter = '';
 
     if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
         code = urlParams.get('c');
+
+        if (urlParams.get('p')) {
+            promoter = urlParams.get('p');
+        }
     }
 
     const handleNextClick = () => {
-        Cookies.set('code', code);
-
         if (typeof window !== 'undefined') {
-            window.location.href = 'convite/checkout?c=' + code;
+            let url = `convite/checkout?c=${code}`
+
+            if (promoter != '') {
+                url += `&p=${promoter}`
+            }
+
+            window.location.href = url;
         }
     };
 
@@ -62,6 +71,7 @@ export default function Invite() {
             party: code,
             token: token,
         });
+
         setSaved(!saved);
     };
 
@@ -303,13 +313,14 @@ export default function Invite() {
                                 </div>
                                 <div className="flex flex-col mb-4 w-full">
                                     <Button
-                                        label="Tô dentro!"
-                                        icon="arrow"
-                                        action={handleNextClick}
-                                        iconSide='right'
+                                        label={guests.confirmed == guests.capacity ? 'Esgotou!' : 'Tô dentro!'}
+                                        icon={guests.confirmed == guests.capacity ? 'shield' : 'arrow'}
+                                        action={guests.confirmed == guests.capacity ? null : handleNextClick}
+                                        iconSide={'right'}
                                         height={1}
                                         width={1}
                                         textAlign='center'
+                                        disabled={guests.confirmed == guests.capacity}
                                     />
                                 </div>
                             </div>

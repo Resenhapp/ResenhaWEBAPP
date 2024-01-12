@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Vector from './Vector';
 
-const MyParty = ({ partyName, partyDate, partyHour, shareParty, viewParty, viewChat, inviteCode, partyCode, imageUrl, viewReceipt, partyPaid }) => {
+const MyParty = ({ partyName, partyDate, partyHour, shareParty, viewParty, viewChat, inviteCode, partyCode, imageUrl, viewReceipt, partyPaid, expired }) => {
 
     const h3Classes = 'text-[12px]';
     const baseFlexClasses = 'flex flex-row items-center gap-1';
@@ -22,9 +22,15 @@ const MyParty = ({ partyName, partyDate, partyHour, shareParty, viewParty, viewC
                     <p className={h3Classes}>{partyDate}, às {partyHour}</p>
                 </div>
                 <div className={baseFlexClasses}>
-                    <Vector vectorname={partyPaid == 0 ? 'pending1' : partyPaid == 1 ? 'done1' : ''} />
+                    <Vector vectorname={
+                        partyPaid == 0 && expired ? 'hourglass01' :
+                        partyPaid == 0 ? 'pending1' :
+                        partyPaid == 1 ? 'done1' : ''
+                    } />
                     <p className={h3Classes}>
-                        {partyPaid == 0 ? 'Pagamento pendente' : partyPaid == 1 ? 'Pago' : ''}
+                        {partyPaid == 0 && expired ? 'Pagamento expirado' :
+                        partyPaid == 0 ? 'Pagamento pendente' :
+                        partyPaid == 1 ? 'Pago' : ''}
                     </p>
                 </div>
                 {/* <div className={baseFlexClasses}>
@@ -48,7 +54,7 @@ const MyParty = ({ partyName, partyDate, partyHour, shareParty, viewParty, viewC
                     <button onClick={viewParty} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                         <Vector vectorname={'eye02'} />
                     </button>
-                    {partyPaid == 0 && <button onClick={openPay} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-fit px-4 h-8 align-center justify-center items-center'>
+                    {partyPaid == 0 && expired != true && <button onClick={openPay} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-fit px-4 h-8 align-center justify-center items-center'>
                         <p>Pagar</p>
                     </button>}
                 </div>

@@ -35,7 +35,7 @@ export default function Receipt({}) {
   const [PartyAddress, setPartyAddress] = useState('');
   const [InviteCode, setInviteCode] = useState('');
 
-  const [PartyImage, setPartyImage] = useState('https://media.resenha.app/r/8df66f64b57424391d363fd6b811fed3c430c77597da265025728bd637bad804.png')
+  const [PartyImage, setPartyImage] = useState('')
   
   const [hidestyle, setHideStyle] = useState(!false);
 
@@ -59,6 +59,7 @@ export default function Receipt({}) {
     setPartyHour(response.hour.start);
     setPartyAddress(response.address);
     setInviteCode(code);
+    setPartyImage(`https://media.resenha.app/r/${response.hash}.png`)
   };
 
   const saveInvite = async () => {
