@@ -93,10 +93,20 @@ export default function Invite() {
     const { ticket, date, guests, hour, address, host, title, description, users, tags, hash } = data;
 
     const renderDescription = () => {
+        let processedDescription = description;
+    
+        // Replace newline characters (\n) with <br> tags
+        processedDescription = processedDescription.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+                {line}
+                <br />
+            </React.Fragment>
+        ));
+    
         if (isExpanded) {
             return (
                 <>
-                    <h1>{description}<div className="mt-4"></div></h1>
+                    <h1>{processedDescription}</h1>
                     <div
                         className="flex flex-row items-center align-center cursor-pointer text-purpleT5"
                         onClick={handleToggleDescription}
@@ -105,27 +115,29 @@ export default function Invite() {
                         <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
                             <Vector vectorname={'verticalArrow01'} />
                         </div>
-                    </div >
+                    </div>
                 </>
             );
         }
-
-        let shortDescription = description;
-
-        if (description.length > 80) {
-            shortDescription = description.slice(0, 80) + '...';
+    
+        // Use shortDescription as processedDescription for the collapsed view
+        let shortDescription = processedDescription;
+    
+        if (processedDescription.length > 3) {
+            shortDescription = processedDescription.slice(0, 3);
         }
-
+    
         return (
             <>
                 <h1>{shortDescription}</h1>
-                <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
-                    {data.description.length>100 && <span>Mostrar mais</span>}
-                   
-                   {data.description.length>100 && <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
-                        <Vector vectorname={'verticalArrow02'} />
-                    </div>}
-                </div>
+                {processedDescription.length > 3 && (
+                    <div className="flex items-center cursor-pointer text-purpleT5" onClick={handleToggleDescription}>
+                        <span>Mostrar mais</span>
+                        <div className="align-center justify-center items-center flex flex-col h-4 w-4 ml-1">
+                            <Vector vectorname={'verticalArrow02'} />
+                        </div>
+                    </div>
+                )}
             </>
         );
     };

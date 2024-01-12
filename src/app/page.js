@@ -1,4 +1,5 @@
 'use client'
+
 import { faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faBolt, faCircle, faCircleCheck, faCircleXmark, faClose, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
