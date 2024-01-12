@@ -50,6 +50,8 @@ export default function NewEvent() {
         tagsContent
       };
 
+      setLoading(true)
+
       const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
         request: 'tryToCreateEvent',
         token: token,
@@ -60,6 +62,8 @@ export default function NewEvent() {
         setPartyCode(response.code);
 
         setProgress(progress + 1);
+
+        setLoading(false)
       }
     } 
 
@@ -80,6 +84,8 @@ export default function NewEvent() {
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [dateSelected, setDateSelected] = useState(''); 
+
+  const [loading, setLoading] = useState(false); 
 
   const [selectedGuests, setSelectedGuests] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
@@ -244,51 +250,58 @@ const handlePiece02EndHourSelect = (endHour) => {
   }
 
   return (
-    <div className='flex flex-col justify-around w-screen h-screen'>
-      <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-8'>
-        <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
-          {title}
-        </h1>
-        <p className='text-center leading-[30px] text-[20px]' dangerouslySetInnerHTML={{ __html: subtitle }}>
-        </p>
-      </div>
-      <div className='flex flex-col h-full items-center justify-end px-4'>
-        <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
-          {renderPiece()}
-          <div className='flex flex-row justify-between w-full'>
-            {progress > 1 && progress !== 5 && (
-              <button className='py-4 px-8' onClick={() => setProgress(progress - 1)}>
-                Voltar
-              </button>
-            )}
-            
-            {progress == 1 && (
-              <button className='py-4 px-8' onClick={handleCancel}>
-                Cancelar
-              </button>
-            )}
-
-            {progress == 5 && (
-              <button className='py-4 px-8' onClick={handleNextStep}>
-               Pular
-              </button>
-            )}
-            <Button
-              label={buttonText}
-              action={handleNextStep}
-              icon={'arrow'}
-              iconSide='right'
-              height={1}
-              width={3}
-              textAlign='center'
-              active={isFilled}
-            />
+    <>
+      {loading && (
+        <div className="h-screen w-full flex justify-center items-center">
+          <Loading />
+        </div>
+      )}
+      <div className='flex flex-col justify-around w-screen h-screen'>
+        <div className='w-full gap-4 align-center mt-8 flex flex-col content-center py-2 px-8'>
+          <h1 className='text-[39px] leading-[50px] items-center font-bold text-center'>
+            {title}
+          </h1>
+          <p className='text-center leading-[30px] text-[20px]' dangerouslySetInnerHTML={{ __html: subtitle }}>
+          </p>
+        </div>
+        <div className='flex flex-col h-full items-center justify-end px-4'>
+          <section className='flex h-full content-center justify-between flex-col items-center w-full mt-8 max-w-md p-4'>
+            {renderPiece()}
+            <div className='flex flex-row justify-between w-full'>
+              {progress > 1 && progress !== 5 && (
+                <button className='py-4 px-8' onClick={() => setProgress(progress - 1)}>
+                  Voltar
+                </button>
+              )}
+              
+              {progress == 1 && (
+                <button className='py-4 px-8' onClick={handleCancel}>
+                  Cancelar
+                </button>
+              )}
+  
+              {progress == 5 && (
+                <button className='py-4 px-8' onClick={handleNextStep}>
+                 Pular
+                </button>
+              )}
+              <Button
+                label={buttonText}
+                action={handleNextStep}
+                icon={'arrow'}
+                iconSide='right'
+                height={1}
+                width={3}
+                textAlign='center'
+                active={isFilled}
+              />
+            </div>
+          </section>
+          <div className='pb-12 w-full'>
+            <ProgressBar barAmount={5} barDone={progress} />
           </div>
-        </section>
-        <div className='pb-12 w-full'>
-          <ProgressBar barAmount={5} barDone={progress} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
