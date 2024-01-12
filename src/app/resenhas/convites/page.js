@@ -80,7 +80,8 @@ export default function MyInvites() {
                         <div key={party.id}>
                           <MyParty
                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
-                            partyCode={party.token}
+                            inviteCode={party.token}
+                            partyCode={party.code}
                             viewChat={()=>(window.location.href = `/chat?r=${party.code}`)}
                             partyDate={party.date}
                             partyHour={party.start}

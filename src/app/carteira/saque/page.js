@@ -108,8 +108,8 @@ export default function Withdraw() {
                         <div className='w-full flex flex-col items-center gap-4'>
                             <div className='w-full h-fit bg-purpleT2 rounded-2xl ring-1 ring-inset ring-purpleT3 p-4'>
                                 <h1 className='font-bold text-2xl'>Dados bancários</h1>
-                                <h1 className=''><b>Conta: </b>{cpf}</h1>
-                                <h1 className=''><b>Nome: </b>{name}</h1>
+                                <b>Conta: </b>{cpf ? cpf : 'Não registrada'}
+                                <h1><b>Nome: </b>{name}</h1>
                             </div>
                             <div className='w-full'>
                                 <div>
