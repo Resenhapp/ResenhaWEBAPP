@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 
 const MagnifierIcon = () => (
-  <svg className="absolute left-3 top-1/2 transform -translate-y-1/2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg className="absolute left-5 top-1/2 transform -translate-y-1/2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" clipRule="evenodd" d="M11.1923 13.9005C11.7659 13.5673 12.5145 13.6136 12.9582 14.1067L17.9039 19.6019C18.2239 19.9574 18.7241 20.0895 19.1778 19.9383C19.5369 19.8186 19.8186 19.5369 19.9383 19.1778C20.0895 18.7241 19.9574 18.2239 19.6019 17.9039L14.1067 12.9582C13.6136 12.5145 13.5673 11.7659 13.9005 11.1923C15.557 8.34048 15.1642 4.62495 12.722 2.18275C9.81166 -0.727583 5.09308 -0.727583 2.18275 2.18275C-0.727583 5.09308 -0.727583 9.81166 2.18275 12.722C4.62495 15.1642 8.34047 15.557 11.1923 13.9005ZM11.8437 11.8437C9.41844 14.269 5.48629 14.269 3.06102 11.8437C0.63574 9.41844 0.63574 5.48629 3.06102 3.06102C5.48629 0.635742 9.41844 0.635743 11.8437 3.06102C14.269 5.48629 14.269 9.41844 11.8437 11.8437Z" fill="#8E00FF"/>
   </svg>
 );
@@ -38,14 +38,14 @@ const SearchInput = ({ placeholder, onDelayedChange }) => {
   };
 
   return (
-    <div className="relative h-14 w-full bg-whiteT1 ring-1 ring-whiteT2 ring-inset rounded-2xl text-sm">
+    <div className="relative h-14 w-full bg-whiteT1 ring-1 ring-whiteT2 ring-inset rounded-full text-sm">
       <MagnifierIcon />
       <input
         type="search"
         placeholder={placeholder}
         value={inputValue}
         onChange={handleInputChange}
-        className="pl-10 pr-12 w-full py-2 bg-transparent rounded-2xl h-full appearance-none text-gray-700 focus:outline-none focus:shadow-outline"
+        className="pl-12 pr-12 w-full py-2 bg-transparent rounded-fyu h-full appearance-none text-gray-700 focus:outline-none focus:shadow-outline"
         style={{appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none'}}
       />
       {inputValue && (
