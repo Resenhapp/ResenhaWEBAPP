@@ -3,7 +3,7 @@
     "background_color": "#1d1d1d",
     "display": "fullscreen",
     "scope": "/",
-    "start_url": "/",
+    "start_url": "/feed",
     "name": "Resenha.app",
     "short_name": "Resenha.app",
     "description": "Resenha app, um app de festas",
