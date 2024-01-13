@@ -180,13 +180,13 @@ export default function Profile() {
                                 {activeTab === 'Resenhas' && (
                                 <div>
                                     <div className="bg-scroll flex flex-col gap-2 h-[55vh] w-full overflow-y-auto">
-                                    {uniqueParties.some(party => party.used !== 1) && (
+                                    {uniqueParties.some(party => party.uses >= 1) && (
                                         <div className='text-purpleT5'>
                                             Vou
                                         </div>
                                         )}
                                         {uniqueParties.map((party) => (
-                                        party.used !== 1 ? (
+                                        party.uses >= 1 ? (
                                             <ProfileEvent
                                             key={party.hash}
                                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
@@ -198,13 +198,13 @@ export default function Profile() {
                                             />
                                         ) : null
                                         ))}
-                                        {uniqueParties.some(party => party.used === 1) && (
+                                        {uniqueParties.some(party => party.uses == 0) && (
                                         <div className='text-purpleT5'>
                                             Fui
                                         </div>
                                         )}
                                         {uniqueParties.map((party) => (
-                                        party.used === 1 ? (
+                                        party.uses == 0 ? (
                                             <ProfileEvent
                                             key={party.hash}
                                             imageUrl={`https://media.resenha.app/r/${party.hash}.png`}
@@ -216,9 +216,9 @@ export default function Profile() {
                                             />
                                         ) : null
                                     ))}
-                                    {!(parties.went.some((party) => party.used !== 1) || parties.went.some((party) => party.used === 1)) && (
+                                    {!(parties.went.some((party) => party.uses == 0) || parties.went.some((party) => party.uses >= 1)) && (
                                         <div className='text-base'>
-                                        Ainda não participei de resenhas 😢
+                                            Ainda não participei de resenhas 😢
                                         </div>
                                     )}
                                     </div>

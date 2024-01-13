@@ -36,7 +36,7 @@ export default function Checkout() {
     const [loading, setLoading] = useState(false);
 
     const [partyName, setPartyName] = useState('');
-    const [partyImage, setPartyImage] = useState('https://media.resenha.app/r/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f.png');
+    const [partyImage, setPartyImage] = useState('');
     const [partyOwner, setPartyOwner] = useState('');
     const [partyDateDay, setPartyDateDay] = useState('');
     const [partyDay, setPartyDay] = useState('');
@@ -51,7 +51,6 @@ export default function Checkout() {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
-    const [ticketsAmount, setTicketsAmount] = useState(0);
     const [customerIsEighteen, setCustomerIsEighteen] = useState(true);
     const [cardHolder, setCardHolder] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -59,15 +58,50 @@ export default function Checkout() {
     const [cardCvv, setCardCvv] = useState('');
     const [cardCpf, setCardCpf] = useState('');
     const [pixData, setPixData] = useState(null);
+
+    const [ticketsAmount, setTicketsAmount] = useState(1);
    
     const [hidestyle, setHideStyle] = useState(!false);
-
     const [data, setData] = useState(null);
 
     const axios = require('axios');
     const qs = require('qs');
 
-    const payRequest = () => {
+    const payRequest = async () => {
+        setLoading(true);
+
+        var cardObject = {
+            cardHolder,
+            cardNumber,
+            cardExpiration,
+            cardCvv,
+            cardCpf
+        };
+
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'tryToCreateGuest',
+            token: token,
+            name: customerName,
+            email: customerEmail,
+            maiority: customerIsEighteen,
+            method: paymentMethod,
+            card: cardObject,
+            entries: ticketsAmount,
+            code: code,
+            promoter: promoter
+        });
+
+
+        if (!response.error) {
+            setProgress(progress + 1);
+            setInviteCode(response.code);
+        }
+
+        else {
+            // MOSTRAR ERRO AQUI response.error
+        }
+
+        setLoading(false);
     }
 
     const generateCash = async () => {
@@ -109,6 +143,11 @@ export default function Checkout() {
         setPartyDateDay(response.date.day)
         setPartyDay(response.date.dayString)
         setPartyMonth(response.date.monthString)
+        setPartyImage(`https://media.resenha.app/r/${response.hash}.png`)
+
+        if (response.guests.confirmed == response.guests.capacity) {
+            window.history.back();
+        }
     };
 
     const fetchData = async () => {
@@ -122,6 +161,7 @@ export default function Checkout() {
             maiority: customerIsEighteen,
             method: paymentMethod,
             code: code,
+            entries: ticketsAmount,
             promoter: promoter
         });
 
