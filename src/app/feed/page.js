@@ -19,6 +19,10 @@ import { interestsData } from '@/src/components/interestsData';
 export default function Feed() {
   var token = Cookies.get('token');
 
+  if (!token && typeof window !== 'undefined') {
+    window.location.href = '/login';
+  }
+
   const axios = require('axios');
   const qs = require('qs');
 
