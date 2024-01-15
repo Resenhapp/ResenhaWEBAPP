@@ -216,7 +216,7 @@ export default function AccountInfo() {
         setBirthday(response.birth);
         setPhone(response.phone);
         setCpf(response.cpf);
-        setVerified(response.verified);
+        setVerified(response.verified == "1");
     };
 
     useEffect(() => {
