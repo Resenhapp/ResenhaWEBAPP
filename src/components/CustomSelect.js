@@ -37,7 +37,57 @@ const CustomSelect = ({ placeholder, showIcon = false, Icon, readOnly = false, m
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         isDisabled={readOnly}
-      />
+        styles={{
+          control: (provided, state) => ({
+            ...provided,
+            border: 'none',
+            boxShadow: 'none',
+            margin: '20px 0px 0px 0px',
+            borderRadius: '100px',
+            backgroundColor: '#F6F6F6',
+            padding: '0.8rem 1rem',
+            fontSize: '1rem',
+            color: '#6B6B6B',
+            fontWeight: '500',
+            ...(state.isFocused ? { backgroundColor: '#F6F6F6' } : {}),
+          }),
+          placeholder: (provided, state) => ({
+            ...provided,
+            color: '#6B6B6B',
+            fontWeight: '500',
+            ...(state.isFocused ? { color: '#6B6B6B' } : {}),
+          }),
+          menu: (provided, state) => ({
+            ...provided,
+            borderRadius: '1rem',
+            backgroundColor: '#F6F6F6',
+            padding: '1rem',
+            marginTop: '0.5rem',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            zIndex: '9999',
+          }),
+          option: (provided, state) => ({
+            ...provided,
+            color: '#8E00FF',
+            fontWeight: '500',
+            ...(state.isFocused ? { backgroundColor: '#F6F6F6' } : {}),
+          }),
+          singleValue: (provided, state) => ({
+            ...provided,
+            color: '#6B6B6B',
+            fontWeight: '500',
+          }),
+          dropdownIndicator: (provided, state) => ({
+            ...provided,
+            color: '#6B6B6B',
+            ...(state.isFocused ? { color: '#6B6B6B' } : {}),
+          }),
+          indicatorSeparator: (provided, state) => ({
+            ...provided,
+            ...(state.isFocused ? { backgroundColor: '#6B6B6B' } : {}),
+          }),
+        }}
+        />
   );
 };
 

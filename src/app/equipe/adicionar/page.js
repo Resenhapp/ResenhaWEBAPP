@@ -26,7 +26,6 @@ export default function NewCrewMember() {
     const [comissions, setComissions] = useState(['5%', '10%', '15%', '20%', '25%']);
     const [comissionsValues, setComissionsValues] = useState([5, 10, 15, 20, 25]);
     const [functionValues, setFunctionValues] = useState(['promoter', 'concierge']);
-    const [usersBeingSearched, setUsersBeingSearched] = useState([]);
     const [values, setValues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -50,7 +49,7 @@ export default function NewCrewMember() {
 
     const handleConciergeInputChange = (e) => {
         setIsFilled(e.target.value !== '');
-        setCrewMemberName(e.target.value);   
+        setCrewMemberName(e.target.value);
     };
 
     const handlePromoterInputChange = (selectedOption) => {
@@ -67,16 +66,16 @@ export default function NewCrewMember() {
         setLoading(true);
 
         const requested = ["parties"];
-        
+
         const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'getUserData',
             token: token,
             requested: requested
         });
-        
+
         const namesArray = response.parties.made.map(item => item.name);
         const valuesArray = response.parties.made.map(item => item.code);
-        
+
         setOptions(namesArray);
         setValues(valuesArray);
 
@@ -91,12 +90,12 @@ export default function NewCrewMember() {
             ...(selectedFunction == 'promoter' ? { comission: selectedComission } : {}),
         };
 
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'tryToCreateCrewMember',
             token: token,
             data: data
         });
-        
+
         if (!response.error) {
             handleNavigation("equipe");
         }
@@ -111,7 +110,7 @@ export default function NewCrewMember() {
     if (loading) {
         return (
             <div className="h-screen w-full flex justify-center content-center items-center">
-                <Loading/>
+                <Loading />
             </div>
         );
     }
@@ -148,34 +147,35 @@ export default function NewCrewMember() {
                                     setSelectedOption={setSelectedFunction}
                                     values={functionValues}
                                 />
-                                {selectedFunction == 'promoter' ? (
-                                    <>
-                                        <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
-                                        <span>Comissão por venda</span>
-                                        <Vector vectorname={'question01'} />
-                                        </button>
-                                        <Dropdown
-                                            options={comissions}
-                                            selectedOption={selectedComission}
-                                            setSelectedOption={setSelectedComission}
-                                            values={comissionsValues}
-                                        />
-                                    </>
-                                    ) : null
+                                {selectedFunction == 'promoter' &&
+                                    <CustomSelect
+                                        Icon={'user'}
+                                        showIcon={true}
+                                        placeholder={'Usuário do promoter'}
+                                        readOnly={selectedFunction == ''}
+                                        action={handlePromoterInputChange}
+                                        token={token}
+                                        makeRequest={makeRequest}
+                                        currentValue={currentValue}
+                                    />
                                 }
                             </div>
                             {selectedFunction == 'promoter' ? (
-                                <CustomSelect
-                                    Icon={'user'}
-                                    showIcon={true}
-                                    placeholder={'Usuário do promoter'}
-                                    readOnly={selectedFunction == ''}
-                                    action={handlePromoterInputChange}
-                                    token={token}
-                                    makeRequest={makeRequest}
-                                    currentValue={currentValue}
-                                />
-                                ) : (
+                                <div className='gap-1 flex flex-col'>
+                                    <button onClick={handleModalOpen} className='ml-2 flex flex-row items-center content-center'>
+                                        <span>Comissão por venda</span>
+                                        <Vector vectorname={'question01'} />
+                                    </button>
+                                    <Dropdown
+                                        options={comissions}
+                                        selectedOption={selectedComission}
+                                        setSelectedOption={setSelectedComission}
+                                        values={comissionsValues}
+                                    />
+                                </div>
+                            ) : null
+                            }
+                            {selectedFunction == 'concierge' &&
                                 <InputField
                                     Icon={'user'}
                                     showIcon={true}
@@ -183,7 +183,8 @@ export default function NewCrewMember() {
                                     action={handleConciergeInputChange}
                                     readOnly={selectedFunction == ''}
                                 />
-                            )}
+
+                            }
                         </div>
                     </div>
                     <div className="flex flex-col mb-4 w-full mt-8 items-center justify-center content-center">

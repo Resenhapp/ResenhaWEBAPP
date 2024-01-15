@@ -8,7 +8,7 @@ const Dropdown = ({ options, selectedOption, setSelectedOption, values }) => {
     return (
       <div>
         <select
-          className='text-purpleT1 px-2 relative h-14 w-full ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center'
+          className='text-purpleT1 px-2 relative h-14 w-full ring-1 ring-inset ring-whiteT2 bg-whiteT1 rounded-xl flex items-center'
           value={selectedOption}
           onChange={handleSelectChange}
         >
