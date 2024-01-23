@@ -2,29 +2,11 @@ import React, { useState, useEffect } from 'react';
 import InputField from '@/src/components/InputField';
 import Toggle from '@/src/components/Toggle';
 import PlacesAutocomplete from '@/src/components/PlacesAutocomplete';
-import { Loader } from '@googlemaps/js-api-loader';
 
-const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled }) => {
+const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, filled, isMapsLoaded, placesService }) => {
   const [name, setName] = useState('');
-  const [maiority, setToggleValue] = useState('');
+  const [maiority, setToggleValue] = useState(false);
   const [address, setAddress] = useState('');
-  const [placesService, setPlacesService] = useState(null);
-  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
-
-  useEffect(() => {
-    const loader = new Loader({
-      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
-      version: 'weekly',
-      libraries: ['places'],
-    });
-
-    loader.importLibrary('places')
-      .then(() => {
-        const service = new window.google.maps.places.PlacesService(document.createElement('div'));
-        setPlacesService(service);
-        setIsMapsLoaded(true);
-      }).catch(() => { setIsMapsLoaded(false); });
-  }, []);
 
   const handleNameFieldChange = (event) => {
     const value = event.target.value;
@@ -59,10 +41,6 @@ const Piece01 = ({ onNameFieldChange, onAddressFieldChange, onToggleChange, fill
     setAddress(location.address);
     onAddressFieldChange(location.address);
   };
-
-  if (!isMapsLoaded) {
-    return <div>Carregando...</div>;
-  }
 
   return (
     <div className='w-full flex flex-col h-fit gap-3'>

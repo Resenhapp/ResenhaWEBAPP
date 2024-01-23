@@ -10,7 +10,8 @@ import Loading from '@/src/components/Loading';
 import Button from '@/src/components/Button';
 import Cookies from 'js-cookie';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Loader } from '@googlemaps/js-api-loader';
 
 export default function NewEvent() {
   const token = Cookies.get('token');
@@ -63,7 +64,7 @@ export default function NewEvent() {
 
         setProgress(progress + 1);
 
-        setLoading(false)
+        setloading(false);
       }
     } 
 
@@ -85,12 +86,15 @@ export default function NewEvent() {
   const [end, setEnd] = useState('');
   const [dateSelected, setDateSelected] = useState(''); 
 
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(true); 
 
   const [selectedGuests, setSelectedGuests] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [descriptionContent, setDescriptionContent] = useState('');
   const [tagsContent, setTagsContent] = useState([]);
+
+  const [isMapsLoaded, setIsMapsLoaded] = useState(null);
+  const [placesService, setPlacesService] = useState(null);
 
   const [isFilled, setIsFilled] = useState(false);
 
@@ -167,6 +171,24 @@ const handlePiece02EndHourSelect = (endHour) => {
     window.history.back();
   };
 
+  if (typeof window !== 'undefined') {
+    const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY,
+      version: 'weekly',
+      libraries: ['places'],
+    });
+  
+    loader.importLibrary('places').then(() => {
+        const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+        setPlacesService(service);
+        setIsMapsLoaded(true);
+        setLoading(false)
+      }).catch(() => { 
+        setIsMapsLoaded(false); 
+      }
+    );
+  }
+
   const renderPiece = () => {
     switch (progress) {
       case 0:
@@ -178,6 +200,8 @@ const handlePiece02EndHourSelect = (endHour) => {
             onAddressFieldChange={handlePiece01AddressChange}
             onToggleChange={handlePiece01ToggleChange}
             filled={setIsFilled}
+            isMapsLoaded={isMapsLoaded}
+            placesService={placesService}
           />
         );
       case 2:

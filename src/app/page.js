@@ -117,7 +117,7 @@ export default function Home() {
         <div className="flex w-full h-full flex-col items-start justify-start px-8 pt-24">
           <p className="text-2xl text-white font-bold">Menu</p>
           <div className="flex flex-col gap-4 mt-8 pb-8 h-full">
-            <a href="https://resenha.app/login" className="text-white text-lg font-medium">Entrar</a>
+            <a href="/login" className="text-white text-lg font-medium">Entrar</a>
             <button className="text-white text-lg font-medium" onClick={() => setShowCreateAccount(true)}>Criar conta</button>
           </div>
           <div className="flex flex-col w-1/2 items-start relative bottom-8 justify-start">
