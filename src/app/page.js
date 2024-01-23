@@ -372,7 +372,7 @@ export default function Home() {
                 <a className='hover:underline underline-offset-4' href="https://tiktok.com/resenha.app"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a className='hover:underline underline-offset-4' href="https://resenha.app/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
+                <a className='hover:underline underline-offset-4' href="/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
               </li>
             </ul>
           </div>
