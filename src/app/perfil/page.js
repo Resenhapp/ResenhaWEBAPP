@@ -57,19 +57,13 @@ export default function Profile() {
             profile: profile
         });
 
-        if (!response.error) {
-            setData(response);
+        setData(response);
 
-            setIsFollowing(response.mutual.follower);
-            setFollowersCount(response.followers.followed);
-    
-            if (response.mutual.follower == true && response.mutual.following == true) {
-                setIsMutual(true);
-            }
-        }
+        setIsFollowing(response.mutual.follower);
+        setFollowersCount(response.followers.followed);
 
-        else {
-            window.history.back();
+        if (response.mutual.follower == true && response.mutual.following == true) {
+            setIsMutual(true);
         }
     };
 
@@ -101,7 +95,7 @@ export default function Profile() {
         );
     }
 
-    var { name, username, followers, about, interests, comments, verified, hash, mine, parties } = data
+    var { name, username, followers, about, interests, comments, verified, hash, mine, parties, mutual } = data
 
     interestsData.filter(interest => interests.map(Number).includes(interest.id))
 

@@ -117,7 +117,7 @@ export default function Home() {
         <div className="flex w-full h-full flex-col items-start justify-start px-8 pt-24">
           <p className="text-2xl text-white font-bold">Menu</p>
           <div className="flex flex-col gap-4 mt-8 pb-8 h-full">
-            <a href="/login" className="text-white text-lg font-medium">Entrar</a>
+            <a href="https://resenha.app/login" className="text-white text-lg font-medium">Entrar</a>
             <button className="text-white text-lg font-medium" onClick={() => setShowCreateAccount(true)}>Criar conta</button>
           </div>
           <div className="flex flex-col w-1/2 items-start relative bottom-8 justify-start">
@@ -372,7 +372,7 @@ export default function Home() {
                 <a className='hover:underline underline-offset-4' href="https://tiktok.com/resenha.app"><FontAwesomeIcon icon={faTiktok} className="mr-2" />TikTok</a>
               </li>
               <li className="text-sm text-left font-light text-white">
-                <a className='hover:underline underline-offset-4' href="/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
+                <a className='hover:underline underline-offset-4' href="https://resenha.app/perfil?u=resenha.app"><FontAwesomeIcon icon={faBolt} className="mr-2" />Resenha.app</a>
               </li>
             </ul>
           </div>
