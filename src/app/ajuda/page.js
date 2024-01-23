@@ -39,7 +39,7 @@ export default function Help() {
 
     const handleHelpButton = () => {
       if (typeof window !== 'undefined') {
-        window.open("https://wa.me/555195095286?text=Ol%C3%A1%2C+eu+preciso+de+ajuda+com+o+Resenha.app", "_blank")
+        window.open("https://wa.me/5551998261231?text=Eu%20preciso%20de%20ajuda%20com%20o%20Resenha.app.", "_blank")
       }
     }
 
