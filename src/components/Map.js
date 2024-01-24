@@ -106,7 +106,7 @@ export default function Map({ onLocationSelect, displayPartiesAround, partyData 
                             <Marker key={index} position={[party.coordinates.lat, party.coordinates.lon]}>
                                 <Popup>
                                     {party.title} <br />
-                                    <a href={`https://www.resenha.app/convite?c=${party.code}`} style={{color: '#8E00FF'}} className='pt-4 decoration-transparent font-bold rounded-full'>Ver resenha</a><br />
+                                    <a href={`https://resenha.app/convite?c=${party.code}`} style={{color: '#8E00FF'}} className='pt-4 decoration-transparent font-bold rounded-full'>Ver resenha</a><br />
                                 </Popup>
                             </Marker>
                         );
