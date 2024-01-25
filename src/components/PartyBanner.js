@@ -30,7 +30,7 @@ const PartyBanner = ({ imageUrl, eventCode, eventName, eventGuests, eventMax, ev
                 </div>
                 <img src={eventImage} className='absolute top-0 left-0 rounded-2xl z-[-1] object-cover w-full h-full' alt='P Banner' />
                 <div className='py-4 pl-4'>
-                    <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]">{eventName}</h1>
+                    <h1 className="font-bold text-xl text-white overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[170px]">{eventName}</h1>
                     <div className=' items-center flex'>
                         {imageUrl.length > 0 ? (
                             <div className='flex flex-row mr-[-20px]'>
