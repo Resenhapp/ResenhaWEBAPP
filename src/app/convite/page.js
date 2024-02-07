@@ -307,13 +307,13 @@ export default function Invite() {
                                     ))}
                                 </div>
                             </div>
-                            <div className="flex flex-row mb-4 gap-4 w-full mt-4">
-                                <div className="flex flex-col mb-4 w-fit">
+                            <div className="flex flex-row gap-4 py-4 w-full">
+                                <div className="flex flex-col w-fit">
                                     <RoundButton white={false} label="" icon="share" onClick={handleShare} />
                                 </div>
-                                <div className="flex flex-col mb-4 w-full">
+                                <div className="flex flex-col w-full">
                                     <Button
-                                        label={guests.confirmed == guests.capacity ? 'Esgotou!' : 'Tô dentro!'}
+                                        label={guests.confirmed == guests.capacity ? 'Esgotou!' : 'Comprar!'}
                                         icon={guests.confirmed == guests.capacity ? 'shield' : 'arrow'}
                                         action={guests.confirmed == guests.capacity ? null : handleNextClick}
                                         iconSide={'right'}

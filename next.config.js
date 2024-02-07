@@ -13,6 +13,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
+      minimumCacheTTL: 60,
       domains: ['chart.googleapis.com','resenha.app', 'media.resenha.app', 'api.pagar.me', 'api.resenha.app'],
     },
 };
