@@ -39,7 +39,7 @@ export default function Crew() {
     const copyAction = (crewMember) => {
         var baseUrl = "https://resenha.app/";
 
-        if (crewMember.type == "Concierge") {
+        if (crewMember.type == "Recepcionista") {
             baseUrl += `equipe?t=${crewMember.token}`;
         }
 

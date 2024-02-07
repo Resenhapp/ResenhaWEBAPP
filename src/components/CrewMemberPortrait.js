@@ -40,9 +40,9 @@ const CrewMemberPortrait = ({ imgUrl, crewMember, deleteAction, editAction, copy
                 </div>
                 <div className='flex flex-row justify-between w-full'>
                     <div className='gap-2 flex w-fit'>
-                        <button onClick={editAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
+                        {/* <button onClick={editAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'edit02'} />
-                        </button>
+                        </button> */}
                         <button onClick={copyAction} className='bg-purpleT2 flex ring-purpleT3 ring-inset rounded-full ring-1 w-8 h-8 align-center justify-center items-center'>
                             <Vector vectorname={'copy01'} />
                         </button>

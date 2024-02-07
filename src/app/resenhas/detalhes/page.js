@@ -57,14 +57,7 @@ export default function EventDetails() {
     const handleCopyClick = async (party) => {
         const partyUrl = `https://resenha.app/convite?c=${party}`;
 
-        const copyData = {
-            text: `Que tal colar na minha resenha? Só confirmar pelo link: `,
-            url: `${partyUrl}`,
-        };
-
-        const fullTextToCopy = `${copyData.text}${copyData.url}`;
-
-        await navigator.clipboard.writeText(fullTextToCopy);
+        await navigator.clipboard.writeText(partyUrl);
     };
 
     const handleOpenClick = async (party) => {
