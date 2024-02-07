@@ -40,7 +40,7 @@ export default function Crew() {
         var baseUrl = "https://resenha.app/";
 
         if (crewMember.type == "Recepcionista") {
-            baseUrl += `equipe?t=${crewMember.token}`;
+            baseUrl += `recepcionista?t=${crewMember.token}`;
         }
 
         else if (crewMember.type == "Promoter") {
