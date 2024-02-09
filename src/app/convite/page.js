@@ -9,6 +9,7 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
+import { Head } from 'next/document';
 
 export default function Invite() {
     const axios = require('axios');
@@ -186,6 +187,13 @@ export default function Invite() {
     const ogTitle = title;
     const ogDescription = description;
     const ogURL = `https://resenha.app/convite?c=${code}`;
+
+    <Head>
+        <meta property="og:image" content={`https://media.resenha.app/r/${hash}.png`} />
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:url" content={ogURL} />
+    </Head>
 
     return (
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
