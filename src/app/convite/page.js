@@ -188,12 +188,14 @@ export default function Invite() {
     const ogDescription = description;
     const ogURL = `https://resenha.app/convite?c=${code}`;
 
+    <Document>
     <Head>
         <meta property="og:image" content={`https://media.resenha.app/r/${hash}.png`} />
         <meta property="og:title" content={ogTitle} />
         <meta property="og:description" content={ogDescription} />
         <meta property="og:url" content={ogURL} />
     </Head>
+    </Document>
 
     return (
         <div className="flex flex-col justify-center items-center xl:p-4 h-fit bg-purpleT01">
