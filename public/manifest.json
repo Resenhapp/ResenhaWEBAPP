@@ -4,8 +4,8 @@
     "display": "fullscreen",
     "scope": "/",
     "start_url": "/feed",
-    "name": "Resenha.app",
-    "short_name": "Resenha.app",
+    "name": "Resenha",
+    "short_name": "Resenha",
     "description": "Resenha app, um app de festas",
     "icons": [
         {
