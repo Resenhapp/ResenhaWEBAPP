@@ -231,7 +231,7 @@ export default function Checkout() {
                 break;
             case 2:
                 if (paymentMethod === 'Pix' && pixData) {
-                    return <Pix setPixKey={pixData["text"]} setPixQrCodeUrl={pixData["url"]} transactionCharge={pixData["charge"]} setIsFilled={setIsFilled} />
+                    return <Pix setPixKey={pixData["text"]} setPixQrCodeUrl={pixData["url"]} transactionCharge={pixData["charge"]} setIsFilled={setIsFilled} setProgress={setProgress} progress={progress} />
                 }
 
                 else if (paymentMethod === 'Dinheiro') {

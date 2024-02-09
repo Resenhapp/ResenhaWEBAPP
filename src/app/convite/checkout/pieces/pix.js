@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import React, { useEffect } from 'react';
 
-export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setIsFilled}) {
+export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setIsFilled, setProgress, progress}) {
     const axios = require('axios');
     const qs = require('qs');
 
@@ -20,8 +20,8 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
       });
 
       if (response.paid == 1) {
+        setProgress(progress + 1);
         
-
         setIsFilled(true);
       }
     };
