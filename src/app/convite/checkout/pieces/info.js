@@ -60,7 +60,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
     }, [name, emailValid, ticketsAmount, method, isEighteen, canBeUnderaged]);
     
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center h-screen">
             <section className="flex flex-col items-center w-full max-w-md">
                 <div className="flex flex-col w-full">
                     <div className='bg-purpleT2 items-center justify-center align-center flex flex-col ring-1 p-2 ring-inset ring-purpleT3 rounded-2xl'>

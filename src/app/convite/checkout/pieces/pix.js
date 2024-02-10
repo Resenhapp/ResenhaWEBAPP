@@ -42,14 +42,14 @@ export default function Pix({setPixKey, setPixQrCodeUrl, transactionCharge, setI
         <div className="flex flex-col items-center justify-center">
             <section className="flex flex-col items-center w-full max-w-md">
             <div className="flex flex-col mb-0 w-full justify-center content-center items-center">
-                <Image
-                    alt='pix qr code'
-                    src={setPixQrCodeUrl}
-                    width={190}
-                    height={190}
-                    className='rounded-lg p-1 bg-white mt-4'
-                />
-                <div className="flex flex-col mt-10 mb-2 gap-4 w-full">
+            <Image
+    alt='pix qr code'
+    src={setPixQrCodeUrl}
+    width={190}
+    height={190}
+    className='rounded-lg p-1 bg-white mt-4 hidden sm:block'
+/>
+                <div className="flex flex-col mt-10 mb-2 px-4 gap-4 w-full">
                     <CopyInput value={setPixKey} showIcon={true} Icon={'copy'} />
                 </div>
                 <div className='my-4 w-full'>

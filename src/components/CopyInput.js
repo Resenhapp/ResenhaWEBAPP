@@ -1,9 +1,12 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { useRef, useEffect } from 'react';
+import PopUpCopy from './PopUpCopy';
 
 const CopyInput = ({ placeholder, showIcon = false, Icon, value }) => {
   const inputRef = useRef();
+
+  const [showCopy, setShowCopy] = useState(false);
 
   useEffect(() => {
     if(inputRef.current && value!==undefined){
@@ -17,11 +20,24 @@ const CopyInput = ({ placeholder, showIcon = false, Icon, value }) => {
   const handleCopy = () => {
     if (inputRef.current) {
       navigator.clipboard.writeText(inputRef.current.value)
+      setShowCopy(true);
     }
   };
 
+  useEffect(() => {
+    if (showCopy) {
+        const timer = setTimeout(() => {
+            setShowCopy(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }
+}, [showCopy]);
+
   return (
     <div className="relative h-14 ring-1 ring-whiteT2 bg-whiteT1 rounded-2xl flex items-center">
+      {showCopy &&
+                <PopUpCopy message={"Copiado!"}/>
+            }
       <input
         ref={inputRef}
         type="text"

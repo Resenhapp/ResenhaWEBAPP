@@ -389,12 +389,12 @@ export default function Checkout() {
     }
 
     return (
-        <div className="flex flex-col justify-around h-screen p-4" >
+        <div className="flex flex-col justify-start h-screen p-4" >
             <div className='w-full flex flex-col gap-2'>
-                <div className="flex flex-row justify-center mt-8">
+                <div className="flex flex-row justify-center mt-4">
                     <Vector vectorname={'logo'} />
                 </div>
-                <div id="idOfElementToHide">
+                <div id="idOfElementToHide" className="mb-4">
                     <p className="text-xl text-center font-bold">{title}</p>
                     <p className="text-sm font-thin text-center">{subtitle}</p>
                 </div>

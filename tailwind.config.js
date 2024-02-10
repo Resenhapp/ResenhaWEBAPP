@@ -44,6 +44,15 @@ module.exports = {
         },
 
       },
+      animation: {
+        'slide-up': 'slideUp 0.05s ease-out'
+      },
+      keyframes: {
+        slideUp: {
+          '0%': { transform: 'translateY(100%) translateX(-50%)', opacity: '0' },
+          '100%': { transform: 'translateY(0%) translateX(-50%)', opacity: '1' }
+        }
+      },
       colors: {
         blackT1: "#212121",
         blackT2: "#4D4D4D",
