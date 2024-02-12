@@ -54,9 +54,9 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         const numericPart = parseFloat(getPartyPrice.replace(/[^0-9,]/g, '').replace(',', '.'));
 
         let discount = 0;
-        if (ticketsAmount > 1 && ticketsAmount <= 2) {
+        if (ticketsAmount > 1 && ticketsAmount <= 4) {
             discount = 0.25;
-        } else if (ticketsAmount >= 3 && ticketsAmount <= 10) {
+        } else if (ticketsAmount >= 5 && ticketsAmount <= 10) {
             discount = 0.35;
         }
 
@@ -79,7 +79,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
                                 <p className="text-2md text-whiteT1 text-left font-normal">{getPartyName}</p>
                             </div>
                             <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-1 ring-purpleT3'>
-                                <p className="text-sm text-whiteT1 text-left font-normal">{ticketsAmount}x</p>
+                                <p className="text-sm text-whiteT1 text-left font-normal">{ticketsAmount} •</p>
                                 <div>
                                     <p className="text-sm text-whiteT1 text-left font-bold">R$ {newPartyPrice}</p>
                                     {ticketsAmount > 1 && (() => {
