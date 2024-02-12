@@ -150,7 +150,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadCoupon, 
                             <AmountSelector className="text-purpleT1" setTicketsAmount={handleTicketsUpdate} />
                         </div>
                         <Toggle labelText={'Sou maior de 18 anos'} showLabel={true} startToggled={isEighteen} onToggle={isCustomerEighteen} />
-                        <Toggle labelText={'Tenho um cupom de desconto'} showLabel={true} startToggled={haveCoupon} onToggle={setHaveCoupon} />
+                        {/* <Toggle labelText={'Tenho um cupom de desconto'} showLabel={true} startToggled={haveCoupon} onToggle={setHaveCoupon} /> */}
 
                         {haveCoupon &&
                             <div>
