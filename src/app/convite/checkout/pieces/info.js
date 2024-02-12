@@ -4,15 +4,19 @@ import AmountSelector from '@/src/components/AmountSelector';
 import Toggle from '@/src/components/Toggle';
 
 import { useState, useEffect } from 'react';
+import Vector from '@/src/components/Vector';
 
-export default function Info({ setSelectionAmout, setPaymentMethod, loadName, loadEmail, setIsFilled, setCustomerName, setCustomerEmail, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
+export default function Info({ setSelectionAmout, setPaymentMethod, loadCoupon, loadName, loadEmail, setIsFilled, setCustomerName, setCustomerEmail, setCustomerCoupon, setCustomerIsEighteen, getPartyName, getPartyPrice, canBeUnderaged }) {
     const [name, setName] = useState(loadName);
     const [email, setEmail] = useState(loadEmail);
     const [ticketsAmount, setTicketsAmount] = useState(1);
     const [isEighteen, setIsEighteen] = useState(true);
     const [emailValid, setEmailValid] = useState(false);
     const [newPartyPrice, setNewPartyPrice] = useState('');
-
+    const [haveCoupon, setHaveCoupon] = useState(false);
+    const [coupon, setCoupon] = useState(loadCoupon);
+    const [validCoupon, setValidCoupon] = useState(null);
+    const [loadingCoupon, setLoadingCoupon] = useState(false);
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
         setName(value);
@@ -24,6 +28,16 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         setEmail(value);
         setCustomerEmail(value);
         validateEmail(value);
+    }
+
+    const handleCouponFieldChange = (event) => {
+        const value = event.target.value;
+        setCoupon(value);
+        setCustomerCoupon(value);
+    }
+
+    const handleCouponChange = (event) => {
+        setHaveCoupon(event.target.checked);
     }
 
     const validateEmail = (email) => {
@@ -47,6 +61,38 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         setMethod(event.target.value);
         setPaymentMethod(event.target.value);
     };
+
+    const exampleCoupon = 'FESTA10';
+
+    useEffect(() => {
+        let timeoutId;
+      
+        const checkCouponValidity = async () => {
+          try {
+            setLoadingCoupon(true);
+            // Simulate an asynchronous operation (coupon validation)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+      
+            if (coupon === exampleCoupon) {
+              setValidCoupon(true);
+            } else {
+              setValidCoupon(false);
+            }
+          } finally {
+            setLoadingCoupon(false);
+          }
+        };
+      
+        if (haveCoupon && (coupon !== '' || coupon !== null)) {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(checkCouponValidity, 50);
+        }
+      
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      }, [coupon, haveCoupon]);
+      
 
     useEffect(() => {
         const isValid = name && emailValid && ticketsAmount && method && (canBeUnderaged || isEighteen);
@@ -104,6 +150,23 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
                             <AmountSelector className="text-purpleT1" setTicketsAmount={handleTicketsUpdate} />
                         </div>
                         <Toggle labelText={'Sou maior de 18 anos'} showLabel={true} startToggled={isEighteen} onToggle={isCustomerEighteen} />
+                        <Toggle labelText={'Tenho um cupom de desconto'} showLabel={true} startToggled={haveCoupon} onToggle={setHaveCoupon} />
+
+                        {haveCoupon &&
+                            <div>
+                                <InputField Required={true} action={handleCouponFieldChange} placeholder="Cupom de desconto" showIcon={true} Icon="ticket" value={coupon} />
+                                {loadingCoupon &&
+                                    <div className="flex flex-row items-center justify-end">
+                                        <div className="animate-spin">
+                                            <Vector vectorname={"loading01"} />
+                                        </div>
+                                            <p className="text-whiteT1 text-sm">Validando cupom... </p>
+                                    </div>
+                                }
+                                {validCoupon === false && !loadingCoupon && <p className="text-red-500 text-sm w-full text-right">Cupom inválido!</p>}
+                                {validCoupon === true && !loadingCoupon && <p className="text-green-500 text-sm w-full text-right">Cupom válido!</p>}
+                            </div>
+                        }
                         <OptionsList showIcon={true} Icon="coin" options={options} action={handleSelectChange} placeholder='Forma de pagamento' />
                     </div>
                 </div>

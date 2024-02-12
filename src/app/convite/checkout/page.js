@@ -51,6 +51,7 @@ export default function Checkout() {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
+    const [customerCoupon, setCustomerCoupon] = useState('');
     const [customerIsEighteen, setCustomerIsEighteen] = useState(true);
     const [cardHolder, setCardHolder] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -227,6 +228,8 @@ export default function Checkout() {
                     setIsFilled={setIsFilled}
                     setCustomerIsEighteen={setCustomerIsEighteen}
                     canBeUnderaged={canBeUnderaged}
+                    loadCoupon={null}
+                    setCustomerCoupon={setCustomerCoupon}
                 />;
                 break;
             case 2:
