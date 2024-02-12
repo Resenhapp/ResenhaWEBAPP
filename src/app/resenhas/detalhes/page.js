@@ -54,6 +54,17 @@ export default function EventDetails() {
         setData(response);
     };
 
+    const editGuestBypass = async (code) => {
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
+            request: 'editGuestBypass',
+            token: token,
+            party: partyCode,
+            code: code
+        });
+
+        console.log(response)
+    };
+
     const handleCopyClick = async (party) => {
         const partyUrl = `https://resenha.app/convite?c=${party}`;
 
@@ -169,17 +180,17 @@ export default function EventDetails() {
                         </div>
                     </div>
                 </div>
-                {users && users.length > 0 && (
+                {guests.list && guests.list.length > 0 && (
                     <div className="mt-4">
                         <div className="flex flex-col">
                         <p className="font-bold text-lg">Participantes</p>
                         </div>
                         <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <div className="flex flex-col gap-1 overflow-auto max-h-60">
-                            {users.map((user, index) => (
-                            <div key={user.id}>
-                                <PartyGuest isFirst={true} paidStatus={true} guestName={user.name} username={user.username} onAuthorize={()=>{console.log(user.username)}} />
-                            </div>
+                            {guests.list.map((user, index) => (
+                                <div key={index}>
+                                    <PartyGuest isFirst={true} paidStatus={user.paid == '1'} guestName={user.name} bypass={user.bypass == '1'} username={user.username != 'none' ? user.username : undefined} onAuthorize={()=>{editGuestBypass(user.code)}} />
+                                </div>
                             ))}
                         </div>
                         </div>

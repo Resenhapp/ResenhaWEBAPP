@@ -1,6 +1,6 @@
 import Vector from "./Vector";
 
-const PartyGuest = ({ guestName, isFirst, isLast, paidStatus, username, onRemove, onAuthorize }) => {
+const PartyGuest = ({ guestName, isFirst, isLast, paidStatus, username, onRemove, onAuthorize, bypass }) => {
     return (
         <div className="flex flex-col items-end border-t-[1px] border-purpleT2">
             {!isFirst && <hr className="w-full mt-1 border-purpleT3 mb-1" />}
@@ -11,17 +11,23 @@ const PartyGuest = ({ guestName, isFirst, isLast, paidStatus, username, onRemove
                         {username && <><p>·</p><p className="text-sm text-purpleT5">@{username}</p></>}
                     </div>
                     <div className="flex flex-row items-center content-center gap-1">
-                        {paidStatus === true ?
+                    {bypass === true ?
+                        <>
+                            <Vector vectorname={'done1'} />
+                            <p className="">Liberado</p>
+                        </>
+                        :
+                        paidStatus === true ?
                             <>
                                 <Vector vectorname={'done1'} />
-                                <p className="">Pago </p>
+                                <p className="">Pago</p>
                             </>
                             :
                             <>
                                 <Vector vectorname={'clock01'} />
-                                <p>Pendente </p>
+                                <p>Pendente</p>
                             </>
-                        }
+                    }
                     </div>
                 </div>
             </div>
