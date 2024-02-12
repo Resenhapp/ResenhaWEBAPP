@@ -11,6 +11,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
     const [ticketsAmount, setTicketsAmount] = useState(1);
     const [isEighteen, setIsEighteen] = useState(true);
     const [emailValid, setEmailValid] = useState(false);
+    const [newPartyPrice, setNewPartyPrice] = useState('');
 
     const handleNameFieldChange = (event) => {
         const value = event.target.value;
@@ -24,7 +25,7 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         setCustomerEmail(value);
         validateEmail(value);
     }
-    
+
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         setEmailValid(emailRegex.test(email));
@@ -47,18 +48,26 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
         setPaymentMethod(event.target.value);
     };
 
-    const numericPart = parseFloat(getPartyPrice.replace(/[^0-9,]/g, '').replace(',', '.'));
-
-    if (!isNaN(numericPart)) {
-        var newPartyPrice = numericPart * ticketsAmount;
-        newPartyPrice = newPartyPrice.toLocaleString('pt-BR');
-    }
-
     useEffect(() => {
         const isValid = name && emailValid && ticketsAmount && method && (canBeUnderaged || isEighteen);
+
+        const numericPart = parseFloat(getPartyPrice.replace(/[^0-9,]/g, '').replace(',', '.'));
+
+        let discount = 0;
+        if (ticketsAmount > 1 && ticketsAmount <= 2) {
+            discount = 0.25;
+        } else if (ticketsAmount >= 3 && ticketsAmount <= 10) {
+            discount = 0.35;
+        }
+
+        let discountedPrice = numericPart * ticketsAmount * (1 - discount);
+        discountedPrice = discountedPrice.toLocaleString('pt-BR');
+
+        setNewPartyPrice(discountedPrice);
+
         setIsFilled(isValid);
-    }, [name, emailValid, ticketsAmount, method, isEighteen, canBeUnderaged]);
-    
+    }, [name, emailValid, ticketsAmount, method, isEighteen, canBeUnderaged, getPartyPrice]);
+
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <section className="flex flex-col items-center w-full max-w-md">
@@ -71,7 +80,19 @@ export default function Info({ setSelectionAmout, setPaymentMethod, loadName, lo
                             </div>
                             <div className='flex-row flex gap-2 bg-purpleT1 h-fit rounded-2xl py-1 px-3 ml-4 ring-inset ring-1 ring-purpleT3'>
                                 <p className="text-sm text-whiteT1 text-left font-normal">{ticketsAmount}x</p>
-                                <p className="text-sm text-whiteT1 text-left font-bold">R$ {newPartyPrice}</p>
+                                <div>
+                                    <p className="text-sm text-whiteT1 text-left font-bold">R$ {newPartyPrice}</p>
+                                    {ticketsAmount > 1 && (() => {
+                                        const numericPart = parseFloat(getPartyPrice.replace(/[^0-9,]/g, '').replace(',', '.'));
+                                        return (
+                                            <>
+                                                <p className="text-[12px] text-purpleT4 text-right font-bold line-through">
+                                                    R$ {numericPart * ticketsAmount}
+                                                </p>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
                             </div>
                         </div>
                     </div>
