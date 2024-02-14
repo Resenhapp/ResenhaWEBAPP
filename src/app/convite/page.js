@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import Button from "@/src/components/Button";
 import RoundButton from "@/src/components/RoundButton";
@@ -9,6 +9,7 @@ import Loading from "@/src/components/Loading";
 import Vector from "@/src/components/Vector";
 import Tag from '@/src/components/Tag';
 import { tagsData } from "@/src/components/tagsData";
+import Link from '@/src/components/Link';
 
 export default function Invite() {
     const axios = require('axios');
@@ -66,7 +67,7 @@ export default function Invite() {
     };
 
     const handleSaveButton = async () => {
-        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, { 
+        const response = await makeRequest(process.env.NEXT_PUBLIC_API_URL, {
             request: 'switchSaveEvent',
             party: code,
             token: token,
@@ -104,7 +105,7 @@ export default function Invite() {
 
     const renderDescription = () => {
         let processedDescription = description;
-    
+
         // Replace newline characters (\n) with <br> tags
         processedDescription = processedDescription.split('\n').map((line, index) => (
             <React.Fragment key={index}>
@@ -112,7 +113,7 @@ export default function Invite() {
                 <br />
             </React.Fragment>
         ));
-    
+
         if (isExpanded) {
             return (
                 <>
@@ -129,14 +130,14 @@ export default function Invite() {
                 </>
             );
         }
-    
+
         // Use shortDescription as processedDescription for the collapsed view
         let shortDescription = processedDescription;
-    
+
         if (processedDescription.length > 3) {
             shortDescription = processedDescription.slice(0, 3);
         }
-    
+
         return (
             <>
                 <h1>{shortDescription}</h1>
@@ -192,16 +193,16 @@ export default function Invite() {
             <section className="relative max-w-[540px] xl:ring-2 xl:ring-purpleT2 xl:rounded-xl xl:drop-shadow-lg">
                 {token && (
                     <div className="absolute z-[4] top-4 left-4">
-                        <button onClick={() => {window.location.href = `https://resenha.app/feed/`;}} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
-                        <Vector vectorname={'arrowLeft01'} />
+                        <button onClick={() => { window.location.href = `https://resenha.app/feed/`; }} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
+                            <Vector vectorname={'arrowLeft01'} />
                         </button>
                     </div>
                 )}
                 {token && (
                     <div className="absolute z-[4] top-4 right-4">
                         <button onClick={handleSaveButton} className="w-14 h-14 ring-1 ring-purpleT3 bg-purpleT2 rounded-full align-center items-center flex justify-center">
-                        { saved && <Vector vectorname={'bookmarkOutlined02'} /> }
-                        { !saved && <Vector vectorname={'bookmarkFill02'} /> }
+                            {saved && <Vector vectorname={'bookmarkOutlined02'} />}
+                            {!saved && <Vector vectorname={'bookmarkFill02'} />}
                         </button>
                     </div>
                 )}
@@ -285,6 +286,14 @@ export default function Invite() {
                                 </h1>
                                 {renderDescription()}
                             </div>
+                            {/* LINKS
+                            <div className="mt-4 gap-1 flex flex-col">
+                                <p className='font-bold'>Links:</p>
+                                <div className='flex flex-wrap gap-2 w-full'>
+                                    <Link className="w-full" href="https://chat.whatsapp.com/H38lFdIgGt6K8NjkDqVUSP" title={'Grupo do whats'} />
+                                    <Link className="w-full" href="https://www.instagram.com/app.resenha" title={'Insta'} />
+                                </div>
+                            </div> */}
                             <div className="mt-4">
                                 <h1 className="font-bold mb-1">
                                     Tags:
@@ -324,25 +333,25 @@ export default function Invite() {
                                     />
                                 </div>
                             </div>
-                            
+
                             <div className="flex flex-col mb-4 w-full">
                                 {users.length > 0 && (
                                     <div>
                                         <h1 className="text-whiteT1 text-xl font-bold w-full text-left">
                                             Quem vai:
                                         </h1>
-                                        <div className="bg-scroll flex py-2 flex-row overflow-x-auto gap-2 w-full">
-                                        {users.map((user, index) => (
-                                            <div key={user.id}>
-                                                <UserPortrait
-                                                isBlurried={false} // index >= 5
-                                                imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
-                                                userName={user.username}
-                                                userId={user.id}
-                                                />
-                                            </div>
-                                        ))}
+                                        <div className="flex overflow-x-auto space-x-4 py-2 h-fit w-full">
+                                            {users.map((user, index) => (
+                                                    <UserPortrait
+                                                        isBlurried={false} // index >= 5
+                                                        imageUrl={`https://media.resenha.app/u/${user.hash}.png`}
+                                                        userName={user.username}
+                                                        userId={user.id}
+                                                        key={user.id}
+                                                    />
+                                            ))}
                                         </div>
+
                                     </div>
                                 )}
                             </div>
@@ -355,6 +364,6 @@ export default function Invite() {
                     </div>
                 </div>
             </section>
-        </div> 
+        </div>
     );
 }
