@@ -115,7 +115,12 @@ export default function EventDetails() {
     var { guests, date, income, impressions, users } = data
 
     return (
-        <div className='flex flex-col w-screen h-screen'>
+        <div className='flex flex-col w-screen h-screen justify-center content-center'>
+            <PageHeader
+                pageTitle={'Detalhes'}
+                isBack={true}
+                checker={() => { null }}
+            />
             {showRemoveGuestModal && <div className="w-screen h-screen z-[9999] bg-[#00000093] flex backdrop-blur-md absolute items-center content-center justify-center">
                 <div className="w-[90%] bg-purpleT0 ring-1 ring-inset ring-purpleT3 rounded-xl p-5">
                     <p className="text-center text-xl font-bold">Você tem certeza de que deseja remover esta pessoa?</p>
@@ -126,13 +131,8 @@ export default function EventDetails() {
                     </div>
                 </div>
             </div>}
-            <PageHeader
-                pageTitle={'Detalhes'}
-                isBack={true}
-                checker={() => { null }}
-            />
-            <div className="px-8 flex flex-col">
-                <div className="mt-8">
+            <div className="px-8 flex flex-col w-full justify-center items-center">
+                <div className="mt-8 w-full max-w-2xl">
                     <p className="font-bold text-lg">Geral</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <p className="text-2xl font-bold">{data.title}</p>
@@ -161,7 +161,7 @@ export default function EventDetails() {
                     </div>
 
                 </div>
-                <div className="mt-4">
+                <div className="mt-4 w-full max-w-2xl">
                     <p className="font-bold text-lg">Faturamento</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <div className="flex flex-row gap-4">
@@ -181,22 +181,22 @@ export default function EventDetails() {
                     </div>
                 </div>
                 {guests.list && guests.list.length > 0 && (
-                    <div className="mt-4">
+                    <div className="mt-4 w-full max-w-2xl">
                         <div className="flex flex-col">
-                        <p className="font-bold text-lg">Participantes</p>
+                            <p className="font-bold text-lg">Participantes</p>
                         </div>
                         <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
-                        <div className="flex flex-col gap-1 overflow-auto max-h-60">
-                            {guests.list.map((user, index) => (
-                                <div key={index}>
-                                    <PartyGuest isFirst={true} paidStatus={user.paid == '1'} guestName={user.name} bypass={user.bypass == '1'} username={user.username != 'none' ? user.username : undefined} onAuthorize={()=>{editGuestBypass(user.code)}} />
-                                </div>
-                            ))}
-                        </div>
+                            <div className="flex flex-col gap-1 overflow-auto max-h-60">
+                                {guests.list.map((user, index) => (
+                                    <div key={index}>
+                                        <PartyGuest isFirst={true} paidStatus={user.paid == '1'} guestName={user.name} bypass={user.bypass == '1'} username={user.username != 'none' ? user.username : undefined} onAuthorize={() => { editGuestBypass(user.code) }} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
-                <div className="mt-4">
+                <div className="mt-4 w-full max-w-2xl">
                     <p className="font-bold text-lg">Impressões</p>
                     <div className="bg-purpleT1 ring-inset ring-1 ring-purpleT2 rounded-2xl px-4 py-2 gap-2 flex flex-col">
                         <div className="flex flex-col gap-1">

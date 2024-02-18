@@ -1,5 +1,4 @@
 'use client'
-
 import Button from '@/src/components/Button';
 import PartyPortrait from '@/src/components/PartyPortrait';
 import PageHeader from '@/src/components/PageHeader';

@@ -1,6 +1,7 @@
 'use client'
 
 import Vector from "@/src/components/Vector"
+import React, { useState } from 'react';
 
 export default function TypeCode({ useCamera, codeResponse, tryToAllow }) {
     const [code, setCode] = useState('');

@@ -10,12 +10,11 @@ const UserPortrait = ({ isBlurried, imageUrl, userId, userName }) => {
 
   return (
     <img
-  src={imageUrl}
-  alt="Retrato do convidado"
-  style={{ objectFit: 'contain' }}
-  className={`w-24 ring-2 m-1 ring-purpleT3 ring-inset p-[2px] rounded-full ${isBlurried ? 'blur-[2px]' : ''}`}
-  onClick={handlePortraitClick}
-/>
+      src={imageUrl}
+      alt="Retrato do convidado"
+      className={`w-14 h-14 object-cover ring-2 m-1 ring-purpleT3 ring-inset p-[2px] rounded-full ${isBlurried ? 'blur-[2px]' : ''}`}
+      onClick={handlePortraitClick}
+    />
   );
 };
 

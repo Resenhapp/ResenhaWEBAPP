@@ -104,6 +104,7 @@ export default function HomePage() {
                             eventMax={data.parties.made[0].capacity}
                             eventCode={data.parties.made[0].code}
                             eventImage={`https://media.resenha.app/r/${data.parties.made[0].hash}.png`}
+                            openParty={() => { window.location.href = "/editar/" + data.parties.made[0].code }}
                         />
                         :
                         <section className="flex content-center justify-center flex-col items-center w-full h- max-w-md p-4">
